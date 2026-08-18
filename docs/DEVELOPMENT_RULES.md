@@ -45,4 +45,21 @@ Antes de considerar qualquer funcionalidade financeira ou transacional concluíd
 11. **O que acontece se o job de IA falhar após o débito inicial?** (O sistema dispara o fluxo transacional de reembolso `GENERATION_REFUND`).
 12. **O que acontece se o usuário tentar manipular as variáveis do request?** (O backend adota arquitetura Zero Trust, recalculando e validando preços e limites no lado do servidor).
 
+## 6. PENDING TESTS OBRIGATÓRIO
 
+Antes de iniciar uma nova fase ou auditoria:
+
+1. consultar `docs/PENDING_TESTS.md`;
+2. verificar se existe pendência relacionada à etapa atual;
+3. executar pendências que já possam ser validadas;
+4. acrescentar novas pendências encontradas;
+5. preservar o histórico;
+6. nunca apagar itens sem evidência de conclusão.
+
+Ao finalizar qualquer fase ou auditoria:
+
+1. revisar o arquivo;
+2. adicionar novas pendências;
+3. atualizar itens realmente concluídos;
+4. registrar evidências;
+5. informar no relatório final o que foi adicionado ou concluído.
