@@ -1,9 +1,15 @@
 import 'dotenv/config';
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import prisma from '@/lib/prisma';
 import { AIService } from '@/services/ai/ai.service';
 import { CreditService } from '@/services/credit.service';
 import { POST as handleFalWebhook } from '@/app/api/webhooks/fal/route';
+
+vi.mock('@/services/storage.service', () => ({
+  StorageService: {
+    uploadFromUrl: vi.fn().mockImplementation(() => Promise.resolve(`/uploads/mocked-image-${Math.random()}.png`))
+  }
+}));
 
 describe('AI Engine and fal.ai mock adapter tests', () => {
   let testUser: any;
@@ -11,8 +17,8 @@ describe('AI Engine and fal.ai mock adapter tests', () => {
   let seededTool: any;
 
   beforeAll(async () => {
-    seededModel = await prisma.aIModel.findFirst();
-    seededTool = await prisma.aITool.findFirst();
+    seededTool = await prisma.aITool.findFirst({ include: { model: true } });
+    seededModel = seededTool?.model;
 
     if (!seededModel || !seededTool) {
       throw new Error("Seed do banco de dados não foi executado.");
@@ -26,7 +32,7 @@ describe('AI Engine and fal.ai mock adapter tests', () => {
     });
 
     await prisma.creditBalance.create({
-      data: { userId: testUser.id, balance: 50 },
+      data: { userId: testUser.id, balance: 200 },
     });
   });
 
@@ -54,7 +60,7 @@ describe('AI Engine and fal.ai mock adapter tests', () => {
   it('should successfully submit job and deduct credits', async () => {
     await prisma.creditBalance.update({
       where: { userId: testUser.id },
-      data: { balance: 50 },
+      data: { balance: 200 },
     });
 
     const job = await AIService.submitJob({
@@ -70,7 +76,7 @@ describe('AI Engine and fal.ai mock adapter tests', () => {
 
     const cost = seededModel.creditCost;
     const finalBal = await CreditService.getBalance(testUser.id);
-    expect(finalBal).toBe(50 - cost);
+    expect(finalBal).toBe(200 - cost);
   });
 
   it('should enforce idempotency and return the existing job on duplicate submit', async () => {
@@ -212,6 +218,9 @@ describe('AI Engine and fal.ai mock adapter tests', () => {
       }),
     });
     const response = await handleFalWebhook(req2);
+    if (response.status !== 200) {
+      console.error(await response.text());
+    }
     expect(response.status).toBe(200);
 
     const checkJob = await prisma.aIJob.findUnique({

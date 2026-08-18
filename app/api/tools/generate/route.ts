@@ -22,6 +22,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Parâmetros inválidos." }, { status: 400 });
     }
 
+    // Validação de segurança adicional: tamanho máximo de strings de entrada (limite de 10.000 caracteres)
+    for (const key in parsed.data.inputs) {
+      const val = parsed.data.inputs[key];
+      if (typeof val === "string" && val.length > 10000) {
+        return NextResponse.json({ error: "O tamanho do input excede o limite permitido de 10.000 caracteres." }, { status: 400 });
+      }
+    }
+
     const job = await AIService.submitJob({
       userId: session.user.id,
       toolSlug: parsed.data.toolSlug,

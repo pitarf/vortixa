@@ -15,6 +15,7 @@ vi.mock('@/auth', () => ({
 
 describe('Tools API Router Tests', () => {
   let testUser: any;
+  let hackerUser: any;
   let seededTool: any;
 
   beforeAll(async () => {
@@ -27,14 +28,28 @@ describe('Tools API Router Tests', () => {
       },
     });
 
+    hackerUser = await prisma.user.create({
+      data: {
+        email: `hacker_api_${Date.now()}@test.com`,
+        name: 'Hacker User',
+      },
+    });
+
     await prisma.creditBalance.create({
       data: { userId: testUser.id, balance: 200 },
+    });
+
+    await prisma.creditBalance.create({
+      data: { userId: hackerUser.id, balance: 200 },
     });
   });
 
   afterAll(async () => {
     if (testUser) {
       await prisma.user.delete({ where: { id: testUser.id } }).catch(() => {});
+    }
+    if (hackerUser) {
+      await prisma.user.delete({ where: { id: hackerUser.id } }).catch(() => {});
     }
     vi.restoreAllMocks();
   });
@@ -103,5 +118,33 @@ describe('Tools API Router Tests', () => {
     (auth as any).mockResolvedValueOnce({ user: { id: "some-other-hacker-id" } });
     const getRes = await handleJobStatus(new Request("http://localhost"), { params: Promise.resolve({ id: job.id }) });
     expect(getRes.status).toBe(403); // Forbidden access!
+  });
+
+  it('should prevent IDOR inverso (USER_B accessing USER_A job)', async () => {
+    // USER_B (hacker) submits a job
+    (auth as any).mockResolvedValueOnce({ user: { id: hackerUser.id } });
+    const req = new Request("http://localhost/api/tools/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        toolSlug: seededTool.slug,
+        inputs: { prompt: "Hacker job" },
+      }),
+    });
+    const res = await handleGenerate(req);
+    const job = await res.json();
+
+    // USER_A (testUser) tries to access USER_B's job
+    (auth as any).mockResolvedValueOnce({ user: { id: testUser.id } });
+    const getRes = await handleJobStatus(new Request("http://localhost"), { params: Promise.resolve({ id: job.id }) });
+    expect(getRes.status).toBe(403);
+  });
+
+  it('should return 404 safe error message when querying non-existent job ID', async () => {
+    (auth as any).mockResolvedValueOnce({ user: { id: testUser.id } });
+    const getRes = await handleJobStatus(new Request("http://localhost"), { params: Promise.resolve({ id: "00000000-0000-0000-0000-000000000000" }) });
+    expect(getRes.status).toBe(404);
+    const data = await getRes.json();
+    expect(data.error).toBe("Job não localizado.");
   });
 });

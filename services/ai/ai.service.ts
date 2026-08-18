@@ -69,6 +69,7 @@ export class AIService {
       })),
     });
 
+    let charged = false;
     try {
       // 6. Consumir créditos transacionalmente
       await CreditService.consumeCredits(
@@ -77,6 +78,7 @@ export class AIService {
         request.toolSlug,
         job.id
       );
+      charged = true;
 
       // 7. Submeter ao Provedor (Factory escolhe Live ou Mock)
       const provider = AIProviderFactory.getProvider();
@@ -115,10 +117,12 @@ export class AIService {
         },
       });
 
-      // Estornar créditos
-      await CreditService.refundCredits(request.userId, cost, job.id).catch((err) => {
-        console.error(`Falha grave ao tentar estornar créditos do job ${job.id}: ${err.message}`);
-      });
+      // Estornar créditos apenas se foram cobrados
+      if (charged) {
+        await CreditService.refundCredits(request.userId, cost, job.id).catch((err) => {
+          console.error(`Falha grave ao tentar estornar créditos do job ${job.id}: ${err.message}`);
+        });
+      }
 
       throw new Error(`Falha no motor de IA: ${error.message}`);
     }

@@ -30,6 +30,12 @@ Os seguintes cenários devem ser validados antes de qualquer liberação de cód
 * **CT-011 (Webhooks Fora de Ordem)**: Validar que se um webhook de confirmação `PAID` chegar antes de um webhook de criação de pedido, ou se chegar um webhook atrasado contendo status anterior a `PAID`, a máquina de estados impeça a regressão de estado do pagamento.
 * **CT-012 (Ajustes de Admin)**: Validar que alterações de créditos manuais feitas por administradores gerem obrigatoriamente um registro no `AuditLog` e uma movimentação do tipo `ADMIN_ADJUSTMENT`.
 
+### 2.3 Ferramentas de IA e Auditoria Adversarial (Fase 5)
+* **CT-013 (Manipulação de Custo pelo Cliente)**: Validar que requisições com custos forjados no corpo (ex: `credits: 0`) são ignoradas e recalculadas pelo backend.
+* **CT-014 (Sanitização contra Path Traversal)**: Validar que uploads contendo modificadores de diretório parentes (ex: `../../filename`) são higienizados e renomeados com UUIDs aleatórios.
+* **CT-015 (Bloqueio de Upload Excedente)**: Validar que tentativas de carregar arquivos com mais de 50MB retornam erro HTTP 400 no backend.
+* **CT-016 (IDOR de Jobs)**: Validar que usuários não conseguem consultar o status ou os outputs de jobs gerados por outros usuários.
+
 
 ---
 

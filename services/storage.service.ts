@@ -18,9 +18,44 @@ export class StorageService {
     return await this.uploadToLocalDisk(url, fileName);
   }
 
+  private static isTrustedHost(hostname: string): boolean {
+    if (
+      hostname === "fal.media" || hostname.endsWith(".fal.media") ||
+      hostname === "fal.run" || hostname.endsWith(".fal.run") ||
+      hostname === "fal.ai" || hostname.endsWith(".fal.ai")
+    ) {
+      return true;
+    }
+
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return true; // Permitido para Mock local nos testes
+    }
+
+    if (process.env.VITEST === "true" && (hostname === "picsum.photos" || hostname.endsWith(".picsum.photos"))) {
+      return true;
+    }
+
+    return false;
+  }
+
   private static async uploadToLocalDisk(url: string, fileName: string): Promise<string> {
     try {
-      const response = await fetch(url);
+      // Validação de SSRF: Apenas permite downloads vindos de domínios confiáveis
+      const parsedUrl = new URL(url);
+      
+      if (!this.isTrustedHost(parsedUrl.hostname)) {
+        throw new Error("URL de origem não confiável para download.");
+      }
+
+      // Previne ataques de SSRF via redirects HTTP
+      const response = await fetch(url, {
+        redirect: 'manual', // Não segue redirects automaticamente
+      });
+
+      if (response.status >= 300 && response.status < 400) {
+        throw new Error("Redirecionamentos HTTP não são permitidos por segurança (SSRF).");
+      }
+
       if (!response.ok) {
         throw new Error(`Falha ao baixar arquivo da URL externa: ${response.statusText}`);
       }

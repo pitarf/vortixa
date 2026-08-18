@@ -15,16 +15,17 @@ export async function POST(req: Request) {
       where: { email: validatedData.email },
     });
 
+    // Para evitar enumeração de usuários (OWASP), retorna sucesso genérico independente da existência do e-mail
     if (!user) {
       return NextResponse.json(
-        { error: "Este e-mail não está cadastrado em nossa base." },
-        { status: 404 }
+        { message: "Se o e-mail estiver cadastrado, você receberá as instruções de recuperação." },
+        { status: 200 }
       );
     }
 
     // Mock de envio de e-mail de recuperação
     return NextResponse.json(
-      { message: "Instruções de recuperação enviadas para o seu e-mail." },
+      { message: "Se o e-mail estiver cadastrado, você receberá as instruções de recuperação." },
       { status: 200 }
     );
   } catch (error: any) {

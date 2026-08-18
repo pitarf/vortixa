@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { describe, it, expect } from 'vitest';
 import bcrypt from 'bcryptjs';
 import { authConfig } from '@/auth.config';
@@ -55,5 +56,31 @@ describe('Auth Security and Hashing Tests', () => {
       });
       expect(resAdminAdmin).toBe(true);
     }
+  });
+
+  it('should have allowDangerousEmailAccountLinking disabled for GoogleProvider', () => {
+    const googleProvider = authConfig.providers.find(p => p.id === 'google');
+    expect(googleProvider).toBeDefined();
+    expect((googleProvider as any).options.allowDangerousEmailAccountLinking).toBe(false);
+  });
+
+  it('should return 200 generic message on password recovery mock regardless of email presence', async () => {
+    // Import do handler de recuperação para testar endpoint diretamente
+    const { POST: handleRecovery } = await import('@/app/api/auth/recovery-password/route');
+    
+    // Testa com e-mail inexistente
+    const req = new Request("http://localhost/api/auth/recovery-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: "doesnotexist@test.com" }),
+    });
+
+    const res = await handleRecovery(req);
+    if (res.status !== 200) {
+      console.log("RECOVERY API ERROR:", await res.json());
+    }
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data.message).toContain("Se o e-mail estiver cadastrado, você receberá");
   });
 });
