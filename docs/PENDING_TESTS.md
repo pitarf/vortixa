@@ -33,3 +33,8 @@ Um item só pode sair da lista depois de:
 - **Descoberta:** O comportamento do Webhook foi fortemente testado localmente (`TESTADO` via mocks) cobrindo idempotência e assinatura, mas requisições provenientes diretamente dos servidores originais da fal.ai exigirão infraestrutura pública (ngrok/domínio) para homologação final.
 - **Ação Pendente:** Homologar recebimento de webhook em ambiente de staging/produção com chaves assinadas nativas emitidas pela fal.ai.
 - **Status:** PENDENTE.
+
+## 5. Homologação Real de Strict-Transport-Security (HSTS) e HTTPS (Auditoria 14.5.1)
+- **Descoberta:** Os cabeçalhos de segurança (HSTS e CSP) foram testados em requisições HTTP reais localmente (`localhost:3000`) confirmando sua entrega pelo backend Next.js. Contudo, o HSTS requer efetividade comprovada em um ambiente com certificado SSL/TLS de produção (HTTPS real), domínio e, caso aplicável, submissão para a lista de preload dos navegadores.
+- **Ação Pendente:** Validar recebimento de `Strict-Transport-Security` em ambiente produtivo/staging com HTTPS ativo e certificar que a diretiva `includeSubDomains; preload` é honrada pelo browser e proxy reverso.
+- **Status:** PENDENTE.

@@ -362,4 +362,17 @@ describe('Adversarial Security and Vulnerability Tests (Comprehensive)', () => {
       server.close();
     }
   });
+  // 14. CORS and Security Headers regression check at handler level
+  it('should not emit permissive CORS headers on API endpoints', async () => {
+    const req = new Request("http://localhost/api/tools/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Origin": "https://evil.example" },
+      body: JSON.stringify({ toolSlug: "any" }),
+    });
+
+    const res = await handleGenerate(req);
+    // Verificar que a rota não emite cabeçalho de permissão de CORS
+    expect(res.headers.get("Access-Control-Allow-Origin")).toBeNull();
+    expect(res.headers.get("Access-Control-Allow-Credentials")).toBeNull();
+  });
 });
