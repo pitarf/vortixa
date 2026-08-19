@@ -50,4 +50,10 @@ Um item só pode sair da lista depois de:
 - **Condição de Encerramento:** Validação de migração com testes de regressão executados com sucesso e build gerada corretamente.
 - **Status:** PENDENTE.
 
+## 8. Homologação Sandbox de Pagamentos (Fase 6.1)
+- **Descoberta:** A integração com provedores de pagamento (VorexPay/Stripe/Mercado Pago) e recebimento de webhooks assíncronos não pode ser validada localmente de forma fim-a-fim real em ambiente estático.
+- **Ação Pendente:** Homologar transações PIX/Cartão em sandbox e testar a assinatura criptográfica dos webhooks e idempotência contra dupla concessão de saldo no servidor live de staging.
+- **Status:** PENDENTE.
+
+
 
