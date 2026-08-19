@@ -88,33 +88,86 @@ describe('Admin Panel Financial Controller RBAC and Security Tests (Fase 6.7)', 
     expect(json.paymentsCount).toBeDefined();
   });
 
-  it('should allow admin to trigger manual credit adjustment and prevent concurrent double execution', async () => {
+  it('should process concurrent legitimate administrative adjustments distinctly without race conditions', async () => {
     (auth as any).mockResolvedValue({
       user: { email: adminUser.email },
     });
 
-    // Cria saldo de crédito inicial
+    // Zera o saldo do usuário para garantir isolamento e asserção precisa
     await prisma.creditBalance.upsert({
       where: { userId: regularUser.id },
       create: { userId: regularUser.id, balance: 10 },
       update: { balance: 10 },
     });
 
-    const payload = {
+    const payloadA = {
       targetUserId: regularUser.id,
       creditsAmount: 50,
-      reason: 'Ajuste painel admin',
+      reason: 'Ajuste A',
     };
 
-    // Dispara dois ajustes simultâneos (duplo clique / concorrência)
-    const runAdjust = () => adjustCredits(createMockRequest(payload));
-    const results = await Promise.all([runAdjust(), runAdjust()]);
+    const payloadB = {
+      targetUserId: regularUser.id,
+      creditsAmount: 30,
+      reason: 'Ajuste B',
+    };
+
+    // Dispara dois ajustes concorrentes distintos legítimos em paralelo
+    const results = await Promise.all([
+      adjustCredits(createMockRequest(payloadA)),
+      adjustCredits(createMockRequest(payloadB)),
+    ]);
 
     expect(results[0].status).toBe(200);
     expect(results[1].status).toBe(200);
 
     const balance = await prisma.creditBalance.findUnique({ where: { userId: regularUser.id } });
-    // Deve somar as duas transações legítimas no ledger (10 + 50 + 50 = 110)
-    expect(balance?.balance).toBe(110);
+    // Deve computar de forma atômica e correta (10 + 50 + 30 = 90)
+    expect(balance?.balance).toBe(90);
+
+    // Deve possuir exatamente duas transações novas criadas no Ledger correspondentes a este usuário
+    const ledgerTxs = await prisma.creditTransaction.findMany({
+      where: { userId: regularUser.id, type: 'ADMIN_ADJUSTMENT' },
+    });
+    // Pelo menos 2 novos registros de ajuste (A e B) mais eventuais legados se o banco não for zerado
+    expect(ledgerTxs.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('should ignore forged fields in admin adjustments to prevent mass assignment', async () => {
+    (auth as any).mockResolvedValue({
+      user: { email: adminUser.email },
+    });
+
+    // Tenta injetar parâmetros maliciosos tentando forçar privilégios e saldo ilimitado
+    const maliciousPayload = {
+      targetUserId: regularUser.id,
+      creditsAmount: 100,
+      reason: 'Ajuste Hack',
+      role: 'ADMIN', // Tenta promover
+      isUnlimited: true, // Tenta burlar consumo
+      balance: 999999, // Tenta sobrescrever saldo diretamente
+      adminUserId: regularUser.id, // Tenta forjar autoria da auditoria
+    };
+
+    const res = await adjustCredits(createMockRequest(maliciousPayload));
+    expect(res.status).toBe(200);
+
+    // 1. O saldo final deve ser ajustado com base estrita e exclusiva no creditsAmount (90 + 100 = 190)
+    const balance = await prisma.creditBalance.findUnique({ where: { userId: regularUser.id } });
+    expect(balance?.balance).toBe(190);
+
+    // 2. A role e privilégios do regularUser devem continuar intocados
+    const user = await prisma.user.findUnique({ where: { id: regularUser.id } });
+    expect(user?.role).toBe(Role.USER);
+    expect(user?.isUnlimited).toBe(false);
+
+    // 3. O administrador registrado no AuditLog deve ser estritamente o da sessão (adminUser), ignorando adminUserId forjado
+    const auditLogs = await prisma.auditLog.findMany({
+      where: { action: 'MANUAL_CREDIT_ADJUSTMENT' },
+      orderBy: { createdAt: 'desc' },
+      take: 1,
+    });
+    expect(auditLogs.length).toBe(1);
+    expect(auditLogs[0].userId).toBe(adminUser.id);
   });
 });

@@ -70,6 +70,12 @@ Um item só pode sair da lista depois de:
 - **Ação Pendente:** Tratar e testar o evento de Chargeback no webhook de pagamentos quando as chaves reais do provedor definitivo e sua documentação oficial de webhook de disputa estiverem disponíveis.
 - **Status:** PENDENTE.
 
+## 12. Homologação de Idempotência no Ajuste Manual de Créditos (Fase 6.7)
+- **Descoberta:** O serviço de ajuste manual do administrador (ReconciliationService.adjustCreditsManually) atualmente processa requisições de forma puramente sequencial e transacional no Ledger, não possuindo controle de chaves de idempotência administrativas específicas contra cliques repetidos simultâneos na UI.
+- **Ação Pendente:** Implementar controle de chaves de idempotência na API de controle do painel administrativo de finanças para evitar disparar a mesma ação de ajuste repetidamente.
+- **Status:** PENDENTE.
+
+
 
 
 
