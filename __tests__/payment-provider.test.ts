@@ -113,4 +113,31 @@ describe('Payment Provider Abstraction and Checkout Security Tests (Fase 6.4)', 
 
     expect(fulfilled.length).toBe(2);
   });
+
+  it('should strictly reject checkouts if the session userId is invalid or forged', async () => {
+    // Tentativa de criar checkout com userId inexistente ou forjado na sessão
+    await expect(
+      checkoutService.handleCheckout('forged-user-id', testPackage.id)
+    ).rejects.toThrow('Usuário não encontrado.');
+  });
+
+  it('should ensure order and payment records remain pending/failed and no credits are granted on gateway errors', async () => {
+    const brokenProvider = new MockPaymentProvider(true);
+    const failingService = new CheckoutService(brokenProvider);
+
+    await expect(
+      failingService.handleCheckout(testUser.id, testPackage.id)
+    ).rejects.toThrow('Erro na conexão com o gateway de pagamentos.');
+
+    // O último Order criado para este usuário deve ter falhado
+    const lastOrder = await prisma.order.findFirst({
+      where: { userId: testUser.id },
+      orderBy: { createdAt: 'desc' },
+    });
+    expect(lastOrder?.status).toBe(PaymentStatus.FAILED);
+
+    // O saldo deve continuar 0 (nenhum crédito de cortesia concedido por falha do gateway)
+    const balance = await prisma.creditBalance.findUnique({ where: { userId: testUser.id } });
+    expect(balance?.balance || 0).toBe(0);
+  });
 });
