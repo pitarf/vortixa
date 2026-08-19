@@ -92,7 +92,7 @@ describe('Payment Webhooks Adversarial and Security Tests (Fase 6.5)', () => {
 
   it('should confirm payment, grant credits and prevent credit duplication on webhook retry', async () => {
     const eventId = `evt_success_${Date.now()}`;
-    const gatewayTxId = `tx_gateway_${Date.now()}`;
+    const gatewayTxId = testPayment.gatewayTxId; // deve coincidir com o do banco
 
     const payload = {
       eventId,
@@ -149,18 +149,37 @@ describe('Payment Webhooks Adversarial and Security Tests (Fase 6.5)', () => {
   });
 
   it('should process payment estorno/refund transationally and idempotently', async () => {
+    // Cria um pagamento novo já em status PAID para estornar de forma válida
+    const refundPayment = await prisma.payment.create({
+      data: {
+        userId: testUser.id,
+        amountCents: 1000,
+        creditsGranted: 10,
+        status: PaymentStatus.PAID,
+        gateway: 'vorexpay',
+        gatewayTxId: `tx_ref_${Date.now()}`,
+      },
+    });
+
+    // Cria saldo de créditos correspondente
+    await prisma.creditBalance.upsert({
+      where: { userId: testUser.id },
+      create: { userId: testUser.id, balance: 10 },
+      update: { balance: 10 },
+    });
+
     const eventId = `evt_refund_${Date.now()}`;
     const payload = {
       eventId,
-      paymentId: testPayment.id,
-      gatewayTxId: 'tx_refund',
+      paymentId: refundPayment.id,
+      gatewayTxId: refundPayment.gatewayTxId,
       status: 'REFUNDED',
     };
 
     const res1 = await POST(createMockRequest(payload));
     expect(res1.status).toBe(200);
 
-    // Saldo inicial era 100 - 100 = 0
+    // Saldo inicial era 10 - 10 = 0
     const balanceAfterRefund = await prisma.creditBalance.findUnique({
       where: { userId: testUser.id },
     });
@@ -200,6 +219,13 @@ describe('Payment Webhooks Adversarial and Security Tests (Fase 6.5)', () => {
   });
 
   it('should reject webhooks trying to spoof commercial amount and credits', async () => {
+    // Zera o saldo do usuário para garantir isolamento e asserção precisa
+    await prisma.creditBalance.upsert({
+      where: { userId: testUser.id },
+      create: { userId: testUser.id, balance: 0 },
+      update: { balance: 0 },
+    });
+
     // 1. Cria um pagamento legítimo de R$ 19,90 e 100 créditos no banco
     const spoofPayment = await prisma.payment.create({
       data: {
@@ -260,7 +286,7 @@ describe('Payment Webhooks Adversarial and Security Tests (Fase 6.5)', () => {
     };
 
     const res = await POST(createMockRequest(badPayload));
-    expect(res.status).toBe(500); // Erro interno e não atualiza status para PAID_HACKED
+    expect(res.status).toBe(400); // Bad Request e não atualiza status para PAID_HACKED
 
     const payment = await prisma.payment.findUnique({
       where: { id: badStatusPayment.id },
@@ -290,7 +316,7 @@ describe('Payment Webhooks Adversarial and Security Tests (Fase 6.5)', () => {
     };
 
     const res1 = await POST(createMockRequest(payload));
-    expect(res1.status).toBe(500);
+    expect(res1.status).toBe(400);
 
     // O webhook deve estar salvo na tabela como processed=false
     const webhook = await prisma.paymentWebhook.findUnique({
@@ -334,12 +360,13 @@ describe('Payment Webhooks Adversarial and Security Tests (Fase 6.5)', () => {
       status: 'PAID',
     };
 
-    // A rota deve prosseguir, mas a transação só atualizará o gatewayTxId se coincidir ou não adulterar a identidade
+    // O webhook deve retornar erro 400 Bad Request por mismatch
     const res = await POST(createMockRequest(payload));
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(400);
 
     const payment = await prisma.payment.findUnique({ where: { id: spoofTxPayment.id } });
-    expect(payment?.gatewayTxId).toBe(payload.gatewayTxId); // O identificador atualiza, mas a concessão é segura
+    expect(payment?.gatewayTxId).not.toBe(payload.gatewayTxId); 
+    expect(payment?.status).toBe(PaymentStatus.PENDING); // Permanece PENDING
   });
 
   it('should handle concurrent identical webhooks safely with only one transaction applying', async () => {
@@ -362,6 +389,9 @@ describe('Payment Webhooks Adversarial and Security Tests (Fase 6.5)', () => {
       status: 'PAID',
     };
 
+    const initialBalance = await prisma.creditBalance.findUnique({ where: { userId: testUser.id } });
+    const initialBalValue = initialBalance?.balance || 0;
+
     // Dispara dois webhooks idênticos concorrentes (Promise.all)
     const runWebhook = () => POST(createMockRequest(payload));
     
@@ -380,5 +410,15 @@ describe('Payment Webhooks Adversarial and Security Tests (Fase 6.5)', () => {
       where: { id: concurrentPayment.id },
     });
     expect(payment?.status).toBe(PaymentStatus.PAID);
+
+    // Verifica que o saldo aumentou exatamente uma vez (initialBalValue + 50)
+    const finalBalance = await prisma.creditBalance.findUnique({ where: { userId: testUser.id } });
+    expect(finalBalance?.balance).toBe(initialBalValue + 50);
+
+    // Verifica que existe apenas 1 transação de Ledger criada para este pagamento no histórico imutável
+    const txs = await prisma.creditTransaction.findMany({
+      where: { paymentId: concurrentPayment.id },
+    });
+    expect(txs.length).toBe(1);
   });
 });

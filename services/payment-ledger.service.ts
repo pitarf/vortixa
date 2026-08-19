@@ -21,6 +21,11 @@ export class PaymentLedgerService {
 
       const currentPayment = payment[0];
 
+      // Validação estrita de gatewayTxId para evitar alteração indevida da identidade da transação externa
+      if (currentPayment.gatewayTxId && currentPayment.gatewayTxId !== gatewayTxId) {
+        throw new Error("Mismatched gatewayTxId. Transação rejeitada por segurança.");
+      }
+
       // Bloqueio de regressão de estado: Se já estiver pago, ignora com sucesso (idempotência)
       if (currentPayment.status === PaymentStatus.PAID) {
         return;

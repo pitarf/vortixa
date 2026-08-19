@@ -84,8 +84,8 @@ export async function POST(req: Request) {
       // Regressões lógicas ou atualizações não finais. Retorna 200 para sinalizar recebimento, mas não executa alteração.
       return NextResponse.json({ message: "Status ignorado de forma idempotente." }, { status: 200 });
     } else {
-      // Se for um status fraudulento ou inválido, lançamos erro
-      throw new Error(`Status de pagamento inválido ou não suportado: ${status}`);
+      // Se for um status fraudulento ou inválido, retornamos 400 Bad Request
+      return NextResponse.json({ error: `Status de pagamento inválido ou não suportado: ${status}` }, { status: 400 });
     }
 
     // Marca o webhook como processado de forma definitiva APÓS o sucesso completo das etapas anteriores
@@ -97,7 +97,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Webhook processado com sucesso." }, { status: 200 });
   } catch (err: any) {
     console.error("Erro no processamento do webhook de pagamentos:", err);
-    // Erros genéricos de resposta para o cliente não exporem credenciais ou segredos
+    // Se for erro de validação de gatewayTxId mismatch, retorna 400
+    if (err.message && err.message.includes("Mismatched gatewayTxId")) {
+      return NextResponse.json({ error: err.message }, { status: 400 });
+    }
+    // Erros genéricos de infraestrutura interna retornam 500
     return NextResponse.json({ error: "Erro interno no servidor de pagamentos." }, { status: 500 });
   }
 }
