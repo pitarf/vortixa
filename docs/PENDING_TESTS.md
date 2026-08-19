@@ -36,5 +36,11 @@ Um item só pode sair da lista depois de:
 
 ## 5. Homologação Real de Strict-Transport-Security (HSTS) e HTTPS (Auditoria 14.5.1)
 - **Descoberta:** Os cabeçalhos de segurança (HSTS e CSP) foram testados em requisições HTTP reais localmente (`localhost:3000`) confirmando sua entrega pelo backend Next.js. Contudo, o HSTS requer efetividade comprovada em um ambiente com certificado SSL/TLS de produção (HTTPS real), domínio e, caso aplicável, submissão para a lista de preload dos navegadores.
-- **Ação Pendente:** Validar recebimento de `Strict-Transport-Security` em ambiente produtivo/staging com HTTPS ativo e certificar que a diretiva `includeSubDomains; preload` é honrada pelo browser e proxy reverso.
+- **Ação Pendente:** Validar recebimento de `Strict-Transport-Security` in ambiente produtivo/staging com HTTPS ativo e certificar que a diretiva `includeSubDomains; preload` é honrada pelo browser e proxy reverso.
 - **Status:** PENDENTE.
+
+## 6. Homologação de Rate Limiting na Infraestrutura (Auditoria 14.8)
+- **Descoberta:** O código do monorepo não possui rate limiters programáticos por IP/Sessão ativos por design arquitetural. O throttling e a blindagem contra brute force / abuse foram delegados para as regras do Nginx (VPS) e WAF (Cloudflare).
+- **Ação Pendente:** Homologar as configurações de `limit_req` no proxy reverso do ambiente produtivo, garantindo que cabeçalhos como `X-Forwarded-For` originados de fora do proxy confiável sejam descartados para evitar contorno de limites (IP Spoofing).
+- **Status:** PENDENTE.
+
