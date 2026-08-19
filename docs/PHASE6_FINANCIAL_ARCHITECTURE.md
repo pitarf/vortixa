@@ -63,3 +63,37 @@ As seguintes dependências externas e testes de sandbox serão documentados de f
 * Homologação de Webhooks seguros com assinatura HMAC do gateway de pagamento em ambiente de staging/produção.
 * Fluxo end-to-end de simulação de PIX e Cartão em ambiente sandbox do provedor.
 * Teste de concorrência com disparos simultâneos de webhooks para o mesmo `paymentId`.
+
+---
+
+## 5. Relatório de Validação de Banco Limpo e Reprodutibilidade (Fase 6.2)
+
+### Metodologia de Teste e Execução
+* **Banco Temporário Utilizado**: `vorixa_migration_test_62` (criado do zero).
+* **Comando de Deploy Executado**: `npx prisma migrate deploy`
+* **Número de Migrations Aplicadas**: 5 migrations, cobrindo todo o histórico do projeto desde o schema inicial até a modelagem de Ledger/Centavos.
+
+### Resultado do Deploy
+```
+5 migrations found in prisma/migrations
+Applying migration `20260818020859_init`
+Applying migration `20260818024653_nextauth_setup`
+Applying migration `20260818033142_add_credit_packages`
+Applying migration `20260818042250_aijob_financial_snapshots`
+Applying migration `20260819000000_add_order_and_cents`
+All migrations have been successfully applied.
+```
+
+### Constraints e Estrutura Verificadas
+No banco temporário limpo, confirmamos a correta criação das tabelas e chaves de integridade:
+* Tabela `Order` e `Payment` vinculadas com chaves estrangeiras (`FK Payment -> Order` e `FK Order -> User`).
+* Chave de idempotência única `Payment.idempotencyKey` indexada de forma única.
+* Chave única `PaymentWebhook.gatewayEventId` contra webhooks duplicados.
+* Campo de unicidade `Payment.gatewayTxId` para transações de gateway externas.
+
+### Testes Reais Executados no Banco Temporário
+Os testes automatizados foram apontados para o banco temporário `vorixa_migration_test_62` e passaram com **100% de sucesso (5/5 testes)**. Após a validação, o banco temporário foi destruído de forma segura (`DROP DATABASE`).
+
+### Preservação do Ambiente de Desenvolvimento
+Confirmamos que o banco de dados principal de desenvolvimento (`vorixa_db`) foi totalmente preservado e não sofreu resets ou alterações destrutivas durante este procedimento de validação.
+
