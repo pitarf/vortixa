@@ -60,6 +60,17 @@ Um item só pode sair da lista depois de:
 - **Ação Pendente:** Validar a integridade contra mass assignment no controller/schema HTTP quando o endpoint definitivo de checkout for codificado em fases futuras.
 - **Status:** PENDENTE.
 
+## 10. Homologação de Cancelamento Automático de Pedido Expirado (Fase 6.6)
+- **Descoberta:** O status de cancelamento de ordens/pagamentos pendentes expirados não possui cron de varredura ativo localmente nesta etapa de infraestrutura financeira.
+- **Ação Pendente:** Desenvolver e homologar rotina de expiração automática de ordens/pagamentos antigos em banco de dados.
+- **Status:** PENDENTE.
+
+## 11. Homologação de Eventos Nativos de Chargeback no Webhook (Fase 6.6)
+- **Descoberta:** O mock do gateway (VorexPay) não envia webhooks nativos de disputas de Chargeback por indisponibilidade de sandbox deste recurso.
+- **Ação Pendente:** Tratar e testar o evento de Chargeback no webhook de pagamentos quando as chaves reais do provedor definitivo e sua documentação oficial de webhook de disputa estiverem disponíveis.
+- **Status:** PENDENTE.
+
+
 
 
 

@@ -148,6 +148,9 @@ export class PaymentLedgerService {
       });
 
       // Grava movimentação de estorno no Ledger (Histórico Imutável)
+      // Como o relacionamento payment -> creditTx possui constraint de unicidade no schema (1-para-1),
+      // a transação de estorno (ADMIN_ADJUSTMENT) referencia o pagamento textualmente no campo description
+      // para evitar colisão com a transação original de compra (PURCHASE).
       await tx.creditTransaction.create({
         data: {
           userId: currentPayment.userId,

@@ -74,14 +74,19 @@ describe('Estorno, Cancelamento e Reconciliação (Fase 6.6)', () => {
     const balance = await prisma.creditBalance.findUnique({ where: { userId: testUser.id } });
     expect(balance?.balance).toBe(0);
 
-    // Deve possuir exatamente 1 transação de Ledger correspondente ao ajuste negativo de estorno
+    // Deve possuir exatamente 1 transação de Ledger correspondente ao estorno mapeando o ID do pagamento na descrição
     const ledgerTx = await prisma.creditTransaction.findMany({
-      where: { userId: testUser.id, type: 'ADMIN_ADJUSTMENT', amount: -20 },
+      where: {
+        userId: testUser.id,
+        type: 'ADMIN_ADJUSTMENT',
+        amount: -20,
+        description: { contains: payment.id }
+      },
     });
     expect(ledgerTx.length).toBe(1);
   });
 
-  it('should allow refund even if credit balance drops below zero (user already consumed credits)', async () => {
+  it('should allow refund even if credit balance drops below zero (user already consumed credits) and create one ledger entry', async () => {
     const payment = await prisma.payment.create({
       data: {
         userId: testUser.id,
@@ -99,19 +104,73 @@ describe('Estorno, Cancelamento e Reconciliação (Fase 6.6)', () => {
     // Saldo deve ficar negativo (-15) mantendo a verdade e a integridade financeira do ledger
     const balance = await prisma.creditBalance.findUnique({ where: { userId: testUser.id } });
     expect(balance?.balance).toBe(-15);
+
+    // Verifica se a transação do ledger vinculada ao pagamento de estorno existe na descrição
+    const refundTxs = await prisma.creditTransaction.findMany({
+      where: {
+        userId: testUser.id,
+        type: 'ADMIN_ADJUSTMENT',
+        description: { contains: payment.id }
+      },
+    });
+    expect(refundTxs.length).toBe(1);
+    expect(refundTxs[0].amount).toBe(-15);
   });
 
-  it('should reconcile and detect discrepancies accurately', async () => {
-    // 1. Limpa discrepâncias anteriores antes de criar cenário
-    // Cria pagamento sem pedido (Payment without Order)
-    const p1 = await prisma.payment.create({
+  it('should reconcile and detect discrepancies accurately across all mapped scenarios', async () => {
+    // Cenário 1: PAYMENT_WITHOUT_ORDER (Pagamento sem pedido)
+    const pWithoutOrder = await prisma.payment.create({
       data: {
         userId: testUser.id,
         amountCents: 1000,
         creditsGranted: 10,
         status: PaymentStatus.PENDING,
         gateway: 'vorexpay',
-        gatewayTxId: `tx_discrep1_${Date.now()}`,
+        gatewayTxId: `tx_discrep_p_${Date.now()}`,
+      },
+    });
+
+    // Cenário 2: ORDER_WITHOUT_PAYMENT (Pedido sem nenhum pagamento associado)
+    const orderWithoutPay = await prisma.order.create({
+      data: {
+        userId: testUser.id,
+        packageId: 'pkg-100',
+        amountCents: 3990,
+        creditsGranted: 200,
+        status: PaymentStatus.PENDING,
+      },
+    });
+
+    // Cenário 3: VALUE_MISMATCH (Divergência de valores comerciais entre pedido e pagamento)
+    const mismatchOrder = await prisma.order.create({
+      data: {
+        userId: testUser.id,
+        packageId: 'pkg-50',
+        amountCents: 2000,
+        creditsGranted: 50,
+        status: PaymentStatus.PENDING,
+      },
+    });
+
+    const mismatchPayment = await prisma.payment.create({
+      data: {
+        userId: testUser.id,
+        orderId: mismatchOrder.id,
+        amountCents: 1500, // mismatch de valor (2000 vs 1500)
+        creditsGranted: 50,
+        status: PaymentStatus.PENDING,
+        gateway: 'vorexpay',
+        gatewayTxId: `tx_mismatch_val_${Date.now()}`,
+      },
+    });
+
+    // Cenário 4: CREDITS_WITHOUT_PAYMENT (Crédito de compra PURCHASE lançado sem paymentId ou com paymentId inválido)
+    const orphanCreditTx = await prisma.creditTransaction.create({
+      data: {
+        userId: testUser.id,
+        amount: 100,
+        type: 'PURCHASE',
+        description: 'Crédito órfão fraudulento',
       },
     });
 
@@ -119,11 +178,23 @@ describe('Estorno, Cancelamento e Reconciliação (Fase 6.6)', () => {
     const result = await ReconciliationService.runReconciliation();
     expect(result.isConsistent).toBe(false);
 
-    const paymentWithoutOrder = result.discrepancies.find(d => d.type === 'PAYMENT_WITHOUT_ORDER' && d.refId === p1.id);
-    expect(paymentWithoutOrder).toBeDefined();
+    // Asserções
+    const type1 = result.discrepancies.find(d => d.type === 'PAYMENT_WITHOUT_ORDER' && d.refId === pWithoutOrder.id);
+    const type2 = result.discrepancies.find(d => d.type === 'ORDER_WITHOUT_PAYMENT' && d.refId === orderWithoutPay.id);
+    const type3 = result.discrepancies.find(d => d.type === 'VALUE_MISMATCH' && d.refId === mismatchPayment.id);
+    const type4 = result.discrepancies.find(d => d.type === 'CREDITS_WITHOUT_PAYMENT' && d.refId === orphanCreditTx.id);
 
-    // Limpeza
-    await prisma.payment.delete({ where: { id: p1.id } }).catch(() => {});
+    expect(type1).toBeDefined();
+    expect(type2).toBeDefined();
+    expect(type3).toBeDefined();
+    expect(type4).toBeDefined();
+
+    // Limpeza segura dos registros de teste
+    await prisma.payment.delete({ where: { id: pWithoutOrder.id } }).catch(() => {});
+    await prisma.payment.delete({ where: { id: mismatchPayment.id } }).catch(() => {});
+    await prisma.order.delete({ where: { id: mismatchOrder.id } }).catch(() => {});
+    await prisma.order.delete({ where: { id: orderWithoutPay.id } }).catch(() => {});
+    await prisma.creditTransaction.delete({ where: { id: orphanCreditTx.id } }).catch(() => {});
   });
 
   it('should block manual credit adjustments if caller is not an administrator', async () => {
