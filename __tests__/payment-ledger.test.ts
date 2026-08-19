@@ -181,7 +181,9 @@ describe('Payment Ledger and Concurrency Security Tests (Fase 6.2)', () => {
     expect(paymentState?.status).toBe(PaymentStatus.REFUNDED);
 
     // Tenta estornar novamente (Idempotência de estorno)
-    await PaymentLedgerService.refundPayment(payment.id);
+    await expect(
+      PaymentLedgerService.refundPayment(payment.id)
+    ).rejects.toThrow("Este pagamento já foi estornado.");
 
     // Saldo deve permanecer 100 (não pode debitar novamente)
     const balanceAfterDoubleRefund = await prisma.creditBalance.findUnique({

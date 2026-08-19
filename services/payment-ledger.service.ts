@@ -110,7 +110,7 @@ export class PaymentLedgerService {
 
       // Se já estiver estornado ou não estiver pago, bloqueia regressão/ação inválida
       if (currentPayment.status === PaymentStatus.REFUNDED) {
-        return;
+        throw new Error("Este pagamento já foi estornado.");
       }
       if (currentPayment.status !== PaymentStatus.PAID) {
         throw new Error("Somente pagamentos pagos podem ser estornados.");
