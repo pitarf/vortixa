@@ -27,8 +27,8 @@ Este relatório formaliza a análise de explorabilidade, impacto e caminhos de m
 ## 2. Relação Técnica com o Prisma ORM
 
 * **Versão do Prisma Atual**: `7.9.1`
-* **Impacto de Correção Automática**: O `npm audit` sugere migrar para o Prisma `@6.12.0` (ou versões superiores que usem `@prisma/config` corrigidos). Como a base de código do VORIXA utiliza hooks, Prisma Adapter para NextAuth (`@auth/prisma-adapter@2.11.3`) e transações estruturadas (`prisma.$transaction`), fazer um upgrade maior sem exaustivos testes de regressão poderia gerar instabilidade nas consultas e quebras na inicialização de schemas.
-* **Explorabilidade Real no VORIXA**: Para que um ataque de DoS por stack exhaustion ocorresse, o atacante precisaria de um canal para enviar grafos recursivos para a API da aplicação, e o VORIXA precisaria repassar esses grafos para a função `deepMerge` do pacote. Como o pacote é usado apenas internamente pelo Prisma para mergear arquivos locais de configuração e o VORIXA não expõe nenhuma funcionalidade relacionada a esses arquivos, o risco de exploração é **nulo**.
+* **Explorabilidade Real no VORIXA**: Para que um ataque de DoS por stack exhaustion ocorresse, o atacante precisaria de um canal para enviar grafos recursivos para a API da aplicação, e o VORIXA precisaria repassar esses grafos para a função `deepMerge` do pacote. Como o pacote é usado apenas internamente pelo Prisma para mergear arquivos locais de configuração e o VORIXA não expõe nenhuma funcionalidade relacionada a esses arquivos, a exploração não foi demonstrada no fluxo atual da aplicação. Isso não significa que a vulnerabilidade deixou de existir no pacote em si, mas sim que o caminho para sua exploração no VORIXA não é alcançável nos fluxos analisados.
+
 
 ---
 

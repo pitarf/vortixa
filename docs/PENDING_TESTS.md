@@ -44,3 +44,10 @@ Um item só pode sair da lista depois de:
 - **Ação Pendente:** Homologar as configurações de `limit_req` no proxy reverso do ambiente produtivo, garantindo que cabeçalhos como `X-Forwarded-For` originados de fora do proxy confiável sejam descartados para evitar contorno de limites (IP Spoofing).
 - **Status:** PENDENTE.
 
+## 7. Dependência Vulnerável deepmerge-ts (Auditoria 14.9.1)
+- **Descoberta:** O pacote transitivo `deepmerge-ts@7.1.5` (trazido por `prisma@7.9.1 -> @prisma/config@7.9.1`) é vulnerável a exaustão de pilha (Stack Exhaustion / DoS) - Advisory GHSA-ggr8-5vv4-36mx com severidade ALTA. A versão corrigida identificada é `deepmerge-ts@8.0.0`. O upgrade automático via npm não foi realizado porque exige a atualização do Prisma ORM, que é um breaking change e não foi autorizada.
+- **Ação Pendente:** Avaliar a atualização segura do Prisma ORM e das dependências transitivas.
+- **Condição de Encerramento:** Validação de migração com testes de regressão executados com sucesso e build gerada corretamente.
+- **Status:** PENDENTE.
+
+
