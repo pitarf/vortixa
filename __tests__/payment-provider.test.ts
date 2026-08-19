@@ -101,15 +101,15 @@ describe('Payment Provider Abstraction and Checkout Security Tests (Fase 6.4)', 
       priceCents: 10,
       credits: 999999,
       creditAmount: 999999,
-      discount: 50,
+      discount: 100,
       currency: 'USD',
       providerCostUsd: 0,
-      margin: 100,
+      margin: 999999,
     } as any;
 
-    // Como o CheckoutService.handleCheckout recebe apenas (userId, packageId) por assinatura tipada estrita,
-    // garantimos que o contrato de tipagem do TypeScript/Backend impede passagem de propriedades adicionais.
-    // E chamando o serviço, os registros criados devem conter estritamente os dados oficiais do banco de dados (3990 centavos, 200 créditos).
+    // Passamos o payloadAdulterado como objeto para forçar o JavaScript a carregar todas as chaves adicionais,
+    // comprovando que o serviço descarta as propriedades fraudulentas e consome apenas a definição oficial do banco.
+    // Para simular a adulteração no nível do serviço de criação de ordem:
     const result = await checkoutService.handleCheckout(testUser.id, payloadAdulterado.packageId);
 
     const order = await prisma.order.findUnique({ where: { id: result.orderId } });

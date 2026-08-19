@@ -55,5 +55,11 @@ Um item só pode sair da lista depois de:
 - **Ação Pendente:** Homologar transações PIX/Cartão em sandbox e testar a assinatura criptográfica dos webhooks e idempotência contra dupla concessão de saldo no servidor live de staging.
 - **Status:** PENDENTE.
 
+## 9. Homologação de Mass Assignment no Endpoint HTTP de Checkout (Fase 6.4)
+- **Descoberta:** A proteção contra injeção e adulteração de parâmetros de preço, desconto e créditos foi validada a nível de serviço e assinatura tipada. Contudo, o endpoint HTTP definitivo que expõe o checkout ainda não foi implementado nesta etapa.
+- **Ação Pendente:** Validar a integridade contra mass assignment no controller/schema HTTP quando o endpoint definitivo de checkout for codificado em fases futuras.
+- **Status:** PENDENTE.
+
+
 
 
