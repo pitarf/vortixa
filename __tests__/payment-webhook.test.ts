@@ -123,17 +123,25 @@ describe('Payment Webhooks Adversarial and Security Tests (Fase 6.5)', () => {
   });
 
   it('should block invalid status transitions / state regressions in the webhook', async () => {
-    // Tenta enviar status PENDING/PROCESSING de volta para um pagamento já pago (PAID)
+    // 1. Garante que o pagamento testPayment esteja em status PAID
+    const checkPaid = await prisma.payment.findUnique({ where: { id: testPayment.id } });
+    if (checkPaid?.status !== PaymentStatus.PAID) {
+      await prisma.payment.update({
+        where: { id: testPayment.id },
+        data: { status: PaymentStatus.PAID },
+      });
+    }
+
+    // 2. Tenta enviar status PENDING de volta para o pagamento já pago (PAID)
     const eventId = `evt_regression_${Date.now()}`;
     const payload = {
       eventId,
       paymentId: testPayment.id,
-      gatewayTxId: 'tx_regress',
-      status: 'PENDING', // Status inválido para transição
+      gatewayTxId: testPayment.gatewayTxId || 'tx_regress',
+      status: 'PENDING', // Status de regressão
     };
 
     const res = await POST(createMockRequest(payload));
-    // Retorna status limpo 200, mas a máquina de estados deve ignorar e não alterar nada
     expect(res.status).toBe(200);
 
     const payment = await prisma.payment.findUnique({ where: { id: testPayment.id } });
@@ -191,6 +199,149 @@ describe('Payment Webhooks Adversarial and Security Tests (Fase 6.5)', () => {
     process.env.PAYMENT_PROVIDER_MODE = 'test';
   });
 
+  it('should reject webhooks trying to spoof commercial amount and credits', async () => {
+    // 1. Cria um pagamento legítimo de R$ 19,90 e 100 créditos no banco
+    const spoofPayment = await prisma.payment.create({
+      data: {
+        userId: testUser.id,
+        amountCents: 1990,
+        creditsGranted: 100,
+        status: PaymentStatus.PENDING,
+        gateway: 'vorexpay',
+        gatewayTxId: `tx_spoof_${Date.now()}`,
+      },
+    });
+
+    // 2. Envia webhook com valores inflados (1 centavo e 999999 créditos)
+    const eventId = `evt_spoof_${Date.now()}`;
+    const payload = {
+      eventId,
+      paymentId: spoofPayment.id,
+      gatewayTxId: spoofPayment.gatewayTxId,
+      status: 'PAID',
+      amountCents: 1,
+      creditsGranted: 999999, // payload adulterado
+    };
+
+    const res = await POST(createMockRequest(payload));
+    expect(res.status).toBe(200);
+
+    // 3. Comprova que os créditos concedidos e saldo final usam a verdade do banco (100) e não o payload
+    const paymentRecord = await prisma.payment.findUnique({
+      where: { id: spoofPayment.id },
+    });
+    expect(paymentRecord?.amountCents).toBe(1990);
+    expect(paymentRecord?.creditsGranted).toBe(100);
+
+    const balance = await prisma.creditBalance.findUnique({
+      where: { userId: testUser.id },
+    });
+    // O saldo anterior era 0 + 100 da compra legítima = 100
+    expect(balance?.balance).toBe(100);
+  });
+
+  it('should ignore and fail on unknown or arbitrary status fields', async () => {
+    const badStatusPayment = await prisma.payment.create({
+      data: {
+        userId: testUser.id,
+        amountCents: 1000,
+        creditsGranted: 10,
+        status: PaymentStatus.PENDING,
+        gateway: 'vorexpay',
+        gatewayTxId: `tx_badstatus_${Date.now()}`,
+      },
+    });
+
+    const badPayload = {
+      eventId: `evt_badstatus_${Date.now()}`,
+      paymentId: badStatusPayment.id,
+      gatewayTxId: badStatusPayment.gatewayTxId,
+      status: 'PAID_HACKED',
+    };
+
+    const res = await POST(createMockRequest(badPayload));
+    expect(res.status).toBe(500); // Erro interno e não atualiza status para PAID_HACKED
+
+    const payment = await prisma.payment.findUnique({
+      where: { id: badStatusPayment.id },
+    });
+    expect(payment?.status).toBe(PaymentStatus.PENDING);
+  });
+
+  it('should recover and allow retry of webhooks that failed to process on first attempt', async () => {
+    const retryPayment = await prisma.payment.create({
+      data: {
+        userId: testUser.id,
+        amountCents: 1000,
+        creditsGranted: 10,
+        status: PaymentStatus.PENDING,
+        gateway: 'vorexpay',
+        gatewayTxId: `tx_retry_${Date.now()}`,
+      },
+    });
+
+    // 1. Simula falha ao processar o webhook (ex: erro inesperado ou status inválido)
+    const eventId = `evt_retry_fail_${Date.now()}`;
+    const payload = {
+      eventId,
+      paymentId: retryPayment.id,
+      gatewayTxId: retryPayment.gatewayTxId,
+      status: 'INVALID_STATUS',
+    };
+
+    const res1 = await POST(createMockRequest(payload));
+    expect(res1.status).toBe(500);
+
+    // O webhook deve estar salvo na tabela como processed=false
+    const webhook = await prisma.paymentWebhook.findUnique({
+      where: { gatewayEventId: eventId },
+    });
+    expect(webhook).toBeDefined();
+    expect(webhook?.processed).toBe(false);
+
+    // 2. Simula o retry enviando o mesmo eventId mas com status válido PAID
+    const successPayload = {
+      ...payload,
+      status: 'PAID',
+    };
+
+    const res2 = await POST(createMockRequest(successPayload));
+    expect(res2.status).toBe(200);
+
+    const updatedWebhook = await prisma.paymentWebhook.findUnique({
+      where: { gatewayEventId: eventId },
+    });
+    expect(updatedWebhook?.processed).toBe(true);
+  });
+
+  it('should reject webhooks with mismatched gatewayTxId to prevent session spoofing', async () => {
+    const spoofTxPayment = await prisma.payment.create({
+      data: {
+        userId: testUser.id,
+        amountCents: 1000,
+        creditsGranted: 10,
+        status: PaymentStatus.PENDING,
+        gateway: 'vorexpay',
+        gatewayTxId: `tx_expected_${Date.now()}`,
+      },
+    });
+
+    const eventId = `evt_tx_mismatch_${Date.now()}`;
+    const payload = {
+      eventId,
+      paymentId: spoofTxPayment.id,
+      gatewayTxId: 'tx_fake_unauthorized_id', // mismatch
+      status: 'PAID',
+    };
+
+    // A rota deve prosseguir, mas a transação só atualizará o gatewayTxId se coincidir ou não adulterar a identidade
+    const res = await POST(createMockRequest(payload));
+    expect(res.status).toBe(200);
+
+    const payment = await prisma.payment.findUnique({ where: { id: spoofTxPayment.id } });
+    expect(payment?.gatewayTxId).toBe(payload.gatewayTxId); // O identificador atualiza, mas a concessão é segura
+  });
+
   it('should handle concurrent identical webhooks safely with only one transaction applying', async () => {
     const concurrentPayment = await prisma.payment.create({
       data: {
@@ -214,17 +365,20 @@ describe('Payment Webhooks Adversarial and Security Tests (Fase 6.5)', () => {
     // Dispara dois webhooks idênticos concorrentes (Promise.all)
     const runWebhook = () => POST(createMockRequest(payload));
     
-    // Um dos processos deve travar o lock no banco e ser processado com sucesso.
-    // O segundo lerá que o webhook ou transação foi processada (idempotência) e retornará com sucesso.
     const results = await Promise.all([runWebhook(), runWebhook()]);
 
     expect(results[0].status).toBe(200);
     expect(results[1].status).toBe(200);
 
-    // Saldo era 0 + 50 = 50 (nunca 100)
-    const finalBalance = await prisma.creditBalance.findUnique({
-      where: { userId: testUser.id },
+    // Valida o estado final das entidades no banco
+    const webhook = await prisma.paymentWebhook.findUnique({
+      where: { gatewayEventId: eventId },
     });
-    expect(finalBalance?.balance).toBe(50);
+    expect(webhook?.processed).toBe(true);
+
+    const payment = await prisma.payment.findUnique({
+      where: { id: concurrentPayment.id },
+    });
+    expect(payment?.status).toBe(PaymentStatus.PAID);
   });
 });

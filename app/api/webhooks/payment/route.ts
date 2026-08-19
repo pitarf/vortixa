@@ -80,11 +80,15 @@ export async function POST(req: Request) {
     } else if (status === "REFUNDED") {
       // Estorno seguro e dedução atômica do Ledger
       await PaymentLedgerService.refundPayment(paymentId);
+    } else if (status === "PENDING" || status === "FAILED") {
+      // Regressões lógicas ou atualizações não finais. Retorna 200 para sinalizar recebimento, mas não executa alteração.
+      return NextResponse.json({ message: "Status ignorado de forma idempotente." }, { status: 200 });
     } else {
-      return NextResponse.json({ message: "Evento recebido sem alteração de estado final." }, { status: 200 });
+      // Se for um status fraudulento ou inválido, lançamos erro
+      throw new Error(`Status de pagamento inválido ou não suportado: ${status}`);
     }
 
-    // Marca o webhook como processado de forma definitiva
+    // Marca o webhook como processado de forma definitiva APÓS o sucesso completo das etapas anteriores
     await prisma.paymentWebhook.update({
       where: { gatewayEventId: eventId },
       data: { processed: true },
