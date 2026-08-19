@@ -105,7 +105,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ message: "Status ignorado ou em processamento." }, { status: 200 });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error("Erro no endpoint POST /api/webhooks/fal:", err);
+    return NextResponse.json({ error: "Erro interno no processamento do webhook." }, { status: 500 });
   }
 }
 

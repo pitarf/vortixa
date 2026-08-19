@@ -44,6 +44,7 @@ export async function POST(req: Request) {
     const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
     return NextResponse.json({ url: `${baseUrl}${localUrl}`, localUrl });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error("Erro no endpoint POST /api/tools/upload:", err);
+    return NextResponse.json({ error: "Ocorreu um erro ao processar o upload do arquivo." }, { status: 500 });
   }
 }

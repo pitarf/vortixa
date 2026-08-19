@@ -39,6 +39,16 @@ export async function POST(req: Request) {
 
     return NextResponse.json(job);
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 400 });
+    console.error("Erro no endpoint POST /api/tools/generate:", err);
+    // Preservar erros de negócio limpos que devem ser mostrados ao usuário
+    const isBusinessError = err.message && (
+      err.message.includes("crédito") ||
+      err.message.includes("saldo") ||
+      err.message.includes("desativada") ||
+      err.message.includes("Não autorizado") ||
+      err.message.includes("excede")
+    );
+    const msg = isBusinessError ? err.message : "Ocorreu um erro de processamento da geração de IA.";
+    return NextResponse.json({ error: msg }, { status: 400 });
   }
 }

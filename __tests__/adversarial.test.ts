@@ -375,4 +375,25 @@ describe('Adversarial Security and Vulnerability Tests (Comprehensive)', () => {
     expect(res.headers.get("Access-Control-Allow-Origin")).toBeNull();
     expect(res.headers.get("Access-Control-Allow-Credentials")).toBeNull();
   });
+
+  // 15. Secrets Leak Prevention on API Errors
+  it('should not leak stack traces or system details on endpoint crashes', async () => {
+    (auth as any).mockResolvedValue({ user: { id: testUser.id } });
+
+    // Enviar JSON malformado para simular erro interno no catch do route handler
+    const req = new Request("http://localhost/api/tools/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: "invalid-json{",
+    });
+
+    const res = await handleGenerate(req);
+    expect(res.status).toBe(400);
+    const data = await res.json();
+    
+    // O erro de parsing de JSON do body deve ser ocultado ou retornar erro genérico seguro, 
+    // sem expor stack trace, arquivos internos ou segredos.
+    expect(data.error).toBe("Ocorreu um erro de processamento da geração de IA.");
+    expect(data.stack).toBeUndefined();
+  });
 });

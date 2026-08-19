@@ -83,4 +83,11 @@ describe('Auth Security and Hashing Tests', () => {
     const data = await res.json();
     expect(data.message).toContain("Se o e-mail estiver cadastrado, você receberá");
   });
+
+  it('should only use relative login/error pages to prevent Open Redirect vulnerabilities', () => {
+    // NextAuth páginas customizadas devem ser relativas
+    const pages = authConfig.pages as any;
+    expect(pages?.signIn?.startsWith('/')).toBe(true);
+    expect(pages?.error?.startsWith('/') || pages?.error === undefined).toBe(true);
+  });
 });

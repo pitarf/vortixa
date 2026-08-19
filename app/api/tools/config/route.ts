@@ -29,6 +29,7 @@ export async function GET() {
       tools,
     });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error("Erro no endpoint GET /api/tools/config:", err);
+    return NextResponse.json({ error: "Ocorreu um erro interno ao carregar as configurações." }, { status: 500 });
   }
 }
