@@ -294,11 +294,11 @@ model VerificationToken {
 }
 
 model CreditPackage {
-  id           String   @id
+  id           String   @id @default(uuid())
   name         String
   description  String?
   credits      Int
-  priceBRL     Float
+  priceCents   Int      // Utiliza centavos inteiros para evitar flutuação financeira
   bonusCredits Int      @default(0)
   status       Boolean  @default(true)
   displayOrder Int      @default(0)

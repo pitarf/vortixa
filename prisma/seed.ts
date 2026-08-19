@@ -104,9 +104,9 @@ async function main() {
 
   // 3. Pacotes de Créditos
   const packages = [
-    { id: 'pkg-100', name: 'Iniciante', description: 'Ideal para testes rápidos.', credits: 100, price: 19.90, bonus: 0, order: 1 },
-    { id: 'pkg-500', name: 'Profissional', description: 'Nosso pacote mais vendido.', credits: 500, price: 79.90, bonus: 50, order: 2 },
-    { id: 'pkg-1000', name: 'Criador', description: 'Para quem precisa de alta escala.', credits: 1000, price: 149.90, bonus: 150, order: 3 },
+    { id: 'pkg-100', name: 'Iniciante', description: 'Ideal para testes rápidos.', credits: 100, priceCents: 1990, bonus: 0, order: 1 },
+    { id: 'pkg-500', name: 'Profissional', description: 'Nosso pacote mais vendido.', credits: 500, priceCents: 7990, bonus: 50, order: 2 },
+    { id: 'pkg-1000', name: 'Criador', description: 'Para quem precisa de alta escala.', credits: 1000, priceCents: 14990, bonus: 150, order: 3 },
   ];
 
   for (const p of packages) {
@@ -117,7 +117,7 @@ async function main() {
         name: p.name,
         description: p.description,
         credits: p.credits,
-        priceBRL: p.price,
+        priceCents: p.priceCents,
         bonusCredits: p.bonus,
         status: true,
         displayOrder: p.order,
@@ -125,7 +125,7 @@ async function main() {
       update: {
         name: p.name,
         credits: p.credits,
-        priceBRL: p.price,
+        priceCents: p.priceCents,
         bonusCredits: p.bonus,
       },
     });
