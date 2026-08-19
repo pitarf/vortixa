@@ -63,6 +63,7 @@ model User {
   creditTransactions CreditTransaction[]
   jobs              AIJob[]
   payments          Payment[]
+  orders            Order[]
   files             File[]
   auditLogs         AuditLog[]
 
@@ -199,28 +200,45 @@ model File {
   jobOutput   AIJobOutput?
 }
 
+model Order {
+  id             String        @id @default(uuid())
+  userId         String
+  packageId      String
+  amountCents    Int           // Valor congelado no momento da compra (evita flutuações futuras de preço)
+  creditsGranted Int           // Créditos congelados no momento da compra
+  status         PaymentStatus @default(PENDING)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments       Payment[]
+}
+
 model Payment {
   id             String             @id @default(uuid())
   userId         String
-  amountBRL      Float
-  creditsGranted Int
+  orderId        String?
+  amountCents    Int                // Valor real pago em centavos (segurança financeira)
+  creditsGranted Int                // Créditos concedidos
   status         PaymentStatus      @default(PENDING)
   gateway        String             // "vorexpay", "stripe", etc.
-  gatewayTxId    String?            @unique // ID da transação no gateway
+  gatewayTxId    String             @unique // Identificador externo único com constraint no DB
+  idempotencyKey String?            @unique // Chave de idempotência no banco para evitar concorrência
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
   
   user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order          Order?             @relation(fields: [orderId], references: [id], onDelete: SetNull)
   creditTx       CreditTransaction?
 }
 
 model PaymentWebhook {
-  id          String   @id @default(uuid())
-  gateway     String
-  gatewayEventId String @unique // Usado para evitar reprocessamento de webhooks
-  payload     String   // JSON completo recebido
-  processed   Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  id             String   @id @default(uuid())
+  gateway        String
+  gatewayEventId String   @unique // Restrição de unicidade no banco contra reprocessamento
+  payload        String   // JSON completo recebido
+  processed      Boolean  @default(false)
+  createdAt      DateTime @default(now())
 }
 
 model SystemSetting {

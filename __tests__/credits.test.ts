@@ -108,10 +108,11 @@ describe('Credit System transactional service tests', () => {
       data: {
         id: paymentId,
         userId: testUser.id,
-        amountBRL: 49.90,
+        amountCents: 4990,
         creditsGranted: 50,
         status: 'PAID',
         gateway: 'stripe',
+        gatewayTxId: `legacy_tx_${paymentId}`,
       },
     });
 
