@@ -58,6 +58,14 @@
 - [x] Relatórios financeiros (Custo de IA x Créditos consumidos x Receita gerada)
 - [x] Idempotência administrativa com constraint única no banco PostgreSQL e isolamento no Ledger
 
+## [Concluído] Fase 7.1: Auditoria Corretiva Pós-Implementação
+- [x] Eliminação do P2002 genérico (restrito exclusivamente a CreditTransaction.idempotencyKey)
+- [x] Tratamento de reuso de idempotencyKey com parâmetros divergentes (HTTP 409 Conflict)
+- [x] Validação explícita de targetUserId existente (HTTP 404 sem criação de órfãos)
+- [x] Validação estrita de creditsAmount (rejeição de 0, floats, strings, NaN com HTTP 400)
+- [x] Ciclo de vida seguro da idempotencyKey no frontend com componente desacoplado e Sonner
+- [x] 14 testes adversariais automatizados homologados no PostgreSQL real e Mutation QA validado
+
 ## [Pendentes] Fase 8: Landing Page
 - [ ] Criação da página de vendas com tags de indexação e tracking de UTMs
 

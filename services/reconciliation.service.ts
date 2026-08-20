@@ -103,8 +103,16 @@ export class ReconciliationService {
   }
 
   /**
-   * Executa ajustes manuais administrativos auditáveis, gravando o motivo na tabela AuditLog
-   * e garantindo idempotência estrita via constraint única no banco de dados.
+   * Executa ajustes manuais administrativos auditáveis, gravando o motivo na tabela AuditLog,
+   * validando existência de usuário de destino, tipos de dados estritos e garantindo idempotência
+   * estrita contra reutilizações indevidas ou com parâmetros divergentes (HTTP 409 Conflict).
+   *
+   * @param adminUserId ID do administrador autenticado que está realizando o ajuste
+   * @param targetUserId ID do usuário destinatário que terá o saldo alterado
+   * @param creditsAmount Quantidade inteira de créditos a adicionar (positivo) ou deduzir (negativo), diferente de 0
+   * @param reason Motivo e justificativa do ajuste administrativo
+   * @param idempotencyKey Chave opcional de idempotência enviada pelo cliente
+   * @returns Objeto indicando se a operação já havia sido processada anteriormente
    */
   static async adjustCreditsManually(
     adminUserId: string,
@@ -112,31 +120,99 @@ export class ReconciliationService {
     creditsAmount: number,
     reason: string,
     idempotencyKey?: string
-  ): Promise<{ alreadyProcessed: boolean }> {
-    if (!adminUserId || !targetUserId || !creditsAmount || !reason) {
-      throw new Error("Parâmetros obrigatórios ausentes para o ajuste administrativo.");
+  ): Promise<{ alreadyProcessed: boolean; transactionId?: string }> {
+    // 1. Validação estrita de parâmetros obrigatórios e tipos
+    if (!adminUserId || typeof adminUserId !== "string" || adminUserId.trim() === "") {
+      const err: any = new Error("O ID do administrador (adminUserId) é obrigatório.");
+      err.statusCode = 400;
+      err.code = "INVALID_ADMIN_USER";
+      throw err;
     }
 
-    // Valida se quem está solicitando o ajuste é um administrador
+    if (!targetUserId || typeof targetUserId !== "string" || targetUserId.trim() === "") {
+      const err: any = new Error("O ID do usuário de destino (targetUserId) é obrigatório.");
+      err.statusCode = 400;
+      err.code = "INVALID_TARGET_USER";
+      throw err;
+    }
+
+    if (
+      creditsAmount === undefined ||
+      creditsAmount === null ||
+      typeof creditsAmount !== "number" ||
+      !Number.isInteger(creditsAmount) ||
+      creditsAmount === 0 ||
+      !Number.isFinite(creditsAmount) ||
+      Number.isNaN(creditsAmount)
+    ) {
+      const err: any = new Error("A quantidade de créditos deve ser um número inteiro diferente de zero.");
+      err.statusCode = 400;
+      err.code = "INVALID_CREDITS_AMOUNT";
+      throw err;
+    }
+
+    if (!reason || typeof reason !== "string" || reason.trim() === "") {
+      const err: any = new Error("O motivo do ajuste administrativo (reason) é obrigatório.");
+      err.statusCode = 400;
+      err.code = "INVALID_REASON";
+      throw err;
+    }
+
+    // 2. Valida se quem está solicitando o ajuste é de fato um administrador
     const admin = await prisma.user.findUnique({ where: { id: adminUserId } });
     if (!admin || admin.role !== "ADMIN") {
-      throw new Error("Apenas administradores podem efetuar ajustes manuais de saldo.");
+      const err: any = new Error("Apenas administradores podem efetuar ajustes manuais de saldo.");
+      err.statusCode = 403;
+      err.code = "FORBIDDEN";
+      throw err;
     }
 
-    // 1. Se uma chave de idempotência foi fornecida, verifica se a operação já foi concluída anteriormente
+    // 3. Validação explícita de existência do targetUserId antes de qualquer modificação de saldo
+    const targetUser = await prisma.user.findUnique({
+      where: { id: targetUserId },
+    });
+    if (!targetUser) {
+      const err: any = new Error("Usuário alvo não encontrado.");
+      err.statusCode = 404;
+      err.code = "USER_NOT_FOUND";
+      throw err;
+    }
+
+    // Helper interno para validar consistência dos parâmetros com transação idempotente existente
+    const validateIdempotentMatch = (existingTx: {
+      userId: string;
+      amount: number;
+      type: string;
+    }) => {
+      if (
+        existingTx.userId !== targetUserId ||
+        existingTx.amount !== creditsAmount ||
+        existingTx.type !== "ADMIN_ADJUSTMENT"
+      ) {
+        const conflictErr: any = new Error(
+          "Conflito: Chave de idempotência reutilizada com parâmetros divergentes."
+        );
+        conflictErr.statusCode = 409;
+        conflictErr.code = "IDEMPOTENCY_CONFLICT";
+        throw conflictErr;
+      }
+    };
+
+    // 4. Se uma chave de idempotência foi fornecida, verifica se a operação já foi concluída anteriormente
     if (idempotencyKey) {
       const existingTx = await prisma.creditTransaction.findUnique({
         where: { idempotencyKey },
       });
       if (existingTx) {
-        // Retorno idempotente e seguro: a operação já foi realizada e não gera novo crédito ou log
-        return { alreadyProcessed: true };
+        // Valida se os parâmetros conferem exatamente com a transação original
+        validateIdempotentMatch(existingTx);
+        return { alreadyProcessed: true, transactionId: existingTx.id };
       }
     }
 
     try {
       return await prisma.$transaction(async (tx) => {
-        // 2. Lock pessimista do saldo de créditos
+        // 5. Lock pessimista do saldo de créditos para evitar race conditions
         await tx.$executeRaw`
           SELECT 1 FROM "CreditBalance" 
           WHERE "userId" = ${targetUserId} 
@@ -149,7 +225,8 @@ export class ReconciliationService {
             where: { idempotencyKey },
           });
           if (inTxExisting) {
-            return { alreadyProcessed: true };
+            validateIdempotentMatch(inTxExisting);
+            return { alreadyProcessed: true, transactionId: inTxExisting.id };
           }
         }
 
@@ -160,15 +237,15 @@ export class ReconciliationService {
         const currentBalance = balanceRecord?.balance || 0;
         const newBalance = currentBalance + creditsAmount;
 
-        // 3. Atualiza saldo de forma atômica
+        // 6. Atualiza saldo de forma atômica
         await tx.creditBalance.upsert({
           where: { userId: targetUserId },
           create: { userId: targetUserId, balance: newBalance },
           update: { balance: newBalance },
         });
 
-        // 4. Grava transação do Ledger vinculando a chave de idempotência com constraint única
-        await tx.creditTransaction.create({
+        // 7. Grava transação do Ledger vinculando a chave de idempotência com constraint única
+        const createdTx = await tx.creditTransaction.create({
           data: {
             userId: targetUserId,
             amount: creditsAmount,
@@ -178,7 +255,7 @@ export class ReconciliationService {
           },
         });
 
-        // 5. Registra a ação de auditoria administrativa com autoria garantida pelo servidor
+        // 8. Registra a ação de auditoria administrativa com autoria garantida pelo servidor
         await tx.auditLog.create({
           data: {
             userId: adminUserId,
@@ -187,13 +264,34 @@ export class ReconciliationService {
           },
         });
 
-        return { alreadyProcessed: false };
+        return { alreadyProcessed: false, transactionId: createdTx.id };
       });
     } catch (err: any) {
-      // Se duas requisições simultâneas disputarem a mesma idempotencyKey ao mesmo tempo e violarem a constraint P2002
-      if (err.code === "P2002" && idempotencyKey) {
-        return { alreadyProcessed: true };
+      if (err.statusCode) {
+        throw err;
       }
+
+      // 9. Tratamento de erro de unicidade (P2002) específico para idempotencyKey
+      if (err.code === "P2002" && idempotencyKey) {
+        const target = Array.isArray(err.meta?.target)
+          ? err.meta.target.join(",")
+          : (err.meta?.target || "");
+        if (
+          typeof target === "string" &&
+          (target.includes("idempotencyKey") || target.includes("CreditTransaction_idempotencyKey_key"))
+        ) {
+          const racedTx = await prisma.creditTransaction.findUnique({
+            where: { idempotencyKey },
+          });
+          if (racedTx) {
+            validateIdempotentMatch(racedTx);
+            return { alreadyProcessed: true, transactionId: racedTx.id };
+          }
+          return { alreadyProcessed: true };
+        }
+      }
+
+      // Outros erros P2002 ou erros gerais sobem como erro real
       throw err;
     }
   }

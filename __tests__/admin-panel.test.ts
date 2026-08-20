@@ -5,6 +5,7 @@ import { GET as getStats } from '@/app/api/admin/stats/route';
 import { GET as getReconcile } from '@/app/api/admin/reconcile/route';
 import { POST as adjustCredits } from '@/app/api/admin/adjust-credits/route';
 import { GET as getBranding, POST as postBranding } from '@/app/api/admin/branding/route';
+import { ReconciliationService } from '@/services/reconciliation.service';
 import { Role } from '@prisma/client';
 import { auth } from '@/auth';
 
@@ -268,6 +269,193 @@ describe('Admin Panel Financial Controller RBAC, Idempotency and Branding Securi
     });
     expect(auditLogs.length).toBe(1);
     expect(auditLogs[0].userId).toBe(adminUser.id);
+  });
+
+  // Cenário 3: Reutilização de Chave com targetUserId Diferente -> 409 Conflict
+  it('Cenário 3: should reject idempotencyKey reuse with divergent targetUserId with HTTP 409 Conflict', async () => {
+    (auth as any).mockResolvedValue({
+      user: { email: adminUser.email },
+    });
+
+    const secondUser = await prisma.user.create({
+      data: {
+        email: `ctrl_user2_${Date.now()}@test.com`,
+        name: 'Second Controller Client',
+        role: Role.USER,
+      },
+    });
+
+    const conflictKey = `adm-conflict-user-${Date.now()}`;
+    const payloadUserA = {
+      targetUserId: regularUser.id,
+      creditsAmount: 50,
+      reason: 'Ajuste User A',
+      idempotencyKey: conflictKey,
+    };
+
+    // Executa para User A com sucesso
+    const resA = await adjustCredits(createMockRequest(payloadUserA));
+    expect(resA.status).toBe(200);
+
+    // Tenta reutilizar a mesma chave para User B
+    const payloadUserB = {
+      targetUserId: secondUser.id,
+      creditsAmount: 50,
+      reason: 'Ajuste User B com Mesma Chave',
+      idempotencyKey: conflictKey,
+    };
+
+    const initialBalB = await prisma.creditBalance.findUnique({ where: { userId: secondUser.id } });
+    const startBalB = initialBalB?.balance || 0;
+
+    const resB = await adjustCredits(createMockRequest(payloadUserB));
+    expect(resB.status).toBe(409);
+    const jsonB = await resB.json();
+    expect(jsonB.error).toContain('Conflito: Chave de idempotência reutilizada com parâmetros divergentes');
+
+    // Saldo de User B deve permanecer inalterado
+    const balAfterB = await prisma.creditBalance.findUnique({ where: { userId: secondUser.id } });
+    expect(balAfterB?.balance || 0).toBe(startBalB);
+
+    await prisma.user.delete({ where: { id: secondUser.id } }).catch(() => {});
+  });
+
+  // Cenário 4: Reutilização de Chave com creditsAmount Diferente -> 409 Conflict
+  it('Cenário 4: should reject idempotencyKey reuse with divergent creditsAmount with HTTP 409 Conflict', async () => {
+    (auth as any).mockResolvedValue({
+      user: { email: adminUser.email },
+    });
+
+    const conflictAmountKey = `adm-conflict-amt-${Date.now()}`;
+    const payloadAmtA = {
+      targetUserId: regularUser.id,
+      creditsAmount: 30,
+      reason: 'Ajuste 30 créditos',
+      idempotencyKey: conflictAmountKey,
+    };
+
+    const resA = await adjustCredits(createMockRequest(payloadAmtA));
+    expect(resA.status).toBe(200);
+
+    const balAfterA = await prisma.creditBalance.findUnique({ where: { userId: regularUser.id } });
+
+    // Tenta reutilizar a mesma chave com creditsAmount = 300
+    const payloadAmtB = {
+      targetUserId: regularUser.id,
+      creditsAmount: 300,
+      reason: 'Tentativa divergente 300 créditos',
+      idempotencyKey: conflictAmountKey,
+    };
+
+    const resB = await adjustCredits(createMockRequest(payloadAmtB));
+    expect(resB.status).toBe(409);
+    const jsonB = await resB.json();
+    expect(jsonB.error).toContain('Conflito: Chave de idempotência reutilizada com parâmetros divergentes');
+
+    // Saldo deve permanecer inalterado
+    const balAfterB = await prisma.creditBalance.findUnique({ where: { userId: regularUser.id } });
+    expect(balAfterB?.balance).toBe(balAfterA?.balance);
+  });
+
+  // Cenário 5: targetUserId Inexistente -> 404 sem Órfãos
+  it('Cenário 5: should reject non-existent targetUserId with HTTP 404 and create zero orphan records', async () => {
+    (auth as any).mockResolvedValue({
+      user: { email: adminUser.email },
+    });
+
+    const fakeUserId = `non-existent-user-${Date.now()}`;
+    const key = `adm-fake-usr-${Date.now()}`;
+
+    const payload = {
+      targetUserId: fakeUserId,
+      creditsAmount: 100,
+      reason: 'Ajuste Usuário Fantasma',
+      idempotencyKey: key,
+    };
+
+    const res = await adjustCredits(createMockRequest(payload));
+    expect(res.status).toBe(404);
+    const json = await res.json();
+    expect(json.error).toBe('Usuário alvo não encontrado.');
+
+    // Garante que não criou CreditBalance órfão
+    const orphanBal = await prisma.creditBalance.findUnique({ where: { userId: fakeUserId } });
+    expect(orphanBal).toBeNull();
+
+    // Garante que não criou CreditTransaction órfã
+    const orphanTx = await prisma.creditTransaction.findFirst({ where: { userId: fakeUserId } });
+    expect(orphanTx).toBeNull();
+  });
+
+  // Cenários 6, 7 e 8: Validação Estrita de creditsAmount
+  it('Cenário 6, 7 e 8: should strictly reject invalid creditsAmount values (zero, decimals, strings, NaN) with HTTP 400', async () => {
+    (auth as any).mockResolvedValue({ user: { email: adminUser.email } });
+
+    const invalidAmounts = [0, 10.5, -4.2, '50'];
+
+    for (const amount of invalidAmounts) {
+      const payload = {
+        targetUserId: regularUser.id,
+        creditsAmount: amount,
+        reason: 'Teste valor inválido',
+      };
+
+      const res = await adjustCredits(createMockRequest(payload));
+      expect(res.status).toBe(400);
+      const json = await res.json();
+      expect(json.error).toContain('número inteiro diferente de zero');
+    }
+
+    // null, undefined e NaN (JSON.stringify transforma NaN em null) retornam erro 400
+    for (const amount of [null, undefined, NaN]) {
+      const payload = {
+        targetUserId: regularUser.id,
+        creditsAmount: amount,
+        reason: 'Teste valor ausente',
+      };
+
+      const res = await adjustCredits(createMockRequest(payload));
+      expect(res.status).toBe(400);
+      const json = await res.json();
+      expect(json.error).toBeDefined();
+    }
+
+    // Validação direta no ReconciliationService com NaN real
+    await expect(
+      ReconciliationService.adjustCreditsManually(
+        adminUser.id,
+        regularUser.id,
+        NaN,
+        'Teste NaN no Service'
+      )
+    ).rejects.toMatchObject({
+      statusCode: 400,
+      code: 'INVALID_CREDITS_AMOUNT',
+    });
+  });
+
+  // Cenário 1: P2002 Não Relacionado à Idempotência
+  it('Cenário 1: should NOT return false success if P2002 is caused by a constraint other than idempotencyKey', async () => {
+    const spy = vi.spyOn(prisma, '$transaction').mockImplementationOnce(async () => {
+      const p2002Err: any = new Error('Unique constraint failed on the fields: (`email`)');
+      p2002Err.code = 'P2002';
+      p2002Err.meta = { target: ['User_email_key'] };
+      throw p2002Err;
+    });
+
+    await expect(
+      ReconciliationService.adjustCreditsManually(
+        adminUser.id,
+        regularUser.id,
+        50,
+        'Ajuste com P2002 Externo',
+        'key-with-external-p2002'
+      )
+    ).rejects.toMatchObject({
+      code: 'P2002',
+    });
+
+    spy.mockRestore();
   });
 
   it('should strictly reject non-admins from altering Branding and SEO settings', async () => {
