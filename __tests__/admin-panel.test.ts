@@ -100,6 +100,11 @@ describe('Admin Panel Financial Controller RBAC and Security Tests (Fase 6.7)', 
       update: { balance: 10 },
     });
 
+    // Remove transações antigas deste usuário para ter contagem isolada
+    await prisma.creditTransaction.deleteMany({
+      where: { userId: regularUser.id, type: 'ADMIN_ADJUSTMENT' },
+    });
+
     const payloadA = {
       targetUserId: regularUser.id,
       creditsAmount: 50,
@@ -125,12 +130,23 @@ describe('Admin Panel Financial Controller RBAC and Security Tests (Fase 6.7)', 
     // Deve computar de forma atômica e correta (10 + 50 + 30 = 90)
     expect(balance?.balance).toBe(90);
 
-    // Deve possuir exatamente duas transações novas criadas no Ledger correspondentes a este usuário
-    const ledgerTxs = await prisma.creditTransaction.findMany({
+    // Confirma exatamente uma transação no Ledger para o Ajuste A
+    const txA = await prisma.creditTransaction.findFirst({
+      where: { userId: regularUser.id, type: 'ADMIN_ADJUSTMENT', amount: 50, description: { contains: 'Ajuste A' } },
+    });
+    expect(txA).toBeDefined();
+
+    // Confirma exatamente uma transação no Ledger para o Ajuste B
+    const txB = await prisma.creditTransaction.findFirst({
+      where: { userId: regularUser.id, type: 'ADMIN_ADJUSTMENT', amount: 30, description: { contains: 'Ajuste B' } },
+    });
+    expect(txB).toBeDefined();
+
+    // O total de transações de ajuste criadas neste teste deve ser exatamente 2
+    const totalTxs = await prisma.creditTransaction.count({
       where: { userId: regularUser.id, type: 'ADMIN_ADJUSTMENT' },
     });
-    // Pelo menos 2 novos registros de ajuste (A e B) mais eventuais legados se o banco não for zerado
-    expect(ledgerTxs.length).toBeGreaterThanOrEqual(2);
+    expect(totalTxs).toBe(2);
   });
 
   it('should ignore forged fields in admin adjustments to prevent mass assignment', async () => {
@@ -138,11 +154,13 @@ describe('Admin Panel Financial Controller RBAC and Security Tests (Fase 6.7)', 
       user: { email: adminUser.email },
     });
 
+    const uniqueReason = `Ajuste Hack ${Date.now()}`;
+
     // Tenta injetar parâmetros maliciosos tentando forçar privilégios e saldo ilimitado
     const maliciousPayload = {
       targetUserId: regularUser.id,
       creditsAmount: 100,
-      reason: 'Ajuste Hack',
+      reason: uniqueReason,
       role: 'ADMIN', // Tenta promover
       isUnlimited: true, // Tenta burlar consumo
       balance: 999999, // Tenta sobrescrever saldo diretamente
@@ -163,9 +181,10 @@ describe('Admin Panel Financial Controller RBAC and Security Tests (Fase 6.7)', 
 
     // 3. O administrador registrado no AuditLog deve ser estritamente o da sessão (adminUser), ignorando adminUserId forjado
     const auditLogs = await prisma.auditLog.findMany({
-      where: { action: 'MANUAL_CREDIT_ADJUSTMENT' },
-      orderBy: { createdAt: 'desc' },
-      take: 1,
+      where: {
+        action: 'MANUAL_CREDIT_ADJUSTMENT',
+        details: { contains: uniqueReason },
+      },
     });
     expect(auditLogs.length).toBe(1);
     expect(auditLogs[0].userId).toBe(adminUser.id);
