@@ -80,14 +80,15 @@ model CreditBalance {
 }
 
 model CreditTransaction {
-  id         String                @id @default(uuid())
-  userId     String
-  amount     Int                   // Positivo para acréscimo, negativo para débito
-  type       CreditTransactionType
+  id          String                @id @default(uuid())
+  userId      String
+  amount      Int                   // Positivo para acréscimo, negativo para débito
+  type        CreditTransactionType
   description String?
-  jobId      String?               @unique
-  paymentId  String?               @unique
-  createdAt  DateTime              @default(now())
+  jobId       String?               @unique
+  paymentId   String?               @unique
+  idempotencyKey String?            @unique // ID de controle contra duplo processamento e retries
+  createdAt   DateTime              @default(now())
   
   user       User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   job        AIJob?                @relation(fields: [jobId], references: [id], onDelete: SetNull)

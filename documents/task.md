@@ -47,14 +47,16 @@
 - [x] Testes unitários e de integração adicionados em `__tests__/tools-api.test.ts` (26/26 testes automatizados aprovados)
 - [x] Layout com Design System e responsividade Mobile por toque (WCAG 44px) homologados
 
-## [Pendentes] Fase 6: Pagamentos
-- [ ] Integração com VorexPay (Camada de PaymentProvider)
-- [ ] Implementação de Webhook com proteção contra reprocessamento, webhooks duplicados e pagamentos falsos
+## [Concluído] Fase 6: Pagamentos
+- [x] Integração com VorexPay (Camada de PaymentProvider com fallback para Mock e validações transacionais)
+- [x] Implementação de Webhook com proteção contra reprocessamento, webhooks duplicados e pagamentos falsos
+- [x] Reconciliação financeira, suporte a saldos negativos por estorno e consolidação local
 
-## [Pendentes] Fase 7: Painel Administrativo
-- [ ] Interface de controle de usuários, créditos, ferramentas, modelos e auditoria
-- [ ] Configuração de Branding via Admin (SEO dinâmico)
-- [ ] Relatórios financeiros (Custo de IA x Créditos consumidos x Receita gerada)
+## [Concluído] Fase 7: Painel Administrativo
+- [x] Interface de controle de usuários, créditos, ferramentas, modelos e auditoria (/dashboard/admin)
+- [x] Configuração de Branding via Admin (SEO dinâmico, escaping de atributos e autoria no AuditLog)
+- [x] Relatórios financeiros (Custo de IA x Créditos consumidos x Receita gerada)
+- [x] Idempotência administrativa com constraint única no banco PostgreSQL e isolamento no Ledger
 
 ## [Pendentes] Fase 8: Landing Page
 - [ ] Criação da página de vendas com tags de indexação e tracking de UTMs

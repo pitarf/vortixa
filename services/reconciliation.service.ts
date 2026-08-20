@@ -103,14 +103,16 @@ export class ReconciliationService {
   }
 
   /**
-   * Executa ajustes manuais administrativos auditáveis, gravando o motivo na tabela AuditLog.
+   * Executa ajustes manuais administrativos auditáveis, gravando o motivo na tabela AuditLog
+   * e garantindo idempotência estrita via constraint única no banco de dados.
    */
   static async adjustCreditsManually(
     adminUserId: string,
     targetUserId: string,
     creditsAmount: number,
-    reason: string
-  ): Promise<void> {
+    reason: string,
+    idempotencyKey?: string
+  ): Promise<{ alreadyProcessed: boolean }> {
     if (!adminUserId || !targetUserId || !creditsAmount || !reason) {
       throw new Error("Parâmetros obrigatórios ausentes para o ajuste administrativo.");
     }
@@ -121,46 +123,78 @@ export class ReconciliationService {
       throw new Error("Apenas administradores podem efetuar ajustes manuais de saldo.");
     }
 
-    await prisma.$transaction(async (tx) => {
-      // Lock pessimista do saldo de créditos
-      await tx.$executeRaw`
-        SELECT 1 FROM "CreditBalance" 
-        WHERE "userId" = ${targetUserId} 
-        FOR UPDATE
-      `;
-
-      const balanceRecord = await tx.creditBalance.findUnique({
-        where: { userId: targetUserId },
+    // 1. Se uma chave de idempotência foi fornecida, verifica se a operação já foi concluída anteriormente
+    if (idempotencyKey) {
+      const existingTx = await prisma.creditTransaction.findUnique({
+        where: { idempotencyKey },
       });
+      if (existingTx) {
+        // Retorno idempotente e seguro: a operação já foi realizada e não gera novo crédito ou log
+        return { alreadyProcessed: true };
+      }
+    }
 
-      const currentBalance = balanceRecord?.balance || 0;
-      const newBalance = currentBalance + creditsAmount;
+    try {
+      return await prisma.$transaction(async (tx) => {
+        // 2. Lock pessimista do saldo de créditos
+        await tx.$executeRaw`
+          SELECT 1 FROM "CreditBalance" 
+          WHERE "userId" = ${targetUserId} 
+          FOR UPDATE
+        `;
 
-      // Atualiza saldo
-      await tx.creditBalance.upsert({
-        where: { userId: targetUserId },
-        create: { userId: targetUserId, balance: newBalance },
-        update: { balance: newBalance },
+        // Verifica novamente dentro do lock se a chave já foi gravada por transação concorrente
+        if (idempotencyKey) {
+          const inTxExisting = await tx.creditTransaction.findUnique({
+            where: { idempotencyKey },
+          });
+          if (inTxExisting) {
+            return { alreadyProcessed: true };
+          }
+        }
+
+        const balanceRecord = await tx.creditBalance.findUnique({
+          where: { userId: targetUserId },
+        });
+
+        const currentBalance = balanceRecord?.balance || 0;
+        const newBalance = currentBalance + creditsAmount;
+
+        // 3. Atualiza saldo de forma atômica
+        await tx.creditBalance.upsert({
+          where: { userId: targetUserId },
+          create: { userId: targetUserId, balance: newBalance },
+          update: { balance: newBalance },
+        });
+
+        // 4. Grava transação do Ledger vinculando a chave de idempotência com constraint única
+        await tx.creditTransaction.create({
+          data: {
+            userId: targetUserId,
+            amount: creditsAmount,
+            type: "ADMIN_ADJUSTMENT",
+            description: `Ajuste manual administrativo: ${reason}`,
+            idempotencyKey: idempotencyKey || undefined,
+          },
+        });
+
+        // 5. Registra a ação de auditoria administrativa com autoria garantida pelo servidor
+        await tx.auditLog.create({
+          data: {
+            userId: adminUserId,
+            action: "MANUAL_CREDIT_ADJUSTMENT",
+            details: `Ajuste manual de ${creditsAmount} créditos para o usuário ${targetUserId}. Motivo: ${reason}. Saldo anterior: ${currentBalance}, Novo saldo: ${newBalance}`,
+          },
+        });
+
+        return { alreadyProcessed: false };
       });
-
-      // Grava transação do Ledger
-      await tx.creditTransaction.create({
-        data: {
-          userId: targetUserId,
-          amount: creditsAmount,
-          type: "ADMIN_ADJUSTMENT",
-          description: `Ajuste manual administrativo: ${reason}`,
-        },
-      });
-
-      // Registra a ação de auditoria administrativa de forma definitiva
-      await tx.auditLog.create({
-        data: {
-          userId: adminUserId,
-          action: "MANUAL_CREDIT_ADJUSTMENT",
-          details: `Ajuste manual de ${creditsAmount} créditos para o usuário ${targetUserId}. Motivo: ${reason}. Saldo anterior: ${currentBalance}, Novo saldo: ${newBalance}`,
-        },
-      });
-    });
+    } catch (err: any) {
+      // Se duas requisições simultâneas disputarem a mesma idempotencyKey ao mesmo tempo e violarem a constraint P2002
+      if (err.code === "P2002" && idempotencyKey) {
+        return { alreadyProcessed: true };
+      }
+      throw err;
+    }
   }
 }

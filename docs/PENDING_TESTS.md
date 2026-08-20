@@ -70,10 +70,11 @@ Um item só pode sair da lista depois de:
 - **Ação Pendente:** Tratar e testar o evento de Chargeback no webhook de pagamentos quando as chaves reais do provedor definitivo e sua documentação oficial de webhook de disputa estiverem disponíveis.
 - **Status:** PENDENTE.
 
-## 12. Homologação de Idempotência no Ajuste Manual de Créditos (Fase 6.7)
-- **Descoberta:** O serviço de ajuste manual do administrador (ReconciliationService.adjustCreditsManually) atualmente processa requisições de forma puramente sequencial e transacional no Ledger, não possuindo controle de chaves de idempotência administrativas específicas contra cliques repetidos simultâneos na UI.
-- **Ação Pendente:** Implementar controle de chaves de idempotência na API de controle do painel administrativo de finanças para evitar disparar a mesma ação de ajuste repetidamente.
-- **Status:** PENDENTE.
+## 12. Homologação de Idempotência no Ajuste Manual de Créditos (Fase 7 - CONCLUÍDO)
+- **Implementação Real:** Adicionada a coluna com constraint única `idempotencyKey` na tabela `CreditTransaction` (Migration `20260820040000_add_ledger_idempotency`), com validação de duplicidade e tratamento de concorrência com colisão atômica (P2002) no `ReconciliationService.adjustCreditsManually` e no endpoint `/api/admin/adjust-credits`.
+- **Evidência de Teste:** Validado no PostgreSQL real local nos testes `should enforce strict server-side idempotency on repeated adjustment requests with same key` e `should safely handle concurrent simultaneous requests with the same idempotency key` em `__tests__/admin-panel.test.ts`.
+- **Status:** CONCLUÍDO E TESTADO.
+
 
 
 

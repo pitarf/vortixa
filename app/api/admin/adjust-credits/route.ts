@@ -20,15 +20,25 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { targetUserId, creditsAmount, reason } = body;
+    const { targetUserId, creditsAmount, reason, idempotencyKey } = body;
 
     if (!targetUserId || creditsAmount === undefined || !reason) {
       return NextResponse.json({ error: "Parâmetros obrigatórios ausentes." }, { status: 400 });
     }
 
-    await ReconciliationService.adjustCreditsManually(admin.id, targetUserId, creditsAmount, reason);
+    const result = await ReconciliationService.adjustCreditsManually(
+      admin.id,
+      targetUserId,
+      creditsAmount,
+      reason,
+      idempotencyKey
+    );
 
-    return NextResponse.json({ message: "Créditos ajustados com sucesso administrativamente." });
+    if (result.alreadyProcessed) {
+      return NextResponse.json({ message: "Operação já processada anteriormente (idempotente)." }, { status: 200 });
+    }
+
+    return NextResponse.json({ message: "Créditos ajustados com sucesso administrativamente." }, { status: 200 });
   } catch (err: any) {
     console.error("Erro no ajuste manual de créditos:", err);
     return NextResponse.json({ error: err.message || "Erro interno no servidor." }, { status: 500 });

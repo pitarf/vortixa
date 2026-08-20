@@ -13,6 +13,7 @@ export default function DashboardLayout({
     { name: "Motion Control", href: "/dashboard/tools/motion", icon: Activity },
     { name: "Lip Sync", href: "/dashboard/tools/lipsync", icon: Navigation },
     { name: "Video Upscale", href: "/dashboard/tools/upscale", icon: Sparkles },
+    { name: "Painel Executivo / Admin", href: "/dashboard/admin", icon: User },
   ];
 
   return (
