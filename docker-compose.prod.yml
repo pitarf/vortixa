@@ -1,4 +1,4 @@
-﻿version: '3.8'
+version: '3.8'
 
 services:
   # Aplicação Principal VORIXA (Next.js 16 Standalone)
@@ -10,36 +10,16 @@ services:
     restart: unless-stopped
     ports:
       - 127.0.0.1:3005:3000
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://:@postgres:5432/?schema=public
+      - AUTH_TRUST_HOST=true
       - NEXTAUTH_URL=https://vortixia.com.br
       - NEXT_PUBLIC_APP_URL=https://vortixia.com.br
-      - AUTH_SECRET=
-      - NEXTAUTH_SECRET=
-      - GOOGLE_CLIENT_ID=
-      - GOOGLE_CLIENT_SECRET=
-      - FAL_KEY=
-      - GEMINI_API_KEY=
-      - SMTP_HOST=
-      - SMTP_PORT=
-      - SMTP_SECURE=
-      - SMTP_USER=
-      - SMTP_PASS=
-      - SMTP_FROM=
-      - PAYMENT_PROVIDER=
-      - PAYMENT_PROVIDER_MODE=
-      - MERCADOPAGO_ACCESS_KEY=
-      - STRIPE_SECRET_KEY=
-      - STRIPE_WEBHOOK_SECRET=
-      - S3_ENDPOINT=http://minio:9000
-      - S3_ACCESS_KEY=
-      - S3_SECRET_KEY=
-      - S3_BUCKET=
-      - S3_REGION=us-east-1
-      - NEXT_TELEMETRY_DISABLED=1
       - PORT=3000
       - HOSTNAME=0.0.0.0
+      - NEXT_TELEMETRY_DISABLED=1
     depends_on:
       postgres:
         condition: service_healthy
@@ -53,15 +33,12 @@ services:
     image: postgres:15-alpine
     container_name: vorixa-postgres
     restart: always
-    environment:
-      POSTGRES_USER: 
-      POSTGRES_PASSWORD: 
-      POSTGRES_DB: 
-    # Sem bind de porta no Host para evitar qualquer conflito com a 5432 existente
+    env_file:
+      - .env
     volumes:
       - vorixa-postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: [CMD-SHELL, pg_isready -U -d ]
+      test: ["CMD-SHELL", "pg_isready -U vorixa_user -d vorixa_db"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -73,12 +50,11 @@ services:
     image: minio/minio
     container_name: vorixa-minio
     restart: always
+    env_file:
+      - .env
     ports:
-      - 127.0.0.1:9010:9000
-      - 127.0.0.1:9011:9001
-    environment:
-      MINIO_ROOT_USER: 
-      MINIO_ROOT_PASSWORD: 
+      - "127.0.0.1:9010:9000"
+      - "127.0.0.1:9011:9001"
     command: server /data --console-address :9001
     volumes:
       - vorixa-minio-data:/data
