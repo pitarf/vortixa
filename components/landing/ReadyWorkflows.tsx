@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Sparkles, ArrowRight, Video, Flame, TrendingUp, ShoppingBag } from "lucide-react";
+import { ArrowRight, Video, Flame, TrendingUp, ShoppingBag } from "lucide-react";
 
 export function ReadyWorkflows() {
   const workflows = [

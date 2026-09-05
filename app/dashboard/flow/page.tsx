@@ -9,7 +9,6 @@ import {
   Boxes,
   Play,
   Clock,
-  Sparkles,
   Search,
   SlidersHorizontal,
   ChevronRight,
@@ -157,7 +156,7 @@ export default function FlowListingPage() {
       ) : filteredFlows.length === 0 ? (
         <div className="py-20 rounded-3xl border border-dashed border-slate-800 bg-slate-950/40 flex flex-col items-center justify-center text-center p-6 space-y-4">
           <div className="w-14 h-14 rounded-3xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
-            <Sparkles className="w-7 h-7 stroke-[1.5]" />
+            <Boxes className="w-7 h-7 stroke-[1.5]" />
           </div>
           <div className="space-y-1 max-w-sm">
             <h3 className="text-sm font-bold text-slate-200">Nenhum fluxo encontrado</h3>

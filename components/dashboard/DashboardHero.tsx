@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import {
-  Sparkles,
   Boxes,
   Wand2,
   Film,
@@ -79,7 +78,7 @@ export function DashboardHero({
             className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-500 hover:to-indigo-500 text-white text-xs md:text-sm font-bold shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer"
             style={{ minHeight: "44px" }}
           >
-            <Sparkles className="h-4 w-4" />
+            <Wand2 className="h-4 w-4" />
             <span>Criar com IA →</span>
           </Link>
 

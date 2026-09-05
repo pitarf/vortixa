@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, Languages, RefreshCw } from "lucide-react";
+import { Wand2, Languages, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 interface PromptInputProps {
@@ -72,7 +72,7 @@ export function PromptInput({
             {isOptimizing ? (
               <RefreshCw className="w-3.5 h-3.5 animate-spin" />
             ) : (
-              <Sparkles className="w-3.5 h-3.5 text-cyan-200" />
+              <Wand2 className="w-3.5 h-3.5 text-cyan-200" />
             )}
             <span>Otimizar Prompt por IA</span>
           </button>

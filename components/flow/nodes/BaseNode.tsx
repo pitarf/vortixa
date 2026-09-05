@@ -10,7 +10,7 @@ import {
 } from "@/types/flow";
 import { useFlowStore } from "@/stores/flow-store";
 import {
-  Sparkles,
+  Boxes,
   Loader2,
   CheckCircle2,
   AlertCircle,
@@ -47,7 +47,7 @@ export const BaseNode = memo(function BaseNode({
   status = "IDLE",
   error,
   selected = false,
-  icon: Icon = Sparkles,
+  icon: Icon = Boxes,
   accentColor = "#8B5CF6",
   children,
   footer,

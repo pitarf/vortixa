@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import {
-  Sparkles,
   Search,
   Check,
   ArrowRight,
@@ -97,7 +96,7 @@ export default function ChangelogPage() {
           <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
           <div className="relative z-10 space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold">
-              <Sparkles className="h-3.5 w-3.5 fill-current" />
+              <Zap className="h-3.5 w-3.5 fill-current text-cyan-400" />
               <span>VORIXA CREATIVE OS 2.5 LIVE</span>
             </div>
 

@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
-  Sparkles,
   X,
   ArrowRight,
   Search,
@@ -89,7 +88,7 @@ export function ChangelogModal({ isOpen, onClose }: ChangelogModalProps) {
         <div className="p-5 border-b border-[#1E202E] bg-gradient-to-r from-[#0D0E12] via-[#13141B] to-[#0D0E12] flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.2)]">
-              <Sparkles className="h-5 w-5 fill-current" />
+              <Zap className="h-5 w-5 fill-current text-cyan-400" />
             </div>
             <div>
               <div className="flex items-center gap-2">

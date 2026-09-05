@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Coins,
-  Sparkles,
+  Flame,
   Zap,
   Check,
   ShieldCheck,
@@ -188,7 +188,7 @@ export default function CreditsPage() {
           {/* Card Flutuante de Saldo */}
           <div className="flex-shrink-0 bg-[#070709]/80 backdrop-blur-md border border-[#1E202E] rounded-2xl p-6 flex flex-col items-center justify-center min-w-[220px] text-center shadow-xl group hover:border-violet-500/40 transition-all">
             <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-violet-600 to-cyan-400 flex items-center justify-center text-white mb-3 shadow-lg shadow-violet-600/30 group-hover:scale-110 transition-transform">
-              <Sparkles className="h-6 w-6" />
+              <Coins className="h-6 w-6" />
             </div>
             <span className="text-xs font-mono uppercase text-slate-400 tracking-wider">
               Recarga Rápida
@@ -254,7 +254,7 @@ export default function CreditsPage() {
                 {/* Badge Mais Popular */}
                 {isPopular && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-violet-600 to-indigo-500 text-white text-[11px] font-black uppercase tracking-wider shadow-lg shadow-violet-600/30 flex items-center gap-1.5">
-                    <Sparkles className="h-3.5 w-3.5 fill-current" />
+                    <Flame className="h-3.5 w-3.5 fill-current text-amber-300" />
                     Mais Popular
                   </div>
                 )}

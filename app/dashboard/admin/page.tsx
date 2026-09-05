@@ -8,7 +8,7 @@ import {
   Layers, 
   TrendingUp, 
   RefreshCw, 
-  Sparkles, 
+  Zap, 
   AlertTriangle,
   Globe,
   Sliders,
@@ -216,7 +216,7 @@ export default function AdminDashboardPage() {
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">Créditos Vendidos</span>
             <div className="h-8 w-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
-              <Sparkles className="h-4 w-4" />
+              <Zap className="h-4 w-4" />
             </div>
           </div>
           <div className="mt-3">

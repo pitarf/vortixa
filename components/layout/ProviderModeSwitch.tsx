@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Sparkles, Bot, Zap } from "lucide-react";
+import { Bot, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 export function ProviderModeSwitch() {

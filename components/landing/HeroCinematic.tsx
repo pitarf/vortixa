@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Sparkles, Volume2, VolumeX } from "lucide-react";
+import { Zap, Volume2, VolumeX } from "lucide-react";
 
 /**
  * Hero Section Oficial no padrão exato Octuz AI / Higgsfield.
@@ -77,7 +77,7 @@ export function HeroCinematic() {
               href="/register"
               className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#09090B] hover:bg-[#18181B] text-white text-sm sm:text-base font-semibold shadow-xl hover:shadow-2xl transition-all hover:scale-105 border border-slate-800 min-h-[50px] cursor-pointer"
             >
-              <Sparkles className="w-4 h-4 text-violet-300" />
+              <Zap className="w-4 h-4 text-violet-300 fill-current" />
               <span>Gerar vídeos com IA</span>
             </Link>
           </div>

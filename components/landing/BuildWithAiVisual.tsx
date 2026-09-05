@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Sparkles, ArrowRight, CheckCircle2, Play, Zap, Terminal } from "lucide-react";
+import { ArrowRight, CheckCircle2, Play, Zap, Terminal } from "lucide-react";
 
 /**
  * Seção "Build with AI" — Demonstração da fala ao pipeline visual.
@@ -111,7 +111,7 @@ export function BuildWithAiVisual() {
             disabled={isGenerating}
             className="h-13 px-8 rounded-2xl bg-white hover:bg-slate-200 text-slate-950 text-xs sm:text-sm font-bold shadow-xl flex items-center justify-center gap-2 transition-all hover:scale-102 cursor-pointer"
           >
-            <Sparkles className="w-4 h-4 text-violet-600" />
+            <Zap className="w-4 h-4 text-violet-600 fill-current" />
             <span>{isGenerating ? "Sintetizando Grafo..." : "Sintetizar Pipeline "}</span>
           </button>
         </div>

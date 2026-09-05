@@ -22,7 +22,6 @@ import {
   LogOut,
   Search,
   Bell,
-  Sparkles,
   ChevronRight,
   Menu,
   X,
@@ -153,7 +152,7 @@ export function DashboardShell({
     {
       name: "Build with AI",
       href: "/dashboard/flow?mode=ai",
-      icon: Sparkles,
+      icon: Zap,
       badge: "AI",
       color: "text-pink-400",
     },
@@ -177,7 +176,7 @@ export function DashboardShell({
     {
       name: "Novidades & Changelog",
       href: "/dashboard/changelog",
-      icon: Sparkles,
+      icon: Zap,
       badge: "v2.5",
       color: "text-cyan-400",
     },

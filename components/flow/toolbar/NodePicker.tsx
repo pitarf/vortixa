@@ -11,7 +11,7 @@ import {
   Video,
   Mic,
   Activity,
-  Sparkles,
+  Maximize2,
   Download,
   Boxes,
   Zap,
@@ -79,7 +79,7 @@ const AVAILABLE_NODES: NodeToolOption[] = [
     category: "enhance",
     description: "Amplie a nitidez, textura e resolução de vídeos para 4K.",
     creditCost: 5,
-    icon: Sparkles,
+    icon: Maximize2,
     accentColor: "#A855F7",
   },
   {

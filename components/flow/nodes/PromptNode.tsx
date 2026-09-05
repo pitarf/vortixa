@@ -4,7 +4,7 @@ import React, { memo, useCallback } from "react";
 import { NodeProps } from "@xyflow/react";
 import { BaseNode } from "./BaseNode";
 import { FlowNodeData, useFlowStore } from "@/stores/flow-store";
-import { Type, Sparkles } from "lucide-react";
+import { Type, Wand2 } from "lucide-react";
 
 const STYLE_PRESETS = [
   { id: "cinematic", label: "Cinemático" },
@@ -50,7 +50,7 @@ export const PromptNode = memo(function PromptNode({ id, data, selected }: NodeP
       <div className="space-y-2">
         <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium">
           <span className="flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-violet-400" /> Prompt Criativo
+            <Wand2 className="w-3 h-3 text-violet-400" /> Prompt Criativo
           </span>
           <span className="font-mono text-[10px] text-slate-500">{promptLength} caracteres</span>
         </div>

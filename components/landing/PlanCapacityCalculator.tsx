@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Sparkles, ArrowRight, Video, Image, Volume2, Maximize2 } from "lucide-react";
+import { ArrowRight, Video, Image, Volume2, Maximize2 } from "lucide-react";
 
 export function PlanCapacityCalculator() {
   const [activePlan, setActivePlan] = useState<number>(1);

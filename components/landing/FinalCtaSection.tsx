@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Sparkles, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { Zap, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
 
 /**
  * Banner Final de Conversão Cinematográfico (Fechamento de Campanha).
@@ -29,7 +29,7 @@ export function FinalCtaSection() {
 
         {/* Badge Flutuante */}
         <div className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-xs font-medium backdrop-blur-md">
-          <Sparkles className="w-3.5 h-3.5 text-violet-300" />
+          <Zap className="w-3.5 h-3.5 text-violet-300 fill-current" />
           <span>Comece agora com 100 créditos grátis</span>
         </div>
 

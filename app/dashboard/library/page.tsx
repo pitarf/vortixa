@@ -14,7 +14,7 @@ import {
   Trash2,
   Maximize2,
   Clock,
-  Sparkles,
+  Wand2,
   Layers,
   ArrowUpRight,
   Loader2,
@@ -181,7 +181,7 @@ export default function LibraryPage() {
           className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90 text-xs font-bold text-white shadow-lg shadow-violet-600/20 transition-all cursor-pointer"
           style={{ minHeight: "44px" }}
         >
-          <Sparkles className="h-4 w-4" />
+          <Wand2 className="h-4 w-4" />
           <span>Criar no Studio</span>
         </button>
       </div>

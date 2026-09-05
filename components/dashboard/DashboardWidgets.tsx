@@ -6,7 +6,7 @@ import {
   BarChart3,
   Heart,
   MessageSquare,
-  Sparkles,
+  Zap,
   ArrowRight,
   TrendingUp,
   ExternalLink,
@@ -200,7 +200,7 @@ export function DashboardWidgets() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-cyan-400 fill-current" />
+                <Zap className="h-4 w-4 text-cyan-400 fill-current" />
                 <span className="text-sm font-bold text-white font-heading">
                   Novidades no VORIXA
                 </span>

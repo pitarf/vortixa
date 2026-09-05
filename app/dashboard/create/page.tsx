@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   Wand2,
-  Sparkles,
   Image as ImageIcon,
   Video,
   Navigation,
@@ -134,7 +133,7 @@ const TOOLS: Record<StudioTool, ToolDefinition> = {
     slug: "upscale",
     name: "Upscale",
     badge: "Creative 4K",
-    icon: Sparkles,
+    icon: Layers,
     defaultCost: 5,
     description: "Melhore nitidez, remova ruído e eleve mídias até resolução 4K Ultra HD.",
     color: "from-amber-500 to-orange-600",
@@ -1013,7 +1012,7 @@ export default function StudioCreatePage() {
                 style={{ minHeight: "44px" }}
                 title="Ferramentas Extras (Upscale 4K)"
               >
-                <Sparkles className="h-4 w-4 mb-1" />
+                <Layers className="h-4 w-4 mb-1" />
                 <span className="text-[10px]">Mais &gt;</span>
               </button>
             </div>
@@ -1161,7 +1160,7 @@ export default function StudioCreatePage() {
                 {isOptimizing ? (
                   <RefreshCw className="h-3.5 w-3.5 animate-spin" />
                 ) : (
-                  <Sparkles className="h-3.5 w-3.5 text-cyan-200" />
+                  <Wand2 className="h-3.5 w-3.5 text-cyan-200" />
                 )}
                 <span>Otimizar com IA</span>
               </button>
@@ -1469,7 +1468,7 @@ export default function StudioCreatePage() {
                   <div className="relative h-20 w-20 mx-auto">
                     <div className="absolute inset-0 rounded-full border-4 border-violet-500/20 animate-ping" />
                     <div className="h-20 w-20 rounded-full border-4 border-violet-600 border-t-cyan-400 animate-spin" />
-                    <Sparkles className="h-7 w-7 text-cyan-300 absolute inset-0 m-auto animate-pulse" />
+                    <Wand2 className="h-7 w-7 text-cyan-300 absolute inset-0 m-auto animate-pulse" />
                   </div>
                   <div className="space-y-1">
                     <h3 className="text-sm font-bold text-white tracking-wide">{stepText}</h3>
@@ -1614,7 +1613,7 @@ export default function StudioCreatePage() {
                 className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-amber-300 transition-all cursor-pointer"
                 style={{ minHeight: "44px" }}
               >
-                <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+                <Layers className="h-3.5 w-3.5 text-amber-400" />
                 <span>Upscale 4K</span>
               </button>
 
@@ -1652,7 +1651,7 @@ export default function StudioCreatePage() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-violet-400" />
+                <Flame className="h-4 w-4 text-violet-400" />
                 <h3 className="text-xs font-bold text-white uppercase tracking-wider font-heading">
                   Inspirações para você
                 </h3>

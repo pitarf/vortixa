@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import Link from "next/link";
-import { Check, ArrowRight, Sparkles, Zap, Activity } from "lucide-react";
+import { Check, ArrowRight, Zap, Activity } from "lucide-react";
 
 /**
  * Seção de Recursos e Workflows com Animações e Comportamentos Diferenciados para cada Card.

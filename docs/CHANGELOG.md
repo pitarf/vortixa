@@ -2,6 +2,13 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [2.10.0] - 2026-09-05
+
+### Identidade Visual & Design System Premium
+- **Eliminação Completa do Ícone Genérico de IA (`Sparkles`)**:
+  * Extinção de todas as instâncias de `Sparkles` no ecossistema (landing pages, dashboard, studio create, canvas flow e widgets).
+  * Substituição contextual: `Wand2` (estúdios e render), `Zap` (automação e velocidade), `Maximize2` & `Layers` (upscale 4K), `Flame` (tendências/popular) e `Boxes` (grafos).
+
 ## [2.9.0] - 2026-09-05
 
 ### Governança, Compliance LGPD & Consentimento de Cookies

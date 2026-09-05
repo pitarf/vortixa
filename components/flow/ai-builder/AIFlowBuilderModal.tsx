@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useFlowStore } from "@/stores/flow-store";
 import {
-  Sparkles,
   X,
   Wand2,
   ArrowRight,
@@ -141,7 +140,7 @@ export function AIFlowBuilderModal() {
         <div className="flex items-center justify-between p-5 border-b border-slate-800/80 bg-gradient-to-r from-violet-950/40 via-purple-950/30 to-cyan-950/40">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-violet-600 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-violet-500/20">
-              <Sparkles className="w-5 h-5" />
+              <Zap className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-100 flex items-center gap-1.5">

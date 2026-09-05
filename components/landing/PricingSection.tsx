@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Check, Sparkles, ArrowRight, ShieldCheck, XCircle } from "lucide-react";
+import { Check, Zap, ArrowRight, ShieldCheck, XCircle } from "lucide-react";
 
 /**
  * Seção de Preços, Economia e Garantia com Quebra de Ritmo (Fundo Claro / Off-White).
@@ -54,7 +54,7 @@ export function PricingSection() {
             {/* Com o VORIXA FLOW */}
             <div className="space-y-3 p-5 rounded-2xl bg-slate-900 text-white border border-slate-800 shadow-xl">
               <div className="flex items-center gap-2 text-violet-300 font-bold font-mono text-xs uppercase">
-                <Sparkles className="w-4 h-4 text-cyan-400" /> Com o VORIXA:
+                <Zap className="w-4 h-4 text-cyan-400 fill-current" /> Com o VORIXA:
               </div>
               <p className="text-slate-300 text-xs leading-relaxed">
                 Todas as IAs integradas com créditos compartilhados e fluxos visuais automáticos.

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Check, X, ShieldAlert, Sparkles } from "lucide-react";
+import { ArrowRight, Check, X, ShieldAlert } from "lucide-react";
 
 export function CostComparison() {
   const tools = [

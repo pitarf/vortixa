@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Coins, Play, Sparkles, AlertCircle, CheckCircle2, Download, RotateCcw, AlertTriangle, ArrowRight, Wand2, Maximize2, X, Eye } from "lucide-react";
+import { Coins, Play, AlertCircle, CheckCircle2, Download, RotateCcw, AlertTriangle, ArrowRight, Wand2, Maximize2, X, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { PromptEngine } from "@/services/ai/prompt-engine.service";
 
@@ -195,7 +195,7 @@ export function GenerationLayout({
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-          <Sparkles className="h-6 w-6 text-violet-400" />
+          <Wand2 className="h-6 w-6 text-violet-400" />
           <span>{title}</span>
         </h1>
         <p className="text-sm text-slate-400 mt-1">{description}</p>
@@ -360,7 +360,7 @@ export function GenerationLayout({
             ) : (
               <div className="space-y-3 text-slate-500">
                 <div className="w-12 h-12 rounded-2xl bg-muted border border-border flex items-center justify-center mx-auto text-slate-400">
-                  <Sparkles className="w-6 h-6" />
+                  <Wand2 className="w-6 h-6" />
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold text-foreground">Aguardando Parâmetros</h3>

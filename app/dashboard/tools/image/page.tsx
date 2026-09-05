@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   Wand2,
-  Sparkles,
+  Flame,
   Type,
   Image as ImageIcon,
   Palette,
@@ -854,7 +854,7 @@ export default function ImageGenerationPage() {
                 {isOptimizing ? (
                   <RefreshCw className="h-3.5 w-3.5 animate-spin" />
                 ) : (
-                  <Sparkles className="h-3.5 w-3.5 text-cyan-200" />
+                  <Wand2 className="h-3.5 w-3.5 text-cyan-200" />
                 )}
                 <span>Otimizar com IA</span>
               </button>
@@ -1094,7 +1094,7 @@ export default function ImageGenerationPage() {
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 text-cyan-200" />
+                  <Wand2 className="w-4 h-4 text-cyan-200" />
                   <span>Gerar Imagem</span>
                 </>
               )}
@@ -1146,7 +1146,7 @@ export default function ImageGenerationPage() {
               <div className="flex flex-col items-center justify-center gap-3 p-6 text-center">
                 <div className="relative h-14 w-14 rounded-2xl bg-gradient-to-tr from-violet-600 to-cyan-500 p-0.5 animate-spin">
                   <div className="h-full w-full bg-[#070709] rounded-2xl flex items-center justify-center">
-                    <Sparkles className="h-6 w-6 text-cyan-300 animate-pulse" />
+                    <Wand2 className="h-6 w-6 text-cyan-300 animate-pulse" />
                   </div>
                 </div>
                 <div className="space-y-1">
@@ -1365,7 +1365,7 @@ export default function ImageGenerationPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#1E202E] pb-3">
           
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-cyan-400" />
+            <Flame className="w-4 h-4 text-cyan-400" />
             <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-white font-heading">
               Exemplos e Inspirações
             </h2>

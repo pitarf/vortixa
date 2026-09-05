@@ -5,7 +5,7 @@ import { NodeProps } from "@xyflow/react";
 import { BaseNode } from "./BaseNode";
 import { FlowNodeData, useFlowStore } from "@/stores/flow-store";
 import { isSafeMediaUrl } from "@/lib/flow-utils";
-import { Sparkles, Maximize2 } from "lucide-react";
+import { Maximize2 } from "lucide-react";
 
 /**
  * Nó de Creative Upscale 4K no VORIXA FLOW.
@@ -33,7 +33,7 @@ export const UpscaleNode = memo(function UpscaleNode({ id, data, selected }: Nod
       status={nodeData.status}
       error={nodeData.error}
       selected={selected}
-      icon={Sparkles}
+      icon={Maximize2}
       accentColor="#F59E0B"
     >
       <div className="space-y-2">

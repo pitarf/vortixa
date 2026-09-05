@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Search, Filter, Play, Download, Sparkles, Layers, Video, Image as ImageIcon } from "lucide-react";
+import { Search, Filter, Play, Download, Layers, Video, Image as ImageIcon } from "lucide-react";
 
 export function LibraryLiveDemo() {
   const [tab, setTab] = useState<"all" | "video" | "image">("all");

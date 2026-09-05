@@ -5,6 +5,18 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.2.8] - 2026-09-05
+### Design & Identidade Visual
+- **Eliminação Integral do Ícone Genérico de IA (`Sparkles`)**:
+  - Remoção completa do ícone clichê de IA (`lucide-sparkles`) em 100% dos componentes e telas da aplicação.
+  - Substituição contextual e semântica por ícones profissionais de alto nível:
+    * `Wand2` para geração de mídia, otimização de prompts e estúdios criativos.
+    * `Zap` para aceleração GPU, autonomia e features em tempo real.
+    * `Layers` e `Maximize2` para ferramentas de Creative Upscale 4K e super-resolução.
+    * `Boxes` para fluxos de trabalho do canvas e nós conectados.
+    * `Flame` para destaques da comunidade, pacotes populares e carrossel de inspirações.
+    * `Coins` para recarga rápida de saldo e finanças.
+
 ## [1.2.7] - 2026-09-05
 ### Adicionado & Compliance LGPD
 - **Banner de Consentimento de Cookies (`CookieConsentBanner.tsx`)**:

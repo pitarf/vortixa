@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Wand2, Play, Sparkles, SlidersHorizontal, ArrowRight, Video, Image, Zap } from "lucide-react";
+import { Wand2, Play, SlidersHorizontal, ArrowRight, Video, Image, Zap } from "lucide-react";
 
 export function StudioCreateDemo() {
   const [selectedTool, setSelectedTool] = useState<string>("image");
@@ -80,7 +80,7 @@ export function StudioCreateDemo() {
             href="/register"
             className="w-full py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold text-xs shadow-lg flex items-center justify-center gap-2 hover:opacity-90 transition-all cursor-pointer"
           >
-            <Sparkles className="h-4 w-4" />
+            <Wand2 className="h-4 w-4" />
             <span>Gerar Agora no Studio CREATE</span>
           </Link>
         </div>

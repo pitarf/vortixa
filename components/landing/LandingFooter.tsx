@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Sparkles, ArrowRight, Zap, ShieldCheck, Cpu, Workflow } from "lucide-react";
+import { ArrowRight, Zap, ShieldCheck, Cpu, Workflow } from "lucide-react";
 
 export function LandingFooter() {
   return (
@@ -24,7 +24,7 @@ export function LandingFooter() {
             className="inline-flex items-center gap-3 px-10 py-4 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 text-white font-bold text-sm sm:text-base shadow-[0_0_40px_rgba(139,92,246,0.4)] hover:opacity-95 transition-all hover:scale-105"
             style={{ minHeight: "52px" }}
           >
-            <Sparkles className="h-5 w-5" />
+            <Zap className="h-5 w-5 fill-current text-white" />
             <span>Criar Minha Conta Gratuita</span>
             <ArrowRight className="h-4 w-4" />
           </Link>

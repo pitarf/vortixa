@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Star, ShieldCheck, Zap, Award, Sparkles } from "lucide-react";
+import { Star, ShieldCheck, Zap, Award } from "lucide-react";
 
 export function TestimonialsTrust() {
   const testimonials = [

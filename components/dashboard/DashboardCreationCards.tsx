@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   Wand2,
   Boxes,
-  Sparkles,
   Film,
   ArrowRight,
   Zap,
@@ -154,7 +153,7 @@ export function DashboardCreationCards() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-pink-500 via-rose-500 to-purple-600 flex items-center justify-center text-white shadow-md">
-                <Sparkles className="h-5 w-5" />
+                <Zap className="h-5 w-5" />
               </div>
               <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-pink-500/10 border border-pink-500/20 text-pink-300 uppercase">
                 Autônomo

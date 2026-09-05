@@ -3,7 +3,6 @@
 import React, { useState, useRef } from "react";
 import Link from "next/link";
 import {
-  Sparkles,
   ArrowRight,
   Check,
   Zap,
@@ -207,7 +206,7 @@ export default function Home2Page() {
             href="/register"
             className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-xs font-bold text-white shadow-lg shadow-violet-600/30 transition-all hover:scale-105 min-h-[40px] cursor-pointer"
           >
-            <Sparkles className="h-3.5 w-3.5 text-cyan-200" />
+            <Zap className="h-3.5 w-3.5 text-cyan-200" />
             <span>Criar Conta Gratuita</span>
           </Link>
         </div>
@@ -242,7 +241,7 @@ export default function Home2Page() {
               href="/register"
               className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold text-sm sm:text-base shadow-xl shadow-violet-600/30 hover:scale-105 transition-all min-h-[52px] w-full sm:w-auto cursor-pointer"
             >
-              <Sparkles className="w-5 h-5 text-cyan-200" />
+              <Zap className="w-5 h-5 text-cyan-200" />
               <span>Começar Gratuitamente • Ganhe 100 Créditos</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
@@ -863,7 +862,7 @@ export default function Home2Page() {
               href="/register"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-white text-slate-950 font-bold text-xs sm:text-sm shadow-2xl hover:bg-slate-200 transition-all hover:scale-105 min-h-[50px] w-full sm:w-auto cursor-pointer"
             >
-              <Sparkles className="w-4 h-4 text-violet-600 shrink-0" />
+              <Zap className="w-4 h-4 text-violet-600 shrink-0 fill-current" />
               <span className="text-slate-950 font-black">Criar Conta Gratuita e Resgatar 100 Créditos ⚡</span>
             </Link>
           </div>

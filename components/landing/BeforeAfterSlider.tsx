@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { SlidersHorizontal, Sparkles, Wand2, Film, Zap, ArrowLeftRight } from "lucide-react";
+import { SlidersHorizontal, Wand2, Film, Zap, ArrowLeftRight } from "lucide-react";
 
 export function BeforeAfterSlider() {
   const [sliderPosition, setSliderPosition] = useState<number>(50);

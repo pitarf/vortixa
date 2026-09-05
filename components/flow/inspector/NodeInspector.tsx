@@ -8,7 +8,6 @@ import {
   SlidersHorizontal,
   Trash2,
   Copy,
-  Sparkles,
   Info,
   CheckCircle2,
   AlertCircle,
