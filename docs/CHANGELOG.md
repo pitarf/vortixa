@@ -8,7 +8,7 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 - **Banner de Consentimento de Cookies (`CookieConsentBanner.tsx`)**:
   * Adicionado banner dinâmico e não intrusivo com opções "Aceitar Todos" e "Apenas Essenciais", gravando o consentimento com data e hora no `localStorage`.
 - **Página Oficial de Termos de Uso e Política de Privacidade (`/termos`)**:
-  * Página completa com direitos comerciais dos outputs gerados por IA, diretrizes do Art. 18 da LGPD, direitos do titular e canal oficial do DPO (`privacidade@vortixia.com.br`).
+  * Página completa com direitos comerciais dos outputs gerados por IA, diretrizes do Art. 18 da LGPD, direitos do titular e canal oficial de atendimento (`contato@vortixia.com.br`).
 - **Aceite Obrigatório no Cadastro (`app/(auth)/register/page.tsx`)**:
   * Checkbox com links diretos para os termos antes de permitir a criação da conta.
 

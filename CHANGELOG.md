@@ -15,7 +15,7 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
     * 100% de direitos patrimoniais e comerciais sobre o conteúdo gerado por IA para o usuário, sem marcas d'água.
     * Diretrizes de tratamento de dados pessoais conforme a Lei nº 13.709/2018 (LGPD) e Marco Civil da Internet.
     * Mecanismos de exclusão definitiva de conta e dados pelo titular.
-    * Canal direto com o Encarregado de Dados (DPO) em `privacidade@vortixia.com.br`.
+    * Canal direto oficial de atendimento & privacidade em `contato@vortixia.com.br`.
 - **Confirmação Obrigatória de Termos no Cadastro (`app/(auth)/register/page.tsx`)**:
   - Checkbox tátil obrigatório vinculando aceite dos Termos de Uso e Política de Privacidade antes de liberar o botão "Cadastrar com E-mail".
   - Feedback visual e validação bloqueando submissões sem consentimento explícito.

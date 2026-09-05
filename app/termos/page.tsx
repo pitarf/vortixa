@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import Link from "next/link";
 import { Shield, Lock, FileText, CheckCircle2, ArrowLeft } from "lucide-react";
 
@@ -179,7 +179,7 @@ export default function TermosPage() {
               Para exercer qualquer um dos seus direitos garantidos pela LGPD ou sanar dúvidas sobre estes Termos de Uso, entre em contato com nosso Encarregado de Proteção de Dados através do suporte oficial:
             </p>
             <div className="p-4 rounded-xl bg-[#0D0E12] border border-[#1E202E] font-mono text-xs text-slate-300 space-y-1">
-              <p>Canal de Privacidade: <span className="text-cyan-400">privacidade@vortixia.com.br</span></p>
+              <p>Canal Oficial de Atendimento & DPO: <span className="text-cyan-400">contato@vortixia.com.br</span></p>
               <p>Jurisdição: Foro da Comarca de São Paulo / Brasil</p>
             </div>
           </section>
