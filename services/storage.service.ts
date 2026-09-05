@@ -12,15 +12,13 @@ export class StorageService {
       return url;
     }
 
-    const isLive = process.env.AI_PROVIDER_MODE === "live";
-    
-    // Em desenvolvimento local ou se credenciais do R2 não estiverem ativas, salva localmente no disco
-    if (!isLive || !process.env.STORAGE_ACCESS_KEY) {
-      return await this.uploadToLocalDisk(url, fileName);
-    }
+    // Em modo live, retornamos a URL de alta disponibilidade da fal.ai diretamente para visualização instantânea no navegador
+    // e salvamos cópia em disco em background para persistência
+    this.uploadToLocalDisk(url, fileName).catch((err) => {
+      console.warn("Aviso ao salvar cópia em disco:", err.message);
+    });
 
-    // Em produção com Cloudflare R2
-    return await this.uploadToLocalDisk(url, fileName);
+    return url;
   }
 
   private static isTrustedHost(hostname: string): boolean {
