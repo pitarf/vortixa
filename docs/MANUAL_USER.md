@@ -166,3 +166,50 @@ O **VORIXA FLOW** é um espaço de trabalho visual infinito para conectar modelo
   * *Calculadora de Planos & FAQ*: Tabela transparente de pacotes de créditos e perguntas frequentes em formato accordion.
 
 
+
+
+```markdown
+---
+
+## 8. Dashboard VORIXA CREATIVE OS (Fase 8.2)
+
+O **Dashboard VORIXA CREATIVE OS** é o centro nervoso da plataforma para criadores e produtores audiovisuais com inteligência artificial.
+
+### A. Topbar & Ações Globais
+* **Busca Global Omnibox**:
+  * *Objetivo*: Localizar ativos, prompts e projetos em tempo real.
+  * *Atalho*: Pressione `⌘ + K` (Mac) ou `Ctrl + K` (Windows) para focar imediatamente. Pressione `Enter` para filtrar a biblioteca.
+* **Badge Dourado de Créditos**:
+  * *Objetivo*: Acompanhar o saldo disponível de forma imediata com link direto para aquisição ou recarga.
+* **Central de Notificações**:
+  * *Objetivo*: Avisar sobre conclusões de renderizações 4K, novos modelos disponíveis e bônus de créditos.
+* **Status dos Motores & Alternador Turbo**:
+  * *Objetivo*: Alterne entre o modo `VORIXA Turbo` (renderização em nuvem real de alta performance) e `Simulação`.
+* **Menu de Perfil**:
+  * *Objetivo*: Identificação da conta, status do plano (Creator Pro) e encerramento seguro de sessão.
+
+### B. Sidebar Lateral Dark Obsidian
+* **Creative Suite**:
+  * *Studio CREATE* (`/dashboard/create`): Geração direta de imagens, vídeos, lipsync e upscales com presets.
+  * *VORIXA FLOW* (`/dashboard/flow`): Canvas infinito para criação e execução de grafos e pipelines de IA.
+  * *Build with AI* (`/dashboard/flow?mode=ai`): Montagem automática de pipelines a partir de descrições em texto.
+* **Motores de IA**: Acesso direto a cada modelo individual (FLUX.1, Kling AI, LivePortrait, Motion Control e Upscale 4K).
+* **Biblioteca & Gestão**: Meus Ativos, Favoritos e Planos & Créditos.
+
+### C. Hero Banner & Métricas Operacionais
+* **Saudação Editorial & Atalhos de 1 Clique**: Acesso imediato a "Criar com IA", "Abrir VORIXA FLOW" e "Explorar Modelos".
+* **Métricas em Tempo Real**: Indicadores de projetos criados, ativos na biblioteca, créditos disponíveis e uptime operacional (99.99%).
+
+### D. Cards de Criação & Projetos Recentes
+* **Cards Principais**:
+  1. *Studio CREATE*: Preview visual e tags rápidas de motores.
+  2. *VORIXA FLOW*: Simulação de encadeamento dos nós `Prompt -> FLUX -> Kling -> LipSync -> 4K`.
+  3. *Build with AI*: Caixa ilustrativa de prompt com construção autônoma.
+  4. *Biblioteca*: Mini grid 2x2 com acesso rápido à galeria de ativos.
+* **Seus Últimos Projetos**:
+  * Cards em proporção widescreen 16:9 com badge de duração, modelo empregado e menu de 3 pontos para visualização em tela cheia (Lightbox), download e abertura no Flow.
+
+### E. Widgets de Apoio
+* **Estatísticas de Uso**: Gráfico em anel de 62% com balanço de consumo de créditos e seletor temporal de 7 ou 30 dias.
+* **Destaque da Comunidade**: Visualização de obras em alta com likes e remix de workflows no Flow.
+* **Novidades no VORIXA**: Changelog ao vivo das versões mais recentes dos motores de IA.

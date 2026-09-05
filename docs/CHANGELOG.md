@@ -2,6 +2,19 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [2.4.0] - 2026-09-05
+
+### Adicionado / Refatorado
+- **Dashboard VORIXA CREATIVE OS (Fase 8.2)**:
+  * Redesenho completo da interface do Dashboard e Casca de Navegação baseado na referência visual editorial Dark Obsidian.
+  * **Topbar Global Omnibox**: Campo de busca global com atalho de teclado `[ ⌘ K ]` / `[ Ctrl K ]`, badge dourado de créditos (`#F59E0B`), central de notificações com sino interativo e menu de perfil.
+  * **Sidebar Lateral Dark Obsidian**: Menu com categorização por suítes (Creative Suite, Motores de IA, Biblioteca e Sistema) e gaveta deslizante adaptativa para dispositivos móveis.
+  * **Hero Banner Cinematográfico**: Saudação editorial com atalhos de 1 clique ("Criar com IA", "Abrir VORIXA FLOW", "Explorar Modelos") e strip de 4 métricas de desempenho da plataforma.
+  * **Grid dos 4 Cards Principais de Criação**: Studio CREATE, VORIXA FLOW com pré-visualização de conexões de nós em pipeline, Build with AI e Biblioteca 2x2.
+  * **Seção de Projetos Recentes**: Cards widescreen 16:9 com badges de modelo, tempo decorrido, menu de ações rápidas e modal de visualização em tela cheia (Lightbox).
+  * **Widgets de Apoio**: Gráfico SVG de uso em anel de 62%, destaque cinematográfico da comunidade ("O Despertar") e feed de novidades em tempo real.
+- **Validação de Qualidade**: Suíte com 100% de aprovação (16 arquivos, 122 testes Vitest verdes) e build de produção Next.js 16 validado com sucesso.
+
 ## [2.3.0] - 2026-09-04
 
 ### Adicionado / Modificado

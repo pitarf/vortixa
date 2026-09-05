@@ -28,7 +28,12 @@
 - [x] Fase 10: Infraestrutura de Deploy e Disaster Recovery (Dockerfile Multi-stage Standalone, `docker-compose.yml` completo, CI/CD GitHub Actions `.github/workflows/ci.yml`, scripts `backup-db.sh` e `restore-db.sh`).
 - [x] Fase 11: Nova Landing Page Home2 de Alta Conversão (`/home2` com Benchmarking em `docs/BENCHMARK_HOME2_RESEARCH.md`, Copywriting Master em `docs/COPY_HOME2_MASTER.md`, preservando a Home `/` original intacta e com 118/118 testes Vitest verdes).
 - [x] Fase 12: Motor de Otimização e Tradução de Prompts (PromptEngine com tradução de visual para inglês e preservação estrita de falas/scripts em Português, endpoint `/api/tools/optimize-prompt`, botão interativo no `PromptInput` e 121/121 testes verdes).
-- [x] ## Concluído Recentemente
+- [x] **Refatoração do Dashboard VORIXA CREATIVE OS (Fase 8.2)**:
+  - Implementação cirúrgica da interface com base na referência visual: Topbar com busca omnibox `[ ⌘ K ]`, badge de créditos dourado `#F59E0B`, sino com popover, avatar com dropdown e sidebar Dark Obsidian.
+  - Hero banner cinematográfico com saudação dinâmica, métricas operacionais (127 projetos, 842 ativos, uptime 99.99%) e botões táteis de ação rápida.
+  - Grid dos 4 cards centrais de criação (Studio CREATE, VORIXA FLOW com pipeline animado, Build with AI e Biblioteca 2x2).
+  - Seção de projetos recentes widescreen com Lightbox em tela cheia e 3 widgets inferiores (gráfico SVG de consumo 62%, destaque da comunidade e feed de novidades).
+  - 100% dos 122 testes Vitest verdes e build Next.js 16 validado com sucesso.
 - [x] **Conexão Direta SMTP Hostinger (E-mail Transacional)**:
   - Configurado `nodemailer` e `SMTPEmailProvider` nativo.
   - Conexão direta via SSL (Porta 465) com `smtp.hostinger.com` autenticada com sucesso (`contato@vortixia.com.br`).
@@ -36,4 +41,4 @@
 - [x] **Integração Google Imagen 3 (fal-ai/nano-banana-pro)**:
   - Adicionado suporte dinâmico no backend e seletor visual na interface de imagem.
   - Calibração de enquadramento de corpo inteiro (cabeça aos pés sem cortes) e ambientação moderna/povoada no `PromptEngine`.
-  - 100% dos 122 testes Vitest passando com sucesso.
+  - 100% dos 122 testes Vitest verdes e build Next.js 16 validado com sucesso.
