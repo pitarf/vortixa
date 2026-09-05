@@ -5,6 +5,21 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.2.7] - 2026-09-05
+### Adicionado & Compliance LGPD
+- **Banner de Consentimento de Cookies (`CookieConsentBanner.tsx`)**:
+  - Implementação de banner de consentimento em conformidade com a LGPD exibido em todas as rotas públicas, com opções de "Aceitar Todos" e "Apenas Essenciais".
+  - Persistência das preferências no `localStorage` (`vortixa_cookie_consent`).
+- **Página Oficial de Termos de Uso & Privacidade (`/termos`)**:
+  - Página completa em PT-BR detalhando:
+    * 100% de direitos patrimoniais e comerciais sobre o conteúdo gerado por IA para o usuário, sem marcas d'água.
+    * Diretrizes de tratamento de dados pessoais conforme a Lei nº 13.709/2018 (LGPD) e Marco Civil da Internet.
+    * Mecanismos de exclusão definitiva de conta e dados pelo titular.
+    * Canal direto com o Encarregado de Dados (DPO) em `privacidade@vortixia.com.br`.
+- **Confirmação Obrigatória de Termos no Cadastro (`app/(auth)/register/page.tsx`)**:
+  - Checkbox tátil obrigatório vinculando aceite dos Termos de Uso e Política de Privacidade antes de liberar o botão "Cadastrar com E-mail".
+  - Feedback visual e validação bloqueando submissões sem consentimento explícito.
+
 ## [1.2.6] - 2026-09-05
 ### Segurança & Hardening HTTP (Nota A+ no SecurityHeaders / Snyk)
 - **Eliminação de Fingerprinting Tecnológico (`X-Powered-By`)**:

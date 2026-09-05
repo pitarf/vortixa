@@ -10,6 +10,7 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [utms, setUtms] = useState<Record<string, string | null>>({});
   const router = useRouter();
@@ -34,6 +35,12 @@ export default function RegisterPage() {
       toast.error("Por favor, preencha todos os campos.");
       return;
     }
+
+    if (!agreeTerms) {
+      toast.error("Você precisa aceitar os Termos de Uso e a Política de Privacidade (LGPD) para continuar.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -149,10 +156,39 @@ export default function RegisterPage() {
             </div>
           </div>
 
+          {/* Checkbox de Aceite dos Termos de Uso e LGPD */}
+          <div className="flex items-start gap-3 p-3 rounded-xl bg-[hsl(240,10%,2%)] border border-[hsl(240,6%,12%)]">
+            <input
+              id="agreeTerms"
+              type="checkbox"
+              checked={agreeTerms}
+              onChange={(e) => setAgreeTerms(e.target.checked)}
+              className="mt-1 h-4 w-4 rounded border-[hsl(240,6%,25%)] bg-[hsl(240,10%,4%)] text-[hsl(224,100%,54%)] focus:ring-[hsl(224,100%,54%)] cursor-pointer"
+            />
+            <label htmlFor="agreeTerms" className="text-xs text-[hsl(240,5%,65%)] leading-relaxed cursor-pointer select-none">
+              Li e concordo com os{" "}
+              <Link
+                href="/termos"
+                target="_blank"
+                className="text-[hsl(224,100%,65%)] hover:underline font-semibold"
+              >
+                Termos de Uso
+              </Link>{" "}
+              e confirmo o tratamento dos meus dados conforme a{" "}
+              <Link
+                href="/termos#lgpd"
+                target="_blank"
+                className="text-[hsl(180,100%,50%)] hover:underline font-semibold"
+              >
+                Política de Privacidade (LGPD)
+              </Link>.
+            </label>
+          </div>
+
           <div>
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !agreeTerms}
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium bg-[hsl(224,100%,54%)] text-white hover:bg-[hsl(224,100%,48%)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[hsl(224,100%,54%)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02]"
             >
               {isLoading ? "Criando Conta..." : "Cadastrar com E-mail"}

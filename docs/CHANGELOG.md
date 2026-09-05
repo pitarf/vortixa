@@ -2,6 +2,16 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [2.9.0] - 2026-09-05
+
+### Governança, Compliance LGPD & Consentimento de Cookies
+- **Banner de Consentimento de Cookies (`CookieConsentBanner.tsx`)**:
+  * Adicionado banner dinâmico e não intrusivo com opções "Aceitar Todos" e "Apenas Essenciais", gravando o consentimento com data e hora no `localStorage`.
+- **Página Oficial de Termos de Uso e Política de Privacidade (`/termos`)**:
+  * Página completa com direitos comerciais dos outputs gerados por IA, diretrizes do Art. 18 da LGPD, direitos do titular e canal oficial do DPO (`privacidade@vortixia.com.br`).
+- **Aceite Obrigatório no Cadastro (`app/(auth)/register/page.tsx`)**:
+  * Checkbox com links diretos para os termos antes de permitir a criação da conta.
+
 ## [2.8.0] - 2026-09-05
 
 ### Segurança & Blindagem HTTP (Security Headers & Snyk Nota A+)

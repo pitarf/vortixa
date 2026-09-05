@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Outfit, Inter, Instrument_Serif } from "next/font/google";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { CookieConsentBanner } from "@/components/layout/CookieConsentBanner";
 import prisma from "@/lib/prisma";
 import "./globals.css";
 
@@ -131,6 +132,7 @@ export default function RootLayout({
         <ThemeProvider>
           <Toaster richColors position="top-right" />
           {children}
+          <CookieConsentBanner />
         </ThemeProvider>
       </body>
     </html>
