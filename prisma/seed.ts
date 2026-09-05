@@ -66,6 +66,42 @@ async function main() {
       toolName: 'Upscale de Vídeo',
       toolDesc: 'Aumente a resolução de seus vídeos criados.',
     },
+    {
+      name: 'FLUX Dev',
+      technicalName: 'fal-ai/flux/dev',
+      creditCost: 2,
+      apiUnitCost: 0.025,
+      toolSlug: 'gerador-imagem-dev',
+      toolName: 'Gerador de Imagens Dev',
+      toolDesc: 'Geração de alta precisão e detalhamento com FLUX Dev.',
+    },
+    {
+      name: 'Recraft V3',
+      technicalName: 'fal-ai/recraft-v3',
+      creditCost: 2,
+      apiUnitCost: 0.04,
+      toolSlug: 'gerador-imagem-recraft',
+      toolName: 'Recraft V3 Design',
+      toolDesc: 'Design vetorial, ilustrações e imagens de marca de alta fidelidade.',
+    },
+    {
+      name: 'FLUX.1 Pro Ultra',
+      technicalName: 'fal-ai/flux-pro/v1.1-ultra',
+      creditCost: 4,
+      apiUnitCost: 0.06,
+      toolSlug: 'gerador-imagem-ultra',
+      toolName: 'FLUX.1 Pro Ultra',
+      toolDesc: 'Qualidade fotográfica máxima de cinema até resolução 4K.',
+    },
+    {
+      name: 'Google Imagen 3 (Gemini Pro)',
+      technicalName: 'fal-ai/nano-banana-pro',
+      creditCost: 3,
+      apiUnitCost: 0.04,
+      toolSlug: 'gerador-imagem-imagen3',
+      toolName: 'Google Imagen 3',
+      toolDesc: 'Fotorrealismo humano extremo, cenografia urbana rica e tipografia nítida.',
+    },
   ];
 
   for (const m of models) {

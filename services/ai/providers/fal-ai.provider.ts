@@ -22,6 +22,19 @@ export class FalAIProvider implements IAIProvider {
       const isLocalhost = payload.webhookUrl.includes("localhost") || payload.webhookUrl.includes("127.0.0.1");
 
       const modelInputs = { ...payload.inputs };
+
+      // Sanitização específica por modelo fal.ai
+      if (payload.modelTechnicalName.includes("flux/schnell")) {
+        // FLUX Schnell aceita no máximo 12 steps (recomendado: 4)
+        if (modelInputs.num_inference_steps) {
+          modelInputs.num_inference_steps = Math.min(Number(modelInputs.num_inference_steps) || 4, 12);
+        } else {
+          modelInputs.num_inference_steps = 4;
+        }
+        // FLUX Schnell não aceita guidance_scale
+        delete modelInputs.guidance_scale;
+      }
+
       const requiresAspectRatio = payload.modelTechnicalName.includes("ideogram") || 
                                   payload.modelTechnicalName.includes("ultra") || 
                                   payload.modelTechnicalName.includes("nano-banana");
@@ -55,10 +68,8 @@ export class FalAIProvider implements IAIProvider {
         throw new Error("Não foi retornado um request_id válido do fal.ai.");
       }
 
-      // Se estiver rodando em localhost, busca o resultado real diretamente da fila da fal.ai
-      if (isLocalhost) {
-        this.pollFalResultInBackground(result.request_id, payload.jobId, payload.modelTechnicalName);
-      }
+      // Inicia polling em background como safety-net resiliente (funciona tanto em localhost quanto em produção se o webhook atrasar)
+      this.pollFalResultInBackground(result.request_id, payload.jobId, payload.modelTechnicalName);
 
       return { providerJobId: result.request_id };
     } catch (error: any) {
@@ -136,7 +147,9 @@ export class FalAIProvider implements IAIProvider {
           }
 
           const job = await prisma.aIJob.findUnique({ where: { id: jobId } });
-          if (job && outputUrls.length > 0) {
+          if (job && job.status !== "COMPLETED" && outputUrls.length > 0) {
+            const { StorageService } = await import("@/services/storage.service");
+
             await prisma.$transaction(async (tx) => {
               await tx.aIJob.update({
                 where: { id: job.id },
@@ -148,13 +161,20 @@ export class FalAIProvider implements IAIProvider {
 
               for (const realUrl of outputUrls) {
                 const isVideo = realUrl.endsWith(".mp4");
+                let finalUrl = realUrl;
+                try {
+                  finalUrl = await StorageService.uploadFromUrl(realUrl, isVideo ? "result.mp4" : "result.jpg");
+                } catch (stErr) {
+                  console.warn("Aviso ao salvar mídia localmente no StorageService:", stErr);
+                }
+
                 const file = await tx.file.create({
                   data: {
                     userId: job.userId,
                     name: `vorixa-render-${job.id.slice(0, 8)}.${isVideo ? "mp4" : "jpg"}`,
                     mimeType: isVideo ? "video/mp4" : "image/jpeg",
                     sizeBytes: 1024 * 1024 * 2,
-                    url: realUrl,
+                    url: finalUrl,
                     storageKey: `outputs/${job.userId}/vorixa-${job.id}.${isVideo ? "mp4" : "jpg"}`,
                   },
                 });
@@ -162,7 +182,7 @@ export class FalAIProvider implements IAIProvider {
                 await tx.aIJobOutput.create({
                   data: {
                     jobId: job.id,
-                    fileUrl: realUrl,
+                    fileUrl: finalUrl,
                     fileId: file.id,
                   },
                 });

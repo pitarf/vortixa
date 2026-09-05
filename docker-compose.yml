@@ -14,12 +14,17 @@ services:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://vorixa_user:vorixa_password@postgres:5432/vorixa_db?schema=public
       - AUTH_SECRET=${AUTH_SECRET:-change_in_production_secret_key_vorixa_2026}
-      - FAL_KEY=${FAL_KEY:-}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-https://vortixia.com.br}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-https://vortixia.com.br}
+      - AI_PROVIDER_MODE=${AI_PROVIDER_MODE:-live}
+      - FAL_KEY=${FAL_KEY:-b853f917-5e92-4d12-bf3e-a09dba498291:a78de2b18ba9d65b4f8f881df4b5a6c3}
       - PAYMENT_PROVIDER=${PAYMENT_PROVIDER:-mock_gateway}
       - PAYMENT_PROVIDER_MODE=${PAYMENT_PROVIDER_MODE:-mock}
       - NEXT_TELEMETRY_DISABLED=1
       - PORT=3000
       - HOSTNAME=0.0.0.0
+    volumes:
+      - vorixa-uploads:/app/public/uploads
     depends_on:
       postgres:
         condition: service_healthy
@@ -73,6 +78,8 @@ volumes:
   vorixa-minio-data:
     external: true
     name: vorixa_vorixa-minio-data
+  vorixa-uploads:
+    driver: local
 
 networks:
   vorixa-network:
