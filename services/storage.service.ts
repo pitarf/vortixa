@@ -7,6 +7,11 @@ export class StorageService {
    * Salva um arquivo a partir de uma URL externa (ex: fal.ai) no local de armazenamento apropriado (Disco ou S3/R2).
    */
   static async uploadFromUrl(url: string, fileName: string): Promise<string> {
+    // Se já for uma URL local (ex: /media/... ou /uploads/...), retorna direto
+    if (url.startsWith("/")) {
+      return url;
+    }
+
     const isLive = process.env.AI_PROVIDER_MODE === "live";
     
     // Em desenvolvimento local ou se credenciais do R2 não estiverem ativas, salva localmente no disco

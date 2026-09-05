@@ -1,45 +1,79 @@
 import { IAIProvider, AISubmitPayload } from "../ai-provider.interface";
+import prisma from "@/lib/prisma";
 
 export class MockAIProvider implements IAIProvider {
   async submitJob(payload: AISubmitPayload): Promise<{ providerJobId: string }> {
     const mockRequestId = `mock-req-${Math.random().toString(36).substring(2, 11)}`;
 
-    // Simula a chamada assíncrona do webhook de retorno após 2 segundos
+    console.log(`\n================== [MOCK AI PROVIDER TESTE] ==================`);
+    console.log(`🤖 Modo: MOCK (Simulação Local Sem Custos)`);
+    console.log(`📡 Modelo Solicitado: ${payload.modelTechnicalName}`);
+    console.log(`📝 Inputs:`, JSON.stringify(payload.inputs, null, 2));
+    console.log(`🆔 Gerado Request ID: ${mockRequestId}`);
+    console.log(`⏳ Concluindo job diretamente no banco de dados em 1.5s...`);
+    console.log(`==============================================================\n`);
+
+    // Atualiza diretamente no banco de dados para 100% de garantia e confiabilidade sem depender de loop de rede local
     setTimeout(async () => {
       try {
-        // Envia o payload simulado de COMPLETED de volta para o endpoint do webhook
-        const response = await fetch(payload.webhookUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-fal-signature": "mock-signature-for-development",
+        const job = await prisma.aIJob.findFirst({
+          where: {
+            OR: [
+              { id: payload.jobId },
+              { providerJobId: mockRequestId },
+            ],
           },
-          body: JSON.stringify({
-            request_id: mockRequestId,
-            status: "COMPLETED",
-            payload: {
-              images: [
-                {
-                  url: "https://queue.fal.run/files/mock-image.png",
-                  width: 1024,
-                  height: 1024,
-                },
-              ],
-              video: {
-                url: "https://queue.fal.run/files/mock-video.mp4",
-              },
-            },
-            error: null,
-          }),
         });
 
-        if (!response.ok) {
-          console.error(`Mock Webhook respondeu com erro HTTP: ${response.status}`);
+        if (job) {
+          const isVideo = payload.modelTechnicalName.includes("video") || payload.modelTechnicalName.includes("motion");
+          const mediaUrl = isVideo ? "/media/landing/hero/hero_main.mp4" : "/media/landing/hero/hero_main.jpg";
+
+          await prisma.$transaction(async (tx) => {
+            await tx.aIJob.update({
+              where: { id: job.id },
+              data: {
+                status: "COMPLETED",
+                providerJobId: mockRequestId,
+                billingQuantity: 1.0,
+                providerCostUsd: 0.003,
+              },
+            });
+
+            const file = await tx.file.create({
+              data: {
+                userId: job.userId,
+                name: `mock-resultado-${job.id.slice(0, 8)}.${isVideo ? "mp4" : "jpg"}`,
+                mimeType: isVideo ? "video/mp4" : "image/jpeg",
+                sizeBytes: 1024 * 1024 * 2,
+                url: mediaUrl,
+                storageKey: `outputs/${job.userId}/mock-${job.id}.${isVideo ? "mp4" : "jpg"}`,
+              },
+            });
+
+            await tx.aIJobOutput.create({
+              data: {
+                jobId: job.id,
+                fileUrl: mediaUrl,
+                fileId: file.id,
+              },
+            });
+          });
+
+          // Se for um nó de Flow, notifica o DAG Engine
+          try {
+            const { FlowExecutionService } = await import("@/services/flow-execution.service");
+            await FlowExecutionService.handleJobCompletion(job.id, { outputUrls: [mediaUrl] });
+          } catch {
+            // Ignora se não for nó de flow
+          }
+
+          console.log(`✅ [MOCK SUCESSO] Job ${job.id} atualizado para COMPLETED com output: ${mediaUrl}`);
         }
-      } catch (err) {
-        console.error("Erro no envio do Mock Webhook em background:", err);
+      } catch (err: any) {
+        console.error("❌ Erro ao concluir job mock no banco:", err.message);
       }
-    }, 2000);
+    }, 1500);
 
     return { providerJobId: mockRequestId };
   }

@@ -49,11 +49,11 @@ export default function DashboardPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-8 py-4">
       <div>
-        <h1 className="text-3xl font-extrabold text-white flex items-center gap-2">
-          <Wand2 className="h-7 w-7 text-violet-400" />
+        <h1 className="text-3xl font-extrabold text-foreground flex items-center gap-2">
+          <Wand2 className="h-7 w-7 text-violet-500 dark:text-violet-400" />
           Seu Estúdio Criativo
         </h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
           Selecione uma das ferramentas abaixo para iniciar suas gerações de mídia por inteligência artificial.
         </p>
       </div>
@@ -63,7 +63,7 @@ export default function DashboardPage() {
           <Link
             key={tool.href}
             href={tool.href}
-            className="group block bg-slate-950/40 border border-slate-900 rounded-2xl p-6 hover:border-slate-800 transition-all duration-300 relative overflow-hidden"
+            className="group block bg-card border border-border rounded-2xl p-6 hover:border-violet-500/50 hover:shadow-lg transition-all duration-300 relative overflow-hidden"
             style={{ minHeight: "44px" }}
           >
             {/* Efeito Hover de Luz */}
@@ -74,11 +74,11 @@ export default function DashboardPage() {
                 <tool.icon className="h-6 w-6" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-base font-bold text-slate-100 group-hover:text-white transition-colors">
+                <h3 className="text-base font-bold text-foreground group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors">
                   {tool.name}
                 </h3>
-                <p className="text-xs text-slate-500 font-medium">Custo: {tool.cost}</p>
-                <p className="text-xs text-slate-400 leading-relaxed mt-2">
+                <p className="text-xs text-violet-600 dark:text-violet-400 font-semibold font-mono">Custo: {tool.cost}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mt-2">
                   {tool.description}
                 </p>
               </div>

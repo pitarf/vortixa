@@ -3,6 +3,8 @@ export interface PaymentCheckoutRequest {
   amountCents: number;
   userId: string;
   email: string;
+  title?: string;
+  description?: string;
 }
 
 export interface PaymentCheckoutResponse {
@@ -11,6 +13,8 @@ export interface PaymentCheckoutResponse {
 }
 
 export interface PaymentProvider {
+  readonly name: string;
+
   /**
    * Cria uma sessão ou link de checkout no provedor externo.
    */
@@ -19,5 +23,9 @@ export interface PaymentProvider {
   /**
    * Valida e decodifica a assinatura de um webhook recebido do gateway.
    */
-  verifyWebhookSignature(rawBody: string, signature: string): Promise<boolean>;
+  verifyWebhookSignature(
+    rawBody: string,
+    signature: string,
+    headers?: Record<string, string | string[] | undefined>
+  ): Promise<boolean>;
 }

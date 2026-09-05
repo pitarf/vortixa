@@ -1,14 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Toaster, toast } from "sonner";
 
-export default function RecoveryPasswordPage() {
+function RecoveryPasswordContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const token = searchParams.get("token");
+
+  // Estado para solicitação de e-mail
   const [email, setEmail] = useState("");
+
+  // Estado para redefinição com nova senha
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleRecovery = async (e: React.FormEvent) => {
+  const handleRequestRecovery = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
       toast.error("Por favor, preencha o campo de e-mail.");
@@ -30,7 +41,46 @@ export default function RecoveryPasswordPage() {
         return;
       }
 
-      toast.success("E-mail de recuperação enviado com sucesso! Verifique sua caixa de entrada.");
+      toast.success("E-mail com instruções enviado com sucesso! Verifique sua caixa de entrada.");
+    } catch (err) {
+      toast.error("Servidor instável. Tente novamente em alguns instantes.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPassword || newPassword.length < 6) {
+      toast.error("A nova senha deve ter no mínimo 6 caracteres.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error("As senhas não coincidem. Digite novamente.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, newPassword }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error(data.error || "Token inválido ou expirado.");
+        return;
+      }
+
+      toast.success("Senha redefinida com sucesso! Redirecionando para o login...");
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
     } catch (err) {
       toast.error("Servidor instável. Tente novamente em alguns instantes.");
     } finally {
@@ -48,39 +98,87 @@ export default function RecoveryPasswordPage() {
       <div className="w-full max-w-md space-y-8 rounded-2xl border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,4%)] p-8 shadow-2xl relative z-10">
         <div className="text-center">
           <h2 className="font-heading text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-[linear-gradient(135deg,hsl(262,83%,58%)_0%,hsl(224,100%,54%)_50%,hsl(180,100%,50%)_100%)]">
-            VORIXA
+            VORTIXIA
           </h2>
           <p className="mt-2 text-sm text-[hsl(240,5%,65%)]">
-            Insira seu e-mail para recuperar o acesso à sua conta.
+            {token ? "Cadastre uma nova senha para sua conta." : "Insira seu e-mail para recuperar o acesso à sua conta."}
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleRecovery}>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-[hsl(240,5%,65%)]">
-              Endereço de E-mail
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              className="mt-1 block w-full rounded-lg border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,2%)] px-4 py-3 text-sm text-[hsl(0,0%,100%)] placeholder-[hsl(240,5%,35%)] focus:border-[hsl(224,100%,54%)] focus:outline-none focus:ring-1 focus:ring-[hsl(224,100%,54%)] transition-colors"
-              placeholder="nome@exemplo.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+        {token ? (
+          /* Formulário de Redefinição de Nova Senha com Token */
+          <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="newPassword" className="block text-sm font-medium text-[hsl(240,5%,65%)]">
+                  Nova Senha (mínimo 6 caracteres)
+                </label>
+                <input
+                  id="newPassword"
+                  type="password"
+                  required
+                  className="mt-1 block w-full rounded-lg border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,2%)] px-4 py-3 text-sm text-[hsl(0,0%,100%)] placeholder-[hsl(240,5%,35%)] focus:border-[hsl(224,100%,54%)] focus:outline-none focus:ring-1 focus:ring-[hsl(224,100%,54%)] transition-colors"
+                  placeholder="••••••••"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+              </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium bg-[hsl(224,100%,54%)] text-white hover:bg-[hsl(224,100%,48%)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[hsl(224,100%,54%)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02]"
-            >
-              {isLoading ? "Enviando..." : "Enviar Instruções"}
-            </button>
-          </div>
-        </form>
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-[hsl(240,5%,65%)]">
+                  Confirmar Nova Senha
+                </label>
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  required
+                  className="mt-1 block w-full rounded-lg border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,2%)] px-4 py-3 text-sm text-[hsl(0,0%,100%)] placeholder-[hsl(240,5%,35%)] focus:border-[hsl(224,100%,54%)] focus:outline-none focus:ring-1 focus:ring-[hsl(224,100%,54%)] transition-colors"
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium bg-[hsl(224,100%,54%)] text-white hover:bg-[hsl(224,100%,48%)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[hsl(224,100%,54%)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02]"
+              >
+                {isLoading ? "Redefinindo..." : "Salvar Nova Senha"}
+              </button>
+            </div>
+          </form>
+        ) : (
+          /* Formulário de Solicitação de E-mail de Recuperação */
+          <form className="mt-8 space-y-6" onSubmit={handleRequestRecovery}>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-[hsl(240,5%,65%)]">
+                Endereço de E-mail
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                className="mt-1 block w-full rounded-lg border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,2%)] px-4 py-3 text-sm text-[hsl(0,0%,100%)] placeholder-[hsl(240,5%,35%)] focus:border-[hsl(224,100%,54%)] focus:outline-none focus:ring-1 focus:ring-[hsl(224,100%,54%)] transition-colors"
+                placeholder="nome@exemplo.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium bg-[hsl(224,100%,54%)] text-white hover:bg-[hsl(224,100%,48%)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[hsl(224,100%,54%)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02]"
+              >
+                {isLoading ? "Enviando..." : "Enviar Instruções"}
+              </button>
+            </div>
+          </form>
+        )}
 
         <p className="text-center text-xs text-[hsl(240,5%,65%)] mt-8">
           Lembrou a senha?{" "}
@@ -90,5 +188,13 @@ export default function RecoveryPasswordPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function RecoveryPasswordPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[hsl(240,10%,2%)] flex items-center justify-center text-white">Carregando...</div>}>
+      <RecoveryPasswordContent />
+    </Suspense>
   );
 }

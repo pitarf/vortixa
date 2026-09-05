@@ -1,13 +1,28 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { PaymentLedgerService } from "@/services/payment-ledger.service";
-import { MockPaymentProvider } from "@/services/payment-provider/mock-payment-provider.service";
+import { PaymentProviderFactory } from "@/services/payment-provider/payment-provider.factory";
 
 export async function POST(req: Request) {
   try {
-    const signature = req.headers.get("x-vorexpay-signature") || "";
-    
-    // Obtém o payload completo como texto bruto para validar a assinatura com segurança
+    const url = new URL(req.url);
+    const queryProvider = url.searchParams.get("provider") || undefined;
+
+    const stripeSig = req.headers.get("stripe-signature");
+    const mpSig = req.headers.get("x-signature");
+    const vorexSig = req.headers.get("x-vorexpay-signature");
+    const genericSig = req.headers.get("signature");
+
+    const signature = stripeSig || mpSig || vorexSig || genericSig || "";
+
+    const headersMap: Record<string, string | string[] | undefined> = {
+      "x-signature": mpSig || undefined,
+      "stripe-signature": stripeSig || undefined,
+      "x-vorexpay-signature": vorexSig || undefined,
+      "x-request-id": req.headers.get("x-request-id") || undefined,
+      "data-id": url.searchParams.get("data.id") || undefined,
+    };
+
     const rawBody = await req.text();
     if (!rawBody) {
       return NextResponse.json({ error: "Payload vazio." }, { status: 400 });
@@ -20,22 +35,105 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "JSON inválido." }, { status: 400 });
     }
 
-    const { eventId, paymentId, gatewayTxId, status, amountCents, creditsGranted } = payload;
+    let providerName = queryProvider;
+    if (!providerName) {
+      if (stripeSig || payload?.type?.startsWith("checkout.session.") || payload?.type?.startsWith("charge.")) {
+        providerName = "stripe";
+      } else if (mpSig || payload?.action?.startsWith("payment.") || payload?.type === "payment") {
+        providerName = "mercadopago";
+      } else if (vorexSig || payload?.gateway === "vorexpay") {
+        providerName = "mock_gateway";
+      }
+    }
 
-    // 1. Validações preliminares obrigatórias de campos de borda
-    if (!eventId || !paymentId || !gatewayTxId || !status) {
+    const provider = PaymentProviderFactory.getProvider(providerName);
+
+    let eventId = payload.eventId || payload.id;
+    let paymentId = payload.paymentId;
+    let gatewayTxId = payload.gatewayTxId;
+    let rawStatus = payload.status;
+    let normalizedStatus: "PAID" | "REFUNDED" | "PENDING" | "FAILED" | string = "";
+
+    // Normalização Stripe
+    if (payload.type) {
+      eventId = payload.id;
+      const stripeObj = payload.data?.object || {};
+      gatewayTxId = stripeObj.id || gatewayTxId;
+      paymentId = stripeObj.metadata?.paymentId || paymentId;
+      const orderId = stripeObj.client_reference_id || stripeObj.metadata?.orderId;
+
+      if (payload.type === "checkout.session.completed" || payload.type === "payment_intent.succeeded") {
+        normalizedStatus = "PAID";
+      } else if (payload.type === "charge.refunded") {
+        normalizedStatus = "REFUNDED";
+      } else if (payload.type === "payment_intent.payment_failed") {
+        normalizedStatus = "FAILED";
+      }
+
+      if (!paymentId && (gatewayTxId || orderId)) {
+        const paymentRecord = await prisma.payment.findFirst({
+          where: {
+            OR: [
+              gatewayTxId ? { gatewayTxId } : {},
+              orderId ? { orderId } : {},
+            ],
+          },
+        });
+        if (paymentRecord) {
+          paymentId = paymentRecord.id;
+          gatewayTxId = paymentRecord.gatewayTxId;
+        }
+      }
+    }
+
+    // Normalização Mercado Pago
+    if (payload.action || payload.type === "payment") {
+      eventId = String(payload.id || payload.data?.id || `mp_evt_${Date.now()}`);
+      const mpDataId = String(payload.data?.id || payload.id || "");
+      gatewayTxId = mpDataId || gatewayTxId;
+
+      if (payload.action === "payment.created" || payload.action === "payment.updated") {
+        if (payload.data?.status === "approved") {
+          normalizedStatus = "PAID";
+        } else if (payload.data?.status === "refunded") {
+          normalizedStatus = "REFUNDED";
+        } else if (payload.data?.status === "rejected") {
+          normalizedStatus = "FAILED";
+        } else {
+          normalizedStatus = payload.status || "PAID";
+        }
+      }
+
+      if (!paymentId && gatewayTxId) {
+        const paymentRecord = await prisma.payment.findFirst({
+          where: {
+            OR: [
+              { gatewayTxId },
+              { orderId: payload.external_reference || payload.data?.external_reference },
+            ],
+          },
+        });
+        if (paymentRecord) {
+          paymentId = paymentRecord.id;
+          gatewayTxId = paymentRecord.gatewayTxId;
+        }
+      }
+    }
+
+    if (!normalizedStatus && rawStatus) {
+      normalizedStatus = rawStatus;
+    }
+
+    if (!eventId || (!paymentId && !gatewayTxId) || !normalizedStatus) {
       return NextResponse.json({ error: "Parâmetros obrigatórios ausentes." }, { status: 400 });
     }
 
-    // 2. Validação criptográfica de assinatura (Adapter do Provedor)
-    const provider = new MockPaymentProvider();
-    const isSignatureValid = await provider.verifyWebhookSignature(rawBody, signature);
+    const isSignatureValid = await provider.verifyWebhookSignature(rawBody, signature, headersMap);
 
     if (process.env.PAYMENT_PROVIDER_MODE === "live" && !isSignatureValid) {
       return NextResponse.json({ error: "Assinatura inválida." }, { status: 401 });
     }
 
-    // 3. Verifica se o Webhook já foi processado (Idempotência rígida a nível de banco)
     const existingWebhook = await prisma.paymentWebhook.findUnique({
       where: { gatewayEventId: eventId },
     });
@@ -44,19 +142,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Evento de pagamento já processado anteriormente." }, { status: 200 });
     }
 
-    // Grava a intenção de webhook no banco se não existir
     if (!existingWebhook) {
       try {
         await prisma.paymentWebhook.create({
           data: {
-            gateway: "vorexpay",
+            gateway: provider.name || "vorexpay",
             gatewayEventId: eventId,
             payload: rawBody,
             processed: false,
           },
         });
       } catch (err: any) {
-        // Se der erro de Unique Constraint (P2002), significa que outro processo simultâneo acabou de criar
         if (err.code === "P2002") {
           return NextResponse.json({ message: "Evento de pagamento em processamento ou já processado." }, { status: 200 });
         }
@@ -64,31 +160,34 @@ export async function POST(req: Request) {
       }
     }
 
-    // 4. Valida se o pagamento existe no banco de dados e pertence ao ambiente correto
-    const payment = await prisma.payment.findUnique({
-      where: { id: paymentId },
-    });
+    let payment = null;
+    if (paymentId) {
+      payment = await prisma.payment.findUnique({
+        where: { id: paymentId },
+      });
+    } else if (gatewayTxId) {
+      payment = await prisma.payment.findUnique({
+        where: { gatewayTxId },
+      });
+      if (payment) {
+        paymentId = payment.id;
+      }
+    }
 
     if (!payment) {
       return NextResponse.json({ error: "Pagamento não localizado." }, { status: 404 });
     }
 
-    // 5. Trata o status do pagamento na máquina de estados
-    if (status === "PAID") {
-      // Confirmação segura e concessão atômica de créditos
-      await PaymentLedgerService.confirmPayment(paymentId, gatewayTxId, eventId);
-    } else if (status === "REFUNDED") {
-      // Estorno seguro e dedução atômica do Ledger
-      await PaymentLedgerService.refundPayment(paymentId);
-    } else if (status === "PENDING" || status === "FAILED") {
-      // Regressões lógicas ou atualizações não finais. Retorna 200 para sinalizar recebimento, mas não executa alteração.
+    if (normalizedStatus === "PAID") {
+      await PaymentLedgerService.confirmPayment(payment.id, gatewayTxId || payment.gatewayTxId, eventId);
+    } else if (normalizedStatus === "REFUNDED") {
+      await PaymentLedgerService.refundPayment(payment.id);
+    } else if (normalizedStatus === "PENDING" || normalizedStatus === "FAILED") {
       return NextResponse.json({ message: "Status ignorado de forma idempotente." }, { status: 200 });
     } else {
-      // Se for um status fraudulento ou inválido, retornamos 400 Bad Request
-      return NextResponse.json({ error: `Status de pagamento inválido ou não suportado: ${status}` }, { status: 400 });
+      return NextResponse.json({ error: `Status de pagamento inválido ou não suportado: ${normalizedStatus}` }, { status: 400 });
     }
 
-    // Marca o webhook como processado de forma definitiva APÓS o sucesso completo das etapas anteriores
     await prisma.paymentWebhook.update({
       where: { gatewayEventId: eventId },
       data: { processed: true },
@@ -97,11 +196,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Webhook processado com sucesso." }, { status: 200 });
   } catch (err: any) {
     console.error("Erro no processamento do webhook de pagamentos:", err);
-    // Se for erro de validação de gatewayTxId mismatch, retorna 400
     if (err.message && err.message.includes("Mismatched gatewayTxId")) {
       return NextResponse.json({ error: err.message }, { status: 400 });
     }
-    // Erros genéricos de infraestrutura interna retornam 500
     return NextResponse.json({ error: "Erro interno no servidor de pagamentos." }, { status: 500 });
   }
 }

@@ -66,6 +66,8 @@ model User {
   orders            Order[]
   files             File[]
   auditLogs         AuditLog[]
+  flows             Flow[]
+  flowExecutions    FlowExecution[]
 
   @@index([createdAt])
 }
@@ -88,13 +90,16 @@ model CreditTransaction {
   jobId       String?               @unique
   paymentId   String?               @unique
   idempotencyKey String?            @unique // ID de controle contra duplo processamento e retries
+  flowExecutionId String?
   createdAt   DateTime              @default(now())
   
-  user       User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  job        AIJob?                @relation(fields: [jobId], references: [id], onDelete: SetNull)
-  payment    Payment?              @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  user          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job           AIJob?                @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  payment       Payment?              @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  flowExecution FlowExecution?        @relation(fields: [flowExecutionId], references: [id], onDelete: SetNull)
 
   @@index([userId, createdAt])
+  @@index([flowExecutionId])
 }
 
 model AIProvider {
@@ -163,6 +168,7 @@ model AIJob {
   inputs             AIJobInput[]
   outputs            AIJobOutput[]
   creditTx           CreditTransaction?
+  flowNodeExecution  FlowNodeExecution?
 
   @@index([userId, status])
   @@index([providerJobId])
@@ -305,5 +311,143 @@ model CreditPackage {
   displayOrder Int      @default(0)
   createdAt    DateTime @default(now())
 }
+
+// ==========================================
+// MÓDULO VORIXA FLOW (FASE 8)
+// ==========================================
+
+enum FlowStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum FlowExecutionStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  PARTIALLY_FAILED
+  FAILED
+  CANCELLED
+}
+
+enum FlowNodeExecutionStatus {
+  IDLE
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+  SKIPPED
+  CANCELLED
+}
+
+model Flow {
+  id          String           @id @default(uuid())
+  userId      String
+  name        String
+  description String?
+  viewport    Json?            // Coordenadas x, y, zoom do canvas React Flow
+  status      FlowStatus       @default(DRAFT)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nodes       FlowNode[]
+  connections FlowConnection[]
+  executions  FlowExecution[]
+
+  @@index([userId, updatedAt])
+  @@index([userId, status])
+}
+
+model FlowNode {
+  id             String                @id @default(uuid())
+  flowId         String
+  nodeType       String                // ex: "prompt", "image", "video", "lipsync", "upscale"
+  toolSlug       String?               // Mapeia para AITool.slug se for gerador
+  title          String
+  positionX      Float
+  positionY      Float
+  config         Json?                 // Parâmetros fixos e propriedades de inferência (seed, steps, resolution, etc)
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+
+  flow           Flow                  @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  sourceEdges    FlowConnection[]      @relation("SourceNode")
+  targetEdges    FlowConnection[]      @relation("TargetNode")
+  nodeExecutions FlowNodeExecution[]
+
+  @@index([flowId])
+}
+
+model FlowConnection {
+  id           String   @id @default(uuid())
+  flowId       String
+  sourceNodeId String
+  sourceHandle String   // Identificador do handle de saída (ex: "output_image", "output_text")
+  targetNodeId String
+  targetHandle String   // Identificador do handle de entrada (ex: "input_image", "input_prompt")
+  createdAt    DateTime @default(now())
+
+  flow         Flow     @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  sourceNode   FlowNode @relation("SourceNode", fields: [sourceNodeId], references: [id], onDelete: Cascade)
+  targetNode   FlowNode @relation("TargetNode", fields: [targetNodeId], references: [id], onDelete: Cascade)
+
+  @@unique([flowId, sourceNodeId, sourceHandle, targetNodeId, targetHandle])
+  @@index([flowId])
+  @@index([sourceNodeId])
+  @@index([targetNodeId])
+}
+
+model FlowExecution {
+  id                 String               @id @default(uuid())
+  flowId             String
+  userId             String
+  status             FlowExecutionStatus  @default(PENDING)
+  totalCreditCost    Int                  @default(0) // Custo total orçado/reservado
+  creditsReserved    Int                  @default(0) // Reserva inicial
+  creditsCharged     Int                  @default(0) // Consumido por nós concluídos
+  creditsRefunded    Int                  @default(0) // Devolvido por falhas/skips
+  idempotencyKey     String?              @unique     // Controle contra duplo disparo no backend
+  error              String?
+  startedAt          DateTime?
+  completedAt        DateTime?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  flow               Flow                 @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nodeExecutions     FlowNodeExecution[]
+  creditTransactions CreditTransaction[]
+
+  @@index([userId, status])
+  @@index([flowId, createdAt])
+}
+
+model FlowNodeExecution {
+  id              String                  @id @default(uuid())
+  flowExecutionId String
+  flowNodeId      String
+  aiJobId         String?                 @unique     // Vínculo 1:1 estrito com o AIJob do provedor (quando aplicável)
+  status          FlowNodeExecutionStatus @default(IDLE)
+  creditCost      Int                     @default(0)
+  attempt         Int                     @default(1)
+  resolvedInputs  Json?                   // Dados resolvidos dinamicamente de nós pais + config local
+  outputs         Json?                   // Resultados gerados pelo nó (URLs, metadados)
+  error           String?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+
+  flowExecution   FlowExecution           @relation(fields: [flowExecutionId], references: [id], onDelete: Cascade)
+  flowNode        FlowNode                @relation(fields: [flowNodeId], references: [id], onDelete: Cascade)
+  aiJob           AIJob?                  @relation(fields: [aiJobId], references: [id], onDelete: SetNull)
+
+  @@unique([flowExecutionId, flowNodeId, attempt])
+  @@index([flowExecutionId, status])
+  @@index([flowNodeId])
+}
+
 
 

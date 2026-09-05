@@ -29,6 +29,12 @@ export class CheckoutService {
     // 2. Cria o Order com os dados oficiais (única fonte de verdade) e preserva o snapshot
     const order = await OrderService.createOrder(userId, { packageId });
 
+    // Busca detalhes do pacote para enviar título descritivo ao gateway
+    const pkg = await prisma.creditPackage.findUnique({
+      where: { id: packageId },
+      select: { name: true, description: true },
+    });
+
     try {
       // 3. Cria sessão de checkout usando o adapter desacoplado
       const checkoutResponse = await this.provider.createCheckoutSession({
@@ -36,6 +42,8 @@ export class CheckoutService {
         amountCents: order.amountCents,
         userId: userId,
         email: user.email,
+        title: pkg ? `VORIXA - Pacote ${pkg.name}` : "Pacote de Créditos VORIXA",
+        description: pkg?.description || "Créditos para geração de IA na plataforma VORIXA",
       });
 
       // 4. Salva a transação pendente (Payment com status PENDING) no banco
@@ -46,7 +54,7 @@ export class CheckoutService {
           amountCents: order.amountCents,
           creditsGranted: order.creditsGranted,
           status: PaymentStatus.PENDING,
-          gateway: "mock_gateway",
+          gateway: this.provider.name || "mock_gateway",
           gatewayTxId: checkoutResponse.gatewayTxId,
         },
       });
@@ -62,7 +70,7 @@ export class CheckoutService {
         where: { id: order.id },
         data: { status: PaymentStatus.FAILED },
       });
-      throw new Error(error.message || "Falha ao criar o checkout de pagamentos.");
+      throw new Error(error.message || "Erro na conexão com o gateway de pagamentos.");
     }
   }
 }

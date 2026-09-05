@@ -24,6 +24,10 @@ describe('AI Engine and fal.ai mock adapter tests', () => {
       throw new Error("Seed do banco de dados não foi executado.");
     }
 
+    // Garante que todas as ferramentas e modelos estejam ativos
+    await prisma.aITool.updateMany({ data: { status: true } });
+    await prisma.aIModel.updateMany({ data: { status: true } });
+
     testUser = await prisma.user.create({
       data: {
         email: `ai_client_${Date.now()}@test.com`,
@@ -110,7 +114,7 @@ describe('AI Engine and fal.ai mock adapter tests', () => {
 
     const req = new Request("http://localhost/api/webhooks/fal", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-fal-signature": "mock-sig" },
       body: JSON.stringify({
         request_id: job.providerJobId,
         status: "COMPLETED",
@@ -145,7 +149,7 @@ describe('AI Engine and fal.ai mock adapter tests', () => {
 
     const req = new Request("http://localhost/api/webhooks/fal", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-fal-signature": "mock-sig" },
       body: JSON.stringify({
         request_id: job.providerJobId,
         status: "FAILED",
@@ -198,7 +202,7 @@ describe('AI Engine and fal.ai mock adapter tests', () => {
 
     const req1 = new Request("http://localhost/api/webhooks/fal", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-fal-signature": "mock-sig" },
       body: JSON.stringify({
         request_id: job.providerJobId,
         status: "COMPLETED",
@@ -210,7 +214,7 @@ describe('AI Engine and fal.ai mock adapter tests', () => {
     // Segunda chamada
     const req2 = new Request("http://localhost/api/webhooks/fal", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-fal-signature": "mock-sig" },
       body: JSON.stringify({
         request_id: job.providerJobId,
         status: "COMPLETED",
@@ -242,7 +246,7 @@ describe('AI Engine and fal.ai mock adapter tests', () => {
     // COMPLETED primeiro
     const req1 = new Request("http://localhost/api/webhooks/fal", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-fal-signature": "mock-sig" },
       body: JSON.stringify({
         request_id: job.providerJobId,
         status: "COMPLETED",
@@ -254,7 +258,7 @@ describe('AI Engine and fal.ai mock adapter tests', () => {
     // PROCESSING depois (evento atrasado)
     const req2 = new Request("http://localhost/api/webhooks/fal", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-fal-signature": "mock-sig" },
       body: JSON.stringify({
         request_id: job.providerJobId,
         status: "PROCESSING",
@@ -285,7 +289,7 @@ describe('AI Engine and fal.ai mock adapter tests', () => {
     // Primeira falha (estorna créditos)
     const req1 = new Request("http://localhost/api/webhooks/fal", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-fal-signature": "mock-sig" },
       body: JSON.stringify({
         request_id: job.providerJobId,
         status: "FAILED",

@@ -5,6 +5,7 @@ import { z } from "zod";
 
 const generateSchema = z.object({
   toolSlug: z.string(),
+  modelId: z.string().optional(),
   inputs: z.record(z.string(), z.any()),
   idempotencyKey: z.string().optional(),
 });
@@ -33,9 +34,12 @@ export async function POST(req: Request) {
     const job = await AIService.submitJob({
       userId: session.user.id,
       toolSlug: parsed.data.toolSlug,
+      modelId: parsed.data.modelId,
       inputs: parsed.data.inputs,
       idempotencyKey: parsed.data.idempotencyKey,
     });
+
+    console.log(`\n🚀 [POST /api/tools/generate SUCESSO] Job ID: ${job.id} | Status Inicial: ${job.status} | Provider Job ID: ${job.providerJobId}`);
 
     return NextResponse.json(job);
   } catch (err: any) {

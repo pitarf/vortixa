@@ -1,14 +1,33 @@
 @import "tailwindcss";
 
+@layer base {
+  :root, [data-theme="dark"], .dark {
+    --bg-primary: #070709;
+    --bg-secondary: #0D0E12;
+    --bg-card: #13141B;
+    --border-color: #1E202E;
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-muted: #94A3B8;
+  }
+
+  [data-theme="light"], .light {
+    --bg-primary: #F8FAFC;
+    --bg-secondary: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --border-color: #E2E8F0;
+    --text-primary: #0F172A;
+    --text-secondary: #334155;
+    --text-muted: #64748B;
+  }
+}
+
 @theme {
-  --color-background: hsl(240 10% 2%);
-  --color-foreground: hsl(0 0% 100%);
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
 
-  --color-card: hsl(240 10% 4%);
-  --color-card-foreground: hsl(0 0% 98%);
-
-  --color-popover: hsl(240 10% 2%);
-  --color-popover-foreground: hsl(0 0% 98%);
+  --color-card: var(--bg-card);
+  --color-card-foreground: var(--text-primary);
 
   --color-primary: hsl(224 100% 54%);       /* Azul Elétrico */
   --color-primary-foreground: hsl(0 0% 100%);
@@ -19,25 +38,239 @@
   --color-accent: hsl(180 100% 50%);        /* Ciano */
   --color-accent-foreground: hsl(240 10% 2%);
 
-  --color-muted: hsl(240 4% 12%);
-  --color-muted-foreground: hsl(240 5% 65%);
+  --color-muted: var(--bg-secondary);
+  --color-muted-foreground: var(--text-secondary);
 
-  --color-destructive: hsl(0 84% 60%);
-  --color-destructive-foreground: hsl(0 0% 98%);
-
-  --color-border: hsl(240 6% 12%);
-  --color-input: hsl(240 6% 12%);
-  --color-ring: hsl(224 100% 54%);
+  --color-border: var(--border-color);
+  --color-input: var(--border-color);
   
   --font-sans: var(--font-inter);
   --font-heading: var(--font-outfit);
+  --font-serif: var(--font-serif);
 }
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-family: var(--font-sans), sans-serif;
   margin: 0;
   padding: 0;
 }
 
+/* ==========================================================================
+   ARQUIVO MESTRE CENTRAL DE TEMA CLARO (GLOBAL THEME OVERRIDE)
+   Controla de forma UNIFICADA todas as telas do Dashboard, Ferramentas, Flow e Landing.
+   ========================================================================== */
+
+.light {
+  color-scheme: light;
+}
+
+.light body {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+/* 1. MAPEAMENTO UNIVERSAL DE SUPERFÍCIES ESCURAS -> CLARAS */
+.light .bg-\[\#070709\],
+.light .bg-\[\#08080A\],
+.light .bg-black,
+.light .bg-slate-950,
+.light .bg-slate-950\/40,
+.light .bg-slate-950\/50,
+.light .bg-slate-950\/60,
+.light .bg-slate-950\/80,
+.light .bg-slate-900,
+.light .bg-slate-900\/50,
+.light .bg-slate-900\/60,
+.light .bg-slate-900\/80 {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Painéis e Cards Centrais */
+.light .bg-\[\#0D0E12\],
+.light .bg-\[\#0E0F17\],
+.light .bg-\[\#13141B\] {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Inputs, Textareas e Caixas de Busca */
+.light input,
+.light textarea,
+.light .bg-slate-900 input,
+.light .bg-slate-950 input {
+  background-color: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+.light input::placeholder,
+.light textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* 2. MAPEAMENTO UNIVERSAL DE BORDAS */
+.light .border-slate-900,
+.light .border-slate-800,
+.light .border-slate-800\/80,
+.light .border-slate-700,
+.light .border-\[\#1E202E\],
+.light .border-\[\#1E202E\]\/80,
+.light .border-\[\#1E202E\]\/60 {
+  border-color: #E2E8F0 !important;
+}
+
+/* 3. MAPEAMENTO UNIVERSAL DE TEXTO E LEGIBILIDADE */
+.light .text-white {
+  color: #0F172A !important;
+}
+
+.light .text-slate-100,
+.light .text-slate-200 {
+  color: #1E293B !important;
+}
+
+.light .text-slate-300 {
+  color: #334155 !important;
+}
+
+.light .text-slate-400 {
+  color: #475569 !important;
+}
+
+.light .text-slate-500 {
+  color: #64748B !important;
+}
+
+.light .text-slate-600 {
+  color: #475569 !important;
+}
+
+/* 4. BOTÕES E SELETORES DE OPÇÃO (ex: Aspect Ratio, Duração, etc.) */
+.light button.bg-slate-900,
+.light button.bg-slate-950,
+.light button.bg-\[\#0D0E12\],
+.light button.bg-\[\#13141B\] {
+  background-color: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #334155 !important;
+}
+
+.light button.bg-slate-900:hover,
+.light button.bg-slate-950:hover,
+.light button.bg-\[\#0D0E12\]:hover,
+.light button.bg-\[\#13141B\]:hover {
+  background-color: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+/* Botões com seleção ativa */
+.light .bg-violet-600\/10,
+.light .bg-violet-600\/20,
+.light .bg-violet-500\/10 {
+  background-color: #EDE9FE !important;
+  border-color: #A78BFA !important;
+  color: #6D28D9 !important;
+}
+
+/* 5. HEADER, SIDEBAR E NAVEGAÇÃO */
+.light header {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-bottom-color: #E2E8F0 !important;
+}
+
+.light aside {
+  background-color: #FFFFFF !important;
+  border-right-color: #E2E8F0 !important;
+}
+
+.light header nav a,
+.light aside nav a {
+  color: #475569 !important;
+}
+
+.light header nav a:hover,
+.light aside nav a:hover {
+  color: #0F172A !important;
+  background-color: #F1F5F9 !important;
+}
+
+/* 6. PRESERVAÇÃO DE BOTÕES PRIMÁRIOS E GRADIENTES */
+.light .bg-violet-600,
+.light .bg-gradient-to-r,
+.light a.bg-violet-600,
+.light button.bg-violet-600,
+.light a.bg-gradient-to-r,
+.light button.bg-gradient-to-r {
+  color: #FFFFFF !important;
+}
+
+.light .bg-violet-600 *,
+.light .bg-gradient-to-r * {
+  color: #FFFFFF !important;
+}
+
+/* Manter Player de Vídeo Preto para Cinema */
+.light .aspect-video.bg-black,
+.light .aspect-video.bg-black video,
+.light .aspect-\[4\/5\].bg-black video {
+  background-color: #000000 !important;
+}
+
+/* Badges e Tags Coloridas */
+.light .bg-violet-950\/80,
+.light .bg-violet-950\/60,
+.light .bg-violet-950\/40 {
+  background-color: #EDE9FE !important;
+  border-color: #DDD6FE !important;
+  color: #6D28D9 !important;
+}
+
+.light .bg-cyan-950\/60,
+.light .bg-cyan-950\/80 {
+  background-color: #E0F2FE !important;
+  border-color: #BAE6FD !important;
+  color: #0369A1 !important;
+}
+
+.light .bg-emerald-950\/60,
+.light .bg-emerald-950\/80,
+.light .bg-emerald-950\/30 {
+  background-color: #DCFCE7 !important;
+  border-color: #BBF7D0 !important;
+  color: #15803D !important;
+}
+
+.light .bg-red-950\/30 {
+  background-color: #FEE2E2 !important;
+  border-color: #FECACA !important;
+  color: #B91C1C !important;
+}
+
+/* Animações Cinematográficas */
+@keyframes flowDash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(1000%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

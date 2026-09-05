@@ -2,10 +2,12 @@ import prisma from "@/lib/prisma";
 import { CreditService } from "../credit.service";
 import { AIProviderFactory } from "./ai-provider.factory";
 import { JobStatus } from "@prisma/client";
+import { PromptEngine } from "./prompt-engine.service";
 
 export interface AISubmitRequest {
   userId: string;
   toolSlug: string;
+  modelId?: string;
   inputs: Record<string, any>;
   idempotencyKey?: string;
 }
@@ -15,7 +17,7 @@ export class AIService {
    * Submete um novo job de geração de IA de forma segura, transacional e idempotente.
    */
   static async submitJob(request: AISubmitRequest) {
-    // 1. Validar Ferramenta e Modelo associado
+    // 1. Validar Ferramenta
     const tool = await prisma.aITool.findUnique({
       where: { slug: request.toolSlug },
       include: { model: true },
@@ -24,8 +26,23 @@ export class AIService {
     if (!tool) {
       throw new Error("Ferramenta de IA não cadastrada ou inativa.");
     }
-    if (!tool.status || !tool.model.status) {
+    if (!tool.status) {
       throw new Error("Esta ferramenta está temporariamente desativada.");
+    }
+
+    // Se o cliente especificou um modelId alternativo ativo, resolvemos dinamicamente
+    let targetModel = tool.model;
+    if (request.modelId && request.modelId !== tool.model.id) {
+      const customModel = await prisma.aIModel.findUnique({
+        where: { id: request.modelId },
+      });
+      if (customModel && customModel.status) {
+        targetModel = customModel;
+      }
+    }
+
+    if (!targetModel.status) {
+      throw new Error("Este modelo de IA está temporariamente desativado.");
     }
 
     // 2. Validação de Idempotência
@@ -39,7 +56,7 @@ export class AIService {
       }
     }
 
-    const cost = tool.model.creditCost;
+    const cost = targetModel.creditCost;
 
     // 3. Verificar saldo de créditos
     const hasCredits = await CreditService.hasEnoughCredits(request.userId, cost);
@@ -51,11 +68,11 @@ export class AIService {
     const job = await prisma.aIJob.create({
       data: {
         userId: request.userId,
-        modelId: tool.model.id,
+        modelId: targetModel.id,
         toolId: tool.id,
         status: "PENDING",
         creditCost: cost,
-        apiUnitCost: tool.model.apiUnitCost,
+        apiUnitCost: targetModel.apiUnitCost,
         idempotencyKey: request.idempotencyKey || null,
       },
     });
@@ -80,15 +97,25 @@ export class AIService {
       );
       charged = true;
 
-      // 7. Submeter ao Provedor (Factory escolhe Live ou Mock)
+      // 7. Processar e enriquecer prompt (se presente) com a IA da fal.ai (LLM) e fallback
+      const processedInputs = { ...request.inputs };
+      if (processedInputs.prompt && typeof processedInputs.prompt === "string") {
+        const optimized = await PromptEngine.optimizeAsync(processedInputs.prompt, {
+          enhanceQuality: true,
+          toolType: request.toolSlug.includes("video") ? "video" : "image",
+        });
+        processedInputs.prompt = optimized.optimizedPrompt;
+      }
+
+      // 8. Submeter ao Provedor (Factory escolhe Live ou Mock)
       const provider = AIProviderFactory.getProvider();
-      const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3005";
       const webhookUrl = `${baseUrl}/api/webhooks/fal`;
 
       const result = await provider.submitJob({
         jobId: job.id,
-        modelTechnicalName: tool.model.technicalName,
-        inputs: request.inputs,
+        modelTechnicalName: targetModel.technicalName,
+        inputs: processedInputs,
         webhookUrl,
       });
 
@@ -98,9 +125,9 @@ export class AIService {
         data: {
           status: "PROCESSING",
           providerJobId: result.providerJobId,
-          billingUnit: tool.model.billingUnit || "GENERATION",
+          billingUnit: targetModel.billingUnit || "GENERATION",
           billingQuantity: 1.0,
-          providerCostUsd: tool.model.apiUnitCost,
+          providerCostUsd: targetModel.apiUnitCost,
           creditsReserved: cost,
           creditsCharged: cost,
         },

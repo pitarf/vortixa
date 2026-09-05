@@ -55,7 +55,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-8 rounded-2xl border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,4%)] p-8 shadow-2xl relative z-10">
         <div className="text-center">
           <h2 className="font-heading text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-[linear-gradient(135deg,hsl(262,83%,58%)_0%,hsl(224,100%,54%)_50%,hsl(180,100%,50%)_100%)]">
-            VORIXA
+            VORTIXIA
           </h2>
           <p className="mt-2 text-sm text-[hsl(240,5%,65%)]">
             Faça login na sua conta para continuar criando.

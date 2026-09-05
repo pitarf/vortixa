@@ -1,7 +1,55 @@
 version: '3.8'
 
 services:
-  # Storage S3 Local (MinIO)
+  # Aplicação Principal VORIXA (Next.js 16 Standalone)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vorixa-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://vorixa_user:vorixa_password@postgres:5432/vorixa_db?schema=public
+      - AUTH_SECRET=${AUTH_SECRET:-change_in_production_secret_key_vorixa_2026}
+      - FAL_KEY=${FAL_KEY:-}
+      - PAYMENT_PROVIDER=${PAYMENT_PROVIDER:-mock_gateway}
+      - PAYMENT_PROVIDER_MODE=${PAYMENT_PROVIDER_MODE:-mock}
+      - NEXT_TELEMETRY_DISABLED=1
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    networks:
+      - vorixa-network
+
+  # Banco de Dados Relacional PostgreSQL 15 com Volume Persistente
+  postgres:
+    image: postgres:15-alpine
+    container_name: vorixa-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: vorixa_user
+      POSTGRES_PASSWORD: vorixa_password
+      POSTGRES_DB: vorixa_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vorixa_user -d vorixa_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vorixa-network
+
+  # Object Storage S3 Compatível Local (MinIO)
   minio:
     image: minio/minio
     container_name: vorixa-minio
@@ -15,7 +63,15 @@ services:
     command: server /data --console-address ":9001"
     volumes:
       - minio-data:/data
+    networks:
+      - vorixa-network
 
 volumes:
+  postgres-data:
+    driver: local
   minio-data:
     driver: local
+
+networks:
+  vorixa-network:
+    driver: bridge

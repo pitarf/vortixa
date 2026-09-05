@@ -19,7 +19,10 @@ describe('Tools API Router Tests', () => {
   let seededTool: any;
 
   beforeAll(async () => {
-    seededTool = await prisma.aITool.findFirst({ include: { model: true } });
+    seededTool = await prisma.aITool.findFirst({
+      where: { status: true, model: { status: true } },
+      include: { model: true },
+    });
 
     testUser = await prisma.user.create({
       data: {
