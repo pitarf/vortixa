@@ -13,7 +13,7 @@ export function StudioCreateDemo() {
     <section id="studio" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto space-y-10">
       <div className="text-center space-y-3 max-w-2xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-mono font-bold uppercase">
-          ✦ Unified Studio CREATE
+          Unified Studio CREATE
         </div>
         <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight font-heading">
           Studio CREATE — Geração Rápida e Focada
@@ -97,7 +97,7 @@ export function StudioCreateDemo() {
           />
           <div className="absolute bottom-4 right-4 bg-[#0D0E12]/90 border border-violet-500/40 px-3.5 py-1.5 rounded-xl text-xs font-mono text-violet-300 flex items-center gap-2">
             <Zap className="h-3.5 w-3.5 text-violet-400" />
-            <span>Open in Flow ✦</span>
+            <span>Open in Flow </span>
           </div>
         </div>
       </div>

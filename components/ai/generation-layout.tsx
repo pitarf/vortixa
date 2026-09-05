@@ -402,7 +402,7 @@ export function GenerationLayout({
                 className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90 text-white shadow-lg shadow-violet-600/30 transition-all cursor-pointer"
               >
                 <Wand2 className="w-4 h-4 text-cyan-200" />
-                <span>✦ Aprimorar com IA e Ajustar</span>
+                <span>Aprimorar com IA e Ajustar</span>
               </button>
 
               <button

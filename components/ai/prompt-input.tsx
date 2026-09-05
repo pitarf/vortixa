@@ -74,7 +74,7 @@ export function PromptInput({
             ) : (
               <Sparkles className="w-3.5 h-3.5 text-cyan-200" />
             )}
-            <span>✦ Otimizar Prompt por IA</span>
+            <span>Otimizar Prompt por IA</span>
           </button>
         )}
       </div>

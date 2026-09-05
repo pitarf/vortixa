@@ -154,7 +154,7 @@ export function DashboardShell({
       name: "Build with AI",
       href: "/dashboard/flow?mode=ai",
       icon: Sparkles,
-      badge: "✦ AI",
+      badge: "AI",
       color: "text-pink-400",
     },
   ];

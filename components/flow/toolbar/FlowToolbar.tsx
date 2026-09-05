@@ -94,7 +94,7 @@ export const FlowToolbar = memo(function FlowToolbar({ onFitView }: { onFitView?
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-violet-900/60 via-purple-900/40 to-cyan-900/60 hover:from-violet-900 hover:to-cyan-900 text-cyan-300 border border-cyan-500/30 text-xs font-semibold shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
         >
           <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-          <span className="hidden sm:inline">✦ Build with AI</span>
+          <span className="hidden sm:inline">Build with AI</span>
         </button>
       </div>
 

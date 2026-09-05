@@ -145,7 +145,7 @@ export function AIFlowBuilderModal() {
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-100 flex items-center gap-1.5">
-                <span>✦ Build Flow with AI</span>
+                <span>Build Flow with AI</span>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
                   IA Generativa
                 </span>

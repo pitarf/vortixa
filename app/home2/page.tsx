@@ -222,7 +222,7 @@ export default function Home2Page() {
         <div className="text-center space-y-5 max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#13141B] border border-violet-500/30 shadow-inner text-violet-300 text-xs font-mono font-semibold backdrop-blur-md">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span>✦ O Estúdio Audiovisual com IA Mais Completo do Brasil</span>
+            <span>O Estúdio Audiovisual com IA Mais Completo do Brasil</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-black text-white tracking-tight leading-[1.12]">
@@ -474,7 +474,7 @@ export default function Home2Page() {
               </div>
               <h4 className="text-base font-bold text-white">Defina o Visual Base (FLUX.1)</h4>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Escreva o conceito ou use o assistente "✦ Build with AI". O FLUX.1 gera a imagem do personagem ou produto com iluminação de cinema e proporção exata.
+                Escreva o conceito ou use o assistente "Build with AI". O FLUX.1 gera a imagem do personagem ou produto com iluminação de cinema e proporção exata.
               </p>
             </div>
             <div className="p-3 bg-[#070709] border border-[#1E202E] rounded-xl text-[11px] font-mono text-cyan-400">
@@ -633,7 +633,7 @@ export default function Home2Page() {
       <section id="pricing" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto space-y-12">
         <div className="text-center space-y-3 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#13141B] border border-violet-500/30 text-violet-300 text-xs font-mono font-semibold">
-            <span>✦ Planos Flexíveis em Reais</span>
+            <span>Planos Flexíveis em Reais</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight">
             Escolha o plano ideal para a sua produção.

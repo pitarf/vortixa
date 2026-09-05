@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Sparkles, ArrowRight, CheckCircle2, Play, Zap, Terminal } from "lucide-react";
 
 /**
- * Seção "✦ Build with AI" — Demonstração da fala ao pipeline visual.
+ * Seção "Build with AI" — Demonstração da fala ao pipeline visual.
  * Permite ao usuário digitar ou clicar em presets e ver o grafo sendo sintetizado com nós e outputs.
  */
 export function BuildWithAiVisual() {
@@ -70,7 +70,7 @@ export function BuildWithAiVisual() {
       {/* Cabeçalho */}
       <div className="space-y-2">
         <span className="text-[11px] font-mono tracking-widest text-slate-500 uppercase font-semibold block">
-          ✦ BUILD WITH AI
+          BUILD WITH AI
         </span>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
           Da ideia em texto ao <span className="font-serif italic font-normal text-slate-300">workflow completo</span> em 1 clique.
@@ -90,7 +90,7 @@ export function BuildWithAiVisual() {
               onClick={() => handleSimulate(p)}
               className="text-xs px-4 py-2 rounded-full bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-slate-300 hover:text-white transition-all text-left cursor-pointer truncate max-w-md"
             >
-              ✦ {p}
+              {p}
             </button>
           ))}
         </div>
@@ -112,7 +112,7 @@ export function BuildWithAiVisual() {
             className="h-13 px-8 rounded-2xl bg-white hover:bg-slate-200 text-slate-950 text-xs sm:text-sm font-bold shadow-xl flex items-center justify-center gap-2 transition-all hover:scale-102 cursor-pointer"
           >
             <Sparkles className="w-4 h-4 text-violet-600" />
-            <span>{isGenerating ? "Sintetizando Grafo..." : "Sintetizar Pipeline ✦"}</span>
+            <span>{isGenerating ? "Sintetizando Grafo..." : "Sintetizar Pipeline "}</span>
           </button>
         </div>
 

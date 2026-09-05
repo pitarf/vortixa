@@ -479,7 +479,7 @@ export default function StudioCreatePage() {
       const data = await res.json();
       if (data.optimizedPrompt) {
         setPrompt(data.optimizedPrompt);
-        toast.success("✦ Prompt otimizado com enriquecimento cinematográfico!");
+        toast.success("Prompt otimizado com enriquecimento cinematográfico!");
       }
     } catch (err: any) {
       toast.error(err.message || "Erro na otimização.");
@@ -625,7 +625,7 @@ export default function StudioCreatePage() {
             ]);
           }
           fetchConfig();
-          toast.success("✨ Obra renderizada com sucesso no Studio!");
+          toast.success("Obra renderizada com sucesso no Studio!");
         } else if (currentJob.status === "FAILED") {
           clearInterval(timer);
           setIsGenerating(false);
@@ -675,7 +675,7 @@ export default function StudioCreatePage() {
         }),
       });
 
-      toast.success("✦ Pipeline criado no VORIXA FLOW!");
+      toast.success("Pipeline criado no VORIXA FLOW!");
       router.push(`/dashboard/flow/${newFlow.id}`);
     } catch (e: any) {
       toast.error(e.message || "Erro ao abrir no Flow.");
@@ -1024,7 +1024,7 @@ export default function StudioCreatePage() {
                 ) : (
                   <Sparkles className="h-3.5 w-3.5 text-cyan-200" />
                 )}
-                <span>✦ Otimizar com IA</span>
+                <span>Otimizar com IA</span>
               </button>
             </div>
 
@@ -1524,7 +1524,7 @@ export default function StudioCreatePage() {
                 style={{ minHeight: "44px" }}
               >
                 <Boxes className="h-3.5 w-3.5 text-violet-400" />
-                <span>Flow ✦</span>
+                <span>Flow </span>
               </button>
 
               <button
@@ -1683,7 +1683,7 @@ export default function StudioCreatePage() {
         {/* Dica de Pro */}
         <div className="space-y-1.5">
           <span className="text-[10px] font-mono text-cyan-400 font-bold uppercase tracking-wider">
-            ✦ Dica de Pro
+            Dica de Pro
           </span>
           <p className="text-xs text-slate-300 leading-relaxed">
             Use o VORIXA FLOW para encadear múltiplos modelos e criar produções completas.

@@ -148,7 +148,7 @@ export default function LibraryPage() {
         }),
       });
 
-      toast.success("✦ Mídia carregada no VORIXA FLOW!");
+      toast.success("Mídia carregada no VORIXA FLOW!");
       router.push(`/dashboard/flow/${flow.id}`);
     } catch (e: any) {
       toast.error(e.message || "Não foi possível abrir no Flow.");
