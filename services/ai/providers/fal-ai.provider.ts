@@ -183,7 +183,7 @@ export class FalAIProvider implements IAIProvider {
 
             console.log(`✅ [AI SUCESSO] Job ${jobId} finalizado com mídias reais da IA!`);
           }
-        } else if (statusResult.status === "FAILED") {
+        } else if ((statusResult.status as string) === "FAILED") {
           clearInterval(interval);
           console.error(`❌ [AI FALHA] Job ${requestId} falhou na nuvem.`);
           const job = await prisma.aIJob.findUnique({ where: { id: jobId } });
