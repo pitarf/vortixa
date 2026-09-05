@@ -8,6 +8,12 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Homologação e Correção da Geração de Imagens de IA na VPS (Produção)**:
+  - Resolução da divergência de credenciais no banco de dados e liberação das permissões no container.
+  - Sanitização de parâmetros da fal.ai para FLUX Schnell (`num_inference_steps` e remoção de `guidance_scale`).
+  - Sincronização e cadastro dos 9 modelos de IA na tabela `AIModel` do PostgreSQL de produção.
+  - Mapeamento de volume Docker persistente `vorixa-uploads` para `/app/public/uploads`.
+  - Teste E2E concluído com 100% de sucesso, débito de créditos e geração com renderização real.
 - [x] Fase 0: Setup de Documentação Técnica e Regras de Desenvolvimento.
 - [x] Fase 1: Setup do Projeto Next.js 16 + Tailwind CSS + Prisma + PostgreSQL + Docker.
 - [x] Fase 2: Autenticação Completa (Credentials + Google OAuth + NextAuth v5 + RBAC).

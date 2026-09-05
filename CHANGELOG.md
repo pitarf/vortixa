@@ -5,6 +5,17 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.2.9] - 2026-09-05
+### Infraestrutura & Provedores de IA (Produção na VPS)
+- **Sanitização de Parâmetros e Resiliência na Fal.ai (`FalAIProvider`)**:
+  - Implementação de sanitização e clamp inteligente de inferência para o modelo `fal-ai/flux/schnell`, limitando `num_inference_steps` entre 4 e 12 passos e suprimindo `guidance_scale` (incompatível com o modelo, eliminando o erro HTTP 422 na raiz).
+  - Mecanismo híbrido de entrega: webhook oficial em produção (`https://vortixia.com.br/api/webhooks/fal`) com polling em background como safety-net resiliente para garantir conclusão de jobs sob qualquer condição de rede.
+  - Otimização do `StorageService` para retornar a URL instantânea de alta performance da CDN fal.ai com salvamento assíncrono de persistência em disco local.
+- **Banco de Dados & Catálogo de Modelos no PostgreSQL da VPS**:
+  - Inserção e validação dos 9 modelos e ferramentas ativas (`fal-ai/flux/schnell`, `fal-ai/flux/dev`, `fal-ai/recraft-v3`, `fal-ai/flux-pro/v1.1-ultra`, `fal-ai/nano-banana-pro`, `kling`, `motion-control`, `sync`, `creative-upscaler`).
+  - Mapeamento do volume persistente `vorixa-uploads` no `docker-compose.yml` para `/app/public/uploads`.
+  - Homologação e teste E2E executado com 100% de sucesso diretamente no cluster de produção na VPS (`vortixia.com.br`).
+
 ## [1.2.8] - 2026-09-05
 ### Design & Identidade Visual
 - **Eliminação Integral do Ícone Genérico de IA (`Sparkles`)**:
