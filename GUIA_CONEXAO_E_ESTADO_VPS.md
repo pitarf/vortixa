@@ -35,9 +35,22 @@ cd /home/ubuntu/meu-novo-projeto
 
 | Serviço / Aplicação | Tipo | Diretório na VPS | Porta Interna | Porta Host (VPS) | Descrição / Domínio |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Nginx (Host)** | Nativo | `/etc/nginx/` | `80`, `443` | `80`, `443` | Proxy Reverso com SSL Certbot para `tv.connectadvec.online` |
+| **Nginx (Host)** | Nativo | `/etc/nginx/` | `80`, `443` | `80`, `443` | Proxy Reverso com SSL Certbot para `tv.connectadvec.online` e `vortixia.com.br` |
 | **Connect TV** | Docker | `/var/www/connecttv26advec` | `80` | `8080` (Local) | Aplicação web principal de TV/Controle |
 | **PostgreSQL (Testes)** | Docker | `/home/ubuntu/postgres-test` | `5432` | `5432` (Pública) | Banco Postgres de testes (`test_db` / `test_user`) |
+| **VORIXA App** | Docker | `/home/ubuntu/vorixa` | `3000` | `3005` (Localhost) | Aplicação web principal VORIXA AI (`vortixia.com.br`) |
+| **VORIXA Postgres** | Docker | `/home/ubuntu/vorixa` | `5432` | Isolada (Rede Interna) | Banco Postgres de produção (`vorixa_db`) |
+| **VORIXA MinIO** | Docker | `/home/ubuntu/vorixa` | `9000`, `9001` | `9010`, `9011` (Localhost) | Storage de mídias S3 compatível |
+
+---
+
+## 💾 Rotina de Backup Externo do Banco (Host)
+
+Os backups do banco de dados de produção do VORIXA são gravados **diretamente no disco físico da VPS (fora dos contêineres Docker)**:
+- **Diretório no Host**: `/home/ubuntu/backups/vorixa_postgres/`
+- **Script Executável**: `/home/ubuntu/vorixa/backup-simple.sh`
+- **Agendamento Cron**: Diariamente às **03:00 da madrugada** (`0 3 * * *`).
+- **Política de Retenção**: Mantém dumps `.sql.gz` versionados e cópia íntegra pronta para restauração.
 
 ---
 
