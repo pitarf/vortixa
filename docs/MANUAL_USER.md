@@ -248,3 +248,84 @@ Apresentar de forma transparente aos criadores todos os recursos reais e funcion
 * **Botão "Testar Agora →" / "Abrir no Flow →"**: Redireciona contextualmente o usuário para a ferramenta exata pronta para uso (ex: `/dashboard/tools/image`, `/dashboard/tools/video`, `/dashboard/flow`).
 * **Botão "Testar novos modelos no Flow →"**: Conecta o criador diretamente ao Canvas Infinito com os nós de última geração pré-carregados.
 * **Botão "Ver todos (13) →" / "Ver histórico completo"**: Conduz à página `/dashboard/changelog` com histórico técnico estendido e Roadmap de futuros lançamentos.
+
+
+```markdown
+---
+
+## 6. Studio CREATE v2.0 (VORIXA CREATIVE SUITE)
+
+O **Studio CREATE v2.0** é o ambiente integrado de alta performance para criação rápida e cinematográfica de imagens, vídeos, animações labiais e controle de movimento com inteligência artificial.
+
+### A. Módulo & Tela
+* **Módulo**: Creative Suite / Studio
+* **Tela**: Studio CREATE (`/dashboard/create`)
+* **Objetivo**: Fornecer um estúdio unificado de ponta a ponta com seleção de modelos de IA, controle tátil de estilos, otimização de prompts e reprodutor cinematográfico em tempo real.
+
+### B. Anatomia & Campos Disponíveis
+1. **Header do Studio**:
+   * *Nome do Projeto*: Clique no ícone de lápis para editar o nome do projeto e pressione Enter para confirmar.
+   * *Botão Salvar*: Salva localmente as configurações e o estado do projeto atual.
+   * *Menu de Opções (`...`)*: Limpeza de campos, cópia rápida do prompt e atalhos para a Galeria.
+   * *Botão "Enviar para o Flow"*: Converte instantaneamente a criação em um nó executável no VORIXA FLOW Canvas.
+2. **Stepper Horizontal do Workflow**:
+   * `1: Tipo de Mídia`: Seleção entre Imagem, Vídeo, Avatar e Motion.
+   * `2: Prompt & Referências`: Campo textual e upload de imagens guias.
+   * `3: Parâmetros`: Ajuste de modelo, estilo e aspect ratio.
+   * `4: Gerar & Refinar`: Visualização e download do resultado renderizado.
+3. **Seletor de Tipo de Mídia**:
+   * *[Imagem]*: Gera fotos e ilustrações em resolução ultra-HD via FLUX.1.
+   * *[Vídeo]*: Transforma texto ou imagem em sequências cinematográficas de 5s ou 10s via Kling AI.
+   * *[Avatar]*: Sincroniza feições e falas com base em áudios via LivePortrait.
+   * *[Motion]*: Transfere coreografias e poses de vídeos para novos personagens.
+   * *[> Mais]*: Acesso a ferramentas avançadas como Upscale 4K.
+4. **Cards de Modelo de IA**:
+   * *FLUX.1 Schnell* (1 crédito): Máxima rapidez (~8s) para iterações ágeis.
+   * *FLUX.1 Dev* (2 créditos): Alta coerência fotográfica e micro-texturas.
+   * *FLUX.1 Pro* (4 créditos): Nível de estúdio para iluminação e detalhes extremos.
+   * *Google Imagen 3* (3 créditos): Renderização de tipografia e fidelidade textual.
+   * *Kling AI 1.5 & Pro* (10-15 créditos): Movimentos cinemáticos consistentes.
+5. **Prompt de Criação**:
+   * *Textarea com Contador*: Limite de 1.500 caracteres para detalhar a cena.
+   * *Botão ✦ Otimizar com IA*: Enriquece automaticamente a descrição adicionando iluminação, tipo de lente e estética cinematográfica.
+   * *Ícone de Upload de Referência*: Permite guiar a geração com uma imagem já existente.
+6. **Estilos Visuais**:
+   * Seletores táteis com thumbnails reais: Cinemático, Fotorrealista, Anime, 3D Render e Cyberpunk.
+7. **Proporções de Tela (Aspect Ratio)**:
+   * `1:1`: Formato quadrado ideal para feeds sociais e produtos.
+   * `16:9`: Formato widescreen para cinema e YouTube.
+   * `9:16`: Formato vertical para Reels, Shorts e Stories do TikTok.
+   * `4:3`: Formato clássico paisagem.
+8. **Configurações Avançadas (Acordeão)**:
+   * *Passos de Inferência*: Controle de 4 a 28 passos.
+   * *Fidelidade ao Prompt (CFG / Guidance)*: Ajuste de 1.0 a 10.0.
+   * *Seed Numérica*: Controle de semente estocástica com botão de aleatorização 🎲.
+   * *Controles de Câmera (Vídeo)*: Zoom In, Panorâmica e Órbita 360.
+
+### C. Player Cinematográfico & Ações Rápidas
+* **Player Integrado**: Suporte a vídeo com timeline, contadores de tempo (`0:00 / 0:05`), controle de volume e botão de tela cheia.
+* **Aba Comparar**: Visualização dividida entre imagem de referência e resultado final.
+* **Ações Rápidas**:
+  * *Baixar*: Download direto em alta resolução.
+  * *Variar*: Gera uma versão alternativa mantendo a essência do prompt.
+  * *Upscale 4K*: Otimiza a resolução e a nitidez dos detalhes.
+  * *Enviar para o Flow*: Inicializa uma sessão no Canvas com a mídia já conectada.
+  * *Usar como Referência*: Define o resultado como nova entrada para geração encadeada.
+
+### D. Histórico e Inspirações
+* **Inspirações para você**: 5 cards cinematográficos com thumbnails reais e botão play sobreposto. Ao clicar, o Studio carrega instantaneamente o prompt e o estilo.
+* **Histórico Lateral**: Exibe as criações do usuário com thumbnails, badges de tempo ("Agora", "2m atrás") e modelo utilizado. Clicar em qualquer card projeta a mídia no player principal.
+
+### E. Passo a Passo de Utilização
+1. Selecione o **Tipo de Mídia** desejado no topo do painel esquerdo.
+2. Escolha o **Modelo de IA** ideal para o seu projeto.
+3. Digite sua ideia no campo **Prompt de Criação** e clique em **✦ Otimizar com IA** para refinar o prompt automaticamente.
+4. Selecione o **Estilo Visual** e a **Proporção de Tela**.
+5. Clique no botão **▶ Gerar Imagem** (ou Gerar Vídeo).
+6. Acompanhe a renderização em tempo real na área central com feedback do cluster.
+7. Ao concluir, reproduza, compare, faça o download ou envie para o **VORIXA FLOW**.
+
+### F. Tratamento de Erros Comuns
+* *Saldo insuficiente*: O sistema exibe um aviso com a quantidade necessária e mantém os campos intactos.
+* *Upload de arquivo inválido*: Caso o arquivo exceda o tamanho suportado, um toast notificará o usuário.
+* *Falha de conectividade no cluster*: Se o motor de IA falhar, os créditos são estornados automaticamente e o erro é detalhado no preview.

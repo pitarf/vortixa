@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   Wand2,
@@ -10,23 +10,52 @@ import {
   Navigation,
   Activity,
   Maximize2,
+  Minimize2,
   Coins,
   Play,
+  Pause,
   Download,
   Boxes,
   RefreshCw,
   SlidersHorizontal,
-  CheckCircle2,
-  AlertCircle,
-  Clock,
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Layers,
   ArrowRight,
+  Upload,
+  X,
+  Volume2,
+  VolumeX,
+  Copy,
+  Pencil,
+  Check,
+  MoreVertical,
+  MoreHorizontal,
+  Share2,
+  Clock,
+  Flame,
+  CheckCircle2,
+  RotateCcw,
+  Sliders,
+  ExternalLink,
 } from "lucide-react";
 import { toast } from "sonner";
-import { PromptInput } from "@/components/ai/prompt-input";
-import { FileUploader } from "@/components/ai/file-uploader";
+
+// =========================================================================
+// TIPOS E DEFINIÇÕES
+// =========================================================================
 
 type StudioTool = "image" | "video" | "lipsync" | "motion" | "upscale";
+
+interface ModelOption {
+  id: string;
+  name: string;
+  badge: string;
+  cost: number;
+  description: string;
+  speed: string;
+}
 
 interface ToolDefinition {
   id: StudioTool;
@@ -34,7 +63,8 @@ interface ToolDefinition {
   name: string;
   badge: string;
   icon: React.ComponentType<{ className?: string }>;
-  cost: number;
+  defaultCost: number;
+  models: ModelOption[];
   description: string;
   color: string;
 }
@@ -43,188 +73,501 @@ const TOOLS: Record<StudioTool, ToolDefinition> = {
   image: {
     id: "image",
     slug: "gerador-imagem",
-    name: "FLUX Imagem",
-    badge: "FLUX.1 Schnell",
+    name: "Imagem",
+    badge: "FLUX.1",
     icon: ImageIcon,
-    cost: 1,
+    defaultCost: 1,
     description: "Crie ilustrações e fotos ultra-realistas com prompts textuais em segundos.",
-    color: "from-violet-500 to-indigo-600",
+    color: "from-violet-600 via-indigo-600 to-cyan-500",
+    models: [
+      { id: "fal-ai/flux/schnell", name: "FLUX.1 Schnell", badge: "Mais rápido", cost: 1, description: "Inferência rápida em 4 passos", speed: "~ 8s" },
+      { id: "fal-ai/flux/dev", name: "FLUX.1 Dev", badge: "Alta qualidade", cost: 2, description: "Maior coerência e nitidez visual", speed: "~ 14s" },
+      { id: "fal-ai/flux-pro", name: "FLUX.1 Pro", badge: "Máximo detalhe", cost: 4, description: "Nível estúdio e iluminação de cinema", speed: "~ 22s" },
+      { id: "fal-ai/google-imagen-3", name: "Google Imagen 3", badge: "Gemini Pro", cost: 3, description: "Fidelidade tipográfica e realismo", speed: "~ 18s" },
+    ],
   },
   video: {
     id: "video",
     slug: "imagem-video",
-    name: "Kling Vídeo",
-    badge: "Kling AI 1.5",
+    name: "Vídeo",
+    badge: "Kling AI",
     icon: Video,
-    cost: 10,
+    defaultCost: 10,
     description: "Anime imagens estáticas ou gere sequências cinematográficas em 5s ou 10s.",
     color: "from-cyan-500 to-blue-600",
+    models: [
+      { id: "fal-ai/kling/video-generation/image-to-video", name: "Kling AI 1.5", badge: "Mais rápido", cost: 10, description: "Movimentos cinemáticos naturais", speed: "~ 45s" },
+      { id: "fal-ai/kling/video-generation/v1-5/pro", name: "Kling 1.5 Pro", badge: "Ultra HD", cost: 15, description: "Máxima consistência temporal", speed: "~ 70s" },
+      { id: "fal-ai/luma-dream-machine", name: "Luma Dream", badge: "Fluidez", cost: 12, description: "Transições e dinâmicas de câmera 3D", speed: "~ 50s" },
+      { id: "fal-ai/minimax-video", name: "Hailuo Minimax", badge: "Expressivo", cost: 10, description: "Expressões faciais e ações vivas", speed: "~ 40s" },
+    ],
   },
   lipsync: {
     id: "lipsync",
     slug: "lip-sync",
-    name: "LipSync Studio",
+    name: "Avatar",
     badge: "LivePortrait",
     icon: Navigation,
-    cost: 8,
+    defaultCost: 8,
     description: "Sincronize perfeitamente lábios e expressões faciais com faixas de áudio.",
     color: "from-pink-500 to-rose-600",
+    models: [
+      { id: "fal-ai/sync", name: "LivePortrait", badge: "Fisiológico", cost: 8, description: "Expressões oculares e lábios realistas", speed: "~ 30s" },
+      { id: "fal-ai/sync-v2", name: "Sync Audio v2", badge: "Multi-idioma", cost: 8, description: "Sincronia precisa fonética de fala", speed: "~ 25s" },
+    ],
   },
   motion: {
     id: "motion",
     slug: "motion-control",
-    name: "Motion Control",
+    name: "Motion",
     badge: "Pose Transfer",
     icon: Activity,
-    cost: 15,
+    defaultCost: 15,
     description: "Transfira movimentação de um vídeo de referência para qualquer personagem.",
     color: "from-fuchsia-500 to-purple-600",
+    models: [
+      { id: "fal-ai/kling/motion-control", name: "Kling Motion", badge: "Pose Transfer", cost: 15, description: "Transferência física precisa de movimento", speed: "~ 60s" },
+    ],
   },
   upscale: {
     id: "upscale",
     slug: "upscale",
-    name: "Creative Upscale 4K",
-    badge: "Ultra-Res",
+    name: "Upscale",
+    badge: "Creative 4K",
     icon: Sparkles,
-    cost: 5,
+    defaultCost: 5,
     description: "Melhore nitidez, remova ruído e eleve mídias até resolução 4K Ultra HD.",
     color: "from-amber-500 to-orange-600",
+    models: [
+      { id: "fal-ai/creative-upscaler", name: "Creative Upscaler 4K", badge: "Ultra-Res", cost: 5, description: "Restauração e texturização em 4K", speed: "~ 20s" },
+    ],
   },
 };
 
 const STYLE_PRESETS = [
-  { name: "Cinematográfico 8K", suffix: ", cinematic lighting, 8k resolution, photorealistic, Unreal Engine 5 render, award winning cinematography" },
-  { name: "Fotorrealista", suffix: ", highly detailed, 35mm lens, depth of field, studio lighting, natural skin textures" },
-  { name: "Cyberpunk Néon", suffix: ", cyberpunk aesthetics, neon glow, reflective rainy streets, futuristic atmosphere, ray tracing" },
-  { name: "Anime Ghibli", suffix: ", anime aesthetic, Studio Ghibli style, vibrant colors, lush scenic background, hand-drawn illustration" },
-  { name: "3D Octane", suffix: ", 3d octane render, glossy textures, volumetric lighting, surreal concept art, C4D" },
+  {
+    id: "cinematic",
+    name: "Cinemático",
+    thumb: "/media/landing/gallery/hypercar_cyberpunk.jpg",
+    suffix: ", cinematic lighting, 8k resolution, photorealistic, Unreal Engine 5 render, award winning cinematography, anamorphic lens flare",
+  },
+  {
+    id: "photorealistic",
+    name: "Fotorrealista",
+    thumb: "/media/landing/gallery/editorial_fashion.jpg",
+    suffix: ", highly detailed raw photo, 35mm lens, depth of field, studio softbox lighting, natural skin textures with pores, no cgi",
+  },
+  {
+    id: "anime",
+    name: "Anime",
+    thumb: "/test_wide_establishing.png",
+    suffix: ", anime aesthetic, modern Japanese animation, Makoto Shinkai style, vibrant colors, lush scenic background, hand-drawn digital illustration",
+  },
+  {
+    id: "octane3d",
+    name: "3D Render",
+    thumb: "/media/landing/gallery/perfume_commercial.jpg",
+    suffix: ", 3d octane render, glossy textures, volumetric lighting, surreal luxury concept art, Cinema 4D, pristine reflections",
+  },
+  {
+    id: "cyberpunk",
+    name: "Cyberpunk",
+    thumb: "/media/landing/gallery/street_dancer.jpg",
+    suffix: ", cyberpunk aesthetics, neon glow, reflective rainy streets, futuristic high-tech atmosphere, ray tracing reflections",
+  },
 ];
+
+const ASPECT_RATIOS = [
+  { id: "square_hd", label: "1:1", name: "Quadrado", iconWidth: "w-4 h-4" },
+  { id: "landscape_16_9", label: "16:9", name: "Cinema", iconWidth: "w-6 h-3.5" },
+  { id: "portrait_16_9", label: "9:16", name: "Reels", iconWidth: "w-3.5 h-6" },
+  { id: "landscape_4_3", label: "4:3", name: "Paisagem", iconWidth: "w-5 h-4" },
+];
+
+const INSPIRATIONS = [
+  {
+    id: "insp-1",
+    title: "Cyberpunk Hypercar Nocturne",
+    thumb: "/media/landing/gallery/hypercar_cyberpunk.jpg",
+    videoUrl: "/media/landing/videos/cinematic_hypercar.mp4",
+    badge: "0:05",
+    ratio: "16:9",
+    tool: "video" as StudioTool,
+    model: "Kling AI 1.5",
+    styleId: "cinematic",
+    prompt: "Hypercar futurista com neon ciano e roxo em alta velocidade numa rodovia molhada de Neo-Tóquio, reflexos volumétricos, chuva fina, câmera tracking em baixa altitude.",
+  },
+  {
+    id: "insp-2",
+    title: "Editorial Haute Couture Cyber",
+    thumb: "/media/landing/gallery/editorial_fashion.jpg",
+    imageUrl: "/media/landing/gallery/editorial_fashion.jpg",
+    badge: "8K",
+    ratio: "9:16",
+    tool: "image" as StudioTool,
+    model: "FLUX.1 Pro",
+    styleId: "photorealistic",
+    prompt: "Retrato editorial de alta-costura, modelo com detalhes holográficos na pele de titânio, iluminação de estúdio suave, textura de pele natural ultra-realista, lente 85mm f/1.4.",
+  },
+  {
+    id: "insp-3",
+    title: "Luxury Perfume Liquid Gold",
+    thumb: "/media/landing/gallery/perfume_commercial.jpg",
+    videoUrl: "/media/landing/videos/commercial_perfume.mp4",
+    badge: "0:05",
+    ratio: "1:1",
+    tool: "video" as StudioTool,
+    model: "Kling 1.5",
+    styleId: "octane3d",
+    prompt: "Frasco de perfume de luxo de vidro lapidado emergindo de ondas douradas líquidas, iluminação softbox, rotação orbital 360 suave, partículas em suspensão.",
+  },
+  {
+    id: "insp-4",
+    title: "Street Dancer Cyber Hip-Hop",
+    thumb: "/media/landing/gallery/street_dancer.jpg",
+    videoUrl: "/media/landing/videos/motion_dancer.mp4",
+    badge: "0:10",
+    ratio: "9:16",
+    tool: "motion" as StudioTool,
+    model: "Motion Control",
+    styleId: "cyberpunk",
+    prompt: "Dançarino urbano com jaqueta cibernética reagindo a batidas graves sob iluminação néon pulsante de beco urbano molhado, câmera lenta a 60fps.",
+  },
+  {
+    id: "insp-5",
+    title: "AI Presenter Hyper-Real",
+    thumb: "/media/landing/gallery/avatar_presenter.jpg",
+    videoUrl: "/media/landing/videos/lipsync_avatar.mp4",
+    badge: "0:05",
+    ratio: "16:9",
+    tool: "lipsync" as StudioTool,
+    model: "LivePortrait",
+    styleId: "cinematic",
+    prompt: "Apresentadora virtual hiper-realista em estúdio de tecnologia futurista falando com entusiasmo e microexpressões faciais naturais, profundidade de campo sutil.",
+  },
+];
+
+// =========================================================================
+// COMPONENTE PRINCIPAL
+// =========================================================================
 
 export default function StudioCreatePage() {
   const router = useRouter();
+
+  // Estado Geral de Ferramenta e Modelo
   const [activeTool, setActiveTool] = useState<StudioTool>("image");
-  const [balance, setBalance] = useState<number>(0);
+  const [selectedModelId, setSelectedModelId] = useState<string>("fal-ai/flux/schnell");
+  const [balance, setBalance] = useState<number>(2480);
   const [creditMode, setCreditMode] = useState<string>("LIMITED");
 
-  // Inputs unificados
+  // Projeto
+  const [projectName, setProjectName] = useState("Projeto sem nome");
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempProjectName, setTempProjectName] = useState(projectName);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Workflow Stepper
+  const [activeStep, setActiveStep] = useState<number>(1);
+
+  // Inputs de Criação
   const [prompt, setPrompt] = useState("");
-  const [imageSize, setImageSize] = useState("square_hd");
+  const [imageSize, setImageSize] = useState<string>("landscape_16_9");
+  const [selectedStyle, setSelectedStyle] = useState<string>("cinematic");
+  const [referenceImageUrl, setReferenceImageUrl] = useState<string>("");
+  const [isUploadingRef, setIsUploadingRef] = useState(false);
+  const refFileInputRef = useRef<HTMLInputElement>(null);
+
+  // Configurações Avançadas
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+  const [inferenceSteps, setInferenceSteps] = useState(4);
+  const [guidanceScale, setGuidanceScale] = useState(3.5);
+  const [seed, setSeed] = useState<string>("");
+  const [negativePrompt, setNegativePrompt] = useState("");
+
+  // Parâmetros de Vídeo / Avatar / Motion
   const [videoMode, setVideoMode] = useState<"text" | "image">("image");
-  const [sourceImageUrl, setSourceImageUrl] = useState("");
+  const [duration, setDuration] = useState("5");
+  const [cameraMotion, setCameraMotion] = useState("static");
   const [sourceVideoUrl, setSourceVideoUrl] = useState("");
   const [sourceAudioUrl, setSourceAudioUrl] = useState("");
   const [characterImageUrl, setCharacterImageUrl] = useState("");
   const [referenceVideoUrl, setReferenceVideoUrl] = useState("");
-  const [duration, setDuration] = useState("5");
-  const [scaleFactor, setScaleFactor] = useState("2");
-  const [cameraMotion, setCameraMotion] = useState("static");
 
-  // Estado de processamento
+  // Estado de Processamento e Geração
   const [isGenerating, setIsGenerating] = useState(false);
-  const [step, setStep] = useState<string>("");
+  const [isOptimizing, setIsOptimizing] = useState(false);
+  const [stepText, setStepText] = useState("");
   const [activeJob, setActiveJob] = useState<any>(null);
-  const [resultMediaUrl, setResultMediaUrl] = useState<string | null>(null);
+  const [resultMediaUrl, setResultMediaUrl] = useState<string | null>("/media/landing/videos/cinematic_hypercar.mp4");
+  const [resultMediaType, setResultMediaType] = useState<"image" | "video">("video");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isOpeningInFlow, setIsOpeningInFlow] = useState(false);
 
-  // Carrega configurações e saldo
+  // Player de Vídeo Customizado
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [durationSec, setDurationSec] = useState(5);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [previewTab, setPreviewTab] = useState<"result" | "compare">("result");
+
+  // Histórico de Criações
+  const [historyItems, setHistoryItems] = useState<any[]>([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+
+  // Carrega configurações de saldo e histórico
   const fetchConfig = async () => {
     try {
       const res = await fetch("/api/tools/config");
       if (res.ok) {
         const data = await res.json();
-        setBalance(data.balance);
-        setCreditMode(data.creditMode);
+        setBalance(data.balance ?? 2480);
+        setCreditMode(data.creditMode ?? "LIMITED");
       }
     } catch (e) {
-      console.error("Erro ao carregar configurações do Studio:", e);
+      console.warn("Usando saldo padrão em modo preview:", e);
+    }
+  };
+
+  const fetchHistory = async () => {
+    try {
+      setIsLoadingHistory(true);
+      const res = await fetch("/api/library");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.items && data.items.length > 0) {
+          setHistoryItems(data.items);
+          return;
+        }
+      }
+      // Fallback rico e visual para o histórico caso o banco esteja novo
+      setHistoryItems([
+        {
+          id: "hist-1",
+          url: "/media/landing/videos/cinematic_hypercar.mp4",
+          mediaType: "video",
+          modelName: "FLUX.1 Schnell",
+          prompt: "Hypercar futurista com neon ciano e roxo em alta velocidade numa rodovia de Neo-Tóquio",
+          createdAt: new Date().toISOString(),
+          timeAgo: "Agora",
+        },
+        {
+          id: "hist-2",
+          url: "/media/landing/gallery/editorial_fashion.jpg",
+          mediaType: "image",
+          modelName: "FLUX.1 Pro",
+          prompt: "Retrato editorial com reflexos holográficos em luz de estúdio suave",
+          createdAt: new Date(Date.now() - 120000).toISOString(),
+          timeAgo: "2m atrás",
+        },
+        {
+          id: "hist-3",
+          url: "/media/landing/videos/commercial_perfume.mp4",
+          mediaType: "video",
+          modelName: "Kling AI",
+          prompt: "Frasco de perfume luxo emergindo de líquido dourado",
+          createdAt: new Date(Date.now() - 3600000).toISOString(),
+          timeAgo: "1h atrás",
+        },
+        {
+          id: "hist-4",
+          url: "/media/landing/videos/motion_dancer.mp4",
+          mediaType: "video",
+          modelName: "Motion Control",
+          prompt: "Transferência de pose para dançarino urbano sob neon",
+          createdAt: new Date(Date.now() - 10800000).toISOString(),
+          timeAgo: "3h atrás",
+        },
+        {
+          id: "hist-5",
+          url: "/media/landing/videos/lipsync_avatar.mp4",
+          mediaType: "video",
+          modelName: "LivePortrait",
+          prompt: "Apresentadora virtual hiper-realista com sincronia de fala",
+          createdAt: new Date(Date.now() - 18000000).toISOString(),
+          timeAgo: "5h atrás",
+        },
+      ]);
+    } catch (e) {
+      console.warn("Erro ao buscar histórico:", e);
+    } finally {
+      setIsLoadingHistory(false);
     }
   };
 
   useEffect(() => {
     fetchConfig();
+    fetchHistory();
   }, []);
 
-  const handleApplyPreset = (presetSuffix: string) => {
-    if (!prompt.includes(presetSuffix)) {
-      setPrompt((prev) => (prev.trim() ? `${prev.trim()}${presetSuffix}` : presetSuffix.replace(/^, /, "")));
-      toast.info("Preset de estilo aplicado ao prompt!");
+  // Sincroniza modelo padrão ao alternar ferramenta
+  useEffect(() => {
+    const currentToolDef = TOOLS[activeTool];
+    if (currentToolDef.models.length > 0) {
+      setSelectedModelId(currentToolDef.models[0].id);
+    }
+  }, [activeTool]);
+
+  // Video Controls Handlers
+  const handleTogglePlay = () => {
+    if (!videoRef.current) return;
+    if (isPlaying) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      videoRef.current.play();
+      setIsPlaying(true);
     }
   };
 
+  const handleTimeUpdate = () => {
+    if (!videoRef.current) return;
+    setCurrentTime(videoRef.current.currentTime);
+    setDurationSec(videoRef.current.duration || 5);
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = parseFloat(e.target.value);
+    if (videoRef.current) {
+      videoRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  const formatSeconds = (sec: number) => {
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
+  };
+
+  // Aplica Presets de Estilo
+  const handleSelectStyle = (styleId: string) => {
+    setSelectedStyle(styleId);
+    const preset = STYLE_PRESETS.find((p) => p.id === styleId);
+    if (!preset) return;
+
+    // Remove outros suffixes conhecidos e anexa o novo
+    let cleanPrompt = prompt;
+    STYLE_PRESETS.forEach((p) => {
+      cleanPrompt = cleanPrompt.replace(p.suffix, "");
+    });
+    setPrompt(cleanPrompt.trim() ? `${cleanPrompt.trim()}${preset.suffix}` : preset.suffix.replace(/^, /, ""));
+    toast.info(`Estilo "${preset.name}" selecionado!`);
+  };
+
+  // Otimização de Prompt com IA
+  const handleOptimizePrompt = async () => {
+    if (!prompt.trim()) {
+      toast.error("Por favor, digite uma ideia antes de otimizar.");
+      return;
+    }
+
+    try {
+      setIsOptimizing(true);
+      const res = await fetch("/api/tools/optimize-prompt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt,
+          enhanceQuality: true,
+          toolType: activeTool,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Não foi possível otimizar o prompt.");
+      const data = await res.json();
+      if (data.optimizedPrompt) {
+        setPrompt(data.optimizedPrompt);
+        toast.success("✦ Prompt otimizado com enriquecimento cinematográfico!");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Erro na otimização.");
+    } finally {
+      setIsOptimizing(false);
+    }
+  };
+
+  // Upload de Imagem de Referência
+  const handleReferenceUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !e.target.files[0]) return;
+    const file = e.target.files[0];
+
+    try {
+      setIsUploadingRef(true);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/tools/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Falha no upload da imagem de referência.");
+      const data = await res.json();
+      setReferenceImageUrl(data.url);
+      toast.success("Imagem de referência anexada ao Studio!");
+    } catch (err: any) {
+      toast.error(err.message || "Erro no upload.");
+    } finally {
+      setIsUploadingRef(false);
+    }
+  };
+
+  // Geração de Mídia
   const handleGenerate = async () => {
     if (isGenerating) return;
     setErrorMsg(null);
 
     const toolDef = TOOLS[activeTool];
-    const cost = toolDef.cost;
+    const selectedModel = toolDef.models.find((m) => m.id === selectedModelId) || toolDef.models[0];
+    const cost = selectedModel.cost;
 
     if (creditMode !== "UNLIMITED" && balance < cost) {
       toast.error(`Saldo insuficiente (${balance} créditos disponíveis. Custo: ${cost}).`);
-      setErrorMsg("Você não possui saldo de créditos suficiente para esta geração.");
+      setErrorMsg("Você não possui saldo suficiente para esta operação.");
       return;
     }
 
-    // Monta payload de acordo com a ferramenta
-    const inputs: Record<string, any> = {};
+    if (activeTool === "image" && !prompt.trim()) {
+      toast.error("Informe a descrição textual para gerar a imagem.");
+      return;
+    }
+
+    const inputs: Record<string, any> = {
+      prompt,
+      image_size: imageSize,
+      seed: seed ? parseInt(seed, 10) : undefined,
+    };
 
     if (activeTool === "image") {
-      if (!prompt.trim()) {
-        toast.error("Por favor, informe o prompt para gerar a imagem.");
-        return;
-      }
-      inputs.prompt = prompt;
-      inputs.image_size = imageSize;
-      inputs.num_inference_steps = 4; // FLUX.1 Schnell otimizado para 4 passos ultra rápidos (máx 12)
+      inputs.num_inference_steps = inferenceSteps;
+      if (referenceImageUrl) inputs.image_url = referenceImageUrl;
     } else if (activeTool === "video") {
-      if (videoMode === "image" && !sourceImageUrl) {
-        toast.error("Por favor, faça upload da imagem estática de origem.");
-        return;
-      }
-      if (!prompt.trim() && videoMode === "text") {
-        toast.error("Informe a descrição textual da cena do vídeo.");
-        return;
-      }
-      inputs.prompt = prompt;
-      inputs.image_url = videoMode === "image" ? sourceImageUrl : "";
       inputs.duration = duration;
       inputs.camera_motion = cameraMotion;
+      if (videoMode === "image" && referenceImageUrl) inputs.image_url = referenceImageUrl;
     } else if (activeTool === "lipsync") {
-      if (!sourceVideoUrl || !sourceAudioUrl) {
-        toast.error("Faça o upload do vídeo de base e do arquivo de áudio.");
-        return;
-      }
-      inputs.video_url = sourceVideoUrl;
+      inputs.video_url = sourceVideoUrl || resultMediaUrl;
       inputs.audio_url = sourceAudioUrl;
     } else if (activeTool === "motion") {
-      if (!characterImageUrl || !referenceVideoUrl) {
-        toast.error("Faça o upload da imagem do personagem e do vídeo de movimento.");
-        return;
-      }
-      inputs.character_image_url = characterImageUrl;
+      inputs.character_image_url = characterImageUrl || referenceImageUrl;
       inputs.reference_video_url = referenceVideoUrl;
-      inputs.prompt = prompt;
-    } else if (activeTool === "upscale") {
-      if (!sourceVideoUrl) {
-        toast.error("Faça o upload do vídeo que deseja realizar o upscale.");
-        return;
-      }
-      inputs.video_url = sourceVideoUrl;
-      inputs.scale_factor = scaleFactor;
     }
 
     try {
       setIsGenerating(true);
-      setStep("Preparando");
-      setResultMediaUrl(null);
+      setActiveStep(4);
+      setStepText("Conectando ao cluster de IA");
 
-      const idempotencyKey = `studio-${activeTool}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+      const idempotencyKey = `studio-${activeTool}-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
 
       const res = await fetch("/api/tools/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           toolSlug: toolDef.slug,
+          modelId: selectedModelId,
           inputs,
           idempotencyKey,
         }),
@@ -232,100 +575,107 @@ export default function StudioCreatePage() {
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.error || "Falha ao iniciar geração no cluster.");
+        throw new Error(err.error || "Falha ao enviar geração.");
       }
 
       const job = await res.json();
       setActiveJob(job);
-      setStep("Na fila");
-      pollJob(job.id);
+      setStepText("Processando inferência no motor");
+      pollJob(job.id, activeTool === "image" ? "image" : "video");
     } catch (err: any) {
       setIsGenerating(false);
-      setErrorMsg(err.message || "Erro durante o disparo.");
+      setErrorMsg(err.message || "Erro no disparo da geração.");
       toast.error(err.message || "Erro na geração.");
     }
   };
 
-  const pollJob = (jobId: string) => {
+  const pollJob = (jobId: string, expectedType: "image" | "video") => {
     const timer = setInterval(async () => {
       try {
         const res = await fetch(`/api/tools/job/${jobId}`);
         if (!res.ok) return;
 
         const currentJob = await res.json();
-        console.log("📡 [POLLING RESPOSTA DA API /api/tools/job/id]:", currentJob);
         setActiveJob(currentJob);
 
         if (currentJob.status === "PROCESSING") {
-          setStep("Processando no cluster de IA");
+          setStepText("Renderizando no cluster GPU");
         } else if (currentJob.status === "COMPLETED") {
           clearInterval(timer);
-          setStep("Concluído");
+          setStepText("Concluído!");
           setIsGenerating(false);
+
           if (currentJob.outputs?.[0]?.fileUrl) {
-            setResultMediaUrl(currentJob.outputs[0].fileUrl);
+            const finalUrl = currentJob.outputs[0].fileUrl;
+            setResultMediaUrl(finalUrl);
+            setResultMediaType(expectedType);
+
+            // Adiciona ao topo do histórico local
+            setHistoryItems((prev) => [
+              {
+                id: currentJob.id,
+                url: finalUrl,
+                mediaType: expectedType,
+                modelName: TOOLS[activeTool].models.find((m) => m.id === selectedModelId)?.name || "IA",
+                prompt,
+                createdAt: new Date().toISOString(),
+                timeAgo: "Agora",
+              },
+              ...prev,
+            ]);
           }
           fetchConfig();
-          toast.success("✨ Mídia gerada com sucesso!");
+          toast.success("✨ Obra renderizada com sucesso no Studio!");
         } else if (currentJob.status === "FAILED") {
           clearInterval(timer);
-          setStep("Falhou");
           setIsGenerating(false);
           setErrorMsg(currentJob.error || "A geração falhou no motor de IA.");
           fetchConfig();
-          toast.error("A geração falhou no provedor.");
+          toast.error("A geração falhou.");
         }
       } catch {
-        // Polling retry
+        // Polling retry silencioso
       }
     }, 2500);
   };
 
+  // Enviar para o VORIXA FLOW
   const handleOpenInFlow = async () => {
     try {
       setIsOpeningInFlow(true);
       const toolDef = TOOLS[activeTool];
 
-      // Cria um novo fluxo
       const res = await fetch("/api/flows", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: `Pipeline - ${toolDef.name}`,
-          description: `Fluxo criado a partir do Studio CREATE com ${toolDef.name}.`,
+          name: `${projectName || "Produção"} - ${toolDef.name}`,
+          description: `Fluxo derivado do Studio CREATE com prompt: "${prompt.slice(0, 80)}..."`,
         }),
       });
 
-      if (!res.ok) {
-        throw new Error("Não foi possível inicializar a sessão do VORIXA FLOW.");
-      }
-
+      if (!res.ok) throw new Error("Não foi possível criar o fluxo.");
       const newFlow = await res.json();
 
-      // Adiciona o nó no fluxo criado
-      const nodeType = activeTool === "image" ? "image" : activeTool === "video" ? "video" : activeTool === "lipsync" ? "lipsync" : activeTool === "upscale" ? "upscale" : "video";
-
-      const nodeConfig: Record<string, any> = {
-        prompt,
-        image_size: imageSize,
-        duration: parseInt(duration, 10) || 5,
-        output_url: resultMediaUrl,
-      };
-
+      const nodeType = activeTool === "image" ? "image" : "video";
       await fetch(`/api/flows/${newFlow.id}/nodes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nodeType,
-          title: toolDef.name,
-          positionX: 300,
-          positionY: 200,
+          title: `${toolDef.name} Studio`,
+          positionX: 250,
+          positionY: 180,
           toolSlug: toolDef.slug,
-          config: nodeConfig,
+          config: {
+            prompt,
+            image_size: imageSize,
+            output_url: resultMediaUrl,
+          },
         }),
       });
 
-      toast.success("✦ Pipeline criado! Redirecionando para o VORIXA FLOW...");
+      toast.success("✦ Pipeline criado no VORIXA FLOW!");
       router.push(`/dashboard/flow/${newFlow.id}`);
     } catch (e: any) {
       toast.error(e.message || "Erro ao abrir no Flow.");
@@ -334,493 +684,1107 @@ export default function StudioCreatePage() {
     }
   };
 
+  // Carregar Inspiração no Studio
+  const handleSelectInspiration = (insp: (typeof INSPIRATIONS)[0]) => {
+    setActiveTool(insp.tool);
+    setPrompt(insp.prompt);
+    setSelectedStyle(insp.styleId);
+    if (insp.videoUrl) {
+      setResultMediaUrl(insp.videoUrl);
+      setResultMediaType("video");
+    } else if (insp.imageUrl) {
+      setResultMediaUrl(insp.imageUrl);
+      setResultMediaType("image");
+    }
+    toast.success(`Inspiração "${insp.title}" carregada no Studio!`);
+  };
+
+  // Salvar Projeto
+  const handleSaveProject = () => {
+    setIsEditingName(false);
+    localStorage.setItem(
+      "vorixa_studio_last_project",
+      JSON.stringify({
+        name: projectName,
+        tool: activeTool,
+        prompt,
+        imageSize,
+        style: selectedStyle,
+        updatedAt: new Date().toISOString(),
+      })
+    );
+    toast.success(`Projeto "${projectName}" salvo com sucesso!`);
+  };
+
   const currentToolDef = TOOLS[activeTool];
+  const currentModelDef = currentToolDef.models.find((m) => m.id === selectedModelId) || currentToolDef.models[0];
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 pb-16">
-      {/* Header do Studio CREATE */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#1E202E] pb-6">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-violet-600/30">
-              <Wand2 className="h-5 w-5" />
-            </div>
-            <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight font-heading">
-              Studio CREATE
-            </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-violet-500/10 border border-violet-500/20 text-violet-400 font-bold uppercase">
-              v2.0 Turbo
-            </span>
+    <div className="max-w-[1700px] mx-auto space-y-6 pb-20 text-slate-100 antialiased font-sans">
+      {/* =========================================================================
+          1. HEADER DO STUDIO: Título, Badge v2.0, Controles de Projeto e Flow
+         ========================================================================= */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-[#1E202E] pb-5">
+        <div className="flex items-start sm:items-center gap-3.5">
+          <div className="h-11 w-11 rounded-2xl bg-gradient-to-tr from-violet-600 via-purple-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-violet-600/30 flex-shrink-0">
+            <Wand2 className="h-5 w-5" />
           </div>
-          <p className="text-xs md:text-sm text-slate-400">
-            Estúdio integrado de criação rápida. Escolha o motor de IA, ajuste os parâmetros e renderize em segundos.
-          </p>
-        </div>
-
-        {/* Saldo e Ações Rápidas */}
-        <div className="flex items-center gap-3">
-          <div className="px-4 py-2 rounded-2xl bg-[#0D0E12] border border-[#1E202E] flex items-center gap-3">
-            <Coins className="h-4 w-4 text-amber-400" />
-            <div>
-              <span className="text-[10px] font-mono text-slate-400 uppercase block leading-none">Seu Saldo</span>
-              <span className="text-xs font-bold text-slate-200">
-                {creditMode === "UNLIMITED" ? "Ilimitado" : `${balance} créditos`}
+          <div className="space-y-1">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-heading">
+                Studio CREATE
+              </h1>
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-violet-950/60 border border-violet-500/30 text-violet-400 font-bold uppercase tracking-wider">
+                v2.0 Turbo
               </span>
             </div>
+            <p className="text-xs sm:text-sm text-slate-400 max-w-2xl">
+              Do conceito ao resultado. Crie imagens, vídeos e avatares com IA em um estúdio integrado.
+            </p>
+          </div>
+        </div>
+
+        {/* Controles de Projeto e Ações Rápidas */}
+        <div className="flex items-center gap-2.5 flex-wrap">
+          {/* Nome do Projeto Editável */}
+          <div className="flex items-center bg-[#0D0E12] border border-[#1E202E] rounded-xl px-3 py-1.5 focus-within:border-violet-500 transition-all">
+            {isEditingName ? (
+              <div className="flex items-center gap-1.5">
+                <input
+                  type="text"
+                  value={tempProjectName}
+                  onChange={(e) => setTempProjectName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      setProjectName(tempProjectName || "Projeto sem nome");
+                      setIsEditingName(false);
+                      toast.success("Nome atualizado!");
+                    }
+                  }}
+                  autoFocus
+                  className="bg-transparent text-xs text-white outline-none w-36 font-semibold"
+                />
+                <button
+                  onClick={() => {
+                    setProjectName(tempProjectName || "Projeto sem nome");
+                    setIsEditingName(false);
+                    toast.success("Nome atualizado!");
+                  }}
+                  className="text-emerald-400 hover:text-emerald-300 cursor-pointer"
+                >
+                  <Check className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setTempProjectName(projectName);
+                  setIsEditingName(true);
+                }}
+                className="flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-white cursor-pointer group"
+              >
+                <span className="truncate max-w-[140px]">{projectName}</span>
+                <Pencil className="h-3 w-3 text-slate-500 group-hover:text-violet-400 transition-colors" />
+              </button>
+            )}
           </div>
 
+          {/* Botão Salvar */}
           <button
-            onClick={() => router.push("/dashboard/flow")}
-            className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-cyan-400 transition-all cursor-pointer"
+            onClick={handleSaveProject}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0D0E12] hover:bg-[#13141B] border border-[#1E202E] text-xs font-bold text-slate-300 hover:text-white transition-all cursor-pointer"
+            style={{ minHeight: "44px" }}
+          >
+            <span>Salvar</span>
+          </button>
+
+          {/* Menu Reticências */}
+          <div className="relative">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2.5 rounded-xl bg-[#0D0E12] hover:bg-[#13141B] border border-[#1E202E] text-slate-400 hover:text-white transition-all cursor-pointer"
+              style={{ minHeight: "44px", minWidth: "44px" }}
+              aria-label="Mais opções"
+            >
+              <MoreHorizontal className="h-4 w-4" />
+            </button>
+
+            {isMenuOpen && (
+              <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-[#0D0E12] border border-[#1E202E] shadow-2xl p-1.5 z-50 text-xs space-y-1">
+                <button
+                  onClick={() => {
+                    setPrompt("");
+                    setReferenceImageUrl("");
+                    setIsMenuOpen(false);
+                    toast.info("Campos resetados.");
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#13141B] text-slate-300 hover:text-white transition-colors cursor-pointer"
+                >
+                  Limpar todos os campos
+                </button>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(prompt);
+                    setIsMenuOpen(false);
+                    toast.success("Prompt copiado para a área de transferência!");
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#13141B] text-slate-300 hover:text-white transition-colors cursor-pointer"
+                >
+                  Copiar prompt atual
+                </button>
+                <button
+                  onClick={() => {
+                    router.push("/dashboard/library");
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#13141B] text-slate-300 hover:text-white transition-colors cursor-pointer"
+                >
+                  Abrir Galeria & Histórico
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Botão Enviar para o Flow */}
+          <button
+            onClick={handleOpenInFlow}
+            disabled={isOpeningInFlow}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-90 active:scale-95 text-white text-xs font-bold shadow-lg shadow-violet-600/25 transition-all cursor-pointer"
             style={{ minHeight: "44px" }}
           >
             <Boxes className="h-4 w-4" />
-            <span className="hidden sm:inline">Ir para o Flow Canvas</span>
+            <span>{isOpeningInFlow ? "Criando Flow..." : "Enviar para o Flow"}</span>
           </button>
         </div>
       </div>
 
-      {/* Seletor de Ferramentas / Motores */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-        {(Object.keys(TOOLS) as StudioTool[]).map((key) => {
-          const t = TOOLS[key];
-          const isSelected = activeTool === key;
-          return (
-            <button
-              key={key}
-              onClick={() => {
-                setActiveTool(key);
-                setResultMediaUrl(null);
-                setErrorMsg(null);
-              }}
-              className={`relative p-3.5 rounded-2xl border text-left transition-all duration-300 flex flex-col justify-between cursor-pointer ${
-                isSelected
-                  ? "bg-[#13141B] border-violet-500/80 shadow-[0_0_25px_rgba(139,92,246,0.2)]"
-                  : "bg-[#0D0E12] border-[#1E202E] hover:border-slate-700 opacity-80 hover:opacity-100"
-              }`}
-              style={{ minHeight: "80px" }}
-            >
-              <div className="flex items-center justify-between">
-                <div
-                  className={`h-8 w-8 rounded-xl bg-gradient-to-tr ${t.color} flex items-center justify-center text-white shadow-md`}
+      {/* =========================================================================
+          2. STEPPER HORIZONTAL: 1: Tipo de Mídia > 2: Prompt > 3: Parâmetros > 4: Gerar
+         ========================================================================= */}
+      <div className="overflow-x-auto pb-1">
+        <div className="flex items-center justify-between min-w-[700px] gap-2 p-1.5 bg-[#0D0E12] border border-[#1E202E] rounded-2xl">
+          {[
+            { step: 1, title: "Tipo de Mídia", subtitle: "Selecione o que criar" },
+            { step: 2, title: "Prompt & Referências", subtitle: "Descreva sua cena" },
+            { step: 3, title: "Parâmetros", subtitle: "Ajuste o estilo" },
+            { step: 4, title: "Gerar & Refinar", subtitle: "Veja o resultado" },
+          ].map((item, idx) => {
+            const isActive = activeStep === item.step;
+            return (
+              <React.Fragment key={item.step}>
+                <button
+                  onClick={() => setActiveStep(item.step)}
+                  className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-left transition-all cursor-pointer flex-1 ${
+                    isActive
+                      ? "bg-cyan-950/30 border border-cyan-500/80 shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+                      : "hover:bg-[#13141B] opacity-75 hover:opacity-100"
+                  }`}
                 >
-                  <t.icon className="h-4 w-4" />
-                </div>
-                <span className="text-[10px] font-mono text-slate-400 font-semibold">{t.cost} cr</span>
-              </div>
-              <div className="mt-2">
-                <div className="text-xs font-bold text-white">{t.name}</div>
-                <div className="text-[10px] text-slate-400 font-mono">{t.badge}</div>
-              </div>
-            </button>
-          );
-        })}
+                  <div
+                    className={`h-7 w-7 rounded-lg flex items-center justify-center text-xs font-black font-mono transition-all ${
+                      isActive
+                        ? "bg-gradient-to-tr from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-500/30"
+                        : "bg-[#13141B] border border-[#1E202E] text-slate-400"
+                    }`}
+                  >
+                    {item.step}
+                  </div>
+                  <div>
+                    <div className={`text-xs font-bold leading-tight ${isActive ? "text-cyan-300" : "text-slate-200"}`}>
+                      {item.title}
+                    </div>
+                    <div className="text-[10px] text-slate-500 font-medium">{item.subtitle}</div>
+                  </div>
+                </button>
+
+                {idx < 3 && <ChevronRight className="h-4 w-4 text-slate-700 flex-shrink-0" />}
+              </React.Fragment>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Grid Central: Parâmetros (Esquerda) + Preview Cinematográfico (Direita) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Painel de Parâmetros da Ferramenta */}
-        <div className="lg:col-span-7 space-y-6 bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-5 md:p-6">
-          <div className="flex items-center justify-between border-b border-[#1E202E] pb-4">
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal className="h-4 w-4 text-violet-400" />
-              <h2 className="text-sm font-bold text-white uppercase tracking-wider font-heading">
-                Parâmetros de {currentToolDef.name}
-              </h2>
+      {/* =========================================================================
+          3. GRID PRINCIPAL: Coluna de Criação + Preview/Player Central + Histórico
+         ========================================================================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* =======================================================================
+            COLUNA DA ESQUERDA: PARÂMETROS & CONTROLES (lg:col-span-4)
+           ======================================================================= */}
+        <div className="lg:col-span-4 space-y-5 bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-4 sm:p-5">
+          {/* Seção Tipo de Mídia */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                Tipo de Mídia
+              </label>
+              <span className="text-[10px] font-mono text-slate-500">Etapa 1 de 4</span>
             </div>
-            <span className="text-xs text-slate-400 font-mono">
-              Custo estimado: <strong className="text-violet-400">{currentToolDef.cost} créditos</strong>
-            </span>
-          </div>
-
-          {/* Form específico por ferramenta */}
-          {activeTool === "image" && (
-            <div className="space-y-5">
-              <PromptInput
-                value={prompt}
-                onChange={setPrompt}
-                label="Prompt de Criação da Imagem"
-                placeholder="Ex: Close cinematográfico de um samurai futurista com armadura cibernética de titânio e luzes néon azuis sob chuva, iluminação volumétrica, fotorrealista..."
-              />
-
-              {/* Presets de Estilo */}
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                  Presets de Estilo Rápido
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {STYLE_PRESETS.map((preset) => (
-                    <button
-                      key={preset.name}
-                      type="button"
-                      onClick={() => handleApplyPreset(preset.suffix)}
-                      className="px-3 py-1.5 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] hover:border-violet-500/40 text-slate-300 text-xs font-semibold transition-all cursor-pointer"
-                    >
-                      + {preset.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Aspect Ratio */}
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                  Proporção de Tela (Aspect Ratio)
-                </label>
-                <div className="grid grid-cols-3 gap-3">
-                  {[
-                    { label: "1:1 Quadrado", val: "square_hd" },
-                    { label: "16:9 Cinema", val: "landscape_16_9" },
-                    { label: "9:16 Stories/Reels", val: "portrait_16_9" },
-                  ].map((ratio) => (
-                    <button
-                      key={ratio.val}
-                      type="button"
-                      onClick={() => setImageSize(ratio.val)}
-                      className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${
-                        imageSize === ratio.val
-                          ? "bg-violet-600/10 border-violet-500 text-violet-300"
-                          : "bg-[#13141B] border-[#1E202E] text-slate-400 hover:border-slate-700"
-                      }`}
-                      style={{ minHeight: "44px" }}
-                    >
-                      {ratio.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTool === "video" && (
-            <div className="space-y-5">
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                  Modo de Operação
-                </label>
-                <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-5 gap-1.5 p-1 bg-[#070709] rounded-2xl border border-[#1E202E]">
+              {(["image", "video", "lipsync", "motion"] as StudioTool[]).map((key) => {
+                const t = TOOLS[key];
+                const isSelected = activeTool === key;
+                return (
                   <button
+                    key={key}
                     type="button"
-                    onClick={() => setVideoMode("image")}
-                    className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${
-                      videoMode === "image"
-                        ? "bg-cyan-600/10 border-cyan-500 text-cyan-300"
-                        : "bg-[#13141B] border-[#1E202E] text-slate-400"
+                    onClick={() => {
+                      setActiveTool(key);
+                      setActiveStep(1);
+                    }}
+                    className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-xl text-[11px] font-bold transition-all cursor-pointer ${
+                      isSelected
+                        ? "bg-gradient-to-tr from-violet-600 to-indigo-600 text-white shadow-md shadow-violet-600/25"
+                        : "text-slate-400 hover:text-slate-200 hover:bg-[#13141B]"
                     }`}
                     style={{ minHeight: "44px" }}
                   >
-                    Imagem para Vídeo (Recomendado)
+                    <t.icon className="h-4 w-4 mb-1" />
+                    <span className="text-[10px] truncate max-w-full">{t.name}</span>
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setVideoMode("text")}
-                    className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${
-                      videoMode === "text"
-                        ? "bg-cyan-600/10 border-cyan-500 text-cyan-300"
-                        : "bg-[#13141B] border-[#1E202E] text-slate-400"
-                    }`}
-                    style={{ minHeight: "44px" }}
-                  >
-                    Texto para Vídeo
-                  </button>
-                </div>
-              </div>
+                );
+              })}
 
-              {videoMode === "image" && (
-                <FileUploader
-                  accept="image/*"
-                  label="Imagem de Entrada (Frame Inicial)"
-                  onUploadSuccess={setSourceImageUrl}
-                  onClear={() => setSourceImageUrl("")}
-                />
-              )}
-
-              <PromptInput
-                value={prompt}
-                onChange={setPrompt}
-                label="Prompt de Movimento / Cena"
-                placeholder={
-                  videoMode === "image"
-                    ? "Descreva como a câmera se move e o que acontece na cena... Ex: Câmera faz zoom in dramático enquanto o vento sopra as roupas"
-                    : "Descreva a cena de vídeo completa em detalhes..."
-                }
-              />
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                    Duração do Vídeo
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {["5", "10"].map((d) => (
-                      <button
-                        key={d}
-                        type="button"
-                        onClick={() => setDuration(d)}
-                        className={`p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                          duration === d
-                            ? "bg-cyan-600/10 border-cyan-500 text-cyan-300"
-                            : "bg-[#13141B] border-[#1E202E] text-slate-400"
-                        }`}
-                        style={{ minHeight: "44px" }}
-                      >
-                        {d} Segundos
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                    Movimento de Câmera
-                  </label>
-                  <select
-                    value={cameraMotion}
-                    onChange={(e) => setCameraMotion(e.target.value)}
-                    className="w-full rounded-xl bg-[#13141B] border border-[#1E202E] px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500 cursor-pointer"
-                    style={{ minHeight: "44px" }}
-                  >
-                    <option value="static">Estático / Natural</option>
-                    <option value="zoom_in">Zoom In Cinemático</option>
-                    <option value="pan_left">Panorâmica Esquerda</option>
-                    <option value="pan_right">Panorâmica Direita</option>
-                    <option value="orbital">Movimento Orbital</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTool === "lipsync" && (
-            <div className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FileUploader
-                  accept="video/*"
-                  label="1. Vídeo de Rosto / Personagem"
-                  onUploadSuccess={setSourceVideoUrl}
-                  onClear={() => setSourceVideoUrl("")}
-                />
-                <FileUploader
-                  accept="audio/*"
-                  label="2. Áudio de Fala (Voz)"
-                  onUploadSuccess={setSourceAudioUrl}
-                  onClear={() => setSourceAudioUrl("")}
-                />
-              </div>
-              <p className="text-xs text-slate-400 bg-[#13141B] p-3.5 rounded-2xl border border-[#1E202E]">
-                💡 <strong>Dica Pro:</strong> Para sincronizações perfeitas, certifique-se de que o rosto do personagem esteja iluminado e visível na maior parte dos quadros.
-              </p>
-            </div>
-          )}
-
-          {activeTool === "motion" && (
-            <div className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FileUploader
-                  accept="image/*"
-                  label="1. Imagem do Personagem Alvo"
-                  onUploadSuccess={setCharacterImageUrl}
-                  onClear={() => setCharacterImageUrl("")}
-                />
-                <FileUploader
-                  accept="video/*"
-                  label="2. Vídeo de Referência da Pose"
-                  onUploadSuccess={setReferenceVideoUrl}
-                  onClear={() => setReferenceVideoUrl("")}
-                />
-              </div>
-              <PromptInput
-                value={prompt}
-                onChange={setPrompt}
-                label="Prompt de Estilização (Opcional)"
-                placeholder="Detalhes adicionais sobre o ambiente e iluminação final..."
-              />
-            </div>
-          )}
-
-          {activeTool === "upscale" && (
-            <div className="space-y-5">
-              <FileUploader
-                accept="video/*"
-                label="Vídeo de Origem para Upscale"
-                onUploadSuccess={setSourceVideoUrl}
-                onClear={() => setSourceVideoUrl("")}
-              />
-
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                  Fator de Resolução
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { label: "2x Resolução (Full HD -> 2K)", val: "2" },
-                    { label: "4x Resolução (Full HD -> 4K UHD)", val: "4" },
-                  ].map((factor) => (
-                    <button
-                      key={factor.val}
-                      type="button"
-                      onClick={() => setScaleFactor(factor.val)}
-                      className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${
-                        scaleFactor === factor.val
-                          ? "bg-amber-600/10 border-amber-500 text-amber-300"
-                          : "bg-[#13141B] border-[#1E202E] text-slate-400"
-                      }`}
-                      style={{ minHeight: "44px" }}
-                    >
-                      {factor.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Botão de Disparo */}
-          <div className="pt-4 border-t border-[#1E202E] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
-                <Coins className="h-5 w-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-mono text-slate-400 uppercase block leading-none">Custo Total</span>
-                <span className="text-sm font-bold text-white">
-                  {creditMode === "UNLIMITED" ? "Ilimitado" : `${currentToolDef.cost} créditos`}
-                </span>
-              </div>
-            </div>
-
-            <button
-              onClick={handleGenerate}
-              disabled={isGenerating}
-              className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-90 disabled:opacity-50 text-white text-sm font-bold shadow-[0_0_30px_rgba(139,92,246,0.3)] transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-              style={{ minHeight: "44px" }}
-            >
-              {isGenerating ? (
-                <>
-                  <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>{step}...</span>
-                </>
-              ) : (
-                <>
-                  <Play className="h-4 w-4 fill-current" />
-                  <span>Iniciar Geração no Studio</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Lado Direito: Preview & Player Integrado */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-5 md:p-6 flex flex-col min-h-[480px] justify-between">
-            <div className="flex items-center justify-between border-b border-[#1E202E] pb-3 mb-4">
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider font-heading">
-                  Preview & Player
-                </span>
-              </div>
-              {resultMediaUrl && (
-                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
-                  Pronto para uso
-                </span>
-              )}
-            </div>
-
-            {/* Visualizador de Mídia */}
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-2 min-h-[300px]">
-              {isGenerating ? (
-                <div className="space-y-5">
-                  <div className="relative h-20 w-20 mx-auto">
-                    <div className="absolute inset-0 rounded-full border-4 border-violet-500/20 animate-ping" />
-                    <div className="h-20 w-20 rounded-full border-4 border-violet-600 border-t-cyan-400 animate-spin" />
-                    <Sparkles className="h-7 w-7 text-violet-400 absolute inset-0 m-auto animate-pulse" />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-sm font-bold text-white tracking-wide">{step}</div>
-                    <div className="text-xs text-slate-500 font-mono">Executando inferência no motor {currentToolDef.badge}</div>
-                  </div>
-                </div>
-              ) : resultMediaUrl ? (
-                <div className="w-full space-y-4">
-                  <div className="relative rounded-2xl overflow-hidden border border-[#1E202E] bg-black group max-h-[360px] flex items-center justify-center">
-                    {resultMediaUrl.endsWith(".mp4") || resultMediaUrl.endsWith(".webm") || activeTool !== "image" ? (
-                      <video
-                        src={resultMediaUrl}
-                        controls
-                        autoPlay
-                        loop
-                        className="w-full h-full max-h-[360px] object-contain rounded-2xl"
-                      />
-                    ) : (
-                      <img
-                        src={resultMediaUrl}
-                        alt="Resultado da Geração"
-                        className="w-full h-full max-h-[360px] object-contain rounded-2xl"
-                      />
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <a
-                      href={resultMediaUrl}
-                      download="vorixa-asset"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-slate-200 transition-all cursor-pointer"
-                      style={{ minHeight: "44px" }}
-                    >
-                      <Download className="h-4 w-4" />
-                      <span>Download</span>
-                    </a>
-
-                    <button
-                      onClick={handleOpenInFlow}
-                      disabled={isOpeningInFlow}
-                      className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/40 text-xs font-bold text-violet-300 transition-all cursor-pointer"
-                      style={{ minHeight: "44px" }}
-                    >
-                      <Boxes className="h-4 w-4 text-violet-400" />
-                      <span>{isOpeningInFlow ? "Abrindo..." : "Open in Flow ✦"}</span>
-                    </button>
-                  </div>
-                </div>
-              ) : errorMsg ? (
-                <div className="space-y-3 max-w-sm">
-                  <div className="h-12 w-12 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center mx-auto">
-                    <AlertCircle className="h-6 w-6" />
-                  </div>
-                  <div className="text-sm font-bold text-red-300">{errorMsg}</div>
-                  <p className="text-xs text-slate-500">
-                    Seus créditos foram mantidos ou estornados automaticamente no Ledger.
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-3 max-w-xs text-slate-500">
-                  <div className="h-14 w-14 rounded-3xl bg-[#13141B] border border-[#1E202E] flex items-center justify-center mx-auto text-slate-400">
-                    <currentToolDef.icon className="h-7 w-7" />
-                  </div>
-                  <div className="text-xs font-medium text-slate-400">
-                    Ajuste os parâmetros à esquerda e clique em <strong>Iniciar Geração</strong> para renderizar.
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Dica de Integração com o Flow */}
-            <div className="pt-4 border-t border-[#1E202E] mt-4 flex items-center justify-between text-[11px] text-slate-400">
-              <span>Encadeie múltiplos modelos no Canvas</span>
+              {/* Botão de expansão [>] */}
               <button
-                onClick={() => router.push("/dashboard/flow")}
-                className="text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1 cursor-pointer"
+                type="button"
+                onClick={() => setActiveTool("upscale")}
+                className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-xl text-[11px] font-bold transition-all cursor-pointer ${
+                  activeTool === "upscale"
+                    ? "bg-gradient-to-tr from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/25"
+                    : "text-slate-400 hover:text-slate-200 hover:bg-[#13141B]"
+                }`}
+                style={{ minHeight: "44px" }}
+                title="Ferramentas Extras (Upscale 4K)"
               >
-                <span>Abrir VORIXA FLOW</span>
-                <ArrowRight className="h-3 w-3" />
+                <Sparkles className="h-4 w-4 mb-1" />
+                <span className="text-[10px]">Mais &gt;</span>
               </button>
             </div>
           </div>
+
+          {/* Seção Modelo de IA */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                Modelo de IA
+              </label>
+              <span className="text-[10px] font-mono text-violet-400 font-semibold">
+                {currentModelDef.cost} crédito{currentModelDef.cost > 1 ? "s" : ""}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {currentToolDef.models.map((model) => {
+                const isSelected = selectedModelId === model.id;
+                return (
+                  <button
+                    key={model.id}
+                    type="button"
+                    onClick={() => setSelectedModelId(model.id)}
+                    className={`p-3 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between ${
+                      isSelected
+                        ? "bg-[#13141B] border-violet-500 shadow-[0_0_20px_rgba(139,92,246,0.25)]"
+                        : "bg-[#070709] border-[#1E202E] hover:border-slate-700 opacity-85 hover:opacity-100"
+                    }`}
+                    style={{ minHeight: "72px" }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-white truncate max-w-[95px]">
+                        {model.name}
+                      </span>
+                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/20">
+                        {model.cost} cr
+                      </span>
+                    </div>
+                    <div className="mt-1 flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                      <span>{model.badge}</span>
+                      <span className="text-slate-500">{model.speed}</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Seção Prompt de Criação */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                Prompt de Criação
+              </label>
+              <button
+                type="button"
+                onClick={handleOptimizePrompt}
+                disabled={isOptimizing || !prompt.trim()}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 hover:opacity-90 disabled:opacity-40 text-white shadow-md shadow-violet-600/20 transition-all active:scale-95 cursor-pointer"
+                style={{ minHeight: "34px" }}
+              >
+                {isOptimizing ? (
+                  <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="h-3.5 w-3.5 text-cyan-200" />
+                )}
+                <span>✦ Otimizar com IA</span>
+              </button>
+            </div>
+
+            <div className="relative rounded-2xl border border-[#1E202E] bg-[#070709] focus-within:border-violet-500/80 transition-all">
+              <textarea
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                rows={4}
+                placeholder="Ex: Close cinematográfico de um samurai futurista com armadura cibernética de titânio e luzes néon azuis sob chuva, iluminação volumétrica, fotorrealista..."
+                className="w-full bg-transparent p-3.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 outline-none resize-none leading-relaxed"
+                maxLength={1500}
+              />
+
+              {/* Preview de imagem de referência, se carregada */}
+              {referenceImageUrl && (
+                <div className="px-3 pb-2 flex items-center gap-2">
+                  <div className="relative h-10 w-10 rounded-lg overflow-hidden border border-violet-500/50">
+                    <img src={referenceImageUrl} alt="Referência" className="h-full w-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setReferenceImageUrl("")}
+                      className="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 flex items-center justify-center text-white transition-opacity"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                  <span className="text-[11px] text-slate-400 font-mono">Imagem de referência ativa</span>
+                </div>
+              )}
+
+              {/* Rodapé da Textarea com Ícones Rápidos */}
+              <div className="flex items-center justify-between border-t border-[#1E202E] px-3 py-2 text-slate-400">
+                <div className="flex items-center gap-2">
+                  {/* Upload de Referência */}
+                  <input
+                    ref={refFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleReferenceUpload}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => refFileInputRef.current?.click()}
+                    disabled={isUploadingRef}
+                    className="p-1.5 rounded-lg hover:bg-[#13141B] hover:text-violet-400 transition-colors cursor-pointer"
+                    title="Anexar imagem de referência"
+                    style={{ minHeight: "36px", minWidth: "36px" }}
+                  >
+                    {isUploadingRef ? (
+                      <RefreshCw className="h-4 w-4 animate-spin text-violet-400" />
+                    ) : (
+                      <Upload className="h-4 w-4" />
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const next = imageSize === "16:9" ? "1:1" : imageSize === "1:1" ? "9:16" : "16:9";
+                      setImageSize(next);
+                    }}
+                    className="p-1.5 rounded-lg hover:bg-[#13141B] hover:text-cyan-400 transition-colors text-xs font-mono font-bold cursor-pointer"
+                    title="Alternar proporção"
+                    style={{ minHeight: "36px" }}
+                  >
+                    {imageSize}
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {prompt && (
+                    <button
+                      type="button"
+                      onClick={() => setPrompt("")}
+                      className="text-[11px] text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
+                    >
+                      Limpar
+                    </button>
+                  )}
+                  <span className="text-[10px] font-mono text-slate-500">
+                    {prompt.length}/1500
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Seção Estilo Visual com Thumbnails Reais */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
+              Estilo Visual
+            </label>
+            <div className="grid grid-cols-5 gap-2">
+              {STYLE_PRESETS.map((style) => {
+                const isSelected = selectedStyle === style.id;
+                return (
+                  <button
+                    key={style.id}
+                    type="button"
+                    onClick={() => handleSelectStyle(style.id)}
+                    className={`group relative rounded-xl overflow-hidden border transition-all cursor-pointer flex flex-col items-center justify-end p-1.5 aspect-square ${
+                      isSelected
+                        ? "border-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.3)] ring-1 ring-cyan-400"
+                        : "border-[#1E202E] hover:border-slate-600 opacity-80 hover:opacity-100"
+                    }`}
+                    style={{ minHeight: "56px" }}
+                  >
+                    <img
+                      src={style.thumb}
+                      alt={style.name}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                    <span className="relative z-10 text-[9px] font-bold text-white text-center leading-tight truncate w-full">
+                      {style.name}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Seção Proporção de Tela */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
+              Proporção de Tela
+            </label>
+            <div className="grid grid-cols-4 gap-2">
+              {ASPECT_RATIOS.map((ratio) => {
+                const isSelected = imageSize === ratio.id;
+                return (
+                  <button
+                    key={ratio.id}
+                    type="button"
+                    onClick={() => setImageSize(ratio.id)}
+                    className={`py-2 px-1.5 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
+                      isSelected
+                        ? "bg-[#13141B] border-violet-500 text-white shadow-md shadow-violet-500/20"
+                        : "bg-[#070709] border-[#1E202E] text-slate-400 hover:text-slate-200"
+                    }`}
+                    style={{ minHeight: "52px" }}
+                  >
+                    <div
+                      className={`border border-current rounded-sm ${ratio.iconWidth} ${
+                        isSelected ? "border-violet-400 bg-violet-500/20" : "border-slate-500"
+                      }`}
+                    />
+                    <div className="text-[10px] font-bold font-mono">{ratio.label}</div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Acordeão: Configurações Avançadas */}
+          <div className="border border-[#1E202E] rounded-2xl overflow-hidden bg-[#070709]">
+            <button
+              type="button"
+              onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
+              className="w-full flex items-center justify-between p-3.5 text-xs font-bold text-slate-300 hover:text-white transition-colors cursor-pointer"
+              style={{ minHeight: "44px" }}
+            >
+              <div className="flex items-center gap-2">
+                <Sliders className="h-3.5 w-3.5 text-violet-400" />
+                <span>Configurações Avançadas</span>
+              </div>
+              {isAdvancedOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </button>
+
+            {isAdvancedOpen && (
+              <div className="p-4 border-t border-[#1E202E] space-y-4 text-xs">
+                {/* Passos de Inferência */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400">Passos de Inferência (Steps)</span>
+                    <span className="font-mono text-violet-400 font-bold">{inferenceSteps}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={4}
+                    max={28}
+                    step={1}
+                    value={inferenceSteps}
+                    onChange={(e) => setInferenceSteps(parseInt(e.target.value, 10))}
+                    className="w-full accent-violet-500 cursor-pointer"
+                  />
+                </div>
+
+                {/* Guidance Scale */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400">Fidelidade ao Prompt (CFG)</span>
+                    <span className="font-mono text-violet-400 font-bold">{guidanceScale}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={1}
+                    max={10}
+                    step={0.5}
+                    value={guidanceScale}
+                    onChange={(e) => setGuidanceScale(parseFloat(e.target.value))}
+                    className="w-full accent-violet-500 cursor-pointer"
+                  />
+                </div>
+
+                {/* Seed Manual */}
+                <div className="space-y-1.5">
+                  <span className="text-slate-400 block">Seed (Semente Numérica)</span>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="Aleatória (Padrão)"
+                      value={seed}
+                      onChange={(e) => setSeed(e.target.value.replace(/\D/g, ""))}
+                      className="flex-1 bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-1.5 text-xs text-white outline-none focus:border-violet-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setSeed(Math.floor(Math.random() * 9999999).toString())}
+                      className="px-3 py-1.5 rounded-xl bg-[#13141B] border border-[#1E202E] text-slate-300 hover:text-white transition-colors cursor-pointer"
+                      title="Sortear seed aleatória"
+                    >
+                      🎲
+                    </button>
+                  </div>
+                </div>
+
+                {/* Se for vídeo: Duração e Câmera */}
+                {activeTool === "video" && (
+                  <div className="space-y-3 pt-2 border-t border-[#1E202E]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-400">Duração do Vídeo</span>
+                      <div className="flex gap-2">
+                        {["5", "10"].map((d) => (
+                          <button
+                            key={d}
+                            type="button"
+                            onClick={() => setDuration(d)}
+                            className={`px-3 py-1 rounded-lg font-mono font-bold ${
+                              duration === d
+                                ? "bg-cyan-600/30 border border-cyan-500 text-cyan-300"
+                                : "bg-[#13141B] text-slate-400"
+                            }`}
+                          >
+                            {d}s
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <span className="text-slate-400 block">Movimento de Câmera</span>
+                      <select
+                        value={cameraMotion}
+                        onChange={(e) => setCameraMotion(e.target.value)}
+                        className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-cyan-500"
+                      >
+                        <option value="static">Estático / Natural</option>
+                        <option value="zoom_in">Zoom In Dramático</option>
+                        <option value="pan_left">Panorâmica para a Esquerda</option>
+                        <option value="pan_right">Panorâmica para a Direita</option>
+                        <option value="orbital">Giro Orbital 360</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Botão de Ação Principal: Gerar */}
+          <button
+            type="button"
+            onClick={handleGenerate}
+            disabled={isGenerating}
+            className="w-full flex items-center justify-center gap-2.5 py-4 px-6 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 active:scale-[0.98] disabled:opacity-50 text-white font-black text-sm tracking-wide shadow-xl shadow-violet-600/30 transition-all cursor-pointer"
+            style={{ minHeight: "52px" }}
+          >
+            {isGenerating ? (
+              <>
+                <RefreshCw className="h-5 w-5 animate-spin" />
+                <span>{stepText || "Renderizando..."}</span>
+              </>
+            ) : (
+              <>
+                <Play className="h-4 w-4 fill-current" />
+                <span>
+                  Gerar {currentToolDef.name} ({currentModelDef.cost} crédito{currentModelDef.cost > 1 ? "s" : ""})
+                </span>
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* =======================================================================
+            COLUNA CENTRAL: PREVIEW PRINCIPAL, CUSTOM PLAYER & INSPIRAÇÕES (lg:col-span-5)
+           ======================================================================= */}
+        <div className="lg:col-span-5 space-y-6">
+          {/* Header do Player: Abas Resultado / Comparar + Fullscreen */}
+          <div className="bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-4 sm:p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-[#1E202E] pb-3">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setPreviewTab("result")}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    previewTab === "result"
+                      ? "bg-violet-600/20 text-violet-300 border border-violet-500/40"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  Resultado
+                </button>
+                <button
+                  onClick={() => setPreviewTab("compare")}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    previewTab === "compare"
+                      ? "bg-violet-600/20 text-violet-300 border border-violet-500/40"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  Comparar
+                </button>
+              </div>
+
+              <button
+                onClick={() => setIsFullscreen(true)}
+                className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
+                title="Visualizar em Tela Cheia"
+              >
+                <Maximize2 className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Tela Cheia</span>
+              </button>
+            </div>
+
+            {/* Visualizador / Player Central */}
+            <div className="relative rounded-2xl overflow-hidden bg-black border border-[#1E202E] aspect-video flex items-center justify-center group">
+              {isGenerating ? (
+                <div className="p-6 text-center space-y-4 max-w-sm">
+                  <div className="relative h-20 w-20 mx-auto">
+                    <div className="absolute inset-0 rounded-full border-4 border-violet-500/20 animate-ping" />
+                    <div className="h-20 w-20 rounded-full border-4 border-violet-600 border-t-cyan-400 animate-spin" />
+                    <Sparkles className="h-7 w-7 text-cyan-300 absolute inset-0 m-auto animate-pulse" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-sm font-bold text-white tracking-wide">{stepText}</h3>
+                    <p className="text-xs text-slate-400 font-mono">Motor: {currentModelDef.name}</p>
+                  </div>
+                </div>
+              ) : previewTab === "compare" && referenceImageUrl ? (
+                <div className="grid grid-cols-2 w-full h-full">
+                  <div className="relative h-full border-r border-[#1E202E]">
+                    <img src={referenceImageUrl} alt="Original" className="w-full h-full object-cover" />
+                    <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-slate-300">
+                      Referência
+                    </span>
+                  </div>
+                  <div className="relative h-full">
+                    {resultMediaType === "video" && resultMediaUrl ? (
+                      <video src={resultMediaUrl} autoPlay loop muted className="w-full h-full object-cover" />
+                    ) : (
+                      <img src={resultMediaUrl || referenceImageUrl} alt="Gerado" className="w-full h-full object-cover" />
+                    )}
+                    <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-emerald-400">
+                      Gerado
+                    </span>
+                  </div>
+                </div>
+              ) : resultMediaUrl ? (
+                <div className="relative w-full h-full flex items-center justify-center">
+                  {resultMediaType === "video" ? (
+                    <>
+                      <video
+                        ref={videoRef}
+                        src={resultMediaUrl}
+                        loop
+                        playsInline
+                        onTimeUpdate={handleTimeUpdate}
+                        className="w-full h-full object-contain"
+                      />
+
+                      {/* Botão Play Grande Central */}
+                      {!isPlaying && (
+                        <button
+                          type="button"
+                          onClick={handleTogglePlay}
+                          className="absolute inset-0 m-auto h-16 w-16 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-2xl hover:scale-110 active:scale-95 transition-all cursor-pointer z-20"
+                        >
+                          <Play className="h-7 w-7 fill-white ml-1" />
+                        </button>
+                      )}
+
+                      {/* Barra de Controles Inferior */}
+                      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent p-3 space-y-2 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                        {/* Timeline */}
+                        <input
+                          type="range"
+                          min={0}
+                          max={durationSec || 5}
+                          step={0.1}
+                          value={currentTime}
+                          onChange={handleSeek}
+                          className="w-full h-1 accent-cyan-400 bg-white/20 rounded-lg cursor-pointer"
+                        />
+
+                        <div className="flex items-center justify-between text-xs text-slate-300">
+                          <div className="flex items-center gap-3">
+                            <button onClick={handleTogglePlay} className="hover:text-white cursor-pointer">
+                              {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 fill-current" />}
+                            </button>
+                            <span className="font-mono text-[11px]">
+                              {formatSeconds(currentTime)} / {formatSeconds(durationSec)}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <button
+                              onClick={() => {
+                                if (videoRef.current) {
+                                  videoRef.current.muted = !isMuted;
+                                  setIsMuted(!isMuted);
+                                }
+                              }}
+                              className="hover:text-white cursor-pointer"
+                            >
+                              {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                            </button>
+                            <button onClick={() => setIsFullscreen(true)} className="hover:text-white cursor-pointer">
+                              <Maximize2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <img src={resultMediaUrl} alt="Obra de IA" className="w-full h-full object-contain" />
+                  )}
+                </div>
+              ) : (
+                <div className="p-8 text-center space-y-3">
+                  <div className="h-12 w-12 rounded-2xl bg-[#13141B] border border-[#1E202E] flex items-center justify-center text-slate-400 mx-auto">
+                    <currentToolDef.icon className="h-6 w-6" />
+                  </div>
+                  <div className="text-xs text-slate-400 max-w-xs">
+                    Configure os parâmetros à esquerda e clique em <strong>Gerar</strong> para iniciar a inferência.
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Barra de Ações Rápidas Abaixo do Player */}
+            <div className="flex items-center gap-2 flex-wrap pt-1">
+              <a
+                href={resultMediaUrl || "#"}
+                download="vorixa-studio-render"
+                target="_blank"
+                rel="noreferrer"
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-slate-200 transition-all cursor-pointer"
+                style={{ minHeight: "44px" }}
+              >
+                <Download className="h-3.5 w-3.5" />
+                <span>Baixar</span>
+              </a>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSeed(Math.floor(Math.random() * 9999999).toString());
+                  handleGenerate();
+                }}
+                disabled={isGenerating}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-slate-200 transition-all cursor-pointer"
+                style={{ minHeight: "44px" }}
+              >
+                <RotateCcw className="h-3.5 w-3.5 text-cyan-400" />
+                <span>Variar</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTool("upscale");
+                  toast.info("Ferramenta de Upscale 4K selecionada!");
+                }}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-amber-300 transition-all cursor-pointer"
+                style={{ minHeight: "44px" }}
+              >
+                <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+                <span>Upscale 4K</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleOpenInFlow}
+                disabled={isOpeningInFlow}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/40 text-xs font-bold text-violet-300 transition-all cursor-pointer"
+                style={{ minHeight: "44px" }}
+              >
+                <Boxes className="h-3.5 w-3.5 text-violet-400" />
+                <span>Flow ✦</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (resultMediaUrl) {
+                    setReferenceImageUrl(resultMediaUrl);
+                    toast.success("Mídia definida como referência de entrada!");
+                  }
+                }}
+                className="p-2.5 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-slate-400 hover:text-white transition-all cursor-pointer"
+                title="Usar como referência"
+                style={{ minHeight: "44px", minWidth: "44px" }}
+              >
+                <ImageIcon className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* =====================================================================
+              SEÇÃO INFERIOR: 'Inspirações para você' (Carrossel / 5 Cards)
+             ===================================================================== */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-violet-400" />
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider font-heading">
+                  Inspirações para você
+                </h3>
+              </div>
+              <button
+                onClick={() => toast.info("Carrossel atualizado com novos conceitos!")}
+                className="text-[11px] font-semibold text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer"
+              >
+                Ver mais &gt;
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+              {INSPIRATIONS.map((insp) => (
+                <button
+                  key={insp.id}
+                  type="button"
+                  onClick={() => handleSelectInspiration(insp)}
+                  className="group relative rounded-2xl overflow-hidden border border-[#1E202E] hover:border-violet-500/70 transition-all duration-300 text-left aspect-[4/5] bg-black cursor-pointer"
+                >
+                  <img
+                    src={insp.thumb}
+                    alt={insp.title}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+
+                  {/* Badge de Duração / Resolução */}
+                  <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-md border border-white/10 text-[9px] font-mono font-bold text-slate-300">
+                    {insp.badge}
+                  </div>
+
+                  {/* Botão Play Sobreposto */}
+                  <div className="absolute inset-0 m-auto h-9 w-9 rounded-full bg-violet-600/80 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all shadow-lg">
+                    <Play className="h-4 w-4 fill-white ml-0.5" />
+                  </div>
+
+                  {/* Título e Modelo */}
+                  <div className="absolute bottom-2 inset-x-2">
+                    <div className="text-[11px] font-bold text-white leading-snug line-clamp-1">
+                      {insp.title}
+                    </div>
+                    <div className="text-[9px] font-mono text-cyan-400">{insp.model}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* =======================================================================
+            COLUNA DA DIREITA: HISTÓRICO LATERAL (lg:col-span-3)
+           ======================================================================= */}
+        <div className="lg:col-span-3 space-y-4 bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-4">
+          <div className="flex items-center justify-between border-b border-[#1E202E] pb-3">
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-cyan-400" />
+              <h2 className="text-xs font-bold text-white uppercase tracking-wider font-heading">
+                Histórico
+              </h2>
+            </div>
+            <button
+              onClick={() => router.push("/dashboard/library")}
+              className="text-[11px] font-semibold text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer"
+            >
+              Ver todos
+            </button>
+          </div>
+
+          {/* Lista de Gerações Anteriores */}
+          <div className="space-y-2.5 max-h-[600px] overflow-y-auto pr-1">
+            {historyItems.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => {
+                  setResultMediaUrl(item.url);
+                  setResultMediaType(item.mediaType === "video" ? "video" : "image");
+                  if (item.prompt) setPrompt(item.prompt);
+                  toast.success("Carregado no player!");
+                }}
+                className="group p-2 rounded-2xl bg-[#070709] border border-[#1E202E] hover:border-violet-500/50 transition-all cursor-pointer flex items-center gap-3"
+              >
+                {/* Thumbnail */}
+                <div className="relative h-14 w-14 rounded-xl overflow-hidden bg-black flex-shrink-0 border border-[#1E202E]">
+                  {item.mediaType === "video" ? (
+                    <video src={item.url} className="h-full w-full object-cover" />
+                  ) : (
+                    <img src={item.url} alt="Histórico" className="h-full w-full object-cover" />
+                  )}
+                  {item.mediaType === "video" && (
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                      <Play className="h-3.5 w-3.5 text-white fill-white" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Detalhes do Item */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                    <span className="text-violet-400 font-semibold">{item.modelName}</span>
+                    <span>{item.timeAgo || "recente"}</span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 font-medium truncate mt-0.5">
+                    {item.prompt || "Criação de estúdio"}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigator.clipboard.writeText(item.prompt || "");
+                    toast.success("Prompt copiado!");
+                  }}
+                  className="text-slate-500 hover:text-white p-1"
+                  title="Copiar prompt"
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+
+      {/* =========================================================================
+          4. BARRA DE RODAPÉ: Dica de Pro, Créditos com Gráfico Circular e Métricas
+         ========================================================================= */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-5 rounded-3xl bg-[#0D0E12] border border-[#1E202E]">
+        {/* Dica de Pro */}
+        <div className="space-y-1.5">
+          <span className="text-[10px] font-mono text-cyan-400 font-bold uppercase tracking-wider">
+            ✦ Dica de Pro
+          </span>
+          <p className="text-xs text-slate-300 leading-relaxed">
+            Use o VORIXA FLOW para encadear múltiplos modelos e criar produções completas.
+          </p>
+          <button
+            onClick={() => router.push("/dashboard/flow")}
+            className="text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer pt-1"
+          >
+            <span>Abrir Flow Canvas</span>
+            <ArrowRight className="h-3 w-3" />
+          </button>
+        </div>
+
+        {/* Seus Créditos com Gráfico Circular */}
+        <div className="flex items-center gap-3.5">
+          <div className="relative h-12 w-12 flex-shrink-0">
+            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path
+                className="text-[#1E202E]"
+                strokeWidth="3"
+                stroke="currentColor"
+                fill="none"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              />
+              <path
+                className="text-violet-500 transition-all duration-1000 ease-out"
+                strokeDasharray="62, 100"
+                strokeWidth="3"
+                strokeLinecap="round"
+                stroke="currentColor"
+                fill="none"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              />
+            </svg>
+            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-mono font-bold text-white">
+              62%
+            </span>
+          </div>
+          <div>
+            <span className="text-[10px] font-mono text-slate-400 uppercase block">Seus Créditos</span>
+            <div className="text-sm font-black text-white">
+              {creditMode === "UNLIMITED" ? "Ilimitados" : `${balance.toLocaleString()} restantes`}
+            </div>
+          </div>
+        </div>
+
+        {/* Tempo Médio de Geração */}
+        <div className="space-y-1">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block">Tempo Médio de Geração</span>
+          <div className="text-sm font-black text-white font-mono">{currentModelDef.speed}</div>
+          <span className="text-[10px] text-slate-500">Otimizado no cluster GPU do {currentModelDef.name}</span>
+        </div>
+
+        {/* Qualidade de Saída */}
+        <div className="space-y-1">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block">Qualidade de Saída</span>
+          <div className="text-sm font-black text-white font-mono">Até 8K Ultra HD</div>
+          <span className="text-[10px] text-slate-500">Compatível com Upscale Neural 4K/8K</span>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          5. MODAL EM TELA CHEIA (FULLSCREEN VIEWER)
+         ========================================================================= */}
+      {isFullscreen && (
+        <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-white">{projectName}</span>
+              <span className="text-xs font-mono text-slate-400">({resultMediaType})</span>
+            </div>
+            <button
+              onClick={() => setIsFullscreen(false)}
+              className="p-2.5 rounded-2xl bg-[#13141B] hover:bg-[#1E202E] text-white cursor-pointer"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="flex-1 flex items-center justify-center p-4 max-h-[85vh]">
+            {resultMediaType === "video" && resultMediaUrl ? (
+              <video src={resultMediaUrl} controls autoPlay loop className="max-w-full max-h-full rounded-2xl" />
+            ) : (
+              <img src={resultMediaUrl || ""} alt="Full render" className="max-w-full max-h-full object-contain rounded-2xl" />
+            )}
+          </div>
+
+          <div className="flex items-center justify-center gap-3">
+            <a
+              href={resultMediaUrl || "#"}
+              download="vorixa-asset"
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold cursor-pointer"
+            >
+              <Download className="h-4 w-4" />
+              <span>Baixar em Alta Resolução</span>
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

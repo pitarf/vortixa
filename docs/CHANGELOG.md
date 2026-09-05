@@ -2,6 +2,28 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [2.6.0] - 2026-09-05
+
+### Adicionado / Refatorado
+- **Studio CREATE v2.0 Turbo (`/dashboard/create`)**:
+  * Redesenho integral com 100% de fidelidade à referência visual de alta fidelidade da VORIXA CREATIVE SUITE.
+  * **Header do Studio**: Edição dinâmica de nome de projeto, botão de persistência "Salvar", menu contextual de opções e botão de destaque "Enviar para o Flow".
+  * **Stepper Horizontal de 4 Etapas**: `1. Tipo de Mídia` ➔ `2. Prompt & Referências` ➔ `3. Parâmetros` ➔ `4. Gerar & Refinar`.
+  * **Painel de Criação Lateral**:
+    - Abas de mídia (*Imagem, Vídeo, Avatar, Motion, Upscale*).
+    - Seletores de modelos com cards táteis (*FLUX.1 Schnell, FLUX.1 Dev, FLUX.1 Pro, Google Imagen 3, Kling 1.5, LivePortrait*).
+    - Textarea com contador dinâmico (148/1500) e botão integrado **✦ Otimizar com IA**.
+    - Grade de estilos visuais com thumbnails (*Cinemático, Fotorrealista, Anime, 3D Render, Cyberpunk*).
+    - Seletores de aspect ratio (*1:1, 16:9, 9:16, 4:3*) e acordeão de configurações avançadas (steps, seed, guidance).
+    - Botão largo de ação com custo dinâmico: `▶ Gerar Imagem (1 crédito)`.
+  * **Player Central & Preview Cinematográfico**:
+    - Abas *Resultado* e *Comparar*, visualizador widescreen com controles customizados (Play/Pause, timeline, volume e tela cheia).
+    - Barra de ações rápidas: *Baixar, Variar, Upscale 4K, Enviar para o Flow, Usar como Referência*.
+  * **Faixa "Inspirações para você"**: 5 cards cinematográficos com carregamento instantâneo de parâmetros e mídia no player.
+  * **Histórico Lateral**: Integração em tempo real com `GET /api/library`, exibindo mídias recentes com preview e badges.
+  * **Barra de Rodapé**: Dica de Pro com atalho para o VORIXA FLOW, medidor de créditos em anel (62%) e tempo médio.
+  * **Validação**: 100% dos 122 testes Vitest verdes e build Next.js 16 validado sem erros.
+
 ## [2.5.0] - 2026-09-05
 
 ### Adicionado / Refatorado

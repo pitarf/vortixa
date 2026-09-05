@@ -28,6 +28,14 @@
 - [x] Fase 10: Infraestrutura de Deploy e Disaster Recovery (Dockerfile Multi-stage Standalone, `docker-compose.yml` completo, CI/CD GitHub Actions `.github/workflows/ci.yml`, scripts `backup-db.sh` e `restore-db.sh`).
 - [x] Fase 11: Nova Landing Page Home2 de Alta Conversão (`/home2` com Benchmarking em `docs/BENCHMARK_HOME2_RESEARCH.md`, Copywriting Master em `docs/COPY_HOME2_MASTER.md`, preservando a Home `/` original intacta e com 118/118 testes Vitest verdes).
 - [x] Fase 12: Motor de Otimização e Tradução de Prompts (PromptEngine com tradução de visual para inglês e preservação estrita de falas/scripts em Português, endpoint `/api/tools/optimize-prompt`, botão interativo no `PromptInput` e 121/121 testes verdes).
+- [x] **Studio CREATE v2.0 Turbo (Fase 8.4)**:
+  - Redesenho completo da tela com 100% de fidelidade à imagem de referência da Creative Suite.
+  - Header com nome de projeto editável inline, botão Salvar, menu contextual e botão de destaque "Enviar para o Flow".
+  - Stepper horizontal interativo de 4 etapas (Tipo de Mídia ➔ Prompt & Referências ➔ Parâmetros ➔ Gerar & Refinar).
+  - Painel esquerdo com abas de mídia, cards táteis de modelos, botão ✦ Otimizar com IA, grade de estilos visuais com thumbnails e aspect ratio.
+  - Player central widescreen com controles customizados, abas Resultado/Comparar e barra de ações rápidas.
+  - Faixa "Inspirações para você" com 5 cards e histórico lateral integrado com o backend real.
+  - 100% dos 122 testes Vitest verdes e build de produção Next.js 16 validado sem erros.
 - [x] **Central de Novidades & Changelog Dinâmico (Fase 8.3)**:
   - Widget "Novidades no VORIXA" com fidelidade visual à referência, badges de modelos e link "Testar novos modelos no Flow →".
   - Modal interativo (`ChangelogModal.tsx`) com busca instantânea e filtros por categorias (Modelos de IA, Estúdio & Flow, Ferramentas, Plataforma).
