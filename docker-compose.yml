@@ -69,8 +69,10 @@ services:
 volumes:
   vorixa-postgres-data:
     external: true
+    name: vorixa_vorixa-postgres-data
   vorixa-minio-data:
     external: true
+    name: vorixa_vorixa-minio-data
 
 networks:
   vorixa-network:
