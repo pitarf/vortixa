@@ -2,6 +2,29 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [2.5.0] - 2026-09-05
+
+### Adicionado / Refatorado
+- **Central de Novidades & Changelog Dinâmico (Fase 8.3)**:
+  * Widget "Novidades no VORIXA" no Dashboard com visual idêntico à referência do usuário (badge `v1.5`, `Turbo`, `4K AI` e link inferior "Testar novos modelos no Flow →").
+  * **Modal Interativo de Novidades (`ChangelogModal.tsx`)**: Acionado diretamente pelo botão `Changelog` no widget ou na central de notificações, com busca instantânea e filtros por categorias.
+  * **Mapeamento de 100% dos Recursos Reais Ativos (13 Recursos)**:
+    - *Google Imagen 3 (Gemini Pro)* (`fal-ai/nano-banana-pro` - 3 créditos): Fotorrealismo extremo, textura de pele natural e sem corte de corpo inteiro.
+    - *Kling AI 1.5 Pro* (1080p nativo a 60fps - 10 créditos).
+    - *FLUX.1 Schnell Turbo* (<2s de latência - 1 crédito).
+    - *Recraft V3 Cinema & Typography* (textos e letreiros 100% legíveis - 2 créditos).
+    - *Creative Upscale 4K* (restauração neural facial em 2x e 4x - 5 créditos).
+    - *PromptEngine com Tradução Contextual* (otimizador com parâmetros de câmera Sony A7R IV e preservação de falas em PT-BR).
+    - *LivePortrait LipSync Facial* (sincronia fonética sub-milimétrica - 8 créditos).
+    - *Kling Motion Control* (transferência de poses e coreografias - 15 créditos).
+    - *VORIXA FLOW Canvas Infinito* (DAG visual encadeado com histórico Undo/Redo e pré-voo de custos).
+    - *Studio CREATE* (estúdio all-in-one com presets e ação "Open in Flow ✦").
+    - *Library Central de Ativos* (organização de mídia com busca e Cinema Lightbox 4K).
+    - *Google OAuth2 & Hostinger SMTP* (login em 1 clique e e-mails transacionais com SSL 465).
+    - *Carteira de Créditos & Ledger Transacional* (checkout seguro via Pix e Cartão com idempotência).
+  * **Página Dedicada de Novidades & Roadmap (`/dashboard/changelog`)**: Histórico cronológico completo de versões (`OS 2.5`, `OS 2.0`, `OS 1.5`, `OS 1.0`) e roadmap de futuros lançamentos (SoundFX AI, Kling Multi-Camera e LoRA Training).
+  * Novo atalho "Novidades & Changelog" na sidebar lateral e no popover de notificações.
+
 ## [2.4.0] - 2026-09-05
 
 ### Adicionado / Refatorado

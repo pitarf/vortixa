@@ -28,6 +28,12 @@
 - [x] Fase 10: Infraestrutura de Deploy e Disaster Recovery (Dockerfile Multi-stage Standalone, `docker-compose.yml` completo, CI/CD GitHub Actions `.github/workflows/ci.yml`, scripts `backup-db.sh` e `restore-db.sh`).
 - [x] Fase 11: Nova Landing Page Home2 de Alta Conversão (`/home2` com Benchmarking em `docs/BENCHMARK_HOME2_RESEARCH.md`, Copywriting Master em `docs/COPY_HOME2_MASTER.md`, preservando a Home `/` original intacta e com 118/118 testes Vitest verdes).
 - [x] Fase 12: Motor de Otimização e Tradução de Prompts (PromptEngine com tradução de visual para inglês e preservação estrita de falas/scripts em Português, endpoint `/api/tools/optimize-prompt`, botão interativo no `PromptInput` e 121/121 testes verdes).
+- [x] **Central de Novidades & Changelog Dinâmico (Fase 8.3)**:
+  - Widget "Novidades no VORIXA" com fidelidade visual à referência, badges de modelos e link "Testar novos modelos no Flow →".
+  - Modal interativo (`ChangelogModal.tsx`) com busca instantânea e filtros por categorias (Modelos de IA, Estúdio & Flow, Ferramentas, Plataforma).
+  - Mapeamento completo dos 13 recursos reais disponíveis no ecossistema VORIXA com atalhos de teste com 1 clique.
+  - Página dedicada `/dashboard/changelog` com histórico detalhado e timeline de roadmap.
+  - 100% dos 122 testes Vitest verdes e build Next.js 16 validado com sucesso.
 - [x] **Refatoração do Dashboard VORIXA CREATIVE OS (Fase 8.2)**:
   - Implementação cirúrgica da interface com base na referência visual: Topbar com busca omnibox `[ ⌘ K ]`, badge de créditos dourado `#F59E0B`, sino com popover, avatar com dropdown e sidebar Dark Obsidian.
   - Hero banner cinematográfico com saudação dinâmica, métricas operacionais (127 projetos, 842 ativos, uptime 99.99%) e botões táteis de ação rápida.

@@ -174,6 +174,13 @@ export function DashboardShell({
   ];
 
   const systemItems = [
+    {
+      name: "Novidades & Changelog",
+      href: "/dashboard/changelog",
+      icon: Sparkles,
+      badge: "v2.5",
+      color: "text-cyan-400",
+    },
     { name: "Planos & Créditos", href: "/dashboard/credits", icon: Coins, highlight: true },
     { name: "Configurações", href: "/dashboard/settings", icon: Settings },
     { name: "Ajuda & Suporte", href: "https://docs.vorixa.com", icon: HelpCircle, external: true },
@@ -518,13 +525,21 @@ export function DashboardShell({
                     </div>
                   ))}
                 </div>
-                <div className="pt-2 border-t border-[#1E202E] text-center">
+                <div className="pt-2 border-t border-[#1E202E] flex items-center justify-between text-[11px] font-mono">
                   <button
                     onClick={() => setIsNotificationsOpen(false)}
-                    className="text-[11px] font-mono text-violet-400 hover:text-violet-300 font-bold"
+                    className="text-slate-400 hover:text-white cursor-pointer"
                   >
-                    Marcar todas como lidas
+                    Marcar todas lidas
                   </button>
+                  <Link
+                    href="/dashboard/changelog"
+                    onClick={() => setIsNotificationsOpen(false)}
+                    className="text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1"
+                  >
+                    <span>Ver Changelog</span>
+                    <ArrowRight className="h-3 w-3" />
+                  </Link>
                 </div>
               </div>
             )}

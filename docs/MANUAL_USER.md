@@ -213,3 +213,38 @@ O **Dashboard VORIXA CREATIVE OS** é o centro nervoso da plataforma para criado
 * **Estatísticas de Uso**: Gráfico em anel de 62% com balanço de consumo de créditos e seletor temporal de 7 ou 30 dias.
 * **Destaque da Comunidade**: Visualização de obras em alta com likes e remix de workflows no Flow.
 * **Novidades no VORIXA**: Changelog ao vivo das versões mais recentes dos motores de IA.
+
+
+```markdown
+---
+
+## 9. Central de Novidades & Changelog do VORIXA (Fase 8.3)
+
+A **Central de Novidades & Changelog** do VORIXA é o canal oficial e dinâmico para comunicação em tempo real de novos lançamentos de inteligência artificial, atualizações de motores neurais, melhorias de infraestrutura e novidades do ecossistema.
+
+### A. Módulo & Telas
+* **Módulo**: Central de Novidades, Lançamentos & Roadmap (Changelog Engine).
+* **Telas Relacionadas**:
+  1. *Widget "Novidades no VORIXA"* no painel principal (`/dashboard`).
+  2. *Modal Interativo de Novidades & Versões* (acionado pelo botão "Changelog" no widget ou notificações).
+  3. *Página Dedicada de Changelog* (`/dashboard/changelog`).
+
+### B. Objetivo
+Apresentar de forma transparente aos criadores todos os recursos reais e funcionais atualmente disponíveis (como Google Imagen 3, Kling AI 1.5 a 60fps, FLUX.1 Schnell Turbo, Creative Upscale 4K, PromptEngine com tradução e VORIXA FLOW DAG), oferecendo atalhos de teste com 1 clique para acelerar o fluxo criativo e a descoberta de ferramentas.
+
+### C. Campos e Controles
+* **Campo de Busca de Recursos**: Permite digitar termos livres (ex: "Google", "60fps", "LipSync", "Turbo", "4K") para filtrar os lançamentos instantaneamente tanto no modal quanto na página dedicada.
+* **Filtros de Categoria**:
+  * *Todos*: Apresenta o conjunto integral dos 13 recursos e lançamentos.
+  * *Modelos de IA*: Foco nos motores generativos (Google Imagen 3, Kling AI 1.5, FLUX.1 Schnell, Recraft V3).
+  * *Estúdio & Flow*: Foco nos ambientes de orquestração (VORIXA FLOW Canvas e Studio CREATE).
+  * *Ferramentas*: Foco nos utilitários de refinamento (LipSync Facial, Motion Control, Creative Upscale 4K, PromptEngine).
+  * *Plataforma*: Foco na infraestrutura (Google OAuth2, Hostinger SMTP, Carteira de Créditos Idempotente).
+* **Seletor de Versões / Timeline**: Navegação cronológica entre releases (`OS 2.5`, `OS 2.0`, `OS 1.5`, `OS 1.0`).
+
+### D. Botões e Ações
+* **Badge "Changelog [v2.5]" no Widget**: Abre o modal interativo Dark Obsidian sem sair da tela atual do Dashboard.
+* **Cards de Novidades Clicáveis**: Cada item do feed pode ser clicado para inspecionar os detalhes e disparar a ferramenta.
+* **Botão "Testar Agora →" / "Abrir no Flow →"**: Redireciona contextualmente o usuário para a ferramenta exata pronta para uso (ex: `/dashboard/tools/image`, `/dashboard/tools/video`, `/dashboard/flow`).
+* **Botão "Testar novos modelos no Flow →"**: Conecta o criador diretamente ao Canvas Infinito com os nós de última geração pré-carregados.
+* **Botão "Ver todos (13) →" / "Ver histórico completo"**: Conduz à página `/dashboard/changelog` com histórico técnico estendido e Roadmap de futuros lançamentos.
