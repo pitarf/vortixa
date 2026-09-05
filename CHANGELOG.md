@@ -5,6 +5,60 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.2.5] - 2026-09-05
+### Aprimorado
+- **Simplificação e Humanização da Criação de Imagem (Studio CREATE & Image Tool)**:
+  - Eliminação de jargões técnicos para usuários leigos (*Passos de Inferência / Steps, CFG Guidance, Semente manual*).
+  - Automação transparente: o sistema aplica a calibração ideal de steps e fidelidade conforme a IA escolhida sem exigir parametrização complexa do usuário.
+  - Seleção didática e direta: "Qual Inteligência Artificial você quer usar?" com cards explicativos de finalidade e custo:
+    * *FLUX.1 Turbo*: Super rápido para testes e rascunhos (1 crédito).
+    * *Google Imagen 3*: Hiper-realismo humano sem cortes e textos nítidos (3 créditos).
+    * *Recraft V3 Design*: Tipografia legível, logos e ilustrações vetoriais (2 créditos).
+    * *FLUX Pro Ultra*: Qualidade de cinema e detalhes extremos de estúdio (4 créditos).
+  - Preservação de proporções (1:1, 16:9, 9:16, 4:3, 3:2) e estilos visuais táteis.
+  - Zero emojis em conformidade rigorosa com o design Dark Obsidian.
+
+## [1.2.4] - 2026-09-05
+### Adicionado
+- **Auditoria de Backend e Suíte End-to-End da Geração de Imagem & Studio Create**:
+  - Auditoria completa dos endpoints `/api/tools/generate`, `/api/tools/job/[id]`, `/api/tools/upload` e `/api/tools/optimize-prompt`.
+  - Resolução dinâmica de múltiplos modelos (`fal-ai/flux/schnell`, `fal-ai/recraft-v3`, `fal-ai/flux-pro/v1.1-ultra`, `fal-ai/nano-banana-pro`).
+  - Suporte total aos 5 aspect ratios com mapeamento fotográfico (`1:1`, `16:9`, `9:16`, `4:3`, `3:2`).
+  - Suporte completo aos modos Text-to-Image e Image-to-Image com injeção de `image_url` e `strength`.
+  - Criação da suíte de testes de integração `__tests__/image-generation-backend.test.ts` validando débito transacional, idempotência, estorno em falha e polling de jobs.
+  - Suíte global com 17 arquivos de teste e 128 testes passando 100% verde no PostgreSQL.
+  - Build de produção Next.js 16 compilado com sucesso sem erros de tipagem.
+
+## [1.2.3] - 2026-09-05
+### Adicionado
+- **Interface e Motor de 'Geração de Imagem' (FLUX.1 / VORIXA Creative Suite)**:
+  - Desenvolvimento completo de `app/dashboard/tools/image/page.tsx` com alta fidelidade à referência visual fornecida.
+  - Header com navegação "Voltar", título, subtítulo e banner cinematográfico lateral com card do motor FLUX.1.
+  - Abas de fluxo de criação: *Texto para Imagem*, *Imagem para Imagem* (com upload e denoise), *Estilo de Referência*, *Personagem* e *Composição Avançada*.
+  - Painel de criação com Prompt enriquecido com *Otimizar com IA*, ações rápidas (*Inspirar*, *Prompt Aleatório*, *Limpar*) e contador de caracteres.
+  - Seletor dos 6 estilos visuais (*Cinemático*, *Realista*, *Anime*, *3D Render*, *Fotográfico*, *Arte Digital*).
+  - Seletores táteis de proporção (1:1, 16:9, 9:16, 4:3, 3:2) e dropdown de resoluções.
+  - Seleção de qualidade e consumo de créditos (*Rápido 1cr*, *Padrão 2cr*, *Alta Definição 4cr*, *Ultra 8cr*).
+  - Acordeão de configurações avançadas (Steps, CFG, Seed fixa e Negative Prompt).
+  - Área central de preview com imagem em alta resolução, carrossel de variações recentes e barra de ações (*Baixar*, *Variar*, *Upscale 4K*, *Usar no Canvas / Open in Flow*).
+  - Painel lateral com histórico de criações recentes e card "Dica de Pro".
+  - Seção inferior de "Exemplos e Inspirações" com filtros por categorias (*Em Alta*, *Personagens*, *Cenários*, *Produtos*, *Anime*, *Arte*, *Minimalista*) e aplicação com 1 clique.
+  - Zero emojis em textos e botões; 100% em PT-BR e Dark Obsidian styling.
+
+## [1.2.2] - 2026-09-05
+### Adicionado
+- **Motor Real de Estilos Visuais no Studio CREATE & Prompt Engine**:
+  - Implementação técnica completa dos 5 estilos visuais: `Cinemático`, `Fotorrealista`, `Anime`, `3D Render` e `Cyberpunk`.
+  - Separação limpa do prompt base do usuário sem poluição de texto na textarea, exibindo badge com remoção dinâmica e descrição contextual em tempo real.
+  - Injeção das diretrizes no System Prompt da IA (`fal-ai/any-llm`) e no enriquecimento local de alta velocidade:
+    - *Cinemático*: lente anamórfica Panavision 2.39:1, iluminação chiaroscuro, volumetric haze, 35mm film grain e color grading Hollywoodiano.
+    - *Fotorrealista*: fotografia raw unedited, Sony A7R IV 85mm f/1.4 GM, microporos na pele, luz natural difusa sem CGI ou efeito boneca plástica.
+    - *Anime*: estética japonesa moderna Makoto Shinkai e Ufotable, cel-shading nítido, traço à mão e paleta vibrante.
+    - *3D Render*: Octane e Redshift render no Cinema 4D, reflexos ray-tracing e materiais dielétricos.
+    - *Cyberpunk*: iluminação néon ciano/magenta, asfalto molhado refletivo e volumetria distópica.
+  - Ajuste automático de parâmetros ideais de inferência (steps e guidance scale) ao selecionar cada estilo.
+  - Suíte de testes unitários para todos os 5 estilos passando 100% verde (`__tests__/prompt-engine.test.ts`).
+
 ## [1.2.1] - 2026-09-05
 ### Adicionado
 - Fluxo completo de Recuperação e Redefinição de Senha de ponta a ponta:

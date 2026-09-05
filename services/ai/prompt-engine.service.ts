@@ -10,9 +10,12 @@
  * 3. Preservação Universal de Fala: Qualquer roteiro ou diálogo entre aspas ("...") é mantido intocado.
  */
 
+export type VisualStyle = "cinematic" | "photorealistic" | "anime" | "octane3d" | "cyberpunk";
+
 export interface OptimizePromptOptions {
   enhanceQuality?: boolean;
   toolType?: "image" | "video" | "lipsync" | "motion" | "upscale";
+  style?: VisualStyle;
 }
 
 export type ContextIntent = "FOOD" | "PRODUCT" | "UGC" | "PORTRAIT" | "VEHICLE" | "ACTION" | "CINEMA" | "ARTISTIC" | "GENERAL";
@@ -305,12 +308,57 @@ export class PromptEngine {
       6. Return ONLY the translated and enriched prompt text directly without extra conversational noise.`;
       */
 
+      // Diretivas específicas do Estilo Visual Solicitado
+      let styleDirective = "";
+      if (options.style) {
+        switch (options.style) {
+          case "cinematic":
+            styleDirective = `
+MANDATORY VISUAL STYLE: CINEMATIC HOLLYWOOD
+- Enforce anamorphic 2.39:1 aspect ratio aesthetic, Panavision C-Series lens characteristics with subtle oval bokeh and horizontal blue/amber flare.
+- Lighting: Dramatic chiaroscuro lighting, volumetric atmospheric haze/fog, warm practical highlights and cool fill shadows.
+- Color Grading: Hollywood blockbuster cinematic color grade (teal and orange / deep rich tones, 35mm film grain texture).
+- Composition: Dynamic cinematic framing, shallow depth of field, storytelling camera angle.`;
+            break;
+          case "photorealistic":
+            styleDirective = `
+MANDATORY VISUAL STYLE: ULTRA PHOTOREALISTIC RAW
+- Enforce unedited raw photography, shot on Sony A7R IV with 85mm f/1.4 GM lens or 35mm f/1.8 prime lens.
+- Lighting: Natural daylight, soft ambient skylight or professional softbox diffusion. Zero harsh artificial glows.
+- Skin & Materials: Authentic natural human skin micro-texture, visible micropores, natural skin sheen, subtle facial asymmetry, realistic hair flyaways. Absolute prohibition of plastic airbrushed skin, doll-like faces or CGI sheen.
+- Color & Detail: True-to-life color calibration, crisp focus, optical bokeh falloff, authentic depth of field.`;
+            break;
+          case "anime":
+            styleDirective = `
+MANDATORY VISUAL STYLE: MODERN PREMIUM ANIME (Makoto Shinkai & Ufotable)
+- Enforce modern Japanese cinematic anime aesthetic, crisp cel-shaded characters with expressive eyes and clean hand-drawn line art.
+- Scenery & Background: Luminous painterly skies, volumetric god rays, hyper-detailed environmental scenery in the style of Makoto Shinkai and CoMix Wave Films.
+- Palette: Vibrant, saturated, emotionally resonant color palette, subtle magical or luminous particle effects.`;
+            break;
+          case "octane3d":
+            styleDirective = `
+MANDATORY VISUAL STYLE: 3D OCTANE & REDSHIFT RENDER
+- Enforce ultra-high-end 3D CGI render created in Cinema 4D with Octane Render and Redshift engine.
+- Materials: Ray-traced reflections, glossy dielectric materials, subsurface light scattering, polished metallic accents, pristine glass refractions.
+- Lighting: Studio caustics, softbox rim lights, sharp specular highlights, pristine clean 8k digital render look.`;
+            break;
+          case "cyberpunk":
+            styleDirective = `
+MANDATORY VISUAL STYLE: CYBERPUNK DYSTOPIAN NOIR
+- Enforce high-tech futuristic cyberpunk atmosphere, Blade Runner 2049 and Cyberpunk 2077 aesthetic.
+- Lighting: Neon signs in saturated cyan, magenta, acid green and amber casting colored rim lights on wet reflective surfaces.
+- Environment: Rain-slicked wet asphalt with glowing puddles, subtle volumetric steam rising from vents, dark urban architecture with high-tech holo-advertisements.`;
+            break;
+        }
+      }
+
       // Tradução inteligente de alto padrão cinematográfico e cenografia atrativa:
       const systemPrompt = `You are a world-class prompt director and translator for advanced image generation models (Google Imagen 3, FLUX Pro, Recraft).
 Translate the user's Portuguese prompt faithfully into fluent English while automatically elevating the visual aesthetic.
 
 CORE PRINCIPLE - ATTRACTIVE & PREMIUM BY DEFAULT:
 Unless the user explicitly asks for something "feio", "velho", "abandonado", "pobre" or "simples", ALWAYS present a modern, visually attractive, well-kept, well-lit and vibrant setting. Never render drab, dirty, empty or mediocre spaces.
+${styleDirective}
 
 MANDATORY DIRECTIVES:
 1. Full Body Shot: If "corpo todo", "corpo inteiro", "de corpo todo" or "de corpo inteiro" is requested, you MUST ALWAYS instruct: "wide establishing full-body environmental shot, camera placed far back showing the entire body from head down to legs and shoes with visible floor space around feet, full figure completely in frame from head to toe, never cropped at waist, knees or thighs".
@@ -486,7 +534,48 @@ MANDATORY DIRECTIVES:
       }
     }
 
-    // 4. Reanexar fala original
+    // 4. Injeção Especializada de Estilo Visual (se especificado)
+    if (options.style) {
+      switch (options.style) {
+        case "cinematic":
+          if (isVideo) {
+            translated += ", cinematic 2.39:1 anamorphic framing, Panavision C-Series lens flare, dramatic chiaroscuro atmospheric lighting, volumetric haze, Hollywood 35mm film grain, 60fps";
+          } else {
+            translated += ", cinematic 2.39:1 anamorphic composition, dramatic chiaroscuro lighting, volumetric atmospheric haze, Hollywood cinematic color grade, 35mm film grain, masterpiece photography";
+          }
+          break;
+        case "photorealistic":
+          if (isVideo) {
+            translated += ", authentic raw unedited documentary footage, shot on Sony A7R IV, natural daylight, genuine skin micropores, 4k 60fps, zero CGI or plastic sheen";
+          } else {
+            translated += ", unedited raw photograph, shot on Sony A7R IV 85mm f/1.4 GM lens, natural daylight, authentic skin micropores and textures, subtle skin sheen, natural asymmetry, photorealistic depth of field, zero CGI";
+          }
+          break;
+        case "anime":
+          if (isVideo) {
+            translated += ", premium Japanese anime aesthetic, Makoto Shinkai style, crisp cel-shaded animation, luminous skies, vibrant emotional palette, 60fps";
+          } else {
+            translated += ", premium modern Japanese anime visual, Makoto Shinkai and Ufotable key visual, crisp cel-shaded illustration, clean line art, luminous painterly sky, vibrant saturated palette";
+          }
+          break;
+        case "octane3d":
+          if (isVideo) {
+            translated += ", 3D Octane and Redshift render, ray-traced reflections, glossy dielectric materials, Cinema 4D, pristine caustics, 4k 60fps";
+          } else {
+            translated += ", 3D Octane and Redshift render, ray-traced reflections, glossy dielectric materials, subsurface light scattering, Cinema 4D, pristine studio caustics, crisp 8k render";
+          }
+          break;
+        case "cyberpunk":
+          if (isVideo) {
+            translated += ", cyberpunk dystopian aesthetic, neon cyan and magenta rim lighting, rain-slicked asphalt reflections, volumetric fog, high-tech futuristic atmosphere, 60fps";
+          } else {
+            translated += ", cyberpunk dystopian aesthetic, saturated cyan and magenta neon lights, rain-slicked reflective asphalt, volumetric steam, high-tech futuristic atmosphere, ray tracing reflections";
+          }
+          break;
+      }
+    }
+
+    // 5. Reanexar fala original
     if (speechContent) {
       translated = `${translated.trim()} [Dialogue/Speech Script: "${speechContent}"]`;
     }

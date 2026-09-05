@@ -41,4 +41,33 @@ describe("VORIXA Contextual Story Director Engine Dynamic Tests", () => {
     expect(result.preservedSpeech).toBe("Experimente o novo café premium");
     expect(result.optimizedPrompt).toContain('"Experimente o novo café premium"');
   });
+
+  it("should correctly inject technical directives for all visual styles", () => {
+    const prompt = "Um robô em uma metrópole";
+
+    // Cinemático
+    const cinematic = PromptEngine.optimize(prompt, { toolType: "image", style: "cinematic" });
+    expect(cinematic.optimizedPrompt).toContain("cinematic 2.39:1 anamorphic composition");
+    expect(cinematic.optimizedPrompt).toContain("Hollywood cinematic color grade");
+
+    // Fotorrealista
+    const photo = PromptEngine.optimize(prompt, { toolType: "image", style: "photorealistic" });
+    expect(photo.optimizedPrompt).toContain("Sony A7R IV 85mm f/1.4 GM lens");
+    expect(photo.optimizedPrompt).toContain("authentic skin micropores");
+
+    // Anime
+    const anime = PromptEngine.optimize(prompt, { toolType: "image", style: "anime" });
+    expect(anime.optimizedPrompt).toContain("Makoto Shinkai and Ufotable key visual");
+    expect(anime.optimizedPrompt).toContain("cel-shaded illustration");
+
+    // 3D Render (Octane)
+    const octane = PromptEngine.optimize(prompt, { toolType: "image", style: "octane3d" });
+    expect(octane.optimizedPrompt).toContain("3D Octane and Redshift render");
+    expect(octane.optimizedPrompt).toContain("Cinema 4D");
+
+    // Cyberpunk
+    const cyberpunk = PromptEngine.optimize(prompt, { toolType: "image", style: "cyberpunk" });
+    expect(cyberpunk.optimizedPrompt).toContain("cyberpunk dystopian aesthetic");
+    expect(cyberpunk.optimizedPrompt).toContain("neon lights");
+  });
 });

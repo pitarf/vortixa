@@ -74,16 +74,16 @@ const TOOLS: Record<StudioTool, ToolDefinition> = {
     id: "image",
     slug: "gerador-imagem",
     name: "Imagem",
-    badge: "FLUX.1",
+    badge: "FLUX & Imagen",
     icon: ImageIcon,
     defaultCost: 1,
-    description: "Crie ilustrações e fotos ultra-realistas com prompts textuais em segundos.",
+    description: "Crie fotos humanas hiper-realistas, produtos e artes com prompts simples.",
     color: "from-violet-600 via-indigo-600 to-cyan-500",
     models: [
-      { id: "fal-ai/flux/schnell", name: "FLUX.1 Schnell", badge: "Mais rápido", cost: 1, description: "Inferência rápida em 4 passos", speed: "~ 8s" },
-      { id: "fal-ai/flux/dev", name: "FLUX.1 Dev", badge: "Alta qualidade", cost: 2, description: "Maior coerência e nitidez visual", speed: "~ 14s" },
-      { id: "fal-ai/flux-pro", name: "FLUX.1 Pro", badge: "Máximo detalhe", cost: 4, description: "Nível estúdio e iluminação de cinema", speed: "~ 22s" },
-      { id: "fal-ai/google-imagen-3", name: "Google Imagen 3", badge: "Gemini Pro", cost: 3, description: "Fidelidade tipográfica e realismo", speed: "~ 18s" },
+      { id: "fal-ai/flux/schnell", name: "FLUX.1 Turbo", badge: "Super Rápido", cost: 1, description: "Geração ultra-rápida em segundos, ideal para testar ideias", speed: "~ 4s" },
+      { id: "fal-ai/nano-banana-pro", name: "Google Imagen 3", badge: "Realismo Humano", cost: 3, description: "Especialista em pessoas reais, iluminação natural e textos nítidos", speed: "~ 14s" },
+      { id: "fal-ai/recraft-v3", name: "Recraft V3 Design", badge: "Design & Logos", cost: 2, description: "Perfeito para tipografia legível, ilustrações vetoriais e marcas", speed: "~ 12s" },
+      { id: "fal-ai/flux-pro/v1.1-ultra", name: "FLUX Pro Ultra", badge: "Máxima Definição", cost: 4, description: "Qualidade cinematográfica de estúdio e detalhes extremos", speed: "~ 20s" },
     ],
   },
   video: {
@@ -93,7 +93,7 @@ const TOOLS: Record<StudioTool, ToolDefinition> = {
     badge: "Kling AI",
     icon: Video,
     defaultCost: 10,
-    description: "Anime imagens estáticas ou gere sequências cinematográficas em 5s ou 10s.",
+    description: "Dê vida e movimento a fotos ou crie cenas de vídeo cinematográficas.",
     color: "from-cyan-500 to-blue-600",
     models: [
       { id: "fal-ai/kling/video-generation/image-to-video", name: "Kling AI 1.5", badge: "Mais rápido", cost: 10, description: "Movimentos cinemáticos naturais", speed: "~ 45s" },
@@ -149,39 +149,79 @@ const STYLE_PRESETS = [
     id: "cinematic",
     name: "Cinemático",
     thumb: "/media/landing/gallery/hypercar_cyberpunk.jpg",
-    suffix: ", cinematic lighting, 8k resolution, photorealistic, Unreal Engine 5 render, award winning cinematography, anamorphic lens flare",
+    description: "Iluminação dramática chiaroscuro, lente anamórfica 2.39:1 e grading Hollywoodiano.",
+    recommendedSteps: 24,
+    recommendedCfg: 7.5,
+    suffix: ", cinematic lighting, 8k resolution, photorealistic, award winning cinematography, anamorphic lens flare",
   },
   {
-    id: "photorealistic",
-    name: "Fotorrealista",
+    id: "realist",
+    name: "Realista",
     thumb: "/media/landing/gallery/editorial_fashion.jpg",
-    suffix: ", highly detailed raw photo, 35mm lens, depth of field, studio softbox lighting, natural skin textures with pores, no cgi",
+    description: "Fotografia crua unedited, microporos autênticos, textura natural sem CGI.",
+    recommendedSteps: 28,
+    recommendedCfg: 7.0,
+    suffix: ", highly detailed raw photo, 35mm lens, natural skin textures with pores, no cgi, softbox studio",
   },
   {
     id: "anime",
     name: "Anime",
     thumb: "/test_wide_establishing.png",
-    suffix: ", anime aesthetic, modern Japanese animation, Makoto Shinkai style, vibrant colors, lush scenic background, hand-drawn digital illustration",
+    description: "Visual cel-shading moderno, céus luminosos no estilo Makoto Shinkai e Ufotable.",
+    recommendedSteps: 20,
+    recommendedCfg: 8.0,
+    suffix: ", anime aesthetic, modern Japanese animation, Makoto Shinkai style, vibrant colors, lush scenic background",
   },
   {
     id: "octane3d",
     name: "3D Render",
     thumb: "/media/landing/gallery/perfume_commercial.jpg",
+    description: "Render Octane & Redshift no Cinema 4D com cáusticas e reflexos ray-tracing.",
+    recommendedSteps: 25,
+    recommendedCfg: 7.5,
     suffix: ", 3d octane render, glossy textures, volumetric lighting, surreal luxury concept art, Cinema 4D, pristine reflections",
   },
   {
-    id: "cyberpunk",
-    name: "Cyberpunk",
+    id: "photographic",
+    name: "Fotográfico",
     thumb: "/media/landing/gallery/street_dancer.jpg",
-    suffix: ", cyberpunk aesthetics, neon glow, reflective rainy streets, futuristic high-tech atmosphere, ray tracing reflections",
+    description: "Fotografia documental de rua, profundidade de campo óptica e luz ambiente natural.",
+    recommendedSteps: 26,
+    recommendedCfg: 7.0,
+    suffix: ", authentic street photography, 85mm f/1.4 lens, candid shot, natural daylight, photorealistic depth of field",
+  },
+  {
+    id: "digital-art",
+    name: "Arte Digital",
+    thumb: "/media/landing/hero/hero_main.jpg",
+    description: "Pintura digital conceitual, traços ricos, iluminação fantasiosa e alto contraste.",
+    recommendedSteps: 22,
+    recommendedCfg: 8.5,
+    suffix: ", digital concept art, highly detailed digital painting, vibrant palette, fantasy atmosphere, artstation trending",
   },
 ];
 
 const ASPECT_RATIOS = [
-  { id: "square_hd", label: "1:1", name: "Quadrado", iconWidth: "w-4 h-4" },
-  { id: "landscape_16_9", label: "16:9", name: "Cinema", iconWidth: "w-6 h-3.5" },
-  { id: "portrait_16_9", label: "9:16", name: "Reels", iconWidth: "w-3.5 h-6" },
-  { id: "landscape_4_3", label: "4:3", name: "Paisagem", iconWidth: "w-5 h-4" },
+  { id: "square_hd", label: "1:1", name: "Quadrado", iconWidth: "w-4 h-4", defaultRes: "1024 x 1024" },
+  { id: "landscape_16_9", label: "16:9", name: "Cinema", iconWidth: "w-6 h-3.5", defaultRes: "1792 x 1024" },
+  { id: "portrait_16_9", label: "9:16", name: "Reels", iconWidth: "w-3.5 h-6", defaultRes: "1024 x 1792" },
+  { id: "landscape_4_3", label: "4:3", name: "Paisagem", iconWidth: "w-5 h-4", defaultRes: "1152 x 864" },
+  { id: "landscape_3_2", label: "3:2", name: "Fotografia", iconWidth: "w-6 h-4", defaultRes: "1216 x 832" },
+];
+
+const RESOLUTION_OPTIONS: Record<string, string[]> = {
+  square_hd: ["1024 x 1024", "768 x 768", "1536 x 1536"],
+  landscape_16_9: ["1792 x 1024", "1344 x 768", "1920 x 1080"],
+  portrait_16_9: ["1024 x 1792", "768 x 1344", "1080 x 1920"],
+  landscape_4_3: ["1152 x 864", "1024 x 768", "1440 x 1080"],
+  landscape_3_2: ["1216 x 832", "1536 x 1024"],
+};
+
+const QUALITY_MODES = [
+  { id: "fast", name: "Rápido", cost: 1, modelId: "fal-ai/flux/schnell", badge: "1 crédito", steps: 4 },
+  { id: "standard", name: "Padrão", cost: 2, modelId: "fal-ai/recraft-v3", badge: "2 créditos", steps: 20 },
+  { id: "hd", name: "Alta Definição", cost: 4, modelId: "fal-ai/flux-pro/v1.1-ultra", badge: "4 créditos", steps: 28 },
+  { id: "ultra", name: "Ultra", cost: 8, modelId: "fal-ai/flux-pro/v1.1-ultra", badge: "8 créditos", steps: 35 },
 ];
 
 const INSPIRATIONS = [
@@ -272,6 +312,8 @@ export default function StudioCreatePage() {
   // Inputs de Criação
   const [prompt, setPrompt] = useState("");
   const [imageSize, setImageSize] = useState<string>("landscape_16_9");
+  const [resolution, setResolution] = useState<string>("1792 x 1024");
+  const [qualityMode, setQualityMode] = useState<string>("fast");
   const [selectedStyle, setSelectedStyle] = useState<string>("cinematic");
   const [referenceImageUrl, setReferenceImageUrl] = useState<string>("");
   const [isUploadingRef, setIsUploadingRef] = useState(false);
@@ -280,9 +322,9 @@ export default function StudioCreatePage() {
   // Configurações Avançadas
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [inferenceSteps, setInferenceSteps] = useState(4);
-  const [guidanceScale, setGuidanceScale] = useState(3.5);
+  const [guidanceScale, setGuidanceScale] = useState(7.5);
   const [seed, setSeed] = useState<string>("");
-  const [negativePrompt, setNegativePrompt] = useState("");
+  const [negativePrompt, setNegativePrompt] = useState("blurry, low quality, deformed anatomy, bad hands, extra limbs, watermark, artifacts, signature");
 
   // Parâmetros de Vídeo / Avatar / Motion
   const [videoMode, setVideoMode] = useState<"text" | "image">("image");
@@ -441,22 +483,31 @@ export default function StudioCreatePage() {
     return `${m}:${s < 10 ? "0" : ""}${s}`;
   };
 
-  // Aplica Presets de Estilo
+  // Aplica Presets de Estilo com Toggle e Parâmetros Ideais
   const handleSelectStyle = (styleId: string) => {
+    // Se clicar no mesmo estilo ativo, desmarca
+    if (selectedStyle === styleId) {
+      setSelectedStyle("");
+      toast.info("Estilo padrão restaurado.");
+      return;
+    }
+
     setSelectedStyle(styleId);
     const preset = STYLE_PRESETS.find((p) => p.id === styleId);
     if (!preset) return;
 
-    // Remove outros suffixes conhecidos e anexa o novo
-    let cleanPrompt = prompt;
-    STYLE_PRESETS.forEach((p) => {
-      cleanPrompt = cleanPrompt.replace(p.suffix, "");
-    });
-    setPrompt(cleanPrompt.trim() ? `${cleanPrompt.trim()}${preset.suffix}` : preset.suffix.replace(/^, /, ""));
-    toast.info(`Estilo "${preset.name}" selecionado!`);
+    // Ajusta parâmetros de inferência recomendados para o estilo
+    if (preset.recommendedSteps) {
+      setInferenceSteps(preset.recommendedSteps);
+    }
+    if (preset.recommendedCfg) {
+      setGuidanceScale(preset.recommendedCfg);
+    }
+
+    toast.info(`Estilo "${preset.name}" ativado com parâmetros otimizados.`);
   };
 
-  // Otimização de Prompt com IA
+  // Otimização de Prompt com IA considerando o Estilo Visual ativo
   const handleOptimizePrompt = async () => {
     if (!prompt.trim()) {
       toast.error("Por favor, digite uma ideia antes de otimizar.");
@@ -472,6 +523,7 @@ export default function StudioCreatePage() {
           prompt,
           enhanceQuality: true,
           toolType: activeTool,
+          style: selectedStyle || undefined,
         }),
       });
 
@@ -538,10 +590,14 @@ export default function StudioCreatePage() {
       prompt,
       image_size: imageSize,
       seed: seed ? parseInt(seed, 10) : undefined,
+      style: selectedStyle || undefined,
     };
 
     if (activeTool === "image") {
       inputs.num_inference_steps = inferenceSteps;
+      inputs.guidance_scale = guidanceScale;
+      inputs.resolution = resolution;
+      if (negativePrompt.trim()) inputs.negative_prompt = negativePrompt.trim();
       if (referenceImageUrl) inputs.image_url = referenceImageUrl;
     } else if (activeTool === "video") {
       inputs.duration = duration;
@@ -963,41 +1019,68 @@ export default function StudioCreatePage() {
             </div>
           </div>
 
-          {/* Seção Modelo de IA */}
+          {/* Seção Modelo de IA com Linguagem Amigável para Leigos */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
-                Modelo de IA
-              </label>
+              <div>
+                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
+                  Qual Inteligência Artificial você quer usar?
+                </label>
+                <span className="text-[11px] text-slate-400">
+                  {activeTool === "image"
+                    ? "Escolha o motor ideal para o seu tipo de imagem:"
+                    : "Selecione o motor de inferência:"}
+                </span>
+              </div>
               <span className="text-[10px] font-mono text-violet-400 font-semibold">
                 {currentModelDef.cost} crédito{currentModelDef.cost > 1 ? "s" : ""}
               </span>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {currentToolDef.models.map((model) => {
                 const isSelected = selectedModelId === model.id;
                 return (
                   <button
                     key={model.id}
                     type="button"
-                    onClick={() => setSelectedModelId(model.id)}
+                    onClick={() => {
+                      setSelectedModelId(model.id);
+                      if (activeTool === "image") {
+                        if (model.id === "fal-ai/flux/schnell") {
+                          setQualityMode("fast");
+                          setInferenceSteps(4);
+                        } else if (model.id === "fal-ai/recraft-v3") {
+                          setQualityMode("standard");
+                          setInferenceSteps(20);
+                        } else if (model.id === "fal-ai/nano-banana-pro") {
+                          setQualityMode("standard");
+                          setInferenceSteps(24);
+                        } else if (model.id === "fal-ai/flux-pro/v1.1-ultra") {
+                          setQualityMode("hd");
+                          setInferenceSteps(28);
+                        }
+                      }
+                    }}
                     className={`p-3 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between ${
                       isSelected
-                        ? "bg-[#13141B] border-violet-500 shadow-[0_0_20px_rgba(139,92,246,0.25)]"
+                        ? "bg-[#13141B] border-violet-500 shadow-[0_0_20px_rgba(139,92,246,0.25)] ring-1 ring-violet-500/50"
                         : "bg-[#070709] border-[#1E202E] hover:border-slate-700 opacity-85 hover:opacity-100"
                     }`}
-                    style={{ minHeight: "72px" }}
+                    style={{ minHeight: "82px" }}
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-white truncate max-w-[95px]">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="text-xs font-bold text-white truncate">
                         {model.name}
                       </span>
-                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/20">
+                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/20 whitespace-nowrap">
                         {model.cost} cr
                       </span>
                     </div>
-                    <div className="mt-1 flex items-center justify-between text-[10px] text-slate-400 font-mono">
-                      <span>{model.badge}</span>
+                    <p className="text-[11px] text-slate-300 leading-tight my-1">
+                      {model.description}
+                    </p>
+                    <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono pt-1 border-t border-[#1E202E]/60">
+                      <span className="text-cyan-400 font-semibold">{model.badge}</span>
                       <span className="text-slate-500">{model.speed}</span>
                     </div>
                   </button>
@@ -1006,12 +1089,68 @@ export default function StudioCreatePage() {
             </div>
           </div>
 
+          {/* Seção Qualidade / Modo (Paridade com a ferramenta de imagem) */}
+          {activeTool === "image" && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
+                  Qualidade / Modo
+                </label>
+                <span className="text-[10px] text-slate-400">Ajuste de velocidade e fidelidade</span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {QUALITY_MODES.map((mode) => {
+                  const isSelected = qualityMode === mode.id;
+                  return (
+                    <button
+                      key={mode.id}
+                      type="button"
+                      onClick={() => {
+                        setQualityMode(mode.id);
+                        setInferenceSteps(mode.steps);
+                        setSelectedModelId(mode.modelId);
+                      }}
+                      className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                        isSelected
+                          ? "bg-[#13141B] border-violet-500 shadow-md shadow-violet-500/20 ring-1 ring-violet-500/50"
+                          : "bg-[#070709] border-[#1E202E] hover:border-slate-700 opacity-85 hover:opacity-100"
+                      }`}
+                      style={{ minHeight: "58px" }}
+                    >
+                      <span className={`text-xs font-bold ${isSelected ? "text-white" : "text-slate-300"}`}>
+                        {mode.name}
+                      </span>
+                      <span className="text-[10px] font-mono text-violet-400 font-semibold">
+                        {mode.badge}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Seção Prompt de Criação */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
-                Prompt de Criação
-              </label>
+              <div className="flex items-center gap-2">
+                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                  Prompt de Criação
+                </label>
+                {selectedStyle && (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+                    <span>Estilo: {STYLE_PRESETS.find((s) => s.id === selectedStyle)?.name || selectedStyle}</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedStyle("")}
+                      className="hover:text-white transition-colors cursor-pointer"
+                      title="Remover estilo visual"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={handleOptimizePrompt}
@@ -1115,9 +1254,16 @@ export default function StudioCreatePage() {
 
           {/* Seção Estilo Visual com Thumbnails Reais */}
           <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
-              Estilo Visual
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
+                Estilo Visual
+              </label>
+              {selectedStyle && (
+                <span className="text-[11px] text-cyan-400 font-mono">
+                  Ativo ({STYLE_PRESETS.find((s) => s.id === selectedStyle)?.name})
+                </span>
+              )}
+            </div>
             <div className="grid grid-cols-5 gap-2">
               {STYLE_PRESETS.map((style) => {
                 const isSelected = selectedStyle === style.id;
@@ -1132,6 +1278,7 @@ export default function StudioCreatePage() {
                         : "border-[#1E202E] hover:border-slate-600 opacity-80 hover:opacity-100"
                     }`}
                     style={{ minHeight: "56px" }}
+                    title={style.description}
                   >
                     <img
                       src={style.thumb}
@@ -1146,22 +1293,52 @@ export default function StudioCreatePage() {
                 );
               })}
             </div>
+            {selectedStyle && (
+              <p className="text-[11px] text-slate-400 leading-snug bg-[#070709] border border-[#1E202E] rounded-xl px-2.5 py-1.5">
+                <span className="text-cyan-400 font-semibold font-mono">Diretiva: </span>
+                {STYLE_PRESETS.find((s) => s.id === selectedStyle)?.description}
+              </p>
+            )}
           </div>
 
-          {/* Seção Proporção de Tela */}
+          {/* Seção Proporção de Tela e Resolução */}
           <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
-              Proporção de Tela
-            </label>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
+                Proporção da Imagem
+              </label>
+              {activeTool === "image" && (
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] text-slate-400">Tamanho:</span>
+                  <select
+                    value={resolution}
+                    onChange={(e) => setResolution(e.target.value)}
+                    className="bg-[#070709] border border-[#1E202E] rounded-lg px-2 py-0.5 text-[11px] font-mono text-cyan-400 outline-none cursor-pointer"
+                  >
+                    {(RESOLUTION_OPTIONS[imageSize] || [resolution]).map((res) => (
+                      <option key={res} value={res} className="bg-[#0D0E12] text-white">
+                        {res}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-5 gap-1.5">
               {ASPECT_RATIOS.map((ratio) => {
                 const isSelected = imageSize === ratio.id;
                 return (
                   <button
                     key={ratio.id}
                     type="button"
-                    onClick={() => setImageSize(ratio.id)}
-                    className={`py-2 px-1.5 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
+                    onClick={() => {
+                      setImageSize(ratio.id);
+                      if (RESOLUTION_OPTIONS[ratio.id]?.[0]) {
+                        setResolution(RESOLUTION_OPTIONS[ratio.id][0]);
+                      }
+                    }}
+                    className={`py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
                       isSelected
                         ? "bg-[#13141B] border-violet-500 text-white shadow-md shadow-violet-500/20"
                         : "bg-[#070709] border-[#1E202E] text-slate-400 hover:text-slate-200"
@@ -1174,127 +1351,52 @@ export default function StudioCreatePage() {
                       }`}
                     />
                     <div className="text-[10px] font-bold font-mono">{ratio.label}</div>
+                    <span className="text-[8px] text-slate-500 font-sans truncate">{ratio.name}</span>
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {/* Acordeão: Configurações Avançadas */}
-          <div className="border border-[#1E202E] rounded-2xl overflow-hidden bg-[#070709]">
-            <button
-              type="button"
-              onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
-              className="w-full flex items-center justify-between p-3.5 text-xs font-bold text-slate-300 hover:text-white transition-colors cursor-pointer"
-              style={{ minHeight: "44px" }}
-            >
-              <div className="flex items-center gap-2">
-                <Sliders className="h-3.5 w-3.5 text-violet-400" />
-                <span>Configurações Avançadas</span>
-              </div>
-              {isAdvancedOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            </button>
-
-            {isAdvancedOpen && (
-              <div className="p-4 border-t border-[#1E202E] space-y-4 text-xs">
-                {/* Passos de Inferência */}
-                <div className="space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400">Passos de Inferência (Steps)</span>
-                    <span className="font-mono text-violet-400 font-bold">{inferenceSteps}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min={4}
-                    max={28}
-                    step={1}
-                    value={inferenceSteps}
-                    onChange={(e) => setInferenceSteps(parseInt(e.target.value, 10))}
-                    className="w-full accent-violet-500 cursor-pointer"
-                  />
-                </div>
-
-                {/* Guidance Scale */}
-                <div className="space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400">Fidelidade ao Prompt (CFG)</span>
-                    <span className="font-mono text-violet-400 font-bold">{guidanceScale}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min={1}
-                    max={10}
-                    step={0.5}
-                    value={guidanceScale}
-                    onChange={(e) => setGuidanceScale(parseFloat(e.target.value))}
-                    className="w-full accent-violet-500 cursor-pointer"
-                  />
-                </div>
-
-                {/* Seed Manual */}
-                <div className="space-y-1.5">
-                  <span className="text-slate-400 block">Seed (Semente Numérica)</span>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      placeholder="Aleatória (Padrão)"
-                      value={seed}
-                      onChange={(e) => setSeed(e.target.value.replace(/\D/g, ""))}
-                      className="flex-1 bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-1.5 text-xs text-white outline-none focus:border-violet-500"
-                    />
+          {/* Seção de Controles Específicos para Vídeo */}
+          {activeTool === "video" && (
+            <div className="border border-[#1E202E] rounded-2xl p-4 bg-[#070709] space-y-3 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-300 font-bold">Duração do Vídeo</span>
+                <div className="flex gap-2">
+                  {["5", "10"].map((d) => (
                     <button
+                      key={d}
                       type="button"
-                      onClick={() => setSeed(Math.floor(Math.random() * 9999999).toString())}
-                      className="px-3 py-1.5 rounded-xl bg-[#13141B] border border-[#1E202E] text-slate-300 hover:text-white transition-colors cursor-pointer"
-                      title="Sortear seed aleatória"
+                      onClick={() => setDuration(d)}
+                      className={`px-3 py-1 rounded-lg font-mono font-bold transition-all cursor-pointer ${
+                        duration === d
+                          ? "bg-cyan-600/30 border border-cyan-500 text-cyan-300"
+                          : "bg-[#13141B] text-slate-400 hover:text-white"
+                      }`}
                     >
-                      🎲
+                      {d}s
                     </button>
-                  </div>
+                  ))}
                 </div>
-
-                {/* Se for vídeo: Duração e Câmera */}
-                {activeTool === "video" && (
-                  <div className="space-y-3 pt-2 border-t border-[#1E202E]">
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400">Duração do Vídeo</span>
-                      <div className="flex gap-2">
-                        {["5", "10"].map((d) => (
-                          <button
-                            key={d}
-                            type="button"
-                            onClick={() => setDuration(d)}
-                            className={`px-3 py-1 rounded-lg font-mono font-bold ${
-                              duration === d
-                                ? "bg-cyan-600/30 border border-cyan-500 text-cyan-300"
-                                : "bg-[#13141B] text-slate-400"
-                            }`}
-                          >
-                            {d}s
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-slate-400 block">Movimento de Câmera</span>
-                      <select
-                        value={cameraMotion}
-                        onChange={(e) => setCameraMotion(e.target.value)}
-                        className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-cyan-500"
-                      >
-                        <option value="static">Estático / Natural</option>
-                        <option value="zoom_in">Zoom In Dramático</option>
-                        <option value="pan_left">Panorâmica para a Esquerda</option>
-                        <option value="pan_right">Panorâmica para a Direita</option>
-                        <option value="orbital">Giro Orbital 360</option>
-                      </select>
-                    </div>
-                  </div>
-                )}
               </div>
-            )}
-          </div>
+
+              <div className="space-y-1">
+                <span className="text-slate-300 font-bold block">Movimento de Câmera</span>
+                <select
+                  value={cameraMotion}
+                  onChange={(e) => setCameraMotion(e.target.value)}
+                  className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-cyan-500 cursor-pointer"
+                >
+                  <option value="static">Estático / Suave e Natural</option>
+                  <option value="zoom_in">Aproximação (Zoom In)</option>
+                  <option value="pan_left">Panorâmica para a Esquerda</option>
+                  <option value="pan_right">Panorâmica para a Direita</option>
+                  <option value="orbital">Giro Orbital 360</option>
+                </select>
+              </div>
+            </div>
+          )}
 
           {/* Botão de Ação Principal: Gerar */}
           <button

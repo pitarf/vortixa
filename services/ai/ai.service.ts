@@ -103,6 +103,7 @@ export class AIService {
         const optimized = await PromptEngine.optimizeAsync(processedInputs.prompt, {
           enhanceQuality: true,
           toolType: request.toolSlug.includes("video") ? "video" : "image",
+          style: processedInputs.style,
         });
         processedInputs.prompt = optimized.optimizedPrompt;
       }

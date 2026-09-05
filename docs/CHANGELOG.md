@@ -2,6 +2,21 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [2.7.0] - 2026-09-05
+
+### Adicionado / Aprimorado
+- **Experiência Limpa e Didática para Usuários Leigos**:
+  * **Remoção Total de Jargões Técnicos**: Eliminada a exposição de termos de laboratório como *Steps de Inferência*, *Guidance CFG* e *Seed manual* tanto no **Studio CREATE** (`/dashboard/create`) quanto na ferramenta de **Geração de Imagem** (`/dashboard/tools/image`).
+  * **Foco Central em "Qual Inteligência Artificial você quer usar?"**:
+    - *FLUX.1 Turbo*: Geração ultra-rápida em segundos, ideal para testar ideias (1 crédito).
+    - *Google Imagen 3*: Especialista em pessoas reais, fotos sem corte e textos nítidos (3 créditos).
+    - *Recraft V3 Design*: Perfeito para tipografia legível, ilustrações e marcas (2 créditos).
+    - *FLUX Pro Ultra*: Qualidade cinematográfica de estúdio e detalhes extremos (4 créditos).
+  * **Automação Inteligente**: O próprio sistema aplica por debaixo dos panos os melhores parâmetros de inferência e calibração de acordo com a IA escolhida, sem sobrecarregar o usuário.
+  * **Proporções e Resoluções Táteis**: Seleção direta de formatos (1:1, 16:9, 9:16, 4:3, 3:2) e resoluções correspondentes.
+  * **Zero Emojis**: Rigorosa conformidade com o padrão visual Dark Obsidian sem utilização de emojis na interface.
+
+
 ## [2.6.0] - 2026-09-05
 
 ### Adicionado / Refatorado

@@ -7,9 +7,10 @@ const optimizeSchema = z.object({
   prompt: z.string().min(1, "O prompt não pode estar vazio.").max(2000),
   enhanceQuality: z.boolean().default(true),
   toolType: z.enum(["image", "video", "lipsync", "motion", "upscale"]).default("image"),
+  style: z.enum(["cinematic", "photorealistic", "anime", "octane3d", "cyberpunk"]).optional(),
 });
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -32,6 +33,7 @@ export async function POST(req: NextRequest) {
     const result = await PromptEngine.optimizeAsync(parsed.data.prompt, {
       enhanceQuality: parsed.data.enhanceQuality,
       toolType: parsed.data.toolType,
+      style: parsed.data.style,
     });
 
     return NextResponse.json({

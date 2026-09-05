@@ -31,6 +31,8 @@ export class FalAIProvider implements IAIProvider {
           square_hd: "1:1",
           landscape_16_9: "16:9",
           portrait_16_9: "9:16",
+          landscape_4_3: "4:3",
+          landscape_3_2: "3:2",
         };
         modelInputs.aspect_ratio = sizeMap[modelInputs.image_size] || "16:9";
       }
