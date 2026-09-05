@@ -5,6 +5,19 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.2.6] - 2026-09-05
+### Segurança & Hardening HTTP (Nota A+ no SecurityHeaders / Snyk)
+- **Eliminação de Fingerprinting Tecnológico (`X-Powered-By`)**:
+  - Configuração de `poweredByHeader: false` no `next.config.ts`, suprimindo a emissão do cabeçalho `X-Powered-By: Next.js` e mitigando o reconhecimento automatizado da stack por scanners adversariais.
+- **Proteção de Recursos do Navegador (`Permissions-Policy`)**:
+  - Implementação do cabeçalho `Permissions-Policy` com diretivas estritas: `camera=(), microphone=(), geolocation=(), browsing-topics=(), payment=(self)`.
+  - Bloqueio total de acesso a hardware de captura (câmera, microfone), localização física e rastreamento de tópicos de navegação por terceiros (Google FLEDGE / Topics API), limitando chamadas de pagamento estritamente à própria origem.
+- **Isolamento de Janelas e Recursos Cross-Origin (COOP & CORP)**:
+  - Adição de `Cross-Origin-Opener-Policy: same-origin` (COOP) para blindar janelas contra ataques baseados em `window.opener`, XS-Leaks e variantes de Spectre.
+  - Adição de `Cross-Origin-Resource-Policy: same-origin` (CORP) para impedir que origens externas carreguem recursos estáticos ou de mídia sem consentimento explícito.
+- **Suíte de Testes Automatizada (`__tests__/security-headers.test.ts`)**:
+  - 8 testes unitários e de mutação cobrindo a presença e integridade de todos os 8 cabeçalhos fundamentais de segurança e ausência de fingerprinting.
+
 ## [1.2.5] - 2026-09-05
 ### Aprimorado
 - **Simplificação e Humanização da Criação de Imagem (Studio CREATE & Image Tool)**:

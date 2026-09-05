@@ -2,6 +2,19 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [2.8.0] - 2026-09-05
+
+### Segurança & Blindagem HTTP (Security Headers & Snyk Nota A+)
+- **Eliminação de Fingerprinting Tecnológico (`X-Powered-By`)**:
+  * Desativação do header de identificação `X-Powered-By: Next.js` através de `poweredByHeader: false` no `next.config.ts`.
+- **Implementação do `Permissions-Policy`**:
+  * Configurado `camera=(), microphone=(), geolocation=(), browsing-topics=(), payment=(self)` para impedir o uso não autorizado de sensores de hardware, rastreadores biométricos e APIs de tracking comportamental no navegador.
+- **Implementação de Cabeçalhos Cross-Origin (COOP e CORP)**:
+  * `Cross-Origin-Opener-Policy: same-origin` (isolamento de processo de navegação contra side-channel leaks e Spectre).
+  * `Cross-Origin-Resource-Policy: same-origin` (restrição de consumo de recursos estáticos e mídias a origens de mesmo domínio).
+- **Cobertura de Testes de Infraestrutura e Mutação (`__tests__/security-headers.test.ts`)**:
+  * Validação programática automatizada de integridade dos headers e blindagem de falsos positivos via Mutation QA.
+
 ## [2.7.0] - 2026-09-05
 
 ### Adicionado / Aprimorado
