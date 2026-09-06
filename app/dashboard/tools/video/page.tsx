@@ -5,6 +5,8 @@ import { GenerationLayout } from "@/components/ai/generation-layout";
 import { PromptInput } from "@/components/ai/prompt-input";
 import { FileUploader } from "@/components/ai/file-uploader";
 
+import { MessageSquare, Sparkles, Volume2 } from "lucide-react";
+
 const VIDEO_MODELS = [
   { id: "fal-ai/kling-video/v2.1/pro/image-to-video", name: "Kling 2.1 Pro", badge: "Cinema Master", cost: 15, description: "Última geração Kling com máxima consistência temporal e física", speed: "~ 60s" },
   { id: "fal-ai/luma-dream-machine/ray-2", name: "Luma Ray 2", badge: "Física Realista", cost: 12, description: "Arquitetura Ray 2 de alta coerência dinâmica e controle de câmera", speed: "~ 45s" },
@@ -15,8 +17,13 @@ const VIDEO_MODELS = [
 export default function VideoToolPage() {
   const [mode, setMode] = useState<"text" | "image">("text");
   const [selectedModelId, setSelectedModelId] = useState<string>(VIDEO_MODELS[0].id);
+  const [enableTalkingVideo, setEnableTalkingVideo] = useState<boolean>(false);
+  const [speechText, setSpeechText] = useState<string>("");
+  const [selectedVoice, setSelectedVoice] = useState<string>("pt-BR-FranciscaNeural");
 
   const selectedModel = VIDEO_MODELS.find((m) => m.id === selectedModelId) || VIDEO_MODELS[0];
+  // Custo total: se talking video estiver ativado com fala, soma 9 créditos (1 TTS + 8 LipSync)
+  const totalCost = selectedModel.cost + (enableTalkingVideo && speechText.trim() ? 9 : 0);
 
   return (
     <GenerationLayout
@@ -24,11 +31,14 @@ export default function VideoToolPage() {
       title="Imagem/Texto para Vídeo"
       description="Crie vídeos realistas a partir de descrições textuais ou dando movimento a uma imagem."
       selectedModelId={selectedModelId}
-      customCost={selectedModel.cost}
+      customCost={totalCost}
       initialInputs={{
         prompt: "",
         image_url: "",
         duration: "5",
+        speech_text: "",
+        voice: "pt-BR-FranciscaNeural",
+        is_talking_video: false,
       }}
     >
       {({ setInputVal, inputs }) => (
@@ -126,6 +136,84 @@ export default function VideoToolPage() {
                 : "Descreva a cena cinematográfica que deseja gerar... Ex: Um astronauta caminhando na areia vermelha de Marte, iluminação dramática"
             }
           />
+
+          {/* Seção One-Shot Talking Video (Fala com IA Integrada) */}
+          <div className="border border-[#1E202E] rounded-2xl p-4 bg-[#070709] space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-violet-400" />
+                <span className="text-xs font-bold text-white">
+                  ✦ Adicionar Fala com IA ao Vídeo (One-Shot)
+                </span>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={enableTalkingVideo}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setEnableTalkingVideo(checked);
+                    setInputVal("is_talking_video", checked);
+                    if (!checked) {
+                      setInputVal("speech_text", "");
+                    } else {
+                      setInputVal("speech_text", speechText);
+                      setInputVal("voice", selectedVoice);
+                    }
+                  }}
+                  className="sr-only peer"
+                />
+                <div className="w-9 h-5 bg-[#1E202E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-violet-600 peer-checked:to-indigo-600"></div>
+              </label>
+            </div>
+
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              O VORIXA gera o vídeo do personagem e sincroniza os lábios (LipSync) automaticamente com fala neural em Português em 1 único clique. (+9 créditos)
+            </p>
+
+            {enableTalkingVideo && (
+              <div className="space-y-3 pt-2 border-t border-[#1E202E]/80 animate-in fade-in-50 duration-200">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[11px] font-bold text-slate-300">Voz do Personagem (PT-BR)</span>
+                    <span className="text-[10px] text-cyan-400 font-mono">Neural Studio</span>
+                  </div>
+                  <select
+                    value={selectedVoice}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setSelectedVoice(v);
+                      setInputVal("voice", v);
+                    }}
+                    className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-violet-500 cursor-pointer"
+                  >
+                    <option value="pt-BR-FranciscaNeural">Francisca (Feminina, Natural e Fluida)</option>
+                    <option value="pt-BR-AntonioNeural">Antônio (Masculino, Confiante e Comercial)</option>
+                    <option value="pt-BR-ThalitaMultilingualNeural">Thalita (Feminina, Jovem e Expressiva)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[11px] font-bold text-slate-300">O que o personagem deve falar?</span>
+                    <span className="text-[10px] text-slate-500 font-mono">{speechText.length}/1000</span>
+                  </div>
+                  <textarea
+                    value={speechText}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setSpeechText(val);
+                      setInputVal("speech_text", val);
+                    }}
+                    maxLength={1000}
+                    rows={3}
+                    placeholder="Digite exatamente o que o personagem irá falar em português... Ex: 'Olá, seja muito bem-vindo ao futuro da inteligência artificial.'"
+                    className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl p-3 text-xs text-white placeholder-slate-500 outline-none focus:border-violet-500 resize-none leading-relaxed"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
 
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">Duração</label>

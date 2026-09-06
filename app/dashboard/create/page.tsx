@@ -39,6 +39,7 @@ import {
   Sliders,
   ExternalLink,
   Music,
+  Sparkles,
 } from "lucide-react";
 import { AudioSourceSelector } from "@/components/ai/audio-source-selector";
 import { FileUploader } from "@/components/ai/file-uploader";
@@ -332,6 +333,9 @@ export default function StudioCreatePage() {
   const [videoMode, setVideoMode] = useState<"text" | "image">("image");
   const [duration, setDuration] = useState("5");
   const [cameraMotion, setCameraMotion] = useState("static");
+  const [enableTalkingVideo, setEnableTalkingVideo] = useState(false);
+  const [speechText, setSpeechText] = useState("");
+  const [selectedVoice, setSelectedVoice] = useState("pt-BR-FranciscaNeural");
   const [sourceVideoUrl, setSourceVideoUrl] = useState("");
   const [sourceAudioUrl, setSourceAudioUrl] = useState("");
   const [characterImageUrl, setCharacterImageUrl] = useState("");
@@ -575,7 +579,8 @@ export default function StudioCreatePage() {
 
     const toolDef = TOOLS[activeTool];
     const selectedModel = toolDef.models.find((m) => m.id === selectedModelId) || toolDef.models[0];
-    const cost = selectedModel.cost;
+    const hasTalkingVideo = activeTool === "video" && enableTalkingVideo && Boolean(speechText.trim());
+    const cost = selectedModel.cost + (hasTalkingVideo ? 9 : 0);
 
     if (creditMode !== "UNLIMITED" && balance < cost) {
       toast.error(`Saldo insuficiente (${balance} créditos disponíveis. Custo: ${cost}).`);
@@ -605,6 +610,11 @@ export default function StudioCreatePage() {
       inputs.duration = duration;
       inputs.camera_motion = cameraMotion;
       if (videoMode === "image" && referenceImageUrl) inputs.image_url = referenceImageUrl;
+      if (hasTalkingVideo) {
+        inputs.is_talking_video = true;
+        inputs.speech_text = speechText.trim();
+        inputs.voice = selectedVoice;
+      }
     } else if (activeTool === "lipsync") {
       inputs.video_url = sourceVideoUrl || resultMediaUrl;
       inputs.audio_url = sourceAudioUrl;
@@ -1388,6 +1398,55 @@ export default function StudioCreatePage() {
                   <option value="orbital">Giro Orbital 360</option>
                 </select>
               </div>
+
+              {/* One-Shot Talking Video Toggle */}
+              <div className="pt-3 border-t border-[#1E202E] space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+                    <span className="text-xs font-bold text-white">Voz & Fala do Personagem</span>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={enableTalkingVideo}
+                      onChange={(e) => setEnableTalkingVideo(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-8 h-4 bg-[#1E202E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-violet-600 peer-checked:to-cyan-500"></div>
+                  </label>
+                </div>
+                <p className="text-[10px] text-slate-400 leading-tight">
+                  Gera a fala neural e sincroniza os lábios automaticamente (+9 cr).
+                </p>
+
+                {enableTalkingVideo && (
+                  <div className="space-y-2 pt-1 animate-in fade-in-50 duration-200">
+                    <div>
+                      <span className="text-[10px] text-slate-400 block mb-1">Voz (PT-BR)</span>
+                      <select
+                        value={selectedVoice}
+                        onChange={(e) => setSelectedVoice(e.target.value)}
+                        className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-violet-500 cursor-pointer"
+                      >
+                        <option value="pt-BR-FranciscaNeural">Francisca (Feminina, Natural)</option>
+                        <option value="pt-BR-AntonioNeural">Antônio (Masculino, Confiante)</option>
+                        <option value="pt-BR-ThalitaMultilingualNeural">Thalita (Feminina, Jovem)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 block mb-1">Texto da Fala</span>
+                      <textarea
+                        value={speechText}
+                        onChange={(e) => setSpeechText(e.target.value)}
+                        rows={2}
+                        placeholder="O que o personagem de vídeo deve falar em português..."
+                        className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl p-2 text-xs text-white placeholder-slate-500 outline-none focus:border-violet-500 resize-none leading-tight"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -1425,7 +1484,9 @@ export default function StudioCreatePage() {
               <>
                 <Play className="h-4 w-4 fill-current" />
                 <span>
-                  Gerar {currentToolDef.name} ({currentModelDef.cost} crédito{currentModelDef.cost > 1 ? "s" : ""})
+                  Gerar {currentToolDef.name} ({
+                    currentModelDef.cost + (activeTool === "video" && enableTalkingVideo && speechText.trim() ? 9 : 0)
+                  } créditos)
                 </span>
               </>
             )}

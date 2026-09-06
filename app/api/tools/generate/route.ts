@@ -31,15 +31,36 @@ export async function POST(req: Request) {
       }
     }
 
-    const job = await AIService.submitJob({
-      userId: session.user.id,
-      toolSlug: parsed.data.toolSlug,
-      modelId: parsed.data.modelId,
-      inputs: parsed.data.inputs,
-      idempotencyKey: parsed.data.idempotencyKey,
-    });
+    // Se for uma requisição de vídeo com fala/áudio (One-Shot Talking Video)
+    const isTalkingVideo =
+      parsed.data.inputs?.is_talking_video === true ||
+      Boolean(parsed.data.inputs?.speech_text && parsed.data.inputs.speech_text.trim());
 
-    console.log(`\n🚀 [POST /api/tools/generate SUCESSO] Job ID: ${job.id} | Status Inicial: ${job.status} | Provider Job ID: ${job.providerJobId}`);
+    let job;
+    if (isTalkingVideo) {
+      const { TalkingVideoService } = await import("@/services/talking-video.service");
+      job = await TalkingVideoService.createTalkingVideoJob({
+        userId: session.user.id,
+        videoModelId: parsed.data.modelId,
+        prompt: parsed.data.inputs.prompt || "",
+        imageUrl: parsed.data.inputs.image_url || parsed.data.inputs.prompt_image_url,
+        speechText: parsed.data.inputs.speech_text,
+        audioUrl: parsed.data.inputs.audio_url,
+        voice: parsed.data.inputs.voice,
+        duration: parsed.data.inputs.duration || "5",
+        idempotencyKey: parsed.data.idempotencyKey,
+      });
+    } else {
+      job = await AIService.submitJob({
+        userId: session.user.id,
+        toolSlug: parsed.data.toolSlug,
+        modelId: parsed.data.modelId,
+        inputs: parsed.data.inputs,
+        idempotencyKey: parsed.data.idempotencyKey,
+      });
+    }
+
+    console.log(`\n🚀 [POST /api/tools/generate SUCESSO] Job ID: ${job.id} | Status: ${job.status} | Talking: ${isTalkingVideo}`);
 
     return NextResponse.json(job);
   } catch (err: any) {

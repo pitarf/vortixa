@@ -31,6 +31,14 @@ export class TTSService {
       throw new Error("O texto excede o limite máximo permitido de 3.000 caracteres por geração.");
     }
 
+    // Modo de Testes Automatizados (Vitest)
+    if (process.env.VITEST === "true" || process.env.AI_PROVIDER_MODE === "mock") {
+      return {
+        audioUrl: "/media/landing/hero/sample_voice.mp3",
+        format: "mp3",
+      };
+    }
+
     // 1. Tentar via Fal.ai Chatterbox (Alta compatibilidade com LipSync da Fal.ai)
     if (process.env.FAL_KEY && (engine === "fal-chatterbox" || engine === "auto")) {
       try {

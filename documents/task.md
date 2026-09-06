@@ -8,6 +8,10 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Geração de Vídeo com Fala Integrada One-Shot (Talking Video)**:
+  - Criação do serviço `TalkingVideoService` (`services/talking-video.service.ts`) que orquestra em 1 clique: geração da fala neural PT-BR (`TTSService`) -> geração do vídeo do personagem (`Kling 2.1 Pro`, `Luma Ray 2`, `Wan 2.1`, etc.) -> sincronia labial automática com `LatentSync Pro` (`fal-ai/latentsync`).
+  - Interface visual adicionada na página dedicada de Vídeo (`/dashboard/tools/video`) e no **Studio CREATE** (`/dashboard/create`), com seleção de vozes neurais e cálculo de créditos dinâmico.
+  - Teste automatizado `__tests__/talking-video.test.ts` e build Next.js 16.3.1 100% aprovados.
 - [x] **Síntese de Voz com IA (TTS) & Correção do Motor LipSync (LatentSync Pro)**:
   - Criação do serviço `TTSService` (`services/tts.service.ts`) e endpoint `POST /api/tools/tts` com débito de 1 crédito via `CreditService` e estorno automático em falhas.
   - Criação do componente `AudioSourceSelector` permitindo ao usuário digitar qualquer texto em português e gerar fala instantânea para alimentar o LipSync.

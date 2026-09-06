@@ -5,6 +5,16 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.3.9] - 2026-09-06
+### Geração de Vídeo com Fala Integrada One-Shot (Talking Video) & Sincronia Labial Automática
+- **Pipeline de Vídeo Falante em 1 Clique (Studio CREATE & Ferramenta de Vídeo)**:
+  - Implementado o serviço orquestrador `TalkingVideoService` (`services/talking-video.service.ts`) que automatiza o fluxo: geração do texto falado com `TTSService`, geração do vídeo visual base com motores cinematográficos (`Kling 2.1 Pro`, `Luma Ray 2`, `Wan 2.1 High-Motion`, `Hailuo Minimax 01 Live`) e aplicação imediata de sincronia labial de alta fidelidade com `LatentSync Pro` (`fal-ai/latentsync`).
+  - Adicionada opção tátil *"✦ Adicionar Fala com IA ao Vídeo (One-Shot)"* tanto na página dedicada de Vídeo (`/dashboard/tools/video`) quanto no **Studio CREATE** (`/dashboard/create` quando a aba ativa é Vídeo), permitindo ao usuário escolher vozes neurais brasileiras (`Francisca`, `Antônio` e `Thalita`) e digitar o texto que o personagem irá falar.
+  - Cômputo financeiro transparente e atômico no Ledger: débito transacional consolidado (custo do modelo de vídeo + 9 créditos adicionais para o pacote de fala neural e sincronia labial) com estorno integral garantido via `CreditService.refundCredits` caso haja qualquer instabilidade.
+- **Testes Automatizados de Integração**:
+  - Criada suíte de testes `__tests__/talking-video.test.ts` validando bloqueio por saldo insuficiente e orquestração atômica no Ledger.
+  - Build de produção compilado com 100% de sucesso no Next.js 16 (Turbopack).
+
 ## [1.3.8] - 2026-09-06
 ### Síntese de Voz com IA (TTS) & Correção do Motor LipSync (LatentSync Pro)
 - **Nova Ferramenta de Síntese de Voz (TTS) em Português com Débito de Créditos**:
