@@ -5,6 +5,14 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.3.5] - 2026-09-06
+### Otimização da Interface de Criação (Studio CREATE)
+- **Eliminação de Controle Redundante de Proporção no Prompt**:
+  - Removido o botão de texto redundante `16:9` do rodapé da caixa de prompt, centralizando todo o gerenciamento de formato no seletor dedicado **"PROPORÇÃO DA IMAGEM"**.
+  - Caixa de prompt limpa e focada em texto, upload de imagem de referência, botão de limpar e contador de caracteres.
+- **Harmonização da Grade de Estilos Visuais**:
+  - Ajustado o layout de estilos visuais para `grid-cols-3 sm:grid-cols-6`, acomodando harmoniosamente os 6 estilos (Cinemático, Realista, Anime, 3D Render, Fotográfico e Arte Digital) sem quebrar o último card para uma linha isolada.
+
 ## [1.3.4] - 2026-09-05
 ### Configuração Obrigatória de Senha para Usuários Google OAuth
 - **Modal Interceptador de Senha (`SetPasswordModal`)**:

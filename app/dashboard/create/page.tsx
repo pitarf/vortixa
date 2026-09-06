@@ -1222,19 +1222,6 @@ export default function StudioCreatePage() {
                       <Upload className="h-4 w-4" />
                     )}
                   </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const next = imageSize === "16:9" ? "1:1" : imageSize === "1:1" ? "9:16" : "16:9";
-                      setImageSize(next);
-                    }}
-                    className="p-1.5 rounded-lg hover:bg-[#13141B] hover:text-cyan-400 transition-colors text-xs font-mono font-bold cursor-pointer"
-                    title="Alternar proporção"
-                    style={{ minHeight: "36px" }}
-                  >
-                    {imageSize}
-                  </button>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -1267,7 +1254,7 @@ export default function StudioCreatePage() {
                 </span>
               )}
             </div>
-            <div className="grid grid-cols-5 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
               {STYLE_PRESETS.map((style) => {
                 const isSelected = selectedStyle === style.id;
                 return (
