@@ -10,7 +10,7 @@
  * 3. Preservação Universal de Fala: Qualquer roteiro ou diálogo entre aspas ("...") é mantido intocado.
  */
 
-export type VisualStyle = "cinematic" | "photorealistic" | "anime" | "octane3d" | "cyberpunk";
+export type VisualStyle = "cinematic" | "photorealistic" | "realist" | "photographic" | "anime" | "octane3d" | "cyberpunk" | "digital-art";
 
 export interface OptimizePromptOptions {
   enhanceQuality?: boolean;
@@ -311,22 +311,28 @@ export class PromptEngine {
       // Diretivas específicas do Estilo Visual Solicitado
       let styleDirective = "";
       if (options.style) {
-        switch (options.style) {
+        const normalizedStyle = options.style === "realist" || options.style === "photographic" 
+          ? "photorealistic" 
+          : options.style === "digital-art" 
+          ? "artistic" 
+          : options.style;
+
+        switch (normalizedStyle) {
           case "cinematic":
             styleDirective = `
 MANDATORY VISUAL STYLE: CINEMATIC HOLLYWOOD
-- Enforce anamorphic 2.39:1 aspect ratio aesthetic, Panavision C-Series lens characteristics with subtle oval bokeh and horizontal blue/amber flare.
-- Lighting: Dramatic chiaroscuro lighting, volumetric atmospheric haze/fog, warm practical highlights and cool fill shadows.
-- Color Grading: Hollywood blockbuster cinematic color grade (teal and orange / deep rich tones, 35mm film grain texture).
-- Composition: Dynamic cinematic framing, shallow depth of field, storytelling camera angle.`;
+- Enforce anamorphic aesthetic, Panavision C-Series lens characteristics with subtle horizontal blue/amber flare.
+- Lighting: Dramatic chiaroscuro lighting, volumetric atmospheric haze, warm practical highlights and cool fill shadows.
+- Color Grading: Hollywood blockbuster cinematic color grade (teal and orange tones, subtle 35mm film grain texture).
+- Composition: Dynamic cinematic framing, storytelling camera angle. (WARNING: If full body is requested, NEVER use shallow depth of field or tight telephoto lenses; use a wide cinematic lens keeping the full silhouette in focus).`;
             break;
           case "photorealistic":
             styleDirective = `
-MANDATORY VISUAL STYLE: ULTRA PHOTOREALISTIC RAW
-- Enforce unedited raw photography, shot on Sony A7R IV with 85mm f/1.4 GM lens or 35mm f/1.8 prime lens.
-- Lighting: Natural daylight, soft ambient skylight or professional softbox diffusion. Zero harsh artificial glows.
+MANDATORY VISUAL STYLE: ULTRA PHOTOREALISTIC RAW PHOTOGRAPHY
+- Enforce unedited raw photography, natural daylight, soft ambient skylight or professional studio softbox. Zero harsh artificial CGI glows.
 - Skin & Materials: Authentic natural human skin micro-texture, visible micropores, natural skin sheen, subtle facial asymmetry, realistic hair flyaways. Absolute prohibition of plastic airbrushed skin, doll-like faces or CGI sheen.
-- Color & Detail: True-to-life color calibration, crisp focus, optical bokeh falloff, authentic depth of field.`;
+- Camera & Optics: If full body is requested, use wide 28mm or 35mm f/8 lens with deep depth of field so head-to-toe is in focus with visible floor and shoes. If portrait/close-up is requested, 85mm f/1.4 lens with authentic optical bokeh.
+- Color & Detail: True-to-life color calibration, crisp focus, uncompressed high-resolution raw photo.`;
             break;
           case "anime":
             styleDirective = `
@@ -349,6 +355,11 @@ MANDATORY VISUAL STYLE: CYBERPUNK DYSTOPIAN NOIR
 - Lighting: Neon signs in saturated cyan, magenta, acid green and amber casting colored rim lights on wet reflective surfaces.
 - Environment: Rain-slicked wet asphalt with glowing puddles, subtle volumetric steam rising from vents, dark urban architecture with high-tech holo-advertisements.`;
             break;
+          case "artistic":
+            styleDirective = `
+MANDATORY VISUAL STYLE: DIGITAL CONCEPT ART
+- Enforce high-end digital painting, rich brushwork, dynamic dramatic lighting, trending on ArtStation, evocative color harmonies.`;
+            break;
         }
       }
 
@@ -361,7 +372,9 @@ Unless the user explicitly asks for something "feio", "velho", "abandonado", "po
 ${styleDirective}
 
 MANDATORY DIRECTIVES:
-1. Full Body Shot: If "corpo todo", "corpo inteiro", "de corpo todo" or "de corpo inteiro" is requested, you MUST ALWAYS instruct: "wide establishing full-body environmental shot, camera placed far back showing the entire body from head down to legs and shoes with visible floor space around feet, full figure completely in frame from head to toe, never cropped at waist, knees or thighs".
+1. Full Body Shot (CRITICAL): If the user mentions "corpo todo", "corpo inteiro", "de corpo todo", "de corpo inteiro", "full body" or indicates a full-standing figure:
+   - You MUST enforce an ultra-wide establishing shot: "ultra-wide full-length shot, camera pulled far back capturing the complete human figure from the top of the head down to the bottom of the feet and shoes, visible ground and floor space surrounding the feet, generous headroom above, entire body completely visible in frame without any cropping at the knees, waist, or ankles, deep depth of field keeping the full silhouette sharp and clear".
+   - DO NOT include "shallow depth of field", "tight crop", "85mm lens" or "close up" whenever full body is requested, as these optical terms force the AI to crop out the legs and feet.
 2. Attractive & Populated Environment: Make backgrounds lively, upscale and well-arranged (e.g. stylish modern gym with sleek contemporary machines, clean glass mirrors, polished floor; or lively coffee shop, stylish office). Include subtle, natural background people doing everyday activities with pleasant depth-of-field, creating an authentic, lived-in atmosphere without clutter or overcrowding.
 3. Lighting & Atmosphere: Enforce clear, luminous, natural ambient lighting (soft sunbeams, luminous interior windows, warm architectural accents). Avoid gloomy dark underexposed shadows.
 4. Human Realism: Natural authentic skin texture, realistic micro-details, healthy natural skin tone, avoiding plastic artificial airbrushing.
@@ -536,19 +549,36 @@ MANDATORY DIRECTIVES:
 
     // 4. Injeção Especializada de Estilo Visual (se especificado)
     if (options.style) {
-      switch (options.style) {
+      const normalizedStyle = options.style === "realist" || options.style === "photographic" 
+        ? "photorealistic" 
+        : options.style === "digital-art" 
+        ? "artistic" 
+        : options.style;
+
+      const isFullBodyInText = translated.toLowerCase().includes("full-body") || 
+                               translated.toLowerCase().includes("full body") || 
+                               translated.toLowerCase().includes("full-length") ||
+                               translated.toLowerCase().includes("head to toe");
+
+      switch (normalizedStyle) {
         case "cinematic":
           if (isVideo) {
             translated += ", cinematic 2.39:1 anamorphic framing, Panavision C-Series lens flare, dramatic chiaroscuro atmospheric lighting, volumetric haze, Hollywood 35mm film grain, 60fps";
           } else {
-            translated += ", cinematic 2.39:1 anamorphic composition, dramatic chiaroscuro lighting, volumetric atmospheric haze, Hollywood cinematic color grade, 35mm film grain, masterpiece photography";
+            const comp = isFullBodyInText 
+              ? "cinematic wide composition, full figure from head to toe in frame, visible floor" 
+              : "cinematic 2.39:1 anamorphic composition";
+            translated += `, ${comp}, dramatic chiaroscuro lighting, volumetric atmospheric haze, Hollywood cinematic color grade, subtle 35mm film grain, masterpiece photography`;
           }
           break;
         case "photorealistic":
           if (isVideo) {
-            translated += ", authentic raw unedited documentary footage, shot on Sony A7R IV, natural daylight, genuine skin micropores, 4k 60fps, zero CGI or plastic sheen";
+            translated += ", authentic raw unedited footage, shot on Sony A7R IV, natural daylight, genuine skin micropores, 4k 60fps, zero CGI or plastic sheen";
           } else {
-            translated += ", unedited raw photograph, shot on Sony A7R IV 85mm f/1.4 GM lens, natural daylight, authentic skin micropores and textures, subtle skin sheen, natural asymmetry, photorealistic depth of field, zero CGI";
+            const lensUsed = isFullBodyInText 
+              ? "wide 28mm lens with deep depth of field, entire figure from head to toe in focus with visible shoes on floor" 
+              : "Sony A7R IV 85mm f/1.4 GM lens, photorealistic depth of field";
+            translated += `, unedited raw photograph, shot on ${lensUsed}, natural daylight, authentic skin micropores and natural micro-textures, subtle skin sheen, natural asymmetry, zero CGI`;
           }
           break;
         case "anime":
@@ -571,6 +601,9 @@ MANDATORY DIRECTIVES:
           } else {
             translated += ", cyberpunk dystopian aesthetic, saturated cyan and magenta neon lights, rain-slicked reflective asphalt, volumetric steam, high-tech futuristic atmosphere, ray tracing reflections";
           }
+          break;
+        case "artistic":
+          translated += ", high-end digital concept art, evocative color harmonies, rich brushwork, award-winning illustration on ArtStation";
           break;
       }
     }

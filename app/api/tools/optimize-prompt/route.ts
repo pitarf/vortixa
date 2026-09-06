@@ -7,7 +7,7 @@ const optimizeSchema = z.object({
   prompt: z.string().min(1, "O prompt não pode estar vazio.").max(2000),
   enhanceQuality: z.boolean().default(true),
   toolType: z.enum(["image", "video", "lipsync", "motion", "upscale"]).default("image"),
-  style: z.enum(["cinematic", "photorealistic", "anime", "octane3d", "cyberpunk"]).optional(),
+  style: z.enum(["cinematic", "photorealistic", "realist", "photographic", "anime", "octane3d", "cyberpunk", "digital-art"]).optional(),
 });
 
 export async function POST(req: Request) {

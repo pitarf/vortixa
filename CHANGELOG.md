@@ -5,6 +5,14 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.3.7] - 2026-09-06
+### Aprimoramento da IA de Otimização de Prompts (Any-LLM) & Enquadramento de Corpo Inteiro
+- **Diretiva Anti-Corte Óptico para Corpo Todo**:
+  - Ajustado o System Prompt do modelo de linguagem (`fal-ai/any-llm`) no `PromptEngine`: ao detectar intenção de corpo inteiro, a IA agora é estritamente proibida de injetar termos que causam corte em retrato (como *"shallow depth of field"* e lentes teleobjetivas 85mm).
+  - Imposição explícita de *"ultra-wide full-length shot, camera pulled far back, feet and shoes visible on the floor, deep depth of field keeping entire silhouette in frame"*, assegurando que Google Imagen 3 e FLUX gerem a figura completa de ponta a ponta.
+- **Normalização de Estilos Visuais no PromptEngine**:
+  - Compatibilizados todos os estilos do Studio CREATE (`realist`, `photographic`, `digital-art`, etc.) com o enriquecimento da IA neural, evitando discrepâncias entre os presets da interface e os tokens técnicos exigidos pelos motores de difusão.
+
 ## [1.3.6] - 2026-09-06
 ### Correção de Geração de Imagem com FLUX Pro Ultra na Provedora fal.ai
 - **Normalização de Inputs e Resolução de Erro de Validação 422**:
