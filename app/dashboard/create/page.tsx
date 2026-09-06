@@ -608,6 +608,10 @@ export default function StudioCreatePage() {
     } else if (activeTool === "motion") {
       inputs.character_image_url = characterImageUrl || referenceImageUrl;
       inputs.reference_video_url = referenceVideoUrl;
+    } else if (activeTool === "upscale") {
+      inputs.video_url = sourceVideoUrl || resultMediaUrl;
+      inputs.image_url = referenceImageUrl || resultMediaUrl;
+      inputs.scale_factor = 2;
     }
 
     try {

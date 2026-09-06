@@ -23,7 +23,7 @@ export class FalAIProvider implements IAIProvider {
 
       const modelInputs = { ...payload.inputs };
 
-      // Sanitização específica por modelo fal.ai
+      // Sanitização específica por família de modelo fal.ai
       if (payload.modelTechnicalName.includes("flux/schnell")) {
         // FLUX Schnell aceita no máximo 12 steps (recomendado: 4)
         if (modelInputs.num_inference_steps) {
@@ -31,10 +31,10 @@ export class FalAIProvider implements IAIProvider {
         } else {
           modelInputs.num_inference_steps = 4;
         }
-        // FLUX Schnell não aceita guidance_scale
         delete modelInputs.guidance_scale;
       }
 
+      // Modelos de Imagem que exigem aspect_ratio no lugar de image_size
       const requiresAspectRatio = payload.modelTechnicalName.includes("ideogram") || 
                                   payload.modelTechnicalName.includes("ultra") || 
                                   payload.modelTechnicalName.includes("nano-banana");
@@ -48,6 +48,46 @@ export class FalAIProvider implements IAIProvider {
           landscape_3_2: "3:2",
         };
         modelInputs.aspect_ratio = sizeMap[modelInputs.image_size] || "16:9";
+      }
+
+      // Kling Image-to-Video: mapeia image_url para prompt_image_url ou image_url compatível
+      if (payload.modelTechnicalName.includes("kling") && payload.modelTechnicalName.includes("image-to-video")) {
+        if (modelInputs.image_url && !modelInputs.prompt_image_url) {
+          modelInputs.prompt_image_url = modelInputs.image_url;
+        }
+        if (modelInputs.duration) {
+          modelInputs.duration = String(modelInputs.duration); // "5" ou "10"
+        }
+      }
+
+      // Sync / LivePortrait LipSync: mapeia vídeo/imagem e áudio
+      if (payload.modelTechnicalName.includes("sync")) {
+        if (modelInputs.video_url && !modelInputs.video) {
+          modelInputs.video = modelInputs.video_url;
+        }
+        if (modelInputs.image_url && !modelInputs.image) {
+          modelInputs.image = modelInputs.image_url;
+        }
+        if (modelInputs.audio_url && !modelInputs.audio) {
+          modelInputs.audio = modelInputs.audio_url;
+        }
+      }
+
+      // Kling Motion Control: mapeia personagem e vídeo de referência
+      if (payload.modelTechnicalName.includes("motion-control")) {
+        if (modelInputs.character_image_url && !modelInputs.image_url) {
+          modelInputs.image_url = modelInputs.character_image_url;
+        }
+        if (modelInputs.reference_video_url && !modelInputs.video_url) {
+          modelInputs.video_url = modelInputs.reference_video_url;
+        }
+      }
+
+      // Creative Upscaler
+      if (payload.modelTechnicalName.includes("upscaler")) {
+        if (modelInputs.scale_factor) {
+          modelInputs.scale = Number(modelInputs.scale_factor) || 2;
+        }
       }
 
       const submitOptions: any = {
@@ -132,7 +172,7 @@ export class FalAIProvider implements IAIProvider {
           console.log(`\n🎉 [AI RESULTADO REAL RECEBIDO DA NUVEM] Request ID: ${requestId}`);
           console.log(`📦 Dados Recebidos:`, JSON.stringify(finalResult.data, null, 2));
 
-          // Extrai URLs geradas reais
+          // Extrai URLs geradas reais (imagens ou vídeos)
           const outputUrls: string[] = [];
           if ((finalResult.data as any)?.images && Array.isArray((finalResult.data as any).images)) {
             (finalResult.data as any).images.forEach((img: any) => {
@@ -144,6 +184,15 @@ export class FalAIProvider implements IAIProvider {
           }
           if ((finalResult.data as any)?.video?.url) {
             outputUrls.push((finalResult.data as any).video.url);
+          }
+          if ((finalResult.data as any)?.video_url) {
+            outputUrls.push((finalResult.data as any).video_url);
+          }
+          if ((finalResult.data as any)?.output?.url) {
+            outputUrls.push((finalResult.data as any).output.url);
+          }
+          if (typeof (finalResult.data as any)?.output === "string" && (finalResult.data as any).output.startsWith("http")) {
+            outputUrls.push((finalResult.data as any).output);
           }
 
           const job = await prisma.aIJob.findUnique({ where: { id: jobId } });

@@ -102,6 +102,42 @@ async function main() {
       toolName: 'Google Imagen 3',
       toolDesc: 'Fotorrealismo humano extremo, cenografia urbana rica e tipografia nítida.',
     },
+    {
+      name: 'Kling 1.5 Pro',
+      technicalName: 'fal-ai/kling/video-generation/v1-5/pro',
+      creditCost: 15,
+      apiUnitCost: 0.20,
+      toolSlug: 'kling-pro-video',
+      toolName: 'Kling 1.5 Pro',
+      toolDesc: 'Geração de vídeo de altíssima definição com física realista.',
+    },
+    {
+      name: 'Luma Dream Machine',
+      technicalName: 'fal-ai/luma-dream-machine',
+      creditCost: 12,
+      apiUnitCost: 0.18,
+      toolSlug: 'luma-dream-machine',
+      toolName: 'Luma Dream Machine',
+      toolDesc: 'Dinâmicas de câmera 3D com transições fluidas.',
+    },
+    {
+      name: 'Hailuo Minimax Video',
+      technicalName: 'fal-ai/minimax-video',
+      creditCost: 10,
+      apiUnitCost: 0.15,
+      toolSlug: 'minimax-video',
+      toolName: 'Hailuo Minimax Video',
+      toolDesc: 'Expressões faciais vivas e movimentos humanos realistas.',
+    },
+    {
+      name: 'Sync Audio v2',
+      technicalName: 'fal-ai/sync-v2',
+      creditCost: 8,
+      apiUnitCost: 0.08,
+      toolSlug: 'sync-v2',
+      toolName: 'Sync Audio v2',
+      toolDesc: 'Sincronização fonética precisa de múltiplos idiomas.',
+    },
   ];
 
   for (const m of models) {

@@ -43,10 +43,18 @@ export async function POST(req: Request) {
       // Extrair URLs geradas (vídeo ou imagem)
       if (payload?.video?.url) {
         outputUrls.push(payload.video.url);
+      } else if (payload?.video_url) {
+        outputUrls.push(payload.video_url);
+      } else if (payload?.output?.url) {
+        outputUrls.push(payload.output.url);
+      } else if (typeof payload?.output === "string" && payload.output.startsWith("http")) {
+        outputUrls.push(payload.output);
       } else if (payload?.images && Array.isArray(payload.images)) {
         payload.images.forEach((img: any) => {
           if (img.url) outputUrls.push(img.url);
         });
+      } else if (payload?.image?.url) {
+        outputUrls.push(payload.image.url);
       }
 
       await prisma.$transaction(async (tx) => {
