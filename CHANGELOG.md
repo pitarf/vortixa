@@ -5,6 +5,15 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.3.6] - 2026-09-06
+### Correção de Geração de Imagem com FLUX Pro Ultra na Provedora fal.ai
+- **Normalização de Inputs e Resolução de Erro de Validação 422**:
+  - Identificada e corrigida a causa raiz do erro `"Input should be a valid dictionary or object to extract fields from"` ao submeter tarefas para o modelo `fal-ai/flux-pro/v1.1-ultra`.
+  - Corrigido o mapeamento automático de `aspect_ratio` convertendo chaves internas (`landscape_16_9`, `portrait_16_9`, etc.) e removendo a propriedade conflitante `image_size`.
+  - Remoção de metadados internos de controle da VORIXA (`style`, `resolution`) do payload enviado para a fal.ai, prevenindo falhas no validador pydantic do provedor.
+- **Validação E2E com Retorno Real**:
+  - Testado via submissão real de jobs contra a fila da fal.ai, confirmando status `200 COMPLETED` e entrega de imagem em ultra-resolução (2752x1536).
+
 ## [1.3.5] - 2026-09-06
 ### Otimização da Interface de Criação (Studio CREATE)
 - **Eliminação de Controle Redundante de Proporção no Prompt**:

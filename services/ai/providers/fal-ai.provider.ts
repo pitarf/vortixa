@@ -34,21 +34,41 @@ export class FalAIProvider implements IAIProvider {
         delete modelInputs.guidance_scale;
       }
 
-      // Modelos de Imagem que exigem aspect_ratio no lugar de image_size
+      // Modelos de Imagem que exigem aspect_ratio no lugar de image_size (ou aceitam aspect_ratio nativo)
       const requiresAspectRatio = payload.modelTechnicalName.includes("ideogram") || 
                                   payload.modelTechnicalName.includes("ultra") || 
-                                  payload.modelTechnicalName.includes("nano-banana");
+                                  payload.modelTechnicalName.includes("nano-banana") ||
+                                  payload.modelTechnicalName.includes("flux-pro");
 
-      if (requiresAspectRatio && modelInputs.image_size && !modelInputs.aspect_ratio) {
-        const sizeMap: Record<string, string> = {
+      if (requiresAspectRatio) {
+        const ratioMap: Record<string, string> = {
+          "1:1": "1:1",
+          "16:9": "16:9",
+          "9:16": "9:16",
+          "4:3": "4:3",
+          "3:4": "3:4",
+          "3:2": "3:2",
+          "2:3": "2:3",
+          "21:9": "21:9",
+          "9:21": "9:21",
           square_hd: "1:1",
+          square: "1:1",
           landscape_16_9: "16:9",
           portrait_16_9: "9:16",
           landscape_4_3: "4:3",
+          portrait_4_3: "3:4",
           landscape_3_2: "3:2",
+          portrait_3_2: "2:3",
         };
-        modelInputs.aspect_ratio = sizeMap[modelInputs.image_size] || "16:9";
+
+        const rawRatio = modelInputs.aspect_ratio || modelInputs.image_size || "16:9";
+        modelInputs.aspect_ratio = ratioMap[rawRatio] || "16:9";
+        delete modelInputs.image_size;
       }
+
+      // Remover metadados internos da VORIXA que não fazem parte do schema da fal.ai
+      delete modelInputs.style;
+      delete modelInputs.resolution;
 
       // Kling AI (v1.5, v2.1 Pro/Master, etc.): mapeia variações de imagem e duração
       if (payload.modelTechnicalName.includes("kling")) {
