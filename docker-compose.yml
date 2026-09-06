@@ -30,7 +30,7 @@ services:
       - PORT=3000
       - HOSTNAME=0.0.0.0
     volumes:
-      - vorixa-uploads:/app/public/uploads
+      - /var/www/vorixa-uploads:/app/public/uploads
     depends_on:
       postgres:
         condition: service_healthy
