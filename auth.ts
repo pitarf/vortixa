@@ -38,7 +38,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   events: {
     async createUser({ user }) {
-      if (user?.id) {
+      const uid = user?.id;
+      if (uid) {
         try {
           const isAdminMaster = user.email?.toLowerCase() === "rfpita.ti@gmail.com";
 
@@ -46,15 +47,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           await prisma.$transaction(async (tx) => {
             if (isAdminMaster) {
               await tx.user.update({
-                where: { id: user.id },
+                where: { id: uid },
                 data: { role: "ADMIN", isUnlimited: true },
               });
             }
 
             await tx.creditBalance.upsert({
-              where: { userId: user.id },
+              where: { userId: uid },
               create: {
-                userId: user.id,
+                userId: uid,
                 balance: 10,
               },
               update: {},
@@ -62,7 +63,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
             await tx.creditTransaction.create({
               data: {
-                userId: user.id,
+                userId: uid,
                 amount: 10,
                 type: "BONUS",
                 description: "Boas-vindas VORTIXIA (Cadastro Google)",
