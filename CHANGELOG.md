@@ -5,6 +5,28 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.3.4] - 2026-09-05
+### Configuração Obrigatória de Senha para Usuários Google OAuth
+- **Modal Interceptador de Senha (`SetPasswordModal`)**:
+  - Usuários que realizam o primeiro login com Google (ou que já tinham conta Google sem senha) recebem obrigatoriamente um modal escuro em overlay bloqueante para configurar sua senha inicial.
+  - O modal valida senha mínima de 6 caracteres e confirmação de senha, exibindo mensagens claras via Sonner Toast.
+- **Endpoint Seguro de Cadastro de Senha (`/api/auth/set-password`)**:
+  - Rota protegida com hash `bcrypt` (12 rounds) que grava a credencial no registro do usuário mantendo seu vínculo com a conta Google.
+  - Permite que o usuário acesse futuramente tanto com "Entrar com Google" quanto com seu E-mail e a nova senha na tela de login.
+- **Bônus de Boas-Vindas no Evento OAuth (`auth.ts`)**:
+  - Inclusão do evento `createUser` no NextAuth para creditar automaticamente os 10 créditos bônus para contas criadas via Google OAuth.
+
+## [1.3.3] - 2026-09-05
+### Correção de Planos e Métricas Dinâmicas no Dashboard
+- **Eliminação do Mock "Plano Creator Pro"**:
+  - Usuários recém-criados agora exibem estritamente seu status real: `"Sem Plano (10 cr bônus)"`.
+  - Usuários com flag de acesso irrestrito exibem `"Acesso Ilimitado"`.
+  - Assinantes ou compradores de pacotes exibem o nome do pacote adquirido (`"Plano Iniciante"`, `"Plano Profissional"`, `"Plano Criador Pro"`).
+  - Remoção de placeholders estáticos tanto no rodapé da Sidebar quanto no Popover de usuário do cabeçalho.
+- **Estatísticas e Gráficos Conectados ao Consumo Real**:
+  - Métricas de projetos, ativos e créditos consumidos no Dashboard e nos widgets agora agregam transações reais do PostgreSQL via Prisma (`CreditTransaction` e `AIJob`).
+  - Gráfico circular gauge passa a calcular a porcentagem real de consumo em vez do mock fixo de 62%.
+
 ## [1.3.2] - 2026-09-05
 ### Atualização para as Últimas Versões de Motores de IA
 - **Upgrade Geral dos Modelos Generativos**:

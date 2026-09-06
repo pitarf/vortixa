@@ -45,6 +45,7 @@ interface DashboardShellProps {
   } | null;
   userBalance: number;
   isUnlimited: boolean;
+  planName?: string;
 }
 
 export function DashboardShell({
@@ -52,6 +53,7 @@ export function DashboardShell({
   user,
   userBalance,
   isUnlimited,
+  planName = "Sem Plano (Gratuito)",
 }: DashboardShellProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -388,8 +390,8 @@ export function DashboardShell({
               <span className="text-xs font-bold text-slate-200 truncate">
                 {user?.name || "Criador VORIXA"}
               </span>
-              <span className="text-[10px] font-mono text-violet-400">
-                Plano Creator Pro
+              <span className={`text-[10px] font-mono ${planName.includes("Sem") ? "text-slate-400" : "text-violet-400 font-bold"}`}>
+                {planName}
               </span>
             </div>
           </div>
@@ -575,8 +577,14 @@ export function DashboardShell({
                 <div className="p-3 border-b border-[#1E202E]">
                   <div className="text-xs font-bold text-white truncate">{user?.name || "Criador"}</div>
                   <div className="text-[11px] text-slate-400 truncate">{user?.email || "usuario@vorixa.com"}</div>
-                  <span className="inline-block mt-1.5 px-2 py-0.5 rounded text-[9px] font-mono bg-violet-500/20 text-violet-300 font-bold">
-                    Plano Creator Pro
+                  <span className={`inline-block mt-1.5 px-2 py-0.5 rounded text-[9px] font-mono font-bold ${
+                    isUnlimited
+                      ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                      : planName.includes("Sem Plano")
+                      ? "bg-slate-800/60 text-slate-400 border border-slate-700/40"
+                      : "bg-violet-500/20 text-violet-300 border border-violet-500/30"
+                  }`}>
+                    {planName}
                   </span>
                 </div>
                 <Link

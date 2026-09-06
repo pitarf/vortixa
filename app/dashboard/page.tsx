@@ -15,10 +15,11 @@ export default async function DashboardPage() {
   const session = await auth();
   const userId = session?.user?.id;
 
-  let userBalance = 2480;
+  let userBalance = 0;
   let isUnlimited = false;
-  let projectsCount = 127;
-  let assetsCount = 842;
+  let projectsCount = 0;
+  let assetsCount = 0;
+  let consumedCredits = 0;
   let recentProjects: ProjectItem[] = [];
 
   if (userId) {
@@ -31,19 +32,25 @@ export default async function DashboardPage() {
       isUnlimited = !!userRecord?.isUnlimited;
 
       // Contagem real de AIJobs concluídos e fluxos
-      const jobsTotal = await prisma.aIJob.count({
+      assetsCount = await prisma.aIJob.count({
         where: { userId, status: "COMPLETED" },
       });
-      if (jobsTotal > 0) {
-        assetsCount = jobsTotal;
-      }
 
-      const flowsTotal = await prisma.flow.count({
+      projectsCount = await prisma.flow.count({
         where: { userId },
       });
-      if (flowsTotal > 0) {
-        projectsCount = flowsTotal;
-      }
+
+      // Cálculo de créditos consumidos (débitos)
+      const debitTransactions = await prisma.creditTransaction.aggregate({
+        where: {
+          userId,
+          amount: { lt: 0 },
+        },
+        _sum: {
+          amount: true,
+        },
+      });
+      consumedCredits = Math.abs(debitTransactions._sum.amount || 0);
 
       // Busca os últimos AIJobs concluídos
       const userJobs = await prisma.aIJob.findMany({
@@ -158,7 +165,12 @@ export default async function DashboardPage() {
       <DashboardRecentProjects projects={recentProjects} />
 
       {/* 4. Grid Inferior com 3 Widgets de Suporte */}
-      <DashboardWidgets />
+      <DashboardWidgets
+        userBalance={userBalance}
+        consumedCredits={consumedCredits}
+        assetsCount={assetsCount}
+        isUnlimited={isUnlimited}
+      />
     </div>
   );
 }

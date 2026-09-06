@@ -16,11 +16,27 @@ import { toast } from "sonner";
 import { ChangelogModal } from "@/components/dashboard/ChangelogModal";
 import { CHANGELOG_ITEMS } from "@/lib/data/changelog-data";
 
-export function DashboardWidgets() {
+interface DashboardWidgetsProps {
+  userBalance?: number;
+  consumedCredits?: number;
+  assetsCount?: number;
+  isUnlimited?: boolean;
+}
+
+export function DashboardWidgets({
+  userBalance = 0,
+  consumedCredits = 0,
+  assetsCount = 0,
+  isUnlimited = false,
+}: DashboardWidgetsProps) {
   const [period, setPeriod] = useState<"30" | "7">("30");
   const [hasLikedCommunity, setHasLikedCommunity] = useState(false);
   const [likesCount, setLikesCount] = useState(1428);
   const [isChangelogModalOpen, setIsChangelogModalOpen] = useState(false);
+
+  const totalCredits = userBalance + consumedCredits;
+  const usagePercentage =
+    isUnlimited ? 0 : totalCredits > 0 ? Math.min(100, Math.round((consumedCredits / totalCredits) * 100)) : 0;
 
   const handleLikeCommunity = () => {
     if (!hasLikedCommunity) {
@@ -81,7 +97,7 @@ export function DashboardWidgets() {
               </div>
             </div>
 
-            {/* Gráfico SVG de Anel / Gauge Circular (62%) */}
+            {/* Gráfico SVG de Anel / Gauge Circular */}
             <div className="flex items-center justify-around py-2">
               <div className="relative h-28 w-28 flex items-center justify-center">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
@@ -93,8 +109,8 @@ export function DashboardWidgets() {
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   />
                   <path
-                    className="text-violet-500"
-                    strokeDasharray="62, 100"
+                    className={usagePercentage > 80 ? "text-amber-500" : "text-violet-500"}
+                    strokeDasharray={`${usagePercentage}, 100`}
                     strokeWidth="3.5"
                     strokeLinecap="round"
                     stroke="currentColor"
@@ -103,23 +119,29 @@ export function DashboardWidgets() {
                   />
                 </svg>
                 <div className="absolute flex flex-col items-center">
-                  <span className="text-xl font-black font-heading text-white">62%</span>
-                  <span className="text-[9px] font-mono text-slate-400 uppercase">Utilizado</span>
+                  <span className="text-xl font-black font-heading text-white">
+                    {isUnlimited ? "∞" : `${usagePercentage}%`}
+                  </span>
+                  <span className="text-[9px] font-mono text-slate-400 uppercase">
+                    {isUnlimited ? "Ilimitado" : "Utilizado"}
+                  </span>
                 </div>
               </div>
 
               <div className="space-y-2 text-xs">
                 <div>
                   <span className="text-[10px] font-mono text-slate-400 block">Consumidos</span>
-                  <span className="font-bold text-slate-200">1.540 créditos</span>
+                  <span className="font-bold text-slate-200">{consumedCredits.toLocaleString()} créditos</span>
                 </div>
                 <div>
                   <span className="text-[10px] font-mono text-slate-400 block">Restantes</span>
-                  <span className="font-bold text-amber-300">2.480 créditos</span>
+                  <span className="font-bold text-amber-300">
+                    {isUnlimited ? "Ilimitado" : `${userBalance.toLocaleString()} créditos`}
+                  </span>
                 </div>
                 <div>
-                  <span className="text-[10px] font-mono text-slate-400 block">Gerações no ciclo</span>
-                  <span className="font-bold text-emerald-400">48 mídias</span>
+                  <span className="text-[10px] font-mono text-slate-400 block">Gerações</span>
+                  <span className="font-bold text-emerald-400">{assetsCount} mídias</span>
                 </div>
               </div>
             </div>

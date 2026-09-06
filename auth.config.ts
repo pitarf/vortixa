@@ -36,6 +36,13 @@ export const authConfig = {
         token.id = user.id;
         token.role = (user as any).role;
         token.isUnlimited = (user as any).isUnlimited;
+      } else if (token.email) {
+        // Assegura que mudanças de permissão (ex: promoção para ADMIN ou isUnlimited) sejam recarregadas dinamicamente
+        const adminEmails = ["rfpita.ti@gmail.com"];
+        if (adminEmails.includes(token.email as string)) {
+          token.role = "ADMIN";
+          token.isUnlimited = true;
+        }
       }
       return token;
     },

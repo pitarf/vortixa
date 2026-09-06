@@ -239,6 +239,23 @@ async function main() {
     });
   }
 
+  // 4. Administrador Principal do Sistema
+  const adminEmail = "rfpita.ti@gmail.com";
+  const existingAdmin = await prisma.user.findUnique({
+    where: { email: adminEmail },
+  });
+
+  if (existingAdmin) {
+    await prisma.user.update({
+      where: { email: adminEmail },
+      data: {
+        role: "ADMIN",
+        isUnlimited: true,
+      },
+    });
+    console.log(`✅ Usuário ${adminEmail} promovido para ADMIN com isUnlimited=true!`);
+  }
+
   console.log('Seed do banco executado com sucesso!');
 }
 

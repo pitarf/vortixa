@@ -33,13 +33,16 @@ export async function POST(req: Request) {
 
     const passwordHash = await bcrypt.hash(validatedData.password, 12);
 
+    const isAdminMaster = validatedData.email.toLowerCase() === "rfpita.ti@gmail.com";
+
     const user = await prisma.$transaction(async (tx) => {
       const newUser = await tx.user.create({
         data: {
           email: validatedData.email,
           passwordHash,
           name: validatedData.name,
-          role: "USER",
+          role: isAdminMaster ? "ADMIN" : "USER",
+          isUnlimited: isAdminMaster,
           utmSource: validatedData.utmSource,
           utmMedium: validatedData.utmMedium,
           utmCampaign: validatedData.utmCampaign,

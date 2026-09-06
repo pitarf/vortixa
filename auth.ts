@@ -36,4 +36,44 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  events: {
+    async createUser({ user }) {
+      if (user?.id) {
+        try {
+          const isAdminMaster = user.email?.toLowerCase() === "rfpita.ti@gmail.com";
+
+          // Inicializar saldo de 10 créditos bônus para conta criada via OAuth
+          await prisma.$transaction(async (tx) => {
+            if (isAdminMaster) {
+              await tx.user.update({
+                where: { id: user.id },
+                data: { role: "ADMIN", isUnlimited: true },
+              });
+            }
+
+            await tx.creditBalance.upsert({
+              where: { userId: user.id },
+              create: {
+                userId: user.id,
+                balance: 10,
+              },
+              update: {},
+            });
+
+            await tx.creditTransaction.create({
+              data: {
+                userId: user.id,
+                amount: 10,
+                type: "BONUS",
+                description: "Boas-vindas VORTIXIA (Cadastro Google)",
+              },
+            });
+          });
+        } catch (e) {
+          console.error("Erro ao inicializar bônus de boas-vindas OAuth:", e);
+        }
+      }
+    },
+  },
 });
+
