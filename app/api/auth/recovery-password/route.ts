@@ -51,11 +51,12 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error: any) {
+    console.error("❌ [RECOVERY_PASSWORD_ERROR]:", error);
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.issues[0].message }, { status: 400 });
     }
     return NextResponse.json(
-      { error: "Servidor instável. Tente novamente em alguns instantes." },
+      { error: `Falha no envio de e-mail: ${error?.message || "Servidor instável."}` },
       { status: 500 }
     );
   }
