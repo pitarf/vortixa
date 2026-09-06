@@ -56,7 +56,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: error.issues[0].message }, { status: 400 });
     }
     return NextResponse.json(
-      { error: `Falha no envio de e-mail: ${error?.message || "Servidor instável."}` },
+      { error: "Servidor instável. Tente novamente em alguns instantes." },
       { status: 500 }
     );
   }
