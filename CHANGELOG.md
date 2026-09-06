@@ -5,6 +5,24 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.3.0] - 2026-09-05
+### Motores de IA & Sincronização Completa (All-in-One Engine Suite)
+- **Sincronização de 13 Motores Generativos**:
+  - Cadastro, ativação e precificação em créditos no PostgreSQL da VPS de todos os 13 motores da plataforma:
+    * **Imagem**: FLUX Schnell (1 cr), FLUX Dev (2 cr), Recraft V3 Design (2 cr), FLUX.1 Pro Ultra (4 cr), Google Imagen 3 (3 cr).
+    * **Vídeo**: Kling Image-to-Video (10 cr), Kling 1.5 Pro (15 cr), Luma Dream Machine (12 cr), Hailuo Minimax Video (10 cr).
+    * **Avatar & LipSync**: Sync Lip Sync / LivePortrait (8 cr), Sync Audio v2 (8 cr).
+    * **Motion Control**: Kling Motion Control (15 cr).
+    * **Upscale 4K**: Creative Video Upscaler 4K (5 cr).
+- **Mapeamento Unificado de Parâmetros (`FalAIProvider`)**:
+  - Tratamento inteligente de entradas para cada motor:
+    * Mapeamento de `prompt_image_url` e duração para a família Kling.
+    * Mapeamento de `video`, `image` e `audio` para a família Sync / LivePortrait.
+    * Mapeamento de `character_image_url` e `reference_video_url` para Kling Motion Control.
+    * Suporte a fatores de escala (`scale_factor`) para o Creative Upscaler.
+  - Extração resiliente de outputs de vídeo (`video.url`, `video_url`, `output.url`) no Webhook `/api/webhooks/fal` e no polling safety-net.
+  - Suporte completo aos 5 tipos de mídia no Studio CREATE (`/dashboard/create`).
+
 ## [1.2.9] - 2026-09-05
 ### Infraestrutura & Provedores de IA (Produção na VPS)
 - **Sanitização de Parâmetros e Resiliência na Fal.ai (`FalAIProvider`)**:

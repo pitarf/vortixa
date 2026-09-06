@@ -8,6 +8,11 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Sincronização e Homologação de Todos os 13 Motores de IA (Produção na VPS)**:
+  - 100% dos 13 motores cadastrados e ativos no banco de dados (`AIModel` e `AITool`).
+  - Mapeamento e sanitização automática de parâmetros para todas as famílias de IA (FLUX, Kling, Luma, Hailuo, LivePortrait Sync e Upscale 4K).
+  - Extração de resultados unificada e resiliente de vídeo e imagem no webhook e no safety-net.
+  - Deploy em produção validado no container `vorixa-app` na VPS (`vortixia.com.br`).
 - [x] **Homologação e Correção da Geração de Imagens de IA na VPS (Produção)**:
   - Resolução da divergência de credenciais no banco de dados e liberação das permissões no container.
   - Sanitização de parâmetros da fal.ai para FLUX Schnell (`num_inference_steps` e remoção de `guidance_scale`).
