@@ -95,10 +95,10 @@ const TOOLS: Record<StudioTool, ToolDefinition> = {
     description: "Dê vida e movimento a fotos ou crie cenas de vídeo cinematográficas.",
     color: "from-cyan-500 to-blue-600",
     models: [
-      { id: "fal-ai/kling/video-generation/image-to-video", name: "Kling AI 1.5", badge: "Mais rápido", cost: 10, description: "Movimentos cinemáticos naturais", speed: "~ 45s" },
-      { id: "fal-ai/kling/video-generation/v1-5/pro", name: "Kling 1.5 Pro", badge: "Ultra HD", cost: 15, description: "Máxima consistência temporal", speed: "~ 70s" },
-      { id: "fal-ai/luma-dream-machine", name: "Luma Dream", badge: "Fluidez", cost: 12, description: "Transições e dinâmicas de câmera 3D", speed: "~ 50s" },
-      { id: "fal-ai/minimax-video", name: "Hailuo Minimax", badge: "Expressivo", cost: 10, description: "Expressões faciais e ações vivas", speed: "~ 40s" },
+      { id: "fal-ai/kling-video/v2.1/pro/image-to-video", name: "Kling 2.1 Pro", badge: "Cinema Master", cost: 15, description: "Última geração Kling com máxima consistência temporal e física", speed: "~ 60s" },
+      { id: "fal-ai/luma-dream-machine/ray-2", name: "Luma Ray 2", badge: "Física Realista", cost: 12, description: "Arquitetura Ray 2 de alta coerência dinâmica e física 3D", speed: "~ 45s" },
+      { id: "fal-ai/wan-i2v", name: "Wan 2.1 High-Motion", badge: "Fluidez Extrema", cost: 10, description: "Movimentos corporais e estabilidade em 720p", speed: "~ 35s" },
+      { id: "fal-ai/minimax/video-01-live", name: "Hailuo Minimax 01 Live", badge: "Expressões Vivas", cost: 12, description: "Expressões faciais vivas e ações contínuas", speed: "~ 40s" },
     ],
   },
   lipsync: {

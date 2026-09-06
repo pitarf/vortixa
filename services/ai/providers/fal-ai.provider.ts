@@ -50,43 +50,87 @@ export class FalAIProvider implements IAIProvider {
         modelInputs.aspect_ratio = sizeMap[modelInputs.image_size] || "16:9";
       }
 
-      // Kling Image-to-Video: mapeia image_url para prompt_image_url ou image_url compatível
-      if (payload.modelTechnicalName.includes("kling") && payload.modelTechnicalName.includes("image-to-video")) {
+      // Kling AI (v1.5, v2.1 Pro/Master, etc.): mapeia variações de imagem e duração
+      if (payload.modelTechnicalName.includes("kling")) {
         if (modelInputs.image_url && !modelInputs.prompt_image_url) {
           modelInputs.prompt_image_url = modelInputs.image_url;
+        }
+        if (modelInputs.prompt_image_url && !modelInputs.image_url) {
+          modelInputs.image_url = modelInputs.prompt_image_url;
+        }
+        if (modelInputs.image && !modelInputs.prompt_image_url) {
+          modelInputs.prompt_image_url = modelInputs.image;
         }
         if (modelInputs.duration) {
           modelInputs.duration = String(modelInputs.duration); // "5" ou "10"
         }
       }
 
-      // Sync / LivePortrait LipSync: mapeia vídeo/imagem e áudio
-      if (payload.modelTechnicalName.includes("sync")) {
+      // Luma Dream Machine (Ray 2 / Ray 2 Flash), Wan 2.1 & Minimax Video: suporte flexível a image_url / prompt_image_url
+      if (
+        payload.modelTechnicalName.includes("luma") ||
+        payload.modelTechnicalName.includes("wan") ||
+        payload.modelTechnicalName.includes("minimax")
+      ) {
+        if (modelInputs.prompt_image_url && !modelInputs.image_url) {
+          modelInputs.image_url = modelInputs.prompt_image_url;
+        }
+        if (modelInputs.image_url && !modelInputs.prompt_image_url) {
+          modelInputs.prompt_image_url = modelInputs.image_url;
+        }
+      }
+
+      // Sync / LivePortrait LipSync (Sync v1, Sync v2, LivePortrait): mapeia vídeo/imagem e áudio com todos os aliases
+      if (payload.modelTechnicalName.includes("sync") || payload.modelTechnicalName.includes("liveportrait")) {
+        // Vídeo ou Imagem de entrada
+        const videoInput = modelInputs.video_url || modelInputs.video || modelInputs.face_video_url;
+        const imageInput = modelInputs.image_url || modelInputs.image || modelInputs.face_image_url;
+        const audioInput = modelInputs.audio_url || modelInputs.audio || modelInputs.driving_audio_url || modelInputs.audio_file;
+
+        if (videoInput) {
+          modelInputs.video = videoInput;
+          modelInputs.video_url = videoInput;
+        }
+        if (imageInput) {
+          modelInputs.image = imageInput;
+          modelInputs.image_url = imageInput;
+        }
+        if (audioInput) {
+          modelInputs.audio = audioInput;
+          modelInputs.audio_url = audioInput;
+          modelInputs.driving_audio_url = audioInput;
+        }
+      }
+
+      // Kling Motion Control: mapeia personagem (image_url, character_image_url, image) e vídeo/pose de referência
+      if (payload.modelTechnicalName.includes("motion-control")) {
+        const charImg = modelInputs.character_image_url || modelInputs.image_url || modelInputs.image;
+        const refVid = modelInputs.reference_video_url || modelInputs.video_url || modelInputs.video || modelInputs.pose_reference_url || modelInputs.pose_video_url;
+
+        if (charImg) {
+          modelInputs.character_image_url = charImg;
+          modelInputs.image_url = charImg;
+          modelInputs.image = charImg;
+        }
+        if (refVid) {
+          modelInputs.reference_video_url = refVid;
+          modelInputs.video_url = refVid;
+          modelInputs.video = refVid;
+        }
+      }
+
+      // Creative Upscaler: scale_factor e scale
+      if (payload.modelTechnicalName.includes("upscaler") || payload.modelTechnicalName.includes("upscale")) {
+        if (modelInputs.scale_factor) {
+          modelInputs.scale = Number(modelInputs.scale_factor) || 2;
+        } else if (!modelInputs.scale) {
+          modelInputs.scale = 2;
+        }
         if (modelInputs.video_url && !modelInputs.video) {
           modelInputs.video = modelInputs.video_url;
         }
         if (modelInputs.image_url && !modelInputs.image) {
           modelInputs.image = modelInputs.image_url;
-        }
-        if (modelInputs.audio_url && !modelInputs.audio) {
-          modelInputs.audio = modelInputs.audio_url;
-        }
-      }
-
-      // Kling Motion Control: mapeia personagem e vídeo de referência
-      if (payload.modelTechnicalName.includes("motion-control")) {
-        if (modelInputs.character_image_url && !modelInputs.image_url) {
-          modelInputs.image_url = modelInputs.character_image_url;
-        }
-        if (modelInputs.reference_video_url && !modelInputs.video_url) {
-          modelInputs.video_url = modelInputs.reference_video_url;
-        }
-      }
-
-      // Creative Upscaler
-      if (payload.modelTechnicalName.includes("upscaler")) {
-        if (modelInputs.scale_factor) {
-          modelInputs.scale = Number(modelInputs.scale_factor) || 2;
         }
       }
 

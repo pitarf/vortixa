@@ -20,6 +20,12 @@ services:
       - FAL_KEY=${FAL_KEY:-b853f917-5e92-4d12-bf3e-a09dba498291:a78de2b18ba9d65b4f8f881df4b5a6c3}
       - PAYMENT_PROVIDER=${PAYMENT_PROVIDER:-mock_gateway}
       - PAYMENT_PROVIDER_MODE=${PAYMENT_PROVIDER_MODE:-mock}
+      - SMTP_HOST=${SMTP_HOST:-smtp.hostinger.com}
+      - SMTP_PORT=${SMTP_PORT:-465}
+      - SMTP_USER=${SMTP_USER:-contato@vortixia.com.br}
+      - SMTP_PASS=${SMTP_PASS:-Admin@212121@}
+      - SMTP_FROM=${SMTP_FROM:-contato@vortixia.com.br}
+      - SMTP_SENDER_NAME=${SMTP_SENDER_NAME:-VORIXA AI}
       - NEXT_TELEMETRY_DISABLED=1
       - PORT=3000
       - HOSTNAME=0.0.0.0

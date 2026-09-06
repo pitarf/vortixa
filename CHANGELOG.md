@@ -5,6 +5,27 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.3.2] - 2026-09-05
+### Atualização para as Últimas Versões de Motores de IA
+- **Upgrade Geral dos Modelos Generativos**:
+  - **Kling 2.1 Pro** (`fal-ai/kling-video/v2.1/pro/image-to-video`): Nova geração de vídeo com consistência temporal profissional, física ótica e controle cinemático.
+  - **Luma Ray 2** (`fal-ai/luma-dream-machine/ray-2`): Arquitetura Ray 2 com dinâmica 3D e física de câmera avançada.
+  - **Wan 2.1 High-Motion** (`fal-ai/wan-i2v`): Modelo de última geração focado em fluidez extrema de movimento corporal e alta fidelidade em 720p.
+  - **Hailuo Minimax 01 Live** (`fal-ai/minimax/video-01-live`): Modelo de topo para expressões faciais humanas vivas e ausência de deformações.
+- **Sincronização em Produção na VPS**:
+  - Catálogo do PostgreSQL expandido para 17 modelos com integridade de banco de dados e testes automatizados 100% verdes (`__tests__/engines-13-audit.test.ts`).
+  - Studio CREATE (`/dashboard/create`) e Ferramenta Dedicada de Vídeo (`/dashboard/tools/video`) sincronizados com os novos modelos.
+
+## [1.3.1] - 2026-09-05
+### Interface & Experiência de Seleção Multi-Modelo
+- **Seletores Táteis de Modelos em Todas as Ferramentas**:
+  - Implementação de cards visuais interativos com seleção de modelo, indicação de custo em créditos, badges explicativas e tempo estimado em:
+    * `/dashboard/tools/video`: 4 motores (`Kling AI 1.5`, `Kling 1.5 Pro`, `Luma Dream`, `Hailuo Minimax`).
+    * `/dashboard/tools/lipsync`: 2 motores (`LivePortrait LipSync`, `Sync Audio v2 Pro`).
+    * `/dashboard/tools/motion`: motor dedicado com especificações de fidelidade óssea (`Kling Motion Control`).
+    * `/dashboard/tools/upscale`: motor dedicado de super-resolução e restauração facial 4K (`Creative Video Upscaler 4K`).
+  - Suporte total tanto no **Studio CREATE** (`/dashboard/create`) quanto nas páginas de ferramentas dedicadas.
+
 ## [1.3.0] - 2026-09-05
 ### Motores de IA & Sincronização Completa (All-in-One Engine Suite)
 - **Sincronização de 13 Motores Generativos**:

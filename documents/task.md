@@ -8,6 +8,11 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Upgrade Geral para as Últimas Versões de Motores de IA (2026)**:
+  - Integração dos modelos de ponta: **Kling 2.1 Pro** (`fal-ai/kling-video/v2.1/pro/image-to-video`), **Luma Ray 2** (`fal-ai/luma-dream-machine/ray-2`), **Wan 2.1 High-Motion** (`fal-ai/wan-i2v`) e **Hailuo Minimax 01 Live** (`fal-ai/minimax/video-01-live`).
+  - Sincronização executada com sucesso no PostgreSQL de produção na VPS (17 modelos ativos).
+  - Testes automatizados Vitest (`__tests__/engines-13-audit.test.ts`) 100% verdes.
+  - Atualização completa do Studio CREATE (`/dashboard/create`) e Ferramentas Dedicadas (`/dashboard/tools/*`).
 - [x] **Sincronização e Homologação de Todos os 13 Motores de IA (Produção na VPS)**:
   - 100% dos 13 motores cadastrados e ativos no banco de dados (`AIModel` e `AITool`).
   - Mapeamento e sanitização automática de parâmetros para todas as famílias de IA (FLUX, Kling, Luma, Hailuo, LivePortrait Sync e Upscale 4K).

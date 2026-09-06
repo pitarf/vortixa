@@ -8,18 +8,19 @@ Este guia detalha o funcionamento das principais telas e fluxos para os usuário
 2. Preencha seus dados de cadastro (Nome, E-mail e Senha) na tela de registro ou entre diretamente usando seu login.
 3. Ao logar pela primeira vez, sua conta receberá um bônus padrão de créditos de boas-vindas (conforme configurado pela administração) para que você possa testar as ferramentas.
 
+
 ---
 
 ## 2. O Dashboard Principal
 
 O painel principal está organizado em abas acessíveis:
 * **Início (Home)**: Onde você visualiza seu saldo de créditos atual, atalhos rápidos para as ferramentas e suas gerações mais recentes.
-* **Ferramentas de IA**: Lista os modelos de geração disponíveis:
-  * **Gerador de Imagens**: Permite escrever descrições em texto (prompts) para obter imagens fotorrealistas ou ilustrativas.
-  * **Imagem para Vídeo**: Transforma uma imagem de sua autoria em um vídeo curto em movimento.
-  * **Motion Control**: Permite carregar a imagem de um personagem e um vídeo de referência. A IA fará o seu personagem realizar exatamente o mesmo movimento contido no vídeo.
-  * **Sincronização Labial (Lip Sync)**: Faz um personagem sincronizar os movimentos da boca com um arquivo de áudio carregado.
-  * **Creative Upscaler**: Otimiza a resolução e qualidade de vídeos.
+* **Ferramentas de IA (Última Geração de Motores)**:
+  * **Gerador de Imagens**: FLUX.1 Turbo (1 cr), FLUX.1 Dev (2 cr), Recraft V3 Design (2 cr), FLUX.1 Pro Ultra (4 cr) e Google Imagen 3 (3 cr).
+  * **Imagem para Vídeo**: Kling 2.1 Pro (15 cr), Luma Ray 2 (12 cr), Wan 2.1 High-Motion (10 cr) e Hailuo Minimax 01 Live (12 cr).
+  * **Motion Control**: Kling Motion Control (15 cr) para transferência fidedigna de movimentos corporais.
+  * **Sincronização Labial (Lip Sync)**: LivePortrait LipSync (8 cr) e Sync Audio v2 Pro (8 cr).
+  * **Creative Video Upscaler 4K**: Super-resolução e restauração facial 2x/4K (5 cr).
 * **Galeria & Histórico**: Local para visualizar todos os vídeos e imagens que você já gerou, verificar o status de processamento de novos arquivos e efetuar downloads.
 
 ---
