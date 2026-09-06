@@ -12,13 +12,14 @@ export class StorageService {
       return url;
     }
 
-    // Em modo live, retornamos a URL de alta disponibilidade da fal.ai diretamente para visualização instantânea no navegador
-    // e salvamos cópia em disco em background para persistência
-    this.uploadToLocalDisk(url, fileName).catch((err) => {
-      console.warn("Aviso ao salvar cópia em disco:", err.message);
-    });
+    // Validação preventiva de SSRF antes de processar qualquer URL externa
+    const parsedUrl = new URL(url);
+    if (!this.isTrustedHost(parsedUrl.hostname)) {
+      throw new Error("URL de origem não confiável para download.");
+    }
 
-    return url;
+    const localUrl = await this.uploadToLocalDisk(url, fileName);
+    return localUrl;
   }
 
   private static isTrustedHost(hostname: string): boolean {
