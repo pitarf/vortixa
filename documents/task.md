@@ -8,6 +8,11 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Síntese de Voz com IA (TTS) & Correção do Motor LipSync (LatentSync Pro)**:
+  - Criação do serviço `TTSService` (`services/tts.service.ts`) e endpoint `POST /api/tools/tts` com débito de 1 crédito via `CreditService` e estorno automático em falhas.
+  - Criação do componente `AudioSourceSelector` permitindo ao usuário digitar qualquer texto em português e gerar fala instantânea para alimentar o LipSync.
+  - Resolução da falha 404 da fal.ai no LipSync: migração de `fal-ai/sync-v2` e `fal-ai/sync` para o motor oficial ativo **`fal-ai/latentsync`** (LatentSync Pro) e **`fal-ai/sync-lipsync`**.
+  - Atualização do PostgreSQL de produção na VPS via script e suíte de testes Vitest (`__tests__/tts-api.test.ts` e `__tests__/engines-13-audit.test.ts`) 100% verde.
 - [x] **Upgrade Geral para as Últimas Versões de Motores de IA (2026)**:
   - Integração dos modelos de ponta: **Kling 2.1 Pro** (`fal-ai/kling-video/v2.1/pro/image-to-video`), **Luma Ray 2** (`fal-ai/luma-dream-machine/ray-2`), **Wan 2.1 High-Motion** (`fal-ai/wan-i2v`) e **Hailuo Minimax 01 Live** (`fal-ai/minimax/video-01-live`).
   - Sincronização executada com sucesso no PostgreSQL de produção na VPS (17 modelos ativos).

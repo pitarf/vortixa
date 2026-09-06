@@ -21,7 +21,7 @@ describe('Audit & Readiness Test: All 17 Generative AI Engines (Latest Versions)
     { name: 'Wan 2.1 Video', slug: 'wan-video', technicalName: 'fal-ai/wan-i2v' },
     { name: 'Hailuo Minimax 01 Live', slug: 'minimax-live', technicalName: 'fal-ai/minimax/video-01-live' },
     { name: 'Kling Motion Control', slug: 'motion-control', technicalName: 'fal-ai/kling/motion-control' },
-    { name: 'Sync Lip Sync', slug: 'lip-sync', technicalName: 'fal-ai/sync' },
+    { name: 'LatentSync Pro LipSync', slug: 'lip-sync', technicalName: 'fal-ai/latentsync' },
     { name: 'Creative Video Upscaler', slug: 'upscale', technicalName: 'fal-ai/creative-upscaler' },
     { name: 'FLUX Dev', slug: 'gerador-imagem-dev', technicalName: 'fal-ai/flux/dev' },
     { name: 'Recraft V3', slug: 'gerador-imagem-recraft', technicalName: 'fal-ai/recraft-v3' },
@@ -165,12 +165,12 @@ describe('Audit & Readiness Test: All 17 Generative AI Engines (Latest Versions)
     // Test LipSync
     await provider.submitJob({
       jobId: 'fake-job-lipsync',
-      modelTechnicalName: 'fal-ai/sync',
+      modelTechnicalName: 'fal-ai/latentsync',
       inputs: { video_url: 'https://test.com/v.mp4', driving_audio_url: 'https://test.com/a.mp3' },
       webhookUrl: 'https://vorixa.com/webhook',
     });
     expect(queueSpy).toHaveBeenLastCalledWith(
-      'fal-ai/sync',
+      'fal-ai/latentsync',
       expect.objectContaining({
         input: expect.objectContaining({
           video: 'https://test.com/v.mp4',

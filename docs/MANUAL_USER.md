@@ -19,7 +19,8 @@ O painel principal está organizado em abas acessíveis:
   * **Gerador de Imagens**: FLUX.1 Turbo (1 cr), FLUX.1 Dev (2 cr), Recraft V3 Design (2 cr), FLUX.1 Pro Ultra (4 cr) e Google Imagen 3 (3 cr).
   * **Imagem para Vídeo**: Kling 2.1 Pro (15 cr), Luma Ray 2 (12 cr), Wan 2.1 High-Motion (10 cr) e Hailuo Minimax 01 Live (12 cr).
   * **Motion Control**: Kling Motion Control (15 cr) para transferência fidedigna de movimentos corporais.
-  * **Sincronização Labial (Lip Sync)**: LivePortrait LipSync (8 cr) e Sync Audio v2 Pro (8 cr).
+  * **Sincronização Labial (Lip Sync)**: LatentSync Pro LipSync (8 cr) e Sync Audio LipSync (8 cr), com opção de sintetizar fala em português com inteligência artificial diretamente no painel (1 cr).
+  * **Síntese de Voz (TTS)**: Geração instantânea de narrações em português neural (1 cr) com opções de vozes femininas e masculinas.
   * **Creative Video Upscaler 4K**: Super-resolução e restauração facial 2x/4K (5 cr).
 * **Galeria & Histórico**: Local para visualizar todos os vídeos e imagens que você já gerou, verificar o status de processamento de novos arquivos e efetuar downloads.
 

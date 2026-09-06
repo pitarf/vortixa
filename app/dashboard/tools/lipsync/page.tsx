@@ -3,10 +3,11 @@
 import React from "react";
 import { GenerationLayout } from "@/components/ai/generation-layout";
 import { FileUploader } from "@/components/ai/file-uploader";
+import { AudioSourceSelector } from "@/components/ai/audio-source-selector";
 
 const LIPSYNC_MODELS = [
-  { id: "fal-ai/sync", name: "LivePortrait LipSync", badge: "Fisiológico", cost: 8, description: "Movimento ocular, piscar de olhos e lábios realistas", speed: "~ 30s" },
-  { id: "fal-ai/sync-v2", name: "Sync Audio v2 Pro", badge: "Multi-Idioma", cost: 8, description: "Sincronização fonética precisa para falas em Português e Inglês", speed: "~ 25s" },
+  { id: "fal-ai/latentsync", name: "LatentSync Pro", badge: "Alta Fidelidade", cost: 8, description: "Sincronia labial e fonética ultra-realista em Português e Inglês", speed: "~ 30s" },
+  { id: "fal-ai/sync-lipsync", name: "Sync Audio LipSync", badge: "Expressivo", cost: 8, description: "Movimento labial natural com preservação de expressões faciais", speed: "~ 25s" },
 ];
 
 export default function LipSyncToolPage() {
@@ -75,11 +76,10 @@ export default function LipSyncToolPage() {
               onClear={() => setInputVal("video_url", "")}
             />
 
-            <FileUploader
-              accept="audio/*"
+            <AudioSourceSelector
               label="2. Áudio de Fala"
-              onUploadSuccess={(url) => setInputVal("audio_url", url)}
-              onClear={() => setInputVal("audio_url", "")}
+              audioUrl={inputs.audio_url || ""}
+              onAudioChange={(url) => setInputVal("audio_url", url)}
             />
           </div>
         </div>

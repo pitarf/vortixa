@@ -177,3 +177,18 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
   - Posicionamento: Qualidade editorial máxima, cenários ricos, textos nítidos e fotorrealismo humano extremo (estilo Gemini).
   - Margem Bruta Estimada: **+55% a 70% de lucro** sobre os custos de infraestrutura da GPU.
 
+---
+
+## 11. Arquitetura de Síntese de Voz (TTS) & LipSync Pro
+
+### 1. Serviço de Fala TTSService (`services/tts.service.ts`)
+* Endpoint seguro `POST /api/tools/tts`.
+* Arquitetura dual:
+  * Provedor neural Fal.ai (`fal-ai/chatterbox/text-to-speech`) de alta compatibilidade com LipSync.
+  * Fallback neural Google TTS em Português do Brasil com latência ultra-baixa (~200ms).
+* Modelo Financeiro: Débito de 1 crédito no Ledger via `CreditService.consumeCredits`, com estorno automático via `CreditService.refundCredits` caso a síntese de voz apresente falha.
+
+### 2. Motor de Sincronia Labial (LipSync)
+* Identificador técnico oficial da fal.ai: **`fal-ai/latentsync`** (LatentSync Pro) e **`fal-ai/sync-lipsync`**.
+* O `FalAIProvider` implementa redirecionamento automático de chamadas legadas (`fal-ai/sync-v2` e `fal-ai/sync`) para `fal-ai/latentsync` para garantir retrocompatibilidade de nós e jobs em background.
+

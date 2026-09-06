@@ -85,13 +85,13 @@ async function main() {
       toolDesc: 'Controle de movimento de personagem via vídeo de referência.',
     },
     {
-      name: 'Sync Lip Sync',
-      technicalName: 'fal-ai/sync',
+      name: 'LatentSync Pro LipSync',
+      technicalName: 'fal-ai/latentsync',
       creditCost: 8,
       apiUnitCost: 0.08,
       toolSlug: 'lip-sync',
       toolName: 'Sincronização Labial',
-      toolDesc: 'Sincronização de fala e lábios perfeita a partir de áudio.',
+      toolDesc: 'Sincronização de fala e lábios ultra-realista a partir de áudio.',
     },
     {
       name: 'Creative Video Upscaler',

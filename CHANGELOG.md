@@ -5,6 +5,20 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.3.8] - 2026-09-06
+### Síntese de Voz com IA (TTS) & Correção do Motor LipSync (LatentSync Pro)
+- **Nova Ferramenta de Síntese de Voz (TTS) em Português com Débito de Créditos**:
+  - Implementado o serviço `TTSService` (`services/tts.service.ts`) com síntese neural de alta fidelidade e opções de vozes em Português do Brasil (`pt-BR-FranciscaNeural`, `pt-BR-AntonioNeural` e `pt-BR-ThalitaMultilingualNeural`).
+  - Criado o endpoint seguro `POST /api/tools/tts` integrado ao `CreditService`, consumindo atomicamente 1 crédito por geração de áudio com bloqueio contra concorrência e estorno automático em caso de falha.
+  - Criado o componente reativo `AudioSourceSelector` (`components/ai/audio-source-selector.tsx`) com alternância entre upload tradicional de arquivo e geração instantânea de fala por IA, com pré-escuta integrada (play/pause).
+- **Correção e Atualização dos Motores de LipSync**:
+  - Identificada e corrigida a causa raiz da falha na geração de sincronia labial: os endpoints legados `fal-ai/sync` e `fal-ai/sync-v2` retornavam `404 Not Found` na fal.ai por terem sido descontinuados pelo provedor.
+  - Atualizados os motores oficiais para **LatentSync Pro LipSync** (`fal-ai/latentsync`) e **Sync Audio LipSync** (`fal-ai/sync-lipsync`) no frontend (`/dashboard/tools/lipsync`, `/dashboard/create`), no `FalAIProvider` e no PostgreSQL de produção na VPS.
+  - Adicionado redirecionamento preventivo e resiliente no `FalAIProvider` para qualquer chamada legada remanescente.
+- **Suíte de Testes Automatizados**:
+  - Criado teste de integração `__tests__/tts-api.test.ts` cobrindo autenticação, validação de payload, bloqueio por saldo insuficiente (402) e débito transacional no Ledger.
+  - Atualizado `__tests__/engines-13-audit.test.ts` para homologar o novo motor `fal-ai/latentsync`.
+
 ## [1.3.7] - 2026-09-06
 ### Aprimoramento da IA de Otimização de Prompts (Any-LLM) & Enquadramento de Corpo Inteiro
 - **Diretiva Anti-Corte Óptico para Corpo Todo**:

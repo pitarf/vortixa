@@ -100,8 +100,18 @@ export class FalAIProvider implements IAIProvider {
         }
       }
 
-      // Sync / LivePortrait LipSync (Sync v1, Sync v2, LivePortrait): mapeia vídeo/imagem e áudio com todos os aliases
-      if (payload.modelTechnicalName.includes("sync") || payload.modelTechnicalName.includes("liveportrait")) {
+      // Sync / LatentSync LipSync: mapeia vídeo/imagem e áudio com todos os aliases
+      if (
+        payload.modelTechnicalName.includes("sync") ||
+        payload.modelTechnicalName.includes("liveportrait") ||
+        payload.modelTechnicalName.includes("latentsync")
+      ) {
+        // Redirecionamento preventivo de endpoints descontinuados da fal.ai
+        if (payload.modelTechnicalName === "fal-ai/sync-v2" || payload.modelTechnicalName === "fal-ai/sync") {
+          console.warn(`[FalAIProvider] Redirecionando modelo descontinuado ${payload.modelTechnicalName} para fal-ai/latentsync`);
+          payload.modelTechnicalName = "fal-ai/latentsync";
+        }
+
         // Vídeo ou Imagem de entrada
         const videoInput = modelInputs.video_url || modelInputs.video || modelInputs.face_video_url;
         const imageInput = modelInputs.image_url || modelInputs.image || modelInputs.face_image_url;

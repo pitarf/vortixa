@@ -38,7 +38,10 @@ import {
   RotateCcw,
   Sliders,
   ExternalLink,
+  Music,
 } from "lucide-react";
+import { AudioSourceSelector } from "@/components/ai/audio-source-selector";
+import { FileUploader } from "@/components/ai/file-uploader";
 import { toast } from "sonner";
 
 // =========================================================================
@@ -111,8 +114,8 @@ const TOOLS: Record<StudioTool, ToolDefinition> = {
     description: "Sincronize perfeitamente lábios e expressões faciais com faixas de áudio.",
     color: "from-pink-500 to-rose-600",
     models: [
-      { id: "fal-ai/sync", name: "LivePortrait", badge: "Fisiológico", cost: 8, description: "Expressões oculares e lábios realistas", speed: "~ 30s" },
-      { id: "fal-ai/sync-v2", name: "Sync Audio v2", badge: "Multi-idioma", cost: 8, description: "Sincronia precisa fonética de fala", speed: "~ 25s" },
+      { id: "fal-ai/latentsync", name: "LatentSync Pro", badge: "Alta Fidelidade", cost: 8, description: "Sincronia labial e fonética ultra-realista em Português e Inglês", speed: "~ 30s" },
+      { id: "fal-ai/sync-lipsync", name: "Sync Audio LipSync", badge: "Expressivo", cost: 8, description: "Movimento labial natural com preservação de expressões faciais", speed: "~ 25s" },
     ],
   },
   motion: {
@@ -1385,6 +1388,23 @@ export default function StudioCreatePage() {
                   <option value="orbital">Giro Orbital 360</option>
                 </select>
               </div>
+            </div>
+          )}
+
+          {/* Seção de Controles Específicos para LipSync / Avatar */}
+          {activeTool === "lipsync" && (
+            <div className="space-y-4">
+              <FileUploader
+                accept="video/*"
+                label="1. Vídeo do Personagem"
+                onUploadSuccess={(url) => setSourceVideoUrl(url)}
+                onClear={() => setSourceVideoUrl("")}
+              />
+              <AudioSourceSelector
+                label="2. Áudio de Fala do Personagem"
+                audioUrl={sourceAudioUrl}
+                onAudioChange={(url) => setSourceAudioUrl(url)}
+              />
             </div>
           )}
 

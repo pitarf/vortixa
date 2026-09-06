@@ -84,14 +84,23 @@ export class CreditService {
         data: { balance: newBalance },
       });
 
+      // Verificar se jobId fornecido realmente existe na tabela AIJob antes de associar a FK
+      let validJobId: string | null = null;
+      if (jobId) {
+        const jobExists = await tx.aIJob.findUnique({ where: { id: jobId } });
+        if (jobExists) {
+          validJobId = jobId;
+        }
+      }
+
       // 4. Gravar transação de histórico
       await tx.creditTransaction.create({
         data: {
           userId,
           amount: -cost,
           type: "GENERATION_DEBIT",
-          description: `Consumo - ferramenta: ${toolSlug}`,
-          jobId,
+          description: `Consumo - ferramenta: ${toolSlug}${jobId ? ` (Ref: ${jobId})` : ""}`,
+          jobId: validJobId,
         },
       });
 
