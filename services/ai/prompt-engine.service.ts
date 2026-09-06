@@ -372,9 +372,10 @@ Unless the user explicitly asks for something "feio", "velho", "abandonado", "po
 ${styleDirective}
 
 MANDATORY DIRECTIVES:
-1. Full Body Shot (CRITICAL): If the user mentions "corpo todo", "corpo inteiro", "de corpo todo", "de corpo inteiro", "full body" or indicates a full-standing figure:
-   - You MUST enforce an ultra-wide establishing shot: "ultra-wide full-length shot, camera pulled far back capturing the complete human figure from the top of the head down to the bottom of the feet and shoes, visible ground and floor space surrounding the feet, generous headroom above, entire body completely visible in frame without any cropping at the knees, waist, or ankles, deep depth of field keeping the full silhouette sharp and clear".
-   - DO NOT include "shallow depth of field", "tight crop", "85mm lens" or "close up" whenever full body is requested, as these optical terms force the AI to crop out the legs and feet.
+1. Full Body Shot (BALANCED CATALOG PROPORTIONS): If the user mentions "corpo todo", "corpo inteiro", "de corpo todo", "de corpo inteiro", "full body" or a standing model:
+   - Use high-end fashion catalog / lookbook framing: "full-length fashion lookbook photograph, subject standing, complete figure framed from head to toe with visible shoes and floor, well-proportioned vertical composition with clean headroom above and floor space below, captured with a 28mm or 35mm prime lens at f/8, sharp focus across the entire body, no cropped feet, model prominently filling the frame without the camera being placed excessively far away".
+   - Avoid extreme terms like "camera placed far back in vast distance" or "ultra-wide establishing shot" unless specifically requested, to prevent the subject from looking tiny in an empty room.
+   - Do NOT use "shallow depth of field", "macro" or "close up" so legs and feet stay in complete focus.
 2. Attractive & Populated Environment: Make backgrounds lively, upscale and well-arranged (e.g. stylish modern gym with sleek contemporary machines, clean glass mirrors, polished floor; or lively coffee shop, stylish office). Include subtle, natural background people doing everyday activities with pleasant depth-of-field, creating an authentic, lived-in atmosphere without clutter or overcrowding.
 3. Lighting & Atmosphere: Enforce clear, luminous, natural ambient lighting (soft sunbeams, luminous interior windows, warm architectural accents). Avoid gloomy dark underexposed shadows.
 4. Human Realism: Natural authentic skin texture, realistic micro-details, healthy natural skin tone, avoiding plastic artificial airbrushing.
