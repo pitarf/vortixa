@@ -8,6 +8,11 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Componentização Modular em Larga Escala (Studio CREATE & Ferramenta de Imagem)**:
+  - Eliminação de páginas monolíticas (>1.500 e >2.000 linhas) através de equipe de subagentes especializados sob supervisão contínua de integridade.
+  - Extraídos 9 componentes modulares em `components/studio/` (`StudioHeader`, `StudioToolSelector`, `StudioModelSelector`, `StudioStyleSelector`, `StudioAspectRatioSelector`, `StudioVideoControls`, `StudioAdvancedSettings`, `StudioPreviewPlayer`, `StudioHistorySidebar`).
+  - Extraídos 11 componentes modulares em `components/tools/image/` (`ImageWorkflowTabs`, `ImageReferenceUploader`, `ImagePromptSection`, `ImageStyleGrid`, `ImageRatioSelector`, `ImageModelPicker`, `ImagePreviewArea`, `ImageHistorySidebar`, `ImageInspirationGallery`, `ImageHeader`).
+  - Verificação rigorosa de TypeScript e compilação de produção com Turbopack 100% aprovada.
 - [x] **Integração Oficial do ByteDance Seedance 2.0 (Vídeo com Áudio & Física)**:
   - Implementado suporte ao motor `fal-ai/bytedance/seedance-2.0` com roteamento automático:
     - Text-to-Video: `fal-ai/bytedance/seedance-2.0/text-to-video`

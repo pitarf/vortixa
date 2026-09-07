@@ -5,6 +5,25 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.6.0] - 2026-09-07
+### Componentização Modular e Arquitetura Limpa em Larga Escala (Studio CREATE & Ferramenta de Imagem)
+- **Refatoração e Eliminação de Páginas Monolíticas**:
+  - **Studio CREATE (`/dashboard/create`)**: Reduzido de 2.059 linhas monolíticas para uma arquitetura modular desacoplada com extração de 9 componentes em `components/studio/`:
+    - `StudioHeader`: Projeto editável, stepper de criação, saldo de créditos e menu de opções.
+    - `StudioToolSelector`: Barra de seleção das 5 ferramentas com badges táteis.
+    - `StudioModelSelector`: Cards de seleção do motor de IA para cada ferramenta.
+    - `StudioStyleSelector`: Grid de presets visuais e diretivas estilísticas.
+    - `StudioAspectRatioSelector`: Proporções com suporte ao botão "Original 📷".
+    - `StudioVideoControls`: Controles de duração, movimento e vozes neurais.
+    - `StudioAdvancedSettings`: Acordeão com parâmetros técnicos de inferência.
+    - `StudioPreviewPlayer`: Player de vídeo customizado e visualizador fullscreen.
+    - `StudioHistorySidebar`: Painel lateral de criações recentes.
+  - **Ferramenta de Imagem (`/dashboard/tools/image`)**: Reduzida de 1.525 linhas para módulos limpos em `components/tools/image/`:
+    - `ImageWorkflowTabs`, `ImageReferenceUploader`, `ImagePromptSection`, `ImageStyleGrid`, `ImageRatioSelector`, `ImageModelPicker`, `ImagePreviewArea`, `ImageHistorySidebar`, `ImageInspirationGallery` e `ImageHeader`.
+- **Qualidade de Código & Robustez**:
+  - 100% dos tipos TypeScript verificados sem erros (`tsc --noEmit`).
+  - Build Next.js 16 (Turbopack) compilado com zero avisos ou quebras de interface.
+
 ## [1.5.4] - 2026-09-07
 ### Integração Oficial do ByteDance Seedance 2.0 (Vídeo com Áudio & Física)
 - **Conformidade Estrita com a Documentação da Fal.ai**:
