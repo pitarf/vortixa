@@ -86,6 +86,41 @@ export class FalAIProvider implements IAIProvider {
         }
       }
 
+      // Google Veo 3.1 (Áudio e Fala Nativa em 1 clique)
+      if (payload.modelTechnicalName.includes("veo")) {
+        // Se usuário solicitou fala ou é text-to-video com diálogo, ativa áudio nativo
+        if (modelInputs.speech_text || modelInputs.generate_audio !== false) {
+          modelInputs.generate_audio = true;
+          if (modelInputs.speech_text && !modelInputs.prompt?.includes(modelInputs.speech_text)) {
+            modelInputs.prompt = `${modelInputs.prompt || "A person looking at camera"}, speaking: "${modelInputs.speech_text}"`;
+          }
+        }
+        if (modelInputs.image_url && !modelInputs.image) {
+          modelInputs.image = modelInputs.image_url;
+        }
+      }
+
+      // ByteDance Seedance (2.5 / 2.0 / 1.5 Pro) & OmniHuman
+      if (payload.modelTechnicalName.includes("seedance") || payload.modelTechnicalName.includes("omnihuman")) {
+        if (modelInputs.prompt_image_url && !modelInputs.image_url) {
+          modelInputs.image_url = modelInputs.prompt_image_url;
+        }
+        if (modelInputs.image_url && !modelInputs.prompt_image_url) {
+          modelInputs.prompt_image_url = modelInputs.image_url;
+        }
+        if (modelInputs.image_url && !modelInputs.image) {
+          modelInputs.image = modelInputs.image_url;
+        }
+        // OmniHuman exige imagem e áudio
+        if (payload.modelTechnicalName.includes("omnihuman")) {
+          const audioInput = modelInputs.audio_url || modelInputs.audio || modelInputs.driving_audio_url;
+          if (audioInput) {
+            modelInputs.audio_url = audioInput;
+            modelInputs.audio = audioInput;
+          }
+        }
+      }
+
       // Luma Dream Machine (Ray 2 / Ray 2 Flash), Wan 2.1 & Minimax Video: suporte flexível a image_url / prompt_image_url
       if (
         payload.modelTechnicalName.includes("luma") ||

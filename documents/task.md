@@ -8,6 +8,16 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Motores de IA Topo de Linha Mundial (ByteDance Seedance 2.5, Google Veo 3.1 Som Nativo, Kling 3.0 Pro e ByteDance OmniHuman)**:
+  - Adicionados os modelos líderes mundiais em fidelidade física e audiovisual: `fal-ai/bytedance/seedance-2.5` (25 cr), `fal-ai/veo3.1` (30 cr), `fal-ai/kling-video/v3/pro/image-to-video` (20 cr) e `fal-ai/bytedance/omnihuman` (25 cr).
+  - Sanitização automática de parâmetros em `fal-ai.provider.ts` com ativação transparente de `generate_audio: true` no Veo 3.1 ao incluir diálogo.
+  - Atualização visual no Studio CREATE (`/dashboard/create`), ferramenta de Vídeo (`/dashboard/tools/video`) e `seed.ts`.
+  - Build Next.js 16 (Turbopack) e suíte Vitest 100% aprovados.
+- [x] **Catálogo Oficial de Vozes de Estúdio Humano (ElevenLabs Turbo Multilingual v2.5)**:
+  - Implementação do motor `fal-ai/elevenlabs/tts/turbo-v2.5` com suporte nativo a português brasileiro e estúdio humano real.
+  - Catálogo `lib/voice-catalog.ts` contendo dubladores humanos femininos e masculinos de alta fidelidade sem deformações de pitch ou velocidade artificial.
+  - Interface com filtros intuitivos por gênero e cards informativos no `AudioSourceSelector`, na ferramenta de Vídeo e no Studio CREATE.
+  - Testes unitários Vitest e build de produção Next.js 16 compilados com 100% de sucesso.
 - [x] **Geração de Vídeo com Fala Integrada One-Shot (Talking Video)**:
   - Criação do serviço `TalkingVideoService` (`services/talking-video.service.ts`) que orquestra em 1 clique: geração da fala neural PT-BR (`TTSService`) -> geração do vídeo do personagem (`Kling 2.1 Pro`, `Luma Ray 2`, `Wan 2.1`, etc.) -> sincronia labial automática com `LatentSync Pro` (`fal-ai/latentsync`).
   - Interface visual adicionada na página dedicada de Vídeo (`/dashboard/tools/video`) e no **Studio CREATE** (`/dashboard/create`), com seleção de vozes neurais e cálculo de créditos dinâmico.

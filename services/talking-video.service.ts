@@ -57,7 +57,7 @@ export class TalkingVideoService {
       imageUrl,
       speechText,
       audioUrl,
-      voice = "pt-BR-FranciscaNeural",
+      voice = "Rachel",
       duration = "5",
       idempotencyKey,
     } = request;
@@ -218,7 +218,7 @@ export class TalkingVideoService {
       console.log(`[Talking Video] Passo 1: Sintetizando áudio neural com texto: "${params.speechText.slice(0, 40)}..."`);
       const ttsResult = await TTSService.synthesizeSpeech({
         text: params.speechText.trim(),
-        voice: params.voice || "pt-BR-FranciscaNeural",
+        voice: params.voice || "Rachel",
       });
       finalAudioUrl = ttsResult.audioUrl;
     }

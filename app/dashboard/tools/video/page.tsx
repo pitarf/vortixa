@@ -6,9 +6,13 @@ import { PromptInput } from "@/components/ai/prompt-input";
 import { FileUploader } from "@/components/ai/file-uploader";
 
 import { MessageSquare, Sparkles, Volume2 } from "lucide-react";
+import { VORIXA_VOICES } from "@/lib/voice-catalog";
 
 const VIDEO_MODELS = [
-  { id: "fal-ai/kling-video/v2.1/pro/image-to-video", name: "Kling 2.1 Pro", badge: "Cinema Master", cost: 15, description: "Última geração Kling com máxima consistência temporal e física", speed: "~ 60s" },
+  { id: "fal-ai/bytedance/seedance-2.5", name: "ByteDance Seedance 2.5", badge: "Topo Global 👑", cost: 25, description: "O motor de vídeo mais avançado do mundo. Física e consistência absoluta", speed: "~ 50s" },
+  { id: "fal-ai/veo3.1", name: "Google Veo 3.1", badge: "Áudio/Fala Nativo 🎙️", cost: 30, description: "Vídeo cinematográfico com som ambiente e falas nativas em 1 clique", speed: "~ 60s" },
+  { id: "fal-ai/kling-video/v3/pro/image-to-video", name: "Kling 3.0 Pro", badge: "Cinema Ultra", cost: 20, description: "Renderização 4K cinematográfica com consistência temporal extrema", speed: "~ 60s" },
+  { id: "fal-ai/kling-video/v2.1/pro/image-to-video", name: "Kling 2.1 Pro", badge: "Cinema Master", cost: 15, description: "Última geração Kling com máxima consistência temporal e física", speed: "~ 50s" },
   { id: "fal-ai/luma-dream-machine/ray-2", name: "Luma Ray 2", badge: "Física Realista", cost: 12, description: "Arquitetura Ray 2 de alta coerência dinâmica e controle de câmera", speed: "~ 45s" },
   { id: "fal-ai/wan-i2v", name: "Wan 2.1 High-Motion", badge: "Fluidez Extrema", cost: 10, description: "Movimentos corporais fluidos e grande estabilidade em 720p", speed: "~ 35s" },
   { id: "fal-ai/minimax/video-01-live", name: "Hailuo Minimax 01 Live", badge: "Expressões Vivas", cost: 12, description: "Renderização humana hiper-expressiva e ação contínua", speed: "~ 40s" },
@@ -19,11 +23,17 @@ export default function VideoToolPage() {
   const [selectedModelId, setSelectedModelId] = useState<string>(VIDEO_MODELS[0].id);
   const [enableTalkingVideo, setEnableTalkingVideo] = useState<boolean>(false);
   const [speechText, setSpeechText] = useState<string>("");
-  const [selectedVoice, setSelectedVoice] = useState<string>("pt-BR-FranciscaNeural");
+  const [selectedVoice, setSelectedVoice] = useState<string>("Rachel");
+  const [selectedGender, setSelectedGender] = useState<"all" | "female" | "male">("all");
 
   const selectedModel = VIDEO_MODELS.find((m) => m.id === selectedModelId) || VIDEO_MODELS[0];
   // Custo total: se talking video estiver ativado com fala, soma 9 créditos (1 TTS + 8 LipSync)
   const totalCost = selectedModel.cost + (enableTalkingVideo && speechText.trim() ? 9 : 0);
+
+  const filteredVoices = VORIXA_VOICES.filter((v) => {
+    if (selectedGender !== "all" && v.gender !== selectedGender) return false;
+    return true;
+  });
 
   return (
     <GenerationLayout
@@ -37,7 +47,7 @@ export default function VideoToolPage() {
         image_url: "",
         duration: "5",
         speech_text: "",
-        voice: "pt-BR-FranciscaNeural",
+        voice: "Rachel",
         is_talking_video: false,
       }}
     >
@@ -173,24 +183,70 @@ export default function VideoToolPage() {
 
             {enableTalkingVideo && (
               <div className="space-y-3 pt-2 border-t border-[#1E202E]/80 animate-in fade-in-50 duration-200">
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[11px] font-bold text-slate-300">Voz do Personagem (PT-BR)</span>
-                    <span className="text-[10px] text-cyan-400 font-mono">Neural Studio</span>
+                {/* Filtros de Gênero e Idade */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-slate-300">Gênero & Faixa Etária</span>
+                    <span className="text-[10px] text-cyan-400 font-mono">Vozes Neurais</span>
                   </div>
-                  <select
-                    value={selectedVoice}
-                    onChange={(e) => {
-                      const v = e.target.value;
-                      setSelectedVoice(v);
-                      setInputVal("voice", v);
-                    }}
-                    className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-violet-500 cursor-pointer"
-                  >
-                    <option value="pt-BR-FranciscaNeural">Francisca (Feminina, Natural e Fluida)</option>
-                    <option value="pt-BR-AntonioNeural">Antônio (Masculino, Confiante e Comercial)</option>
-                    <option value="pt-BR-ThalitaMultilingualNeural">Thalita (Feminina, Jovem e Expressiva)</option>
-                  </select>
+
+                  {/* Filtro de Gênero */}
+                  <div className="grid grid-cols-3 gap-1.5 bg-[#13141B] p-1 rounded-xl border border-[#1E202E]">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedGender("all")}
+                      className={`py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                        selectedGender === "all" ? "bg-violet-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      Todas
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedGender("female");
+                        setSelectedVoice("Rachel");
+                        setInputVal("voice", "Rachel");
+                      }}
+                      className={`py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                        selectedGender === "female" ? "bg-fuchsia-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      Feminino 👩
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedGender("male");
+                        setSelectedVoice("Brian");
+                        setInputVal("voice", "Brian");
+                      }}
+                      className={`py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                        selectedGender === "male" ? "bg-blue-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      Masculino 👨
+                    </button>
+                  </div>
+
+                  {/* Seletor Dropdown */}
+                  <div>
+                    <select
+                      value={selectedVoice}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        setSelectedVoice(v);
+                        setInputVal("voice", v);
+                      }}
+                      className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-violet-500 cursor-pointer"
+                    >
+                      {filteredVoices.map((voice) => (
+                        <option key={voice.id} value={voice.id}>
+                          {voice.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 <div>

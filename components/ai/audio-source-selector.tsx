@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mic, Upload, Sparkles, Volume2, Play, Square, Loader2, CheckCircle2 } from "lucide-react";
+import { Mic, Upload, Sparkles, Volume2, Play, Square, Loader2, CheckCircle2, User, Users } from "lucide-react";
 import { toast } from "sonner";
 import { FileUploader } from "@/components/ai/file-uploader";
+import { VORIXA_VOICES, VoiceOption } from "@/lib/voice-catalog";
 
 interface AudioSourceSelectorProps {
   label?: string;
@@ -18,10 +19,19 @@ export function AudioSourceSelector({
 }: AudioSourceSelectorProps) {
   const [activeTab, setActiveTab] = useState<"upload" | "tts">("tts");
   const [ttsText, setTtsText] = useState("");
-  const [selectedVoice, setSelectedVoice] = useState("pt-BR-FranciscaNeural");
+  const [selectedGender, setSelectedGender] = useState<"all" | "female" | "male">("all");
+  const [selectedVoice, setSelectedVoice] = useState("Rachel");
   const [isGeneratingVoice, setIsGeneratingVoice] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioPlayer, setAudioPlayer] = useState<HTMLAudioElement | null>(null);
+
+  // Filtrar vozes por gênero
+  const filteredVoices = VORIXA_VOICES.filter((v) => {
+    if (selectedGender !== "all" && v.gender !== selectedGender) return false;
+    return true;
+  });
+
+  const activeVoiceObj = VORIXA_VOICES.find((v) => v.id === selectedVoice) || VORIXA_VOICES[3];
 
   const handleGenerateVoice = async () => {
     if (!ttsText.trim()) {
@@ -129,20 +139,71 @@ export function AudioSourceSelector({
       {activeTab === "tts" && (
         <div className="flex-1 flex flex-col justify-between border border-[#1E202E] rounded-2xl p-4 bg-[#070709] space-y-3">
           <div className="space-y-3">
+            {/* Filtros Rápidos: Gênero e Perfil */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-slate-300">Gênero da Voz</span>
+                <span className="text-[10px] text-violet-400 font-mono">Estúdio Humano</span>
+              </div>
+
+              {/* Botões de Gênero */}
+              <div className="grid grid-cols-3 gap-1.5 bg-[#13141B] p-1 rounded-xl border border-[#1E202E]">
+                <button
+                  type="button"
+                  onClick={() => setSelectedGender("all")}
+                  className={`py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                    selectedGender === "all" ? "bg-violet-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  Todas
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedGender("female");
+                    setSelectedVoice("Rachel");
+                  }}
+                  className={`py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                    selectedGender === "female" ? "bg-fuchsia-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  Feminino 👩
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedGender("male");
+                    setSelectedVoice("Brian");
+                  }}
+                  className={`py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                    selectedGender === "male" ? "bg-blue-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  Masculino 👨
+                </button>
+              </div>
+            </div>
+
+            {/* Seletor de Voz */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-bold text-slate-300">Voz em Português (Brasil)</span>
-                <span className="text-[10px] text-cyan-400 font-mono">Neural Studio</span>
+                <span className="text-[11px] font-bold text-slate-300">Voz do Dublador</span>
+                <span className="text-[10px] text-slate-400 font-mono">{activeVoiceObj.categoryLabel}</span>
               </div>
               <select
                 value={selectedVoice}
                 onChange={(e) => setSelectedVoice(e.target.value)}
                 className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-violet-500 cursor-pointer"
               >
-                <option value="pt-BR-FranciscaNeural">Francisca (Feminina, Natural e Clara)</option>
-                <option value="pt-BR-AntonioNeural">Antônio (Masculino, Confiante e Comercial)</option>
-                <option value="pt-BR-ThalitaMultilingualNeural">Thalita (Feminina, Expressiva e Jovem)</option>
+                {filteredVoices.map((voice) => (
+                  <option key={voice.id} value={voice.id}>
+                    {voice.name}
+                  </option>
+                ))}
               </select>
+              <p className="text-[10px] text-slate-400 mt-1.5 italic bg-[#13141B]/60 p-2 rounded-lg border border-[#1E202E]">
+                {activeVoiceObj.description}
+              </p>
             </div>
 
             <div>

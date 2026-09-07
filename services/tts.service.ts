@@ -6,7 +6,7 @@ import { fal } from "@fal-ai/client";
 export interface TTSRequest {
   text: string;
   voice?: string;
-  engine?: "fal-chatterbox" | "edge-tts" | "auto";
+  engine?: "fal-elevenlabs" | "fal-minimax" | "fal-chatterbox" | "google" | "auto";
 }
 
 export interface TTSResult {
@@ -17,11 +17,41 @@ export interface TTSResult {
 
 export class TTSService {
   /**
+   * Mapeamento de vozes legadas (ex: Francisca, Antonio, Calm_Woman) para os IDs oficiais da ElevenLabs.
+   */
+  private static normalizeVoiceId(voice?: string): string {
+    if (!voice) return "Rachel";
+
+    const legacyMap: Record<string, string> = {
+      // Legadas Microsoft
+      "pt-BR-FranciscaNeural": "Rachel",
+      "pt-BR-AntonioNeural": "Brian",
+      "pt-BR-ThalitaMultilingualNeural": "Sarah",
+      female: "Rachel",
+      male: "Brian",
+      // Legadas MiniMax
+      Calm_Woman: "Rachel",
+      Casual_Guy: "Brian",
+      Lovely_Girl: "Alice",
+      Decent_Boy: "Charlie",
+      Lively_Girl: "Sarah",
+      Inspirational_girl: "Sarah",
+      Young_Knight: "Callum",
+      Determined_Man: "Brian",
+      Deep_Voice_Man: "George",
+      Wise_Woman: "Lily",
+      Patient_Man: "Bill",
+    };
+
+    return legacyMap[voice] || voice;
+  }
+
+  /**
    * Gera arquivo de áudio falado a partir de texto com inteligência artificial.
-   * Suporta o motor neural Fal.ai (Chatterbox) e fallback para serviço de fala de alta fidelidade.
+   * Suporta ElevenLabs Turbo v2.5 / Multilingual via Fal.ai com vozes hiper-realistas por gênero e idade.
    */
   static async synthesizeSpeech(params: TTSRequest): Promise<TTSResult> {
-    const { text, voice = "pt-BR-FranciscaNeural", engine = "auto" } = params;
+    const { text, voice = "Rachel", engine = "auto" } = params;
 
     if (!text || !text.trim()) {
       throw new Error("O texto para síntese de voz não pode estar vazio.");
@@ -31,7 +61,7 @@ export class TTSService {
       throw new Error("O texto excede o limite máximo permitido de 3.000 caracteres por geração.");
     }
 
-    // Modo de Testes Automatizados (Vitest)
+    // Modo de Testes Automatizados (Vitest ou Mock)
     if (process.env.VITEST === "true" || process.env.AI_PROVIDER_MODE === "mock") {
       return {
         audioUrl: "/media/landing/hero/sample_voice.mp3",
@@ -39,7 +69,72 @@ export class TTSService {
       };
     }
 
-    // 1. Tentar via Fal.ai Chatterbox (Alta compatibilidade com LipSync da Fal.ai)
+    const resolvedVoiceId = this.normalizeVoiceId(voice);
+
+    // 1. Tentar ElevenLabs Turbo v2.5 via Fal.ai (Máxima fidelidade, suporte a português nativo e distinção clara de gênero/idade)
+    if (process.env.FAL_KEY && (engine === "fal-elevenlabs" || engine === "auto")) {
+      try {
+        console.log(`[TTS Service] Solicitando síntese via fal-ai/elevenlabs/tts/turbo-v2.5 (Voz: ${resolvedVoiceId})...`);
+        fal.config({ credentials: process.env.FAL_KEY });
+
+        const result = await fal.subscribe("fal-ai/elevenlabs/tts/turbo-v2.5", {
+          input: {
+            text: text.trim(),
+            voice: resolvedVoiceId,
+            language_code: "pt",
+            stability: 0.5,
+          } as any,
+          pollInterval: 1500,
+          timeout: 45000,
+        });
+
+        const falAudioUrl = (result.data as any)?.audio?.url;
+        if (falAudioUrl) {
+          console.log(`[TTS Service] Sucesso via ElevenLabs Turbo (${resolvedVoiceId}): ${falAudioUrl}`);
+          return {
+            audioUrl: falAudioUrl,
+            format: "mp3",
+          };
+        }
+      } catch (err: any) {
+        console.warn(`[TTS Service] Falha na síntese via ElevenLabs: ${err.message}. Tentando fallback...`);
+      }
+    }
+
+    // 2. Fallback Fal.ai MiniMax Speech-02 HD
+    if (process.env.FAL_KEY && (engine === "fal-minimax" || engine === "auto")) {
+      try {
+        console.log(`[TTS Service] Tentando síntese via MiniMax Speech-02 HD...`);
+        fal.config({ credentials: process.env.FAL_KEY });
+
+        const result = await fal.subscribe("fal-ai/minimax/speech-02-hd", {
+          input: {
+            text: text.trim(),
+            voice_setting: {
+              voice_id: resolvedVoiceId,
+              speed: 1.0,
+              vol: 1.0,
+              pitch: 0,
+            },
+          } as any,
+          pollInterval: 1500,
+          timeout: 45000,
+        });
+
+        const falAudioUrl = (result.data as any)?.audio?.url;
+        if (falAudioUrl) {
+          console.log(`[TTS Service] Sucesso via MiniMax Speech: ${falAudioUrl}`);
+          return {
+            audioUrl: falAudioUrl,
+            format: "mp3",
+          };
+        }
+      } catch (err: any) {
+        console.warn(`[TTS Service] Falha na síntese via MiniMax: ${err.message}. Tentando fallback...`);
+      }
+    }
+
+    // 3. Fallback Fal.ai Chatterbox
     if (process.env.FAL_KEY && (engine === "fal-chatterbox" || engine === "auto")) {
       try {
         console.log(`[TTS Service] Solicitando síntese de voz via fal-ai/chatterbox/text-to-speech...`);
@@ -62,11 +157,11 @@ export class TTSService {
           };
         }
       } catch (err: any) {
-        console.warn(`[TTS Service] Falha na síntese via Fal.ai Chatterbox: ${err.message}. Acionando fallback...`);
+        console.warn(`[TTS Service] Falha na síntese via Fal.ai Chatterbox: ${err.message}. Acionando fallback local...`);
       }
     }
 
-    // 2. Fallback de alta fidelidade (Google TTS neural otimizado para áudio rápido em PT-BR)
+    // 4. Fallback de contingência local
     return await this.generateGoogleTTS(text.trim());
   }
 

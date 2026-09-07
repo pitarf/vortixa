@@ -5,6 +5,35 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.5.0] - 2026-09-06
+### Motores de IA Topo de Linha Mundial (ByteDance Seedance 2.5, Google Veo 3.1 com Áudio Direto, Kling 3.0 Pro e ByteDance OmniHuman)
+- **Integração dos Melhores Modelos de IA Generativa do Mercado Global (2026)**:
+  - **ByteDance Seedance 2.5** (`fal-ai/bytedance/seedance-2.5`): O modelo de vídeo cinematográfico mais avançado do mundo, com consistência visual e física dinâmica sem distorções.
+  - **Google Veo 3.1 com Áudio e Fala Nativa** (`fal-ai/veo3.1`): Geração de vídeo cinematográfico com áudio, ambientação sonora e diálogos falados gerados diretamente em 1 único clique (`generate_audio: true`), dispensando a necessidade de múltiplos passos.
+  - **Kling 3.0 Pro Ultra** (`fal-ai/kling-video/v3/pro/image-to-video`): Geração de vídeo em altíssima resolução com coerência temporal e física ultra-realista.
+  - **ByteDance OmniHuman Avatar** (`fal-ai/bytedance/omnihuman`): Motor de avatar humano com preservação de respiração, movimentos corporais e sincronia labial hiper-realista a partir de uma foto + áudio.
+- **Frontend & Catálogo de Modelos Premium**:
+  - Atualização do Studio CREATE (`/dashboard/create`) e da ferramenta de Vídeo (`/dashboard/tools/video`) com os novos modelos, badges táteis (`Topo Global 👑`, `Áudio Nativo 🎙️`, `Cinema Ultra`) e precificação justa e transparente em créditos.
+- **Sanitização Resiliente no FalAIProvider**:
+  - Mapeamento automático de inputs e aliases de imagem, vídeo e áudio para `Seedance`, `Veo 3.1`, `OmniHuman` e `Kling 3.0 Pro`.
+
+## [1.4.0] - 2026-09-06
+### Catálogo Oficial de Vozes de Estúdio Humano de Alta Fidelidade (ElevenLabs Turbo v2.5)
+- **Motor ElevenLabs Turbo Multilingual v2.5 via Fal.ai**:
+  - Implementado o serviço `TTSService` (`services/tts.service.ts`) operando diretamente com o motor de ponta `fal-ai/elevenlabs/tts/turbo-v2.5` com `language_code: 'pt'` nativo em português.
+  - Substituição total de efeitos artificiais de afinação por dubladores humanos reais cadastrados no catálogo oficial `lib/voice-catalog.ts`:
+    - **Feminina Suave**: Helena (`Rachel`) - dicção limpa, feminina, clara e acolhedora.
+    - **Feminina Jovem**: Camila (`Sarah`) - dinâmica, moderna e expressiva.
+    - **Feminina Espontânea**: Sofia (`Jessica`) - calorosa e amigável.
+    - **Feminina Madura**: Clara (`Lily`) - aveludada, confiante e executiva.
+    - **Masculino Comercial**: Lucas (`Brian`) - conversacional, equilibrado e agradável.
+    - **Masculino Grave**: Marcelo (`George`) - encorpado, autoridade cinematográfica e locução.
+    - **Masculino Jovem**: Gabriel (`Charlie`) - comunicativo, vibrante e comercial.
+    - **Masculino Maduro**: Arthur (`Bill`) - sóbrio, maduro e respeitoso.
+- **Interface e Experiência do Usuário (UI/UX)**:
+  - Filtro limpo e intuitivo por Gênero (*Todas*, *Feminino 👩*, *Masculino 👨*) em todas as telas (`AudioSourceSelector`, ferramenta de Vídeo e Studio CREATE), exibindo descritivo detalhado de cada dublador.
+  - Eliminação de qualquer anomalia de timbre ou voz robotizada.
+
 ## [1.3.9] - 2026-09-06
 ### Geração de Vídeo com Fala Integrada One-Shot (Talking Video) & Sincronia Labial Automática
 - **Pipeline de Vídeo Falante em 1 Clique (Studio CREATE & Ferramenta de Vídeo)**:
