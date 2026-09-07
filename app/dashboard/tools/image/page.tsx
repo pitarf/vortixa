@@ -295,7 +295,7 @@ export default function ImageGenerationPage() {
   // Imagem Base para Img2Img ou Estilo
   const [referenceImageUrl, setReferenceImageUrl] = useState<string>("");
   const [isUploadingRef, setIsUploadingRef] = useState<boolean>(false);
-  const [denoiseStrength, setDenoiseStrength] = useState<number>(0.75);
+  const [denoiseStrength, setDenoiseStrength] = useState<number>(0.40);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Configurações Avançadas
@@ -819,20 +819,28 @@ export default function ImageGenerationPage() {
               />
 
               {creationMode === "image-to-image" && (
-                <div className="space-y-1 pt-1">
+                <div className="space-y-1.5 pt-1">
                   <div className="flex items-center justify-between text-[11px] text-slate-400">
-                    <span>Intensidade de Variação (Denoise)</span>
+                    <span className="flex items-center gap-1">
+                      <span>Intensidade de Variação (Denoise)</span>
+                      <span className="text-[10px] text-emerald-400 font-semibold">
+                        {denoiseStrength <= 0.45 ? "(Preserva Rosto e Traços 👤)" : "(Cria Nova Pessoa ✨)"}
+                      </span>
+                    </span>
                     <span className="font-mono text-cyan-400 font-bold">{denoiseStrength}</span>
                   </div>
                   <input
                     type="range"
                     min={0.1}
-                    max={1.0}
+                    max={0.9}
                     step={0.05}
                     value={denoiseStrength}
                     onChange={(e) => setDenoiseStrength(parseFloat(e.target.value))}
                     className="w-full accent-cyan-400 cursor-pointer"
                   />
+                  <p className="text-[10px] text-slate-400 leading-tight">
+                    💡 Para manter a pessoa igual e só mudar o estilo/qualidade 8K, mantenha entre <strong className="text-emerald-400">0.30 e 0.40</strong>.
+                  </p>
                 </div>
               )}
             </div>

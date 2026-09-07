@@ -34,6 +34,37 @@ export class FalAIProvider implements IAIProvider {
         delete modelInputs.guidance_scale;
       }
 
+      // Roteamento Automático de Imagem de Entrada / Base (Image-to-Image & Preservação Física)
+      // Se o usuário forneceu uma imagem de entrada (image_url ou image) para um modelo de geração de imagem (FLUX ou Google Imagen 3),
+      // roteia de forma transparente para o motor dedicado de Image-to-Image com preservação de características físicas.
+      const hasImageInput = Boolean(modelInputs.image_url || modelInputs.image);
+      const isImageTool = !payload.modelTechnicalName.includes("video") && 
+                          !payload.modelTechnicalName.includes("sync") && 
+                          !payload.modelTechnicalName.includes("upscale") && 
+                          !payload.modelTechnicalName.includes("omnihuman");
+
+      if (hasImageInput && isImageTool) {
+        const baseImg = modelInputs.image_url || modelInputs.image;
+        modelInputs.image_url = baseImg;
+
+        // Se o modelo selecionado for de text-to-image tradicional que ignora ou altera a foto (ex: nano-banana-pro, flux/schnell, flux/dev),
+        // redireciona para o endpoint oficial de Image-to-Image de altíssima fidelidade
+        if (
+          payload.modelTechnicalName.includes("flux") || 
+          payload.modelTechnicalName.includes("nano-banana") ||
+          payload.modelTechnicalName.includes("recraft")
+        ) {
+          payload.modelTechnicalName = "fal-ai/flux/dev/image-to-image";
+          // Strength calibrado: 0.35 a 0.45 para manter traços fisionômicos e características físicas sem deformar
+          if (!modelInputs.strength) {
+            modelInputs.strength = 0.40;
+          }
+          if (!modelInputs.num_inference_steps) {
+            modelInputs.num_inference_steps = 28;
+          }
+        }
+      }
+
       // Modelos de Imagem que exigem aspect_ratio no lugar de image_size (ou aceitam aspect_ratio nativo)
       const requiresAspectRatio = payload.modelTechnicalName.includes("ideogram") || 
                                   payload.modelTechnicalName.includes("ultra") || 
