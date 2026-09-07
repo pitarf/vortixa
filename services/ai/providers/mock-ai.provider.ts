@@ -27,7 +27,7 @@ export class MockAIProvider implements IAIProvider {
 
         if (job) {
           const isVideo = payload.modelTechnicalName.includes("video") || payload.modelTechnicalName.includes("motion");
-          const mediaUrl = isVideo ? "/media/landing/hero/hero_main.mp4" : "/media/landing/hero/hero_main.jpg";
+          const mediaUrl = isVideo ? "/media/landing/hero/hero_main.mp4" : "/media/landing/hero/hero_studio_master.jpg";
 
           await prisma.$transaction(async (tx) => {
             await tx.aIJob.update({

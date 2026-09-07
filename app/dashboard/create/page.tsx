@@ -202,7 +202,7 @@ const STYLE_PRESETS = [
   {
     id: "digital-art",
     name: "Arte Digital",
-    thumb: "/media/landing/hero/hero_main.jpg",
+    thumb: "/media/landing/hero/hero_studio_master.jpg",
     description: "Pintura digital conceitual, traços ricos, iluminação fantasiosa e alto contraste.",
     recommendedSteps: 22,
     recommendedCfg: 8.5,
