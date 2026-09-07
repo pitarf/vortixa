@@ -142,38 +142,47 @@ interface AIModelDef {
 
 const AI_MODELS: AIModelDef[] = [
   {
+    id: "fal-ai/nano-banana-pro",
+    name: "Nano Banana Pro (Google)",
+    badge: "Fotorrealismo Humano 👑",
+    cost: 3,
+    description: "Modelo oficial Google Imagen 3 / Gemini 3 Pro. Anatomia humana, fotorrealismo e edição com foto",
+    speed: "~ 12s",
+    recommendedSteps: 24,
+  },
+  {
+    id: "fal-ai/flux-pulid",
+    name: "FLUX PuLID (Mesmo Rosto)",
+    badge: "Rosto Idêntico 👤",
+    cost: 4,
+    description: "Fixação absoluta de identidade. Preserva o mesmo rosto, barba, cabelo e traços físicos da sua foto",
+    speed: "~ 15s",
+    recommendedSteps: 28,
+  },
+  {
     id: "fal-ai/flux/schnell",
     name: "FLUX.1 Turbo",
     badge: "Super Rápido",
     cost: 1,
-    description: "Geração ultra-rápida em segundos, ideal para testar ideias",
+    description: "Geração ultra-rápida em 4 segundos da Black Forest Labs para testar conceitos",
     speed: "~ 4s",
     recommendedSteps: 4,
-  },
-  {
-    id: "fal-ai/nano-banana-pro",
-    name: "Google Imagen 3",
-    badge: "Realismo Humano",
-    cost: 3,
-    description: "Especialista em pessoas reais, fotos sem corte e textos nítidos",
-    speed: "~ 14s",
-    recommendedSteps: 24,
   },
   {
     id: "fal-ai/recraft-v3",
     name: "Recraft V3 Design",
     badge: "Design & Logos",
     cost: 2,
-    description: "Perfeito para tipografia legível, ilustrações e marcas",
-    speed: "~ 12s",
+    description: "Perfeito para tipografia legível, ilustrações vetoriais e marcas",
+    speed: "~ 10s",
     recommendedSteps: 20,
   },
   {
     id: "fal-ai/flux-pro/v1.1-ultra",
     name: "FLUX Pro Ultra",
-    badge: "Máxima Definição",
+    badge: "Máxima Resolução",
     cost: 4,
-    description: "Qualidade cinematográfica de estúdio e detalhes extremos",
+    description: "Qualidade cinematográfica de estúdio da Black Forest Labs em altíssima definição",
     speed: "~ 20s",
     recommendedSteps: 28,
   },
@@ -294,6 +303,7 @@ export default function ImageGenerationPage() {
 
   // Imagem Base para Img2Img ou Estilo
   const [referenceImageUrl, setReferenceImageUrl] = useState<string>("");
+  const [originalDimensions, setOriginalDimensions] = useState<{ width: number; height: number } | null>(null);
   const [isUploadingRef, setIsUploadingRef] = useState<boolean>(false);
   const [denoiseStrength, setDenoiseStrength] = useState<number>(0.40);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -399,6 +409,10 @@ export default function ImageGenerationPage() {
   // Sincroniza resolução ao alterar aspect ratio
   const handleSelectRatio = (ratioId: string) => {
     setAspectRatio(ratioId);
+    if (ratioId === "original" && originalDimensions) {
+      setResolution(`${originalDimensions.width} x ${originalDimensions.height}`);
+      return;
+    }
     const options = RESOLUTION_OPTIONS[ratioId];
     if (options && options.length > 0) {
       setResolution(options[0]);
@@ -470,6 +484,23 @@ export default function ImageGenerationPage() {
     if (!e.target.files || !e.target.files[0]) return;
     const file = e.target.files[0];
 
+    // Ler dimensões naturais da imagem no navegador
+    try {
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+      img.onload = () => {
+        const w = img.naturalWidth || 1024;
+        const h = img.naturalHeight || 1024;
+        setOriginalDimensions({ width: w, height: h });
+        setAspectRatio("original");
+        setResolution(`${w} x ${h}`);
+        URL.revokeObjectURL(objectUrl);
+      };
+      img.src = objectUrl;
+    } catch (e) {
+      console.warn("Não foi possível pré-calcular dimensões da imagem:", e);
+    }
+
     try {
       setIsUploadingRef(true);
       const formData = new FormData();
@@ -483,7 +514,7 @@ export default function ImageGenerationPage() {
       if (!res.ok) throw new Error("Falha ao fazer upload da imagem.");
       const data = await res.json();
       setReferenceImageUrl(data.url);
-      toast.success("Imagem de referência anexada com sucesso!");
+      toast.success("Imagem anexada! Opção de Tamanho Original ativada.");
     } catch (err: any) {
       toast.error(err.message || "Erro no upload.");
     } finally {
@@ -984,7 +1015,32 @@ export default function ImageGenerationPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-5 gap-1.5">
+            <div className={`grid gap-1.5 ${referenceImageUrl || originalDimensions ? "grid-cols-6" : "grid-cols-5"}`}>
+              {(referenceImageUrl || originalDimensions) && (
+                <button
+                  type="button"
+                  onClick={() => handleSelectRatio("original")}
+                  className={`py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
+                    aspectRatio === "original"
+                      ? "bg-[#13141B] border-cyan-400 text-white shadow-md shadow-cyan-500/25 ring-1 ring-cyan-400"
+                      : "bg-[#070709] border-[#1E202E] text-slate-400 hover:text-slate-200"
+                  }`}
+                  style={{ minHeight: "50px" }}
+                  title="Preserva o tamanho e proporção exatos da foto enviada"
+                >
+                  <div
+                    className={`border border-current rounded-sm w-4 h-4 flex items-center justify-center text-[9px] ${
+                      aspectRatio === "original" ? "border-cyan-400 bg-cyan-500/20 text-cyan-300" : "border-slate-500 text-slate-500"
+                    }`}
+                  >
+                    📷
+                  </div>
+                  <span className="text-[10px] font-bold font-mono">Original</span>
+                  <span className="text-[8px] text-cyan-400 font-sans truncate">
+                    {originalDimensions ? `${originalDimensions.width}x${originalDimensions.height}` : "Nativo"}
+                  </span>
+                </button>
+              )}
               {ASPECT_RATIOS.map((ratio) => {
                 const isSelected = aspectRatio === ratio.id;
                 return (

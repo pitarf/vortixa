@@ -9,9 +9,8 @@ import { MessageSquare, Sparkles, Volume2 } from "lucide-react";
 import { VORIXA_VOICES } from "@/lib/voice-catalog";
 
 const VIDEO_MODELS = [
-  { id: "fal-ai/bytedance/seedance-2.5", name: "ByteDance Seedance 2.5", badge: "Topo Global 👑", cost: 25, description: "O motor de vídeo mais avançado do mundo. Física e consistência absoluta", speed: "~ 50s" },
   { id: "fal-ai/veo3.1", name: "Google Veo 3.1", badge: "Áudio/Fala Nativo 🎙️", cost: 30, description: "Vídeo cinematográfico com som ambiente e falas nativas em 1 clique", speed: "~ 60s" },
-  { id: "fal-ai/kling-video/v3/pro/image-to-video", name: "Kling 3.0 Pro", badge: "Cinema Ultra", cost: 20, description: "Renderização 4K cinematográfica com consistência temporal extrema", speed: "~ 60s" },
+  { id: "fal-ai/kling-video/v3/pro/image-to-video", name: "Kling 3.0 Pro", badge: "Cinema Ultra 👑", cost: 20, description: "Renderização 4K cinematográfica com consistência temporal extrema", speed: "~ 60s" },
   { id: "fal-ai/kling-video/v2.1/pro/image-to-video", name: "Kling 2.1 Pro", badge: "Cinema Master", cost: 15, description: "Última geração Kling com máxima consistência temporal e física", speed: "~ 50s" },
   { id: "fal-ai/luma-dream-machine/ray-2", name: "Luma Ray 2", badge: "Física Realista", cost: 12, description: "Arquitetura Ray 2 de alta coerência dinâmica e controle de câmera", speed: "~ 45s" },
   { id: "fal-ai/wan-i2v", name: "Wan 2.1 High-Motion", badge: "Fluidez Extrema", cost: 10, description: "Movimentos corporais fluidos e grande estabilidade em 720p", speed: "~ 35s" },

@@ -16,6 +16,7 @@ export interface OptimizePromptOptions {
   enhanceQuality?: boolean;
   toolType?: "image" | "video" | "lipsync" | "motion" | "upscale";
   style?: VisualStyle;
+  hasReferenceImage?: boolean;
 }
 
 export type ContextIntent = "FOOD" | "PRODUCT" | "UGC" | "PORTRAIT" | "VEHICLE" | "ACTION" | "CINEMA" | "ARTISTIC" | "GENERAL";
@@ -363,13 +364,22 @@ MANDATORY VISUAL STYLE: DIGITAL CONCEPT ART
         }
       }
 
+      const referenceImageDirective = options.hasReferenceImage
+        ? `\nCRITICAL IDENTITY PRESERVATION DIRECTIVE:
+- A reference photo of a real person is being provided.
+- You MUST anchor the prompt explicitly to "the person in the reference image" (e.g. "a photo of the person in the reference image with their identical facial features, facial structure, skin tone and hair").
+- DO NOT invent a completely different person, race, gender, head shape, age, baldness or beard that contradicts the source photo.
+- Focus the prompt on the scene, lighting, camera quality and style requested, while strictly preserving the person's identity and physical characteristics.`
+        : "";
+
       // Tradução inteligente de alto padrão cinematográfico e cenografia atrativa:
-      const systemPrompt = `You are a world-class prompt director and translator for advanced image generation models (Google Imagen 3, FLUX Pro, Recraft).
+      const systemPrompt = `You are a world-class prompt director and translator for advanced image generation models (Google Imagen 3, FLUX Pro, Recraft, PuLID).
 Translate the user's Portuguese prompt faithfully into fluent English while automatically elevating the visual aesthetic.
 
 CORE PRINCIPLE - ATTRACTIVE & PREMIUM BY DEFAULT:
 Unless the user explicitly asks for something "feio", "velho", "abandonado", "pobre" or "simples", ALWAYS present a modern, visually attractive, well-kept, well-lit and vibrant setting. Never render drab, dirty, empty or mediocre spaces.
 ${styleDirective}
+${referenceImageDirective}
 
 MANDATORY DIRECTIVES:
 1. Full Body Shot (BALANCED CATALOG PROPORTIONS): If the user mentions "corpo todo", "corpo inteiro", "de corpo todo", "de corpo inteiro", "full body" or a standing model:

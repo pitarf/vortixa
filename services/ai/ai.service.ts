@@ -99,11 +99,14 @@ export class AIService {
 
       // 7. Processar e enriquecer prompt (se presente) com a IA da fal.ai (LLM) e fallback
       const processedInputs = { ...request.inputs };
+      const hasReferenceImage = Boolean(processedInputs.image_url || processedInputs.image || processedInputs.reference_image_url);
+
       if (processedInputs.prompt && typeof processedInputs.prompt === "string") {
         const optimized = await PromptEngine.optimizeAsync(processedInputs.prompt, {
           enhanceQuality: true,
           toolType: request.toolSlug.includes("video") ? "video" : "image",
           style: processedInputs.style,
+          hasReferenceImage,
         });
         processedInputs.prompt = optimized.optimizedPrompt;
       }

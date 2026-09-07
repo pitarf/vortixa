@@ -5,6 +5,31 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.5.3] - 2026-09-07
+### Eliminação de Falsos Positivos & Alinhamento de Motores e Nomes Reais da IA
+- **Auditoria Rigorosa na Fal.ai (Subagente Especializado)**:
+  - Validação direta e real de endpoints ativos de geração: **Nano Banana Pro (Google)** (`fal-ai/nano-banana-pro`), **Nano Banana Edit (Google)** (`fal-ai/nano-banana-pro/edit`), **FLUX PuLID (Mesmo Rosto)** (`fal-ai/flux-pulid`), **FLUX.1 Turbo** (`fal-ai/flux/schnell`), **Google Veo 3.1 com Som** (`fal-ai/veo3.1`), **Kling 3.0 Pro** (`fal-ai/kling-video/v3/pro/image-to-video`) e **Kling 2.1 Pro**.
+  - **Eliminação de Falsos Positivos**: Removido o modelo inexistente na fal.ai (`Seedance 2.5`), mantendo apenas motores com inferência comprovada em produção.
+  - **Transparência Absoluta de Nomenclatura**: Os modelos agora usam seus nomes populares e oficiais de mercado em toda a plataforma. O usuário sabe exatamente se está executando o motor do Google (Nano Banana / Imagen 3) ou o motor da Black Forest Labs (FLUX).
+  - **Google Imagen 3 Edit**: O modo de imagem com foto de referência agora chama estritamente o endpoint oficial `fal-ai/nano-banana-pro/edit`, respeitando a seleção do usuário sem desvio.
+
+## [1.5.2] - 2026-09-07
+### Preservação de Identidade Facial & Características Físicas com PuLID for FLUX
+- **Integração do Motor de Consistência Facial PuLID (`fal-ai/flux-pulid`)**:
+  - Roteamento automático de fotos de referência em modo *Imagem para Imagem* e *Personagem* para o motor `fal-ai/flux-pulid`.
+  - Diferente do gerador tradicional de difusão que criava ruído aleatório desfigurando o rosto do usuário, o PuLID ancora matematicamente os vetores fisionômicos, corte de cabelo, formato do crânio, barba e tom de pele com fidelidade anatômica.
+- **Blindagem do Otimizador de Prompts (`PromptEngine`)**:
+  - Adicionada diretiva estrita `CRITICAL IDENTITY PRESERVATION DIRECTIVE` para impedir que o enriquecedor de prompts (LLM) invente características inexistentes (como alterar a calvície, estilo de barba, cor de pele ou traços da pessoa). O prompt agora instrui a IA a manter expressamente a mesma pessoa da foto de referência enquanto aplica a iluminação e qualidade de estúdio 8K desejadas.
+
+## [1.5.1] - 2026-09-07
+### Suporte a Proporção e Dimensões Originais da Imagem Base (Image-to-Image)
+- **Opção "Original" com Detecção Automática de Dimensões**:
+  - No modo *Imagem para Imagem* (`image-to-image`) ou ao anexar uma imagem de referência, o sistema agora lê no navegador a resolução nativa da foto enviada (ex: `800 x 1200`, `1080 x 1350`).
+  - Adicionado botão dinâmico de Proporção **"Original 📷"** no Studio CREATE (`/dashboard/create`) e na Ferramenta de Imagem (`/dashboard/tools/image`), exibindo a resolução real da imagem do usuário.
+  - Ao selecionar "Original", o motor `FalAIProvider` omite cortes forçados e pré-definições rígidas de aspect ratio, preservando integralmente o enquadramento, composição e dimensões nativas no modelo `fal-ai/flux/dev/image-to-image`.
+- **Experiência de Uso (UI/UX)**:
+  - Seleção automática e feedback visual imediato para o usuário assim que a foto é carregada.
+
 ## [1.5.0] - 2026-09-06
 ### Motores de IA Topo de Linha Mundial (ByteDance Seedance 2.5, Google Veo 3.1 com Áudio Direto, Kling 3.0 Pro e ByteDance OmniHuman)
 - **Integração dos Melhores Modelos de IA Generativa do Mercado Global (2026)**:

@@ -47,21 +47,31 @@ export class FalAIProvider implements IAIProvider {
         const baseImg = modelInputs.image_url || modelInputs.image;
         modelInputs.image_url = baseImg;
 
-        // Se o modelo selecionado for de text-to-image tradicional que ignora ou altera a foto (ex: nano-banana-pro, flux/schnell, flux/dev),
-        // redireciona para o endpoint oficial de Image-to-Image de altíssima fidelidade
-        if (
+        // Roteamento fiel ao motor escolhido pelo usuário:
+        if (payload.modelTechnicalName.includes("nano-banana")) {
+          // Google Imagen 3 (Gemini 3 Pro Image Edit Oficial da fal.ai)
+          payload.modelTechnicalName = "fal-ai/nano-banana-pro/edit";
+          modelInputs.image_urls = [baseImg];
+          console.log(`[FalAIProvider] Google Imagen 3 Edit ativado com a foto de referência!`);
+        } else if (
           payload.modelTechnicalName.includes("flux") || 
-          payload.modelTechnicalName.includes("nano-banana") ||
-          payload.modelTechnicalName.includes("recraft")
+          payload.modelTechnicalName.includes("recraft") ||
+          modelInputs.mode === "character"
         ) {
-          payload.modelTechnicalName = "fal-ai/flux/dev/image-to-image";
-          // Strength calibrado: 0.35 a 0.45 para manter traços fisionômicos e características físicas sem deformar
-          if (!modelInputs.strength) {
-            modelInputs.strength = 0.40;
-          }
-          if (!modelInputs.num_inference_steps) {
-            modelInputs.num_inference_steps = 28;
-          }
+          // Família FLUX: usa PuLID para preservação absoluta de traços faciais e identidade física
+          payload.modelTechnicalName = "fal-ai/flux-pulid";
+          modelInputs.reference_image_url = baseImg;
+          console.log(`[FalAIProvider] FLUX PuLID ativado para preservação anatômica facial!`);
+        }
+
+        // Se o usuário selecionou tamanho ou proporção Original da imagem enviada
+        if (
+          modelInputs.image_size === "original" ||
+          modelInputs.aspect_ratio === "original"
+        ) {
+          delete modelInputs.image_size;
+          delete modelInputs.aspect_ratio;
+          console.log(`[FalAIProvider] Img2Img no tamanho/proporção original da imagem base ativado!`);
         }
       }
 
@@ -101,16 +111,20 @@ export class FalAIProvider implements IAIProvider {
       delete modelInputs.style;
       delete modelInputs.resolution;
 
-      // Kling AI (v1.5, v2.1 Pro/Master, etc.): mapeia variações de imagem e duração
+      // Kling AI (v1.5, v2.1 Pro/Master, v3 Pro, etc.): mapeia variações de imagem e duração
       if (payload.modelTechnicalName.includes("kling")) {
-        if (modelInputs.image_url && !modelInputs.prompt_image_url) {
-          modelInputs.prompt_image_url = modelInputs.image_url;
-        }
-        if (modelInputs.prompt_image_url && !modelInputs.image_url) {
-          modelInputs.image_url = modelInputs.prompt_image_url;
-        }
-        if (modelInputs.image && !modelInputs.prompt_image_url) {
-          modelInputs.prompt_image_url = modelInputs.image;
+        const inputImg = modelInputs.image_url || modelInputs.prompt_image_url || modelInputs.image || modelInputs.start_image_url;
+        if (inputImg) {
+          modelInputs.image_url = inputImg;
+          modelInputs.prompt_image_url = inputImg;
+          modelInputs.start_image_url = inputImg;
+        } else if (payload.modelTechnicalName.includes("image-to-video")) {
+          // Se o usuário selecionou Kling em modo texto (sem imagem), roteia para o endpoint correspondente de Text-to-Video
+          if (payload.modelTechnicalName.includes("v3")) {
+            payload.modelTechnicalName = "fal-ai/kling-video/v3/pro/text-to-video";
+          } else if (payload.modelTechnicalName.includes("v1.5")) {
+            payload.modelTechnicalName = "fal-ai/kling-video/v1.5/pro/text-to-video";
+          }
         }
         if (modelInputs.duration) {
           modelInputs.duration = String(modelInputs.duration); // "5" ou "10"

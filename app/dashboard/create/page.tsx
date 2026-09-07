@@ -84,10 +84,11 @@ const TOOLS: Record<StudioTool, ToolDefinition> = {
     description: "Crie fotos humanas hiper-realistas, produtos e artes com prompts simples.",
     color: "from-violet-600 via-indigo-600 to-cyan-500",
     models: [
-      { id: "fal-ai/flux/schnell", name: "FLUX.1 Turbo", badge: "Super Rápido", cost: 1, description: "Geração ultra-rápida em segundos, ideal para testar ideias", speed: "~ 4s" },
-      { id: "fal-ai/nano-banana-pro", name: "Google Imagen 3", badge: "Realismo Humano", cost: 3, description: "Especialista em pessoas reais, iluminação natural e textos nítidos", speed: "~ 14s" },
-      { id: "fal-ai/recraft-v3", name: "Recraft V3 Design", badge: "Design & Logos", cost: 2, description: "Perfeito para tipografia legível, ilustrações vetoriais e marcas", speed: "~ 12s" },
-      { id: "fal-ai/flux-pro/v1.1-ultra", name: "FLUX Pro Ultra", badge: "Máxima Definição", cost: 4, description: "Qualidade cinematográfica de estúdio e detalhes extremos", speed: "~ 20s" },
+      { id: "fal-ai/nano-banana-pro", name: "Nano Banana Pro (Google)", badge: "Fotorrealismo Humano 👑", cost: 3, description: "Modelo oficial Google Imagen 3 / Gemini 3 Pro. Anatomia humana e edição com foto", speed: "~ 12s" },
+      { id: "fal-ai/flux-pulid", name: "FLUX PuLID (Mesmo Rosto)", badge: "Rosto Idêntico 👤", cost: 4, description: "Fixação absoluta de identidade. Preserva o mesmo rosto e barba da foto enviada", speed: "~ 15s" },
+      { id: "fal-ai/flux/schnell", name: "FLUX.1 Turbo", badge: "Super Rápido", cost: 1, description: "Geração ultra-rápida em 4 segundos da Black Forest Labs para testar conceitos", speed: "~ 4s" },
+      { id: "fal-ai/recraft-v3", name: "Recraft V3 Design", badge: "Design & Logos", cost: 2, description: "Perfeito para tipografia legível, ilustrações vetoriais e marcas", speed: "~ 10s" },
+      { id: "fal-ai/flux-pro/v1.1-ultra", name: "FLUX Pro Ultra", badge: "Máxima Resolução", cost: 4, description: "Qualidade cinematográfica de estúdio da Black Forest Labs em altíssima definição", speed: "~ 20s" },
     ],
   },
   video: {
@@ -100,9 +101,8 @@ const TOOLS: Record<StudioTool, ToolDefinition> = {
     description: "Dê vida e movimento a fotos ou crie cenas de vídeo cinematográficas.",
     color: "from-cyan-500 to-blue-600",
     models: [
-      { id: "fal-ai/bytedance/seedance-2.5", name: "ByteDance Seedance 2.5", badge: "Topo Global 👑", cost: 25, description: "O motor de vídeo mais avançado do mundo. Física e consistência absoluta", speed: "~ 50s" },
       { id: "fal-ai/veo3.1", name: "Google Veo 3.1", badge: "Áudio Nativo 🎙️", cost: 30, description: "Vídeo cinematográfico com som ambiente e falas nativas em 1 clique", speed: "~ 60s" },
-      { id: "fal-ai/kling-video/v3/pro/image-to-video", name: "Kling 3.0 Pro", badge: "Cinema Ultra", cost: 20, description: "Renderização 4K cinematográfica com consistência temporal extrema", speed: "~ 60s" },
+      { id: "fal-ai/kling-video/v3/pro/image-to-video", name: "Kling 3.0 Pro", badge: "Cinema Ultra 👑", cost: 20, description: "Renderização 4K cinematográfica com consistência temporal extrema", speed: "~ 60s" },
       { id: "fal-ai/kling-video/v2.1/pro/image-to-video", name: "Kling 2.1 Pro", badge: "Cinema Master", cost: 15, description: "Última geração Kling com máxima consistência temporal e física", speed: "~ 50s" },
       { id: "fal-ai/luma-dream-machine/ray-2", name: "Luma Ray 2", badge: "Física Realista", cost: 12, description: "Arquitetura Ray 2 de alta coerência dinâmica e física 3D", speed: "~ 45s" },
       { id: "fal-ai/wan-i2v", name: "Wan 2.1 High-Motion", badge: "Fluidez Extrema", cost: 10, description: "Movimentos corporais e estabilidade em 720p", speed: "~ 35s" },
@@ -324,6 +324,7 @@ export default function StudioCreatePage() {
   const [qualityMode, setQualityMode] = useState<string>("fast");
   const [selectedStyle, setSelectedStyle] = useState<string>("cinematic");
   const [referenceImageUrl, setReferenceImageUrl] = useState<string>("");
+  const [originalDimensions, setOriginalDimensions] = useState<{ width: number; height: number } | null>(null);
   const [isUploadingRef, setIsUploadingRef] = useState(false);
   const refFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -557,6 +558,23 @@ export default function StudioCreatePage() {
     if (!e.target.files || !e.target.files[0]) return;
     const file = e.target.files[0];
 
+    // Ler dimensões naturais da imagem no navegador
+    try {
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+      img.onload = () => {
+        const w = img.naturalWidth || 1024;
+        const h = img.naturalHeight || 1024;
+        setOriginalDimensions({ width: w, height: h });
+        setImageSize("original");
+        setResolution(`${w} x ${h}`);
+        URL.revokeObjectURL(objectUrl);
+      };
+      img.src = objectUrl;
+    } catch (e) {
+      console.warn("Não foi possível pré-calcular dimensões da imagem:", e);
+    }
+
     try {
       setIsUploadingRef(true);
       const formData = new FormData();
@@ -570,7 +588,7 @@ export default function StudioCreatePage() {
       if (!res.ok) throw new Error("Falha no upload da imagem de referência.");
       const data = await res.json();
       setReferenceImageUrl(data.url);
-      toast.success("Imagem de referência anexada ao Studio!");
+      toast.success("Imagem anexada! Proporção e tamanho originais ativados.");
     } catch (err: any) {
       toast.error(err.message || "Erro no upload.");
     } finally {
@@ -1334,7 +1352,37 @@ export default function StudioCreatePage() {
               )}
             </div>
 
-            <div className="grid grid-cols-5 gap-1.5">
+            <div className={`grid gap-1.5 ${referenceImageUrl || originalDimensions ? "grid-cols-6" : "grid-cols-5"}`}>
+              {(referenceImageUrl || originalDimensions) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setImageSize("original");
+                    if (originalDimensions) {
+                      setResolution(`${originalDimensions.width} x ${originalDimensions.height}`);
+                    }
+                  }}
+                  className={`py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
+                    imageSize === "original"
+                      ? "bg-[#13141B] border-cyan-400 text-white shadow-md shadow-cyan-500/25 ring-1 ring-cyan-400"
+                      : "bg-[#070709] border-[#1E202E] text-slate-400 hover:text-slate-200"
+                  }`}
+                  style={{ minHeight: "52px" }}
+                  title="Preserva o tamanho e proporção exatos da foto anexada"
+                >
+                  <div
+                    className={`border border-current rounded-sm w-4 h-4 flex items-center justify-center text-[9px] ${
+                      imageSize === "original" ? "border-cyan-400 bg-cyan-500/20 text-cyan-300" : "border-slate-500 text-slate-500"
+                    }`}
+                  >
+                    📷
+                  </div>
+                  <div className="text-[10px] font-bold font-mono">Original</div>
+                  <span className="text-[8px] text-cyan-400 font-sans truncate">
+                    {originalDimensions ? `${originalDimensions.width}x${originalDimensions.height}` : "Nativo"}
+                  </span>
+                </button>
+              )}
               {ASPECT_RATIOS.map((ratio) => {
                 const isSelected = imageSize === ratio.id;
                 return (

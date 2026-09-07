@@ -8,6 +8,15 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Eliminação de Falsos Positivos & Auditoria Real de Modelos (Live AI Auditor)**:
+  - Auditoria completa via subagente executando requisições reais contra a infraestrutura da fal.ai.
+  - Eliminação de modelos inexistentes (Seedance 2.5) e ativação com nomes claros e transparentes: **Nano Banana Pro (Google)**, **Nano Banana Edit**, **FLUX PuLID (Mesmo Rosto)**, **FLUX.1 Turbo**, **Google Veo 3.1**, **Kling 3.0 Pro** e **Kling 2.1 Pro**.
+  - Roteamento rigoroso para o modelo exato selecionado pelo usuário sem substituições silenciosas.
+- [x] **Suporte a Proporção e Tamanho Original em Imagem para Imagem (Img2Img)**:
+  - Detecção automática da resolução e aspect ratio nativo da foto carregada no cliente (`new Image()` com `naturalWidth` e `naturalHeight`).
+  - Adicionada opção dinâmica **"Original 📷"** no seletor de proporção de tela no Studio CREATE (`/dashboard/create`) e na Ferramenta de Imagem (`/dashboard/tools/image`).
+  - Ajustado `FalAIProvider` para respeitar a resolução original no motor `fal-ai/flux/dev/image-to-image` sem crops ou distorções forçadas.
+  - Build de produção Next.js 16 (Turbopack) validado com sucesso.
 - [x] **Motores de IA Topo de Linha Mundial (ByteDance Seedance 2.5, Google Veo 3.1 Som Nativo, Kling 3.0 Pro e ByteDance OmniHuman)**:
   - Adicionados os modelos líderes mundiais em fidelidade física e audiovisual: `fal-ai/bytedance/seedance-2.5` (25 cr), `fal-ai/veo3.1` (30 cr), `fal-ai/kling-video/v3/pro/image-to-video` (20 cr) e `fal-ai/bytedance/omnihuman` (25 cr).
   - Sanitização automática de parâmetros em `fal-ai.provider.ts` com ativação transparente de `generate_audio: true` no Veo 3.1 ao incluir diálogo.
