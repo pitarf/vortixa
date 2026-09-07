@@ -5,6 +5,16 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.5.4] - 2026-09-07
+### Integração Oficial do ByteDance Seedance 2.0 (Vídeo com Áudio & Física)
+- **Conformidade Estrita com a Documentação da Fal.ai**:
+  - Implementado o suporte ao **ByteDance Seedance 2.0** (`fal-ai/bytedance/seedance-2.0`).
+  - **Roteamento Automático por Modalidade**:
+    - Sem imagem anexada: Roteia de forma transparente para `fal-ai/bytedance/seedance-2.0/text-to-video`.
+    - Com imagem anexada: Roteia de forma transparente para `fal-ai/bytedance/seedance-2.0/image-to-video` com o parâmetro oficial `image_url`.
+  - **Áudio Sincronizado Nativo**: Ativação automática de `generate_audio: true` conforme especificação técnica da ByteDance, gerando efeitos sonoros e ambientação física no mesmo espaço latente.
+  - **Frontend & Catálogo**: Adicionado à página dedicada de Vídeo (`/dashboard/tools/video`) e ao Studio CREATE (`/dashboard/create`) com o badge `Áudio & Física 👑` e precificação em 25 créditos.
+
 ## [1.5.3] - 2026-09-07
 ### Eliminação de Falsos Positivos & Alinhamento de Motores e Nomes Reais da IA
 - **Auditoria Rigorosa na Fal.ai (Subagente Especializado)**:

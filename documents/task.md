@@ -8,6 +8,13 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Integração Oficial do ByteDance Seedance 2.0 (Vídeo com Áudio & Física)**:
+  - Implementado suporte ao motor `fal-ai/bytedance/seedance-2.0` com roteamento automático:
+    - Text-to-Video: `fal-ai/bytedance/seedance-2.0/text-to-video`
+    - Image-to-Video: `fal-ai/bytedance/seedance-2.0/image-to-video` com parâmetro `image_url`
+  - Áudio e ambientação sincronizados ativados nativamente (`generate_audio: true`).
+  - Mapeado no Studio CREATE (`/dashboard/create`) e na ferramenta de Vídeo (`/dashboard/tools/video`).
+  - Build Next.js 16 (Turbopack) 100% validado.
 - [x] **Eliminação de Falsos Positivos & Auditoria Real de Modelos (Live AI Auditor)**:
   - Auditoria completa via subagente executando requisições reais contra a infraestrutura da fal.ai.
   - Eliminação de modelos inexistentes (Seedance 2.5) e ativação com nomes claros e transparentes: **Nano Banana Pro (Google)**, **Nano Banana Edit**, **FLUX PuLID (Mesmo Rosto)**, **FLUX.1 Turbo**, **Google Veo 3.1**, **Kling 3.0 Pro** e **Kling 2.1 Pro**.

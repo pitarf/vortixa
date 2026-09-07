@@ -145,8 +145,42 @@ export class FalAIProvider implements IAIProvider {
         }
       }
 
-      // ByteDance Seedance (2.5 / 2.0 / 1.5 Pro) & OmniHuman
-      if (payload.modelTechnicalName.includes("seedance") || payload.modelTechnicalName.includes("omnihuman")) {
+      // ByteDance Seedance (2.0 / 2.5) & OmniHuman
+      if (payload.modelTechnicalName.includes("seedance")) {
+        const hasImg = Boolean(modelInputs.image_url || modelInputs.prompt_image_url || modelInputs.image || modelInputs.start_image_url);
+        
+        if (hasImg) {
+          const img = modelInputs.image_url || modelInputs.prompt_image_url || modelInputs.image || modelInputs.start_image_url;
+          modelInputs.image_url = img;
+          delete modelInputs.prompt_image_url;
+          delete modelInputs.image;
+          delete modelInputs.start_image_url;
+          
+          if (payload.modelTechnicalName.includes("seedance-2.5")) {
+            payload.modelTechnicalName = "fal-ai/bytedance/seedance-2.5/image-to-video";
+          } else {
+            payload.modelTechnicalName = "fal-ai/bytedance/seedance-2.0/image-to-video";
+          }
+        } else {
+          delete modelInputs.image_url;
+          delete modelInputs.prompt_image_url;
+          delete modelInputs.image;
+          
+          if (payload.modelTechnicalName.includes("seedance-2.5")) {
+            payload.modelTechnicalName = "fal-ai/bytedance/seedance-2.5/text-to-video";
+          } else {
+            payload.modelTechnicalName = "fal-ai/bytedance/seedance-2.0/text-to-video";
+          }
+        }
+        
+        // Habilita áudio sincronizado por padrão conforme documentação oficial
+        if (modelInputs.generate_audio === undefined) {
+          modelInputs.generate_audio = true;
+        }
+        console.log(`[FalAIProvider] Seedance configurado: ${payload.modelTechnicalName} (Áudio: ${modelInputs.generate_audio})`);
+      }
+
+      if (payload.modelTechnicalName.includes("omnihuman")) {
         if (modelInputs.prompt_image_url && !modelInputs.image_url) {
           modelInputs.image_url = modelInputs.prompt_image_url;
         }
@@ -156,13 +190,10 @@ export class FalAIProvider implements IAIProvider {
         if (modelInputs.image_url && !modelInputs.image) {
           modelInputs.image = modelInputs.image_url;
         }
-        // OmniHuman exige imagem e áudio
-        if (payload.modelTechnicalName.includes("omnihuman")) {
-          const audioInput = modelInputs.audio_url || modelInputs.audio || modelInputs.driving_audio_url;
-          if (audioInput) {
-            modelInputs.audio_url = audioInput;
-            modelInputs.audio = audioInput;
-          }
+        const audioInput = modelInputs.audio_url || modelInputs.audio || modelInputs.driving_audio_url;
+        if (audioInput) {
+          modelInputs.audio_url = audioInput;
+          modelInputs.audio = audioInput;
         }
       }
 
