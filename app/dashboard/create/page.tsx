@@ -253,7 +253,8 @@ export default function StudioCreatePage() {
     const toolDef = TOOLS[activeTool];
     const selectedModel = toolDef.models.find((m) => m.id === selectedModelId) || toolDef.models[0];
     const hasTalkingVideo = activeTool === "video" && enableTalkingVideo && Boolean(speechText.trim());
-    const cost = selectedModel.cost + (hasTalkingVideo ? 9 : 0);
+    const durationMultiplier = (activeTool === "video" && duration === "10") ? 2 : 1;
+    const cost = (selectedModel.cost * durationMultiplier) + (hasTalkingVideo ? 9 : 0);
 
     if (creditMode !== "UNLIMITED" && balance < cost) {
       toast.error(`Saldo insuficiente (${balance} créditos disponíveis. Custo: ${cost}).`);
@@ -723,7 +724,7 @@ export default function StudioCreatePage() {
                 <Play className="h-4 w-4 fill-current" />
                 <span>
                   Gerar {currentToolDef.name} ({
-                    currentModelDef.cost + (activeTool === "video" && enableTalkingVideo && speechText.trim() ? 9 : 0)
+                    (currentModelDef.cost * (activeTool === "video" && duration === "10" ? 2 : 1)) + (activeTool === "video" && enableTalkingVideo && speechText.trim() ? 9 : 0)
                   } créditos)
                 </span>
               </>

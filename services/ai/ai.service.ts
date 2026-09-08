@@ -56,12 +56,18 @@ export class AIService {
       }
     }
 
-    const cost = targetModel.creditCost;
+    // Cálculo dinâmico de custo: Vídeos de 10s consomem o dobro de inferência da GPU
+    const isVideo = request.toolSlug.includes("video") || targetModel.technicalName.includes("video") || targetModel.technicalName.includes("wan") || targetModel.technicalName.includes("luma") || targetModel.technicalName.includes("seedance") || targetModel.technicalName.includes("minimax");
+    const is10s = String(request.inputs?.duration) === "10";
+    const durationMultiplier = (isVideo && is10s) ? 2 : 1;
+
+    const cost = targetModel.creditCost * durationMultiplier;
+    const apiUnitCost = targetModel.apiUnitCost * durationMultiplier;
 
     // 3. Verificar saldo de créditos
     const hasCredits = await CreditService.hasEnoughCredits(request.userId, cost);
     if (!hasCredits) {
-      throw new Error("Saldo insuficiente de créditos.");
+      throw new Error(`Saldo insuficiente de créditos. Custo necessário: ${cost} créditos.`);
     }
 
     // 4. Criar o registro do Job em PENDING no banco
@@ -72,7 +78,7 @@ export class AIService {
         toolId: tool.id,
         status: "PENDING",
         creditCost: cost,
-        apiUnitCost: targetModel.apiUnitCost,
+        apiUnitCost: apiUnitCost,
         idempotencyKey: request.idempotencyKey || null,
       },
     });

@@ -94,9 +94,11 @@ export class TalkingVideoService {
     }
 
     // 2. Cálculo do Custo Total Transacional
-    const videoCost = model.creditCost;
+    const durationMultiplier = String(duration) === "10" ? 2 : 1;
+    const videoCost = model.creditCost * durationMultiplier;
     const additionalCost = hasAudioPipeline ? (speechText ? 9 : 8) : 0;
     const totalCost = videoCost + additionalCost;
+    const apiUnitCost = (model.apiUnitCost || 0.1) * durationMultiplier;
 
     // 3. Validação de Saldo
     const hasEnough = await CreditService.hasEnoughCredits(userId, totalCost);
@@ -112,7 +114,7 @@ export class TalkingVideoService {
         toolId: tool.id,
         status: "PENDING",
         creditCost: totalCost,
-        apiUnitCost: model.apiUnitCost,
+        apiUnitCost: apiUnitCost,
         idempotencyKey: idempotencyKey || null,
         billingUnit: "TALKING_VIDEO_BUNDLE",
         billingQuantity: 1.0,

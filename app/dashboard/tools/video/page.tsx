@@ -234,7 +234,9 @@ export default function VideoGenerationPage() {
       return;
     }
 
-    const cost = selectedModel.cost;
+    // Vídeos de 10s dobram o tempo de processamento e o custo na GPU
+    const durationMultiplier = duration === "10" ? 2 : 1;
+    const cost = selectedModel.cost * durationMultiplier;
 
     if (creditMode !== "UNLIMITED" && balance < cost) {
       toast.error(`Saldo insuficiente (${balance} créditos disponíveis. Custo: ${cost}).`);
@@ -337,7 +339,7 @@ export default function VideoGenerationPage() {
 
           {/* Card 4: Barra de Ação (Custo e Botão Gerar Vídeo) */}
           <VideoActionBar
-            cost={selectedModel.cost}
+            cost={selectedModel.cost * (duration === "10" ? 2 : 1)}
             isGenerating={isGenerating}
             activeStepText={activeStepText}
             onGenerate={handleGenerateVideo}
