@@ -258,11 +258,16 @@ export class FalAIProvider implements IAIProvider {
           delete modelInputs.seed;
         }
 
-        // 6. Modo de Qualidade
-        if (modelInputs.quality === "high") {
-          // Em modelos que suportam modo HD/Pro, reforça resolução e sampling
+        // 6. Modo de Resolução e Qualidade (720p vs 1080p)
+        if (modelInputs.quality === "high" || modelInputs.resolution === "1080p") {
+          modelInputs.resolution = "1080p";
           if (payload.modelTechnicalName.includes("kling")) {
             modelInputs.mode = "pro";
+          }
+        } else {
+          modelInputs.resolution = "720p";
+          if (payload.modelTechnicalName.includes("kling")) {
+            modelInputs.mode = "standard";
           }
         }
       }

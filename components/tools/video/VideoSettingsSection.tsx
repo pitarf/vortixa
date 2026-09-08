@@ -107,9 +107,9 @@ export function VideoSettingsSection({
           </div>
         </div>
 
-        {/* Coluna 3: Qualidade (Padrão | Alta 👑) */}
+        {/* Coluna 3: Qualidade / Resolução (720p HD | 1080p Pro 👑) */}
         <div className="space-y-1.5">
-          <label className="text-[11px] font-bold text-slate-400 block">Qualidade</label>
+          <label className="text-[11px] font-bold text-slate-400 block">Resolução / Qualidade</label>
           <div className="grid grid-cols-2 gap-1.5 p-1 bg-[#070709] border border-[#1E202E] rounded-xl">
             <button
               type="button"
@@ -120,8 +120,9 @@ export function VideoSettingsSection({
                   : "text-slate-400 hover:text-white"
               }`}
               style={{ minHeight: "36px" }}
+              title="720p HD - Resolução Padrão rápida e econômica"
             >
-              Padrão
+              720p HD
             </button>
             <button
               type="button"
@@ -132,8 +133,9 @@ export function VideoSettingsSection({
                   : "text-slate-400 hover:text-white"
               }`}
               style={{ minHeight: "36px" }}
+              title="1080p Full HD Pro - Máxima nitidez e amostragem densa"
             >
-              <span>Alta</span>
+              <span>1080p</span>
               <Crown className="w-3 h-3 text-amber-400" />
             </button>
           </div>

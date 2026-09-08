@@ -69,6 +69,7 @@ export default function StudioCreatePage() {
   // Parâmetros de Vídeo / Avatar / Motion
   const [videoMode, setVideoMode] = useState<"text" | "image">("image");
   const [duration, setDuration] = useState("5");
+  const [videoQuality, setVideoQuality] = useState<string>("standard");
   const [cameraMotion, setCameraMotion] = useState("static");
   const [enableTalkingVideo, setEnableTalkingVideo] = useState(false);
   const [speechText, setSpeechText] = useState("");
@@ -254,7 +255,9 @@ export default function StudioCreatePage() {
     const selectedModel = toolDef.models.find((m) => m.id === selectedModelId) || toolDef.models[0];
     const hasTalkingVideo = activeTool === "video" && enableTalkingVideo && Boolean(speechText.trim());
     const durationMultiplier = (activeTool === "video" && duration === "10") ? 2 : 1;
-    const cost = (selectedModel.cost * durationMultiplier) + (hasTalkingVideo ? 9 : 0);
+    const isKling = activeTool === "video" && selectedModel.id.includes("kling");
+    const qualityMultiplier = (isKling && videoQuality === "high") ? 1.5 : 1;
+    const cost = Math.round((selectedModel.cost * durationMultiplier * qualityMultiplier)) + (hasTalkingVideo ? 9 : 0);
 
     if (creditMode !== "UNLIMITED" && balance < cost) {
       toast.error(`Saldo insuficiente (${balance} créditos disponíveis. Custo: ${cost}).`);
@@ -283,6 +286,8 @@ export default function StudioCreatePage() {
     } else if (activeTool === "video") {
       inputs.duration = duration;
       inputs.camera_motion = cameraMotion;
+      inputs.quality = videoQuality;
+      inputs.resolution = videoQuality === "high" ? "1080p" : "720p";
       if (videoMode === "image" && referenceImageUrl) inputs.image_url = referenceImageUrl;
       if (hasTalkingVideo) {
         inputs.is_talking_video = true;
@@ -661,6 +666,8 @@ export default function StudioCreatePage() {
               selectedModelId={selectedModelId}
               duration={duration}
               onDurationChange={setDuration}
+              videoQuality={videoQuality}
+              onVideoQualityChange={setVideoQuality}
               cameraMotion={cameraMotion}
               onCameraMotionChange={setCameraMotion}
               enableTalkingVideo={enableTalkingVideo}
@@ -724,7 +731,11 @@ export default function StudioCreatePage() {
                 <Play className="h-4 w-4 fill-current" />
                 <span>
                   Gerar {currentToolDef.name} ({
-                    (currentModelDef.cost * (activeTool === "video" && duration === "10" ? 2 : 1)) + (activeTool === "video" && enableTalkingVideo && speechText.trim() ? 9 : 0)
+                    Math.round(
+                      currentModelDef.cost *
+                      (activeTool === "video" && duration === "10" ? 2 : 1) *
+                      (activeTool === "video" && currentModelDef.id.includes("kling") && videoQuality === "high" ? 1.5 : 1)
+                    ) + (activeTool === "video" && enableTalkingVideo && speechText.trim() ? 9 : 0)
                   } créditos)
                 </span>
               </>

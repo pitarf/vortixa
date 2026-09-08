@@ -8,6 +8,8 @@ interface StudioVideoControlsProps {
   selectedModelId?: string;
   duration: string;
   onDurationChange: (duration: string) => void;
+  videoQuality?: string;
+  onVideoQualityChange?: (quality: string) => void;
   cameraMotion: string;
   onCameraMotionChange: (motion: string) => void;
   enableTalkingVideo: boolean;
@@ -24,6 +26,8 @@ export function StudioVideoControls({
   selectedModelId = "",
   duration,
   onDurationChange,
+  videoQuality = "standard",
+  onVideoQualityChange,
   cameraMotion,
   onCameraMotionChange,
   enableTalkingVideo,
@@ -40,24 +44,56 @@ export function StudioVideoControls({
   const modelHasNativeAudio = selectedModelId.includes("seedance");
   return (
     <div className="border border-[#1E202E] rounded-2xl p-4 bg-[#070709] space-y-3 text-xs">
-      {/* Duração do Vídeo */}
-      <div className="flex items-center justify-between">
-        <span className="text-slate-300 font-bold">Duração do Vídeo</span>
-        <div className="flex gap-2">
-          {["5", "10"].map((d) => (
+      {/* Duração e Resolução do Vídeo */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {/* Duração */}
+        <div className="flex items-center justify-between p-2 rounded-xl bg-[#13141B]/60 border border-[#1E202E]">
+          <span className="text-slate-300 font-bold">Duração</span>
+          <div className="flex gap-1.5">
+            {["5", "10"].map((d) => (
+              <button
+                key={d}
+                type="button"
+                onClick={() => onDurationChange(d)}
+                className={`px-3 py-1 rounded-lg font-mono font-bold transition-all cursor-pointer ${
+                  duration === d
+                    ? "bg-cyan-600/30 border border-cyan-500 text-cyan-300"
+                    : "bg-[#070709] text-slate-400 hover:text-white"
+                }`}
+              >
+                {d}s
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Resolução (720p HD vs 1080p Pro) */}
+        <div className="flex items-center justify-between p-2 rounded-xl bg-[#13141B]/60 border border-[#1E202E]">
+          <span className="text-slate-300 font-bold">Resolução</span>
+          <div className="flex gap-1.5">
             <button
-              key={d}
               type="button"
-              onClick={() => onDurationChange(d)}
-              className={`px-3 py-1 rounded-lg font-mono font-bold transition-all cursor-pointer ${
-                duration === d
-                  ? "bg-cyan-600/30 border border-cyan-500 text-cyan-300"
-                  : "bg-[#13141B] text-slate-400 hover:text-white"
+              onClick={() => onVideoQualityChange?.("standard")}
+              className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-bold transition-all cursor-pointer ${
+                videoQuality === "standard"
+                  ? "bg-violet-600 text-white"
+                  : "bg-[#070709] text-slate-400 hover:text-white"
               }`}
             >
-              {d}s
+              720p HD
             </button>
-          ))}
+            <button
+              type="button"
+              onClick={() => onVideoQualityChange?.("high")}
+              className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-bold transition-all cursor-pointer ${
+                videoQuality === "high"
+                  ? "bg-violet-600 text-white shadow-sm"
+                  : "bg-[#070709] text-slate-400 hover:text-white"
+              }`}
+            >
+              1080p Pro 👑
+            </button>
+          </div>
         </div>
       </div>
 

@@ -193,7 +193,7 @@ export default function VideoGenerationPage() {
             timeAgo: "Agora",
             prompt,
             ratio: aspectRatio,
-            quality: quality === "high" ? "Alta" : "Padrão",
+            quality: quality === "high" ? "1080p Pro" : "720p HD",
             modelName: selectedModel.name,
           };
 
