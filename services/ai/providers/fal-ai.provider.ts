@@ -121,7 +121,11 @@ export class FalAIProvider implements IAIProvider {
         } else if (payload.modelTechnicalName.includes("image-to-video")) {
           // Se o usuário selecionou Kling em modo texto (sem imagem), roteia para o endpoint correspondente de Text-to-Video
           if (payload.modelTechnicalName.includes("v3")) {
-            payload.modelTechnicalName = "fal-ai/kling-video/v3/pro/text-to-video";
+            if (payload.modelTechnicalName.includes("standard")) {
+              payload.modelTechnicalName = "fal-ai/kling-video/v3/standard/text-to-video";
+            } else {
+              payload.modelTechnicalName = "fal-ai/kling-video/v3/pro/text-to-video";
+            }
           } else if (payload.modelTechnicalName.includes("v1.5")) {
             payload.modelTechnicalName = "fal-ai/kling-video/v1.5/pro/text-to-video";
           }
