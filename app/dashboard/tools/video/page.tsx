@@ -193,7 +193,7 @@ export default function VideoGenerationPage() {
             timeAgo: "Agora",
             prompt,
             ratio: aspectRatio,
-            quality: quality === "high" ? "1080p Pro" : "720p HD",
+            quality: quality === "ultra4k" ? "4K Ultra" : quality === "high" ? "1080p Pro" : "720p HD",
             modelName: selectedModel.name,
           };
 
@@ -234,10 +234,16 @@ export default function VideoGenerationPage() {
       return;
     }
 
-    // Cálculo de Duração (10s = 2x) e Qualidade (Kling Alta/Pro = 1.5x)
+    // Cálculo de Duração (10s = 2x) e Qualidade (1080p = 1.5x, 4K Ultra = 2x)
     const durationMultiplier = duration === "10" ? 2 : 1;
     const isKling = selectedModel.id.includes("kling");
-    const qualityMultiplier = (isKling && quality === "high") ? 1.5 : 1;
+    const qualityMultiplier = isKling
+      ? quality === "ultra4k"
+        ? 2.0
+        : quality === "high"
+        ? 1.5
+        : 1.0
+      : 1.0;
     const cost = Math.round(selectedModel.cost * durationMultiplier * qualityMultiplier);
 
     if (creditMode !== "UNLIMITED" && balance < cost) {

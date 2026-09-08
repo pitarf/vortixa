@@ -67,31 +67,45 @@ export function StudioVideoControls({
           </div>
         </div>
 
-        {/* Resolução (720p HD vs 1080p Pro) */}
+        {/* Resolução (720p HD vs 1080p Pro vs 4K Ultra) */}
         <div className="flex items-center justify-between p-2 rounded-xl bg-[#13141B]/60 border border-[#1E202E]">
           <span className="text-slate-300 font-bold">Resolução</span>
-          <div className="flex gap-1.5">
+          <div className="flex gap-1">
             <button
               type="button"
               onClick={() => onVideoQualityChange?.("standard")}
-              className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-bold transition-all cursor-pointer ${
+              className={`px-2 py-1 rounded-lg font-mono text-[10px] font-bold transition-all cursor-pointer ${
                 videoQuality === "standard"
                   ? "bg-violet-600 text-white"
                   : "bg-[#070709] text-slate-400 hover:text-white"
               }`}
+              title="720p HD"
             >
-              720p HD
+              720p
             </button>
             <button
               type="button"
               onClick={() => onVideoQualityChange?.("high")}
-              className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-bold transition-all cursor-pointer ${
+              className={`px-2 py-1 rounded-lg font-mono text-[10px] font-bold transition-all cursor-pointer ${
                 videoQuality === "high"
                   ? "bg-violet-600 text-white shadow-sm"
                   : "bg-[#070709] text-slate-400 hover:text-white"
               }`}
+              title="1080p Full HD Pro"
             >
-              1080p Pro 👑
+              1080p 👑
+            </button>
+            <button
+              type="button"
+              onClick={() => onVideoQualityChange?.("ultra4k")}
+              className={`px-2 py-1 rounded-lg font-mono text-[10px] font-bold transition-all cursor-pointer ${
+                videoQuality === "ultra4k"
+                  ? "bg-gradient-to-r from-violet-600 to-cyan-500 text-white shadow-sm"
+                  : "bg-[#070709] text-slate-400 hover:text-white"
+              }`}
+              title="4K Ultra Cinema"
+            >
+              4K 🚀
             </button>
           </div>
         </div>

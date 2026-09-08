@@ -1,6 +1,6 @@
 export type VideoCreationMode = "text-to-video" | "image-to-video";
 export type VideoDuration = "5" | "10";
-export type VideoQuality = "standard" | "high";
+export type VideoQuality = "standard" | "high" | "ultra4k";
 
 export interface VideoModelDef {
   id: string;

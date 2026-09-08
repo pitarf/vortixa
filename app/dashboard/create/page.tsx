@@ -256,7 +256,13 @@ export default function StudioCreatePage() {
     const hasTalkingVideo = activeTool === "video" && enableTalkingVideo && Boolean(speechText.trim());
     const durationMultiplier = (activeTool === "video" && duration === "10") ? 2 : 1;
     const isKling = activeTool === "video" && selectedModel.id.includes("kling");
-    const qualityMultiplier = (isKling && videoQuality === "high") ? 1.5 : 1;
+    const qualityMultiplier = isKling
+      ? videoQuality === "ultra4k"
+        ? 2.0
+        : videoQuality === "high"
+        ? 1.5
+        : 1.0
+      : 1.0;
     const cost = Math.round((selectedModel.cost * durationMultiplier * qualityMultiplier)) + (hasTalkingVideo ? 9 : 0);
 
     if (creditMode !== "UNLIMITED" && balance < cost) {
@@ -734,7 +740,13 @@ export default function StudioCreatePage() {
                     Math.round(
                       currentModelDef.cost *
                       (activeTool === "video" && duration === "10" ? 2 : 1) *
-                      (activeTool === "video" && currentModelDef.id.includes("kling") && videoQuality === "high" ? 1.5 : 1)
+                      (activeTool === "video" && currentModelDef.id.includes("kling")
+                        ? videoQuality === "ultra4k"
+                          ? 2.0
+                          : videoQuality === "high"
+                          ? 1.5
+                          : 1.0
+                        : 1.0)
                     ) + (activeTool === "video" && enableTalkingVideo && speechText.trim() ? 9 : 0)
                   } créditos)
                 </span>

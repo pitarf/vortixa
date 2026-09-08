@@ -262,8 +262,13 @@ export class FalAIProvider implements IAIProvider {
           delete modelInputs.seed;
         }
 
-        // 6. Modo de Resolução e Qualidade (720p vs 1080p)
-        if (modelInputs.quality === "high" || modelInputs.resolution === "1080p") {
+        // 6. Modo de Resolução e Qualidade (720p vs 1080p vs 4K Ultra)
+        if (modelInputs.quality === "ultra4k" || modelInputs.resolution === "4k" || modelInputs.resolution === "4K") {
+          modelInputs.resolution = "4k";
+          if (payload.modelTechnicalName.includes("kling")) {
+            modelInputs.mode = "pro";
+          }
+        } else if (modelInputs.quality === "high" || modelInputs.resolution === "1080p") {
           modelInputs.resolution = "1080p";
           if (payload.modelTechnicalName.includes("kling")) {
             modelInputs.mode = "pro";

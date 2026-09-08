@@ -107,36 +107,50 @@ export function VideoSettingsSection({
           </div>
         </div>
 
-        {/* Coluna 3: Qualidade / Resolução (720p HD | 1080p Pro 👑) */}
+        {/* Coluna 3: Qualidade / Resolução (720p HD | 1080p Pro | 4K Ultra 👑) */}
         <div className="space-y-1.5">
           <label className="text-[11px] font-bold text-slate-400 block">Resolução / Qualidade</label>
-          <div className="grid grid-cols-2 gap-1.5 p-1 bg-[#070709] border border-[#1E202E] rounded-xl">
+          <div className="grid grid-cols-3 gap-1 p-1 bg-[#070709] border border-[#1E202E] rounded-xl">
             <button
               type="button"
               onClick={() => onChangeQuality("standard")}
-              className={`py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+              className={`py-2 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
                 quality === "standard"
                   ? "bg-violet-600 text-white shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
               style={{ minHeight: "36px" }}
-              title="720p HD - Resolução Padrão rápida e econômica"
+              title="720p HD - Resolução Padrão rápida e econômica (1x créditos)"
             >
               720p HD
             </button>
             <button
               type="button"
               onClick={() => onChangeQuality("high")}
-              className={`py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer ${
+              className={`py-2 text-[11px] font-bold rounded-lg transition-all flex items-center justify-center gap-0.5 cursor-pointer ${
                 quality === "high"
                   ? "bg-violet-600 text-white shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
               style={{ minHeight: "36px" }}
-              title="1080p Full HD Pro - Máxima nitidez e amostragem densa"
+              title="1080p Full HD Pro - Máxima nitidez e amostragem densa (1.5x créditos)"
             >
               <span>1080p</span>
-              <Crown className="w-3 h-3 text-amber-400" />
+              <Crown className="w-2.5 h-2.5 text-amber-400" />
+            </button>
+            <button
+              type="button"
+              onClick={() => onChangeQuality("ultra4k")}
+              className={`py-2 text-[11px] font-bold rounded-lg transition-all flex items-center justify-center gap-0.5 cursor-pointer ${
+                quality === "ultra4k"
+                  ? "bg-gradient-to-r from-violet-600 to-cyan-500 text-white shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+              style={{ minHeight: "36px" }}
+              title="4K Ultra Cinema - Resolução cinematográfica de estúdio (2x créditos)"
+            >
+              <span>4K Ultra</span>
+              <Crown className="w-2.5 h-2.5 text-cyan-300" />
             </button>
           </div>
         </div>

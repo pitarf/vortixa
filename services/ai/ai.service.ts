@@ -61,10 +61,17 @@ export class AIService {
     const is10s = String(request.inputs?.duration) === "10";
     const durationMultiplier = (isVideo && is10s) ? 2 : 1;
 
-    // Kling em modo Alta / Pro (1080p) consome amostragem reforçada e mais VRAM
+    // Kling em modo Alta / Pro (1080p = 1.5x) e 4K Ultra (2.0x)
     const isKling = targetModel.technicalName.includes("kling");
+    const is4K = request.inputs?.quality === "ultra4k" || request.inputs?.resolution === "4k" || request.inputs?.resolution === "4K";
     const isHighQuality = request.inputs?.quality === "high" || request.inputs?.mode === "pro" || request.inputs?.resolution === "1080p";
-    const qualityMultiplier = (isKling && isHighQuality) ? 1.5 : 1;
+    const qualityMultiplier = isKling
+      ? is4K
+        ? 2.0
+        : isHighQuality
+        ? 1.5
+        : 1.0
+      : 1.0;
 
     const totalMultiplier = durationMultiplier * qualityMultiplier;
     const cost = Math.round(targetModel.creditCost * totalMultiplier);
