@@ -234,9 +234,11 @@ export default function VideoGenerationPage() {
       return;
     }
 
-    // Vídeos de 10s dobram o tempo de processamento e o custo na GPU
+    // Cálculo de Duração (10s = 2x) e Qualidade (Kling Alta/Pro = 1.5x)
     const durationMultiplier = duration === "10" ? 2 : 1;
-    const cost = selectedModel.cost * durationMultiplier;
+    const isKling = selectedModel.id.includes("kling");
+    const qualityMultiplier = (isKling && quality === "high") ? 1.5 : 1;
+    const cost = Math.round(selectedModel.cost * durationMultiplier * qualityMultiplier);
 
     if (creditMode !== "UNLIMITED" && balance < cost) {
       toast.error(`Saldo insuficiente (${balance} créditos disponíveis. Custo: ${cost}).`);
@@ -339,7 +341,11 @@ export default function VideoGenerationPage() {
 
           {/* Card 4: Barra de Ação (Custo e Botão Gerar Vídeo) */}
           <VideoActionBar
-            cost={selectedModel.cost * (duration === "10" ? 2 : 1)}
+            cost={Math.round(
+              selectedModel.cost * 
+              (duration === "10" ? 2 : 1) * 
+              (selectedModel.id.includes("kling") && quality === "high" ? 1.5 : 1)
+            )}
             isGenerating={isGenerating}
             activeStepText={activeStepText}
             onGenerate={handleGenerateVideo}

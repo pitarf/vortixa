@@ -56,13 +56,19 @@ export class AIService {
       }
     }
 
-    // Cálculo dinâmico de custo: Vídeos de 10s consomem o dobro de inferência da GPU
+    // Cálculo dinâmico de custo: Duração (10s = 2x) e Qualidade (Kling Pro/Alta = 1.5x)
     const isVideo = request.toolSlug.includes("video") || targetModel.technicalName.includes("video") || targetModel.technicalName.includes("wan") || targetModel.technicalName.includes("luma") || targetModel.technicalName.includes("seedance") || targetModel.technicalName.includes("minimax");
     const is10s = String(request.inputs?.duration) === "10";
     const durationMultiplier = (isVideo && is10s) ? 2 : 1;
 
-    const cost = targetModel.creditCost * durationMultiplier;
-    const apiUnitCost = targetModel.apiUnitCost * durationMultiplier;
+    // Kling em modo Alta / Pro consome amostragem reforçada e mais VRAM
+    const isKling = targetModel.technicalName.includes("kling");
+    const isHighQuality = request.inputs?.quality === "high" || request.inputs?.mode === "pro";
+    const qualityMultiplier = (isKling && isHighQuality) ? 1.5 : 1;
+
+    const totalMultiplier = durationMultiplier * qualityMultiplier;
+    const cost = Math.round(targetModel.creditCost * totalMultiplier);
+    const apiUnitCost = targetModel.apiUnitCost * totalMultiplier;
 
     // 3. Verificar saldo de créditos
     const hasCredits = await CreditService.hasEnoughCredits(request.userId, cost);
