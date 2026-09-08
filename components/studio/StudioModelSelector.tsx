@@ -2,6 +2,7 @@
 
 import React from "react";
 import { StudioTool, TOOLS, QUALITY_MODES } from "./types";
+import { ModelLogo } from "@/components/tools/video/ModelLogo";
 
 interface StudioModelSelectorProps {
   activeTool: StudioTool;
@@ -58,13 +59,18 @@ export function StudioModelSelector({
                 }`}
                 style={{ minHeight: "82px" }}
               >
-                <div className="flex items-center justify-between gap-1">
-                  <span className="text-xs font-bold text-white truncate">
-                    {model.name}
-                  </span>
-                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/20 whitespace-nowrap">
-                    {model.cost} cr
-                  </span>
+                <div className="flex items-center gap-2.5">
+                  {activeTool === "video" && <ModelLogo modelId={model.id} size="sm" />}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="text-xs font-bold text-white truncate">
+                        {model.name}
+                      </span>
+                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/20 whitespace-nowrap">
+                        {model.cost} cr
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <p className="text-[11px] text-slate-300 leading-tight my-1">
                   {model.description}

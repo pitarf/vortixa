@@ -8,4 +8,6 @@ export * from "./ImageRatioSelector";
 export * from "./ImageModelPicker";
 export * from "./ImagePreviewArea";
 export * from "./ImageHistorySidebar";
-export * from "./ImageInspirationGallery";
+export * from "./ImageActionBar";
+export * from "./ImageInputSection";
+export * from "./ImageSettingsSection";

@@ -5,6 +5,7 @@ import { Sparkles } from "lucide-react";
 import { VORIXA_VOICES } from "@/lib/voice-catalog";
 
 interface StudioVideoControlsProps {
+  selectedModelId?: string;
   duration: string;
   onDurationChange: (duration: string) => void;
   cameraMotion: string;
@@ -20,6 +21,7 @@ interface StudioVideoControlsProps {
 }
 
 export function StudioVideoControls({
+  selectedModelId = "",
   duration,
   onDurationChange,
   cameraMotion,
@@ -33,6 +35,9 @@ export function StudioVideoControls({
   selectedGender,
   onGenderChange,
 }: StudioVideoControlsProps) {
+  // Modelos como Seedance 2.0 já geram vídeo com áudio sincronizado nativamente pelo prompt,
+  // portanto a opção de LipSync só deve aparecer para modelos que NÃO possuem áudio nativo (Kling, Wan, Luma, Minimax).
+  const modelHasNativeAudio = selectedModelId.includes("seedance");
   return (
     <div className="border border-[#1E202E] rounded-2xl p-4 bg-[#070709] space-y-3 text-xs">
       {/* Duração do Vídeo */}
@@ -72,26 +77,27 @@ export function StudioVideoControls({
         </select>
       </div>
 
-      {/* One-Shot Talking Video Toggle */}
-      <div className="pt-3 border-t border-[#1E202E] space-y-2.5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-violet-400" />
-            <span className="text-xs font-bold text-white">Voz & Fala do Personagem</span>
+      {/* One-Shot Talking Video Toggle (Exibido apenas em modelos sem áudio nativo) */}
+      {!modelHasNativeAudio && (
+        <div className="pt-3 border-t border-[#1E202E] space-y-2.5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+              <span className="text-xs font-bold text-white">Voz & Fala do Personagem (LipSync)</span>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={enableTalkingVideo}
+                onChange={(e) => onToggleTalkingVideo(e.target.checked)}
+                className="sr-only peer"
+              />
+              <div className="w-8 h-4 bg-[#1E202E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-violet-600 peer-checked:to-cyan-500"></div>
+            </label>
           </div>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              checked={enableTalkingVideo}
-              onChange={(e) => onToggleTalkingVideo(e.target.checked)}
-              className="sr-only peer"
-            />
-            <div className="w-8 h-4 bg-[#1E202E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-violet-600 peer-checked:to-cyan-500"></div>
-          </label>
-        </div>
-        <p className="text-[10px] text-slate-400 leading-tight">
-          Gera a fala neural e sincroniza os lábios automaticamente (+9 cr).
-        </p>
+          <p className="text-[10px] text-slate-400 leading-tight">
+            Gera a fala neural e sincroniza os lábios automaticamente (+9 cr).
+          </p>
 
         {enableTalkingVideo && (
           <div className="space-y-2 pt-1 animate-in fade-in-50 duration-200">
@@ -161,6 +167,7 @@ export function StudioVideoControls({
           </div>
         )}
       </div>
-    </div>
-  );
+    )}
+  </div>
+);
 }

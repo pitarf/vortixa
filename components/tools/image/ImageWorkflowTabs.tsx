@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Type, Image as ImageIcon, Palette, User, LayoutGrid } from "lucide-react";
+import { Type, Image as ImageIcon, Palette, User } from "lucide-react";
 import { CreationMode } from "./types";
 
 interface ImageWorkflowTabsProps {
@@ -14,7 +14,6 @@ const WORKFLOW_TABS = [
   { id: "image-to-image" as CreationMode, label: "Imagem para Imagem", icon: ImageIcon },
   { id: "style-ref" as CreationMode, label: "Estilo de Referência", icon: Palette },
   { id: "character" as CreationMode, label: "Personagem", icon: User },
-  { id: "composition" as CreationMode, label: "Composição Avançada", icon: LayoutGrid },
 ];
 
 export function ImageWorkflowTabs({

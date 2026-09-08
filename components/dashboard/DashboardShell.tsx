@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { ProviderModeSwitch } from "@/components/layout/ProviderModeSwitch";
+import { PageTipsModal, PageTipsButton } from "@/components/dashboard/PageTipsModal";
 
 interface DashboardShellProps {
   children: React.ReactNode;
@@ -61,6 +62,7 @@ export function DashboardShell({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isTipsModalOpen, setIsTipsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -161,8 +163,8 @@ export function DashboardShell({
   ];
 
   const engineItems = [
-    { name: "FLUX.1 (Imagem)", href: "/dashboard/tools/image", icon: ImageIcon, color: "text-violet-400" },
-    { name: "Kling AI (Vídeo)", href: "/dashboard/tools/video", icon: Video, color: "text-cyan-400" },
+    { name: "Gerador de Imagem", href: "/dashboard/tools/image", icon: ImageIcon, color: "text-violet-400" },
+    { name: "Gerador de Vídeo", href: "/dashboard/tools/video", icon: Video, color: "text-cyan-400" },
     { name: "LivePortrait (LipSync)", href: "/dashboard/tools/lipsync", icon: Navigation, color: "text-emerald-400" },
     { name: "Motion Control", href: "/dashboard/tools/motion", icon: Activity, color: "text-fuchsia-400" },
     { name: "Upscale 4K", href: "/dashboard/tools/upscale", icon: Layers, color: "text-amber-400" },
@@ -174,7 +176,18 @@ export function DashboardShell({
     { name: "Compartilhados", href: "/dashboard/library?tab=shared", icon: Share2 },
   ];
 
-  const systemItems = [
+  interface SystemItem {
+    name: string;
+    href: string;
+    icon: any;
+    badge?: string;
+    color?: string;
+    highlight?: boolean;
+    admin?: boolean;
+    external?: boolean;
+  }
+
+  const systemItems: SystemItem[] = [
     {
       name: "Novidades & Changelog",
       href: "/dashboard/changelog",
@@ -184,7 +197,7 @@ export function DashboardShell({
     },
     { name: "Planos & Créditos", href: "/dashboard/credits", icon: Coins, highlight: true },
     { name: "Configurações", href: "/dashboard/settings", icon: Settings },
-    { name: "Ajuda & Suporte", href: "https://docs.vorixa.com", icon: HelpCircle, external: true },
+    { name: "Ajuda & Suporte", href: "/dashboard/help", icon: HelpCircle },
     ...(user?.role === "ADMIN"
       ? [{ name: "Painel Admin", href: "/dashboard/admin", icon: ShieldCheck, admin: true }]
       : []),
@@ -205,14 +218,14 @@ export function DashboardShell({
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
-                <span className="text-base font-black tracking-wider bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent font-heading">
+                <span className="text-base font-black tracking-wider text-slate-950 dark:text-white font-heading">
                   VORIXA
                 </span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded font-mono bg-violet-500/20 text-violet-300 font-bold border border-violet-500/30">
+                <span className="text-[9px] px-1.5 py-0.2 rounded font-mono bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 font-bold border border-violet-200 dark:border-violet-500/30">
                   OS 2.5
                 </span>
               </div>
-              <span className="text-[10px] font-mono tracking-widest text-slate-400 uppercase font-semibold">
+              <span className="text-[10px] font-mono tracking-widest text-slate-600 dark:text-slate-400 uppercase font-semibold">
                 CREATIVE SUITE
               </span>
             </div>
@@ -546,6 +559,9 @@ export function DashboardShell({
             )}
           </div>
 
+          {/* Botão de Dica de Ferramenta / O que dá para fazer nesta página */}
+          <PageTipsButton onClick={() => setIsTipsModalOpen(true)} />
+
           {/* Alternador de Tema */}
           <ThemeToggle />
 
@@ -646,6 +662,12 @@ export function DashboardShell({
           {children}
         </main>
       </div>
+
+      {/* Modal de Dicas de Ferramenta Contextual */}
+      <PageTipsModal
+        isOpen={isTipsModalOpen}
+        onClose={() => setIsTipsModalOpen(false)}
+      />
     </div>
   );
 }

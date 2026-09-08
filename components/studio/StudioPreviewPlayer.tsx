@@ -16,7 +16,7 @@ import {
   Flame,
   X,
 } from "lucide-react";
-import { INSPIRATIONS, InspirationItem, ModelOption } from "./types";
+import { INSPIRATIONS, InspirationItem, ModelOption, StudioHistoryItem } from "./types";
 
 interface StudioPreviewPlayerProps {
   isGenerating: boolean;
@@ -35,6 +35,8 @@ interface StudioPreviewPlayerProps {
   onVary: () => void;
   onSetResultAsReference: () => void;
   defaultIcon?: React.ComponentType<{ className?: string }>;
+  recentCreations?: StudioHistoryItem[];
+  onSelectRecentCreation?: (url: string, mediaType: "image" | "video") => void;
 }
 
 export function StudioPreviewPlayer({
@@ -54,6 +56,8 @@ export function StudioPreviewPlayer({
   onVary,
   onSetResultAsReference,
   defaultIcon: DefaultIcon,
+  recentCreations = [],
+  onSelectRecentCreation,
 }: StudioPreviewPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -318,6 +322,47 @@ export function StudioPreviewPlayer({
           </button>
         </div>
       </div>
+
+      {/* SEÇÃO DE GERAÇÕES RECENTES REAIS DO USUÁRIO */}
+      {recentCreations.length > 0 && (
+        <div className="space-y-2 pt-1">
+          <div className="flex items-center justify-between text-xs text-slate-400">
+            <span className="font-semibold text-white">Gerações Recentes</span>
+            <span className="text-[11px] text-slate-500 font-mono">
+              {recentCreations.length} mídia{recentCreations.length === 1 ? "" : "s"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-5 gap-2">
+            {recentCreations.slice(0, 5).map((item, idx) => {
+              const isActive = resultMediaUrl === item.url;
+              return (
+                <button
+                  key={item.id || idx}
+                  type="button"
+                  onClick={() => onSelectRecentCreation?.(item.url, item.mediaType || "image")}
+                  className={`relative rounded-xl overflow-hidden border aspect-video cursor-pointer transition-all ${
+                    isActive
+                      ? "border-cyan-400 shadow-md shadow-cyan-400/30 ring-1 ring-cyan-400 scale-[1.02]"
+                      : "border-[#1E202E] hover:border-slate-600 opacity-70 hover:opacity-100"
+                  }`}
+                >
+                  {item.mediaType === "video" ? (
+                    <video src={item.url} className="w-full h-full object-cover" muted playsInline />
+                  ) : (
+                    <img src={item.url} alt={item.prompt || "Criação"} className="w-full h-full object-cover" />
+                  )}
+                  {item.mediaType === "video" && (
+                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                      <Play className="w-3.5 h-3.5 fill-white text-white drop-shadow" />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* SEÇÃO INFERIOR: Inspirações para você (Carrossel / 5 Cards) */}
       <div className="space-y-3">

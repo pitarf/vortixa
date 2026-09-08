@@ -1,301 +1,364 @@
 "use client";
 
-import React, { useState } from "react";
-import { GenerationLayout } from "@/components/ai/generation-layout";
-import { PromptInput } from "@/components/ai/prompt-input";
-import { FileUploader } from "@/components/ai/file-uploader";
+import React, { useState, useEffect } from "react";
+import { toast } from "sonner";
+import {
+  VideoCreationMode,
+  VideoDuration,
+  VideoQuality,
+  VideoModelDef,
+  VideoRecentCreation,
+  VIDEO_MODELS,
+  VIDEO_PROMPT_SUGGESTIONS,
+  VideoHeader,
+  VideoInputSection,
+  VideoModelSection,
+  VideoSettingsSection,
+  VideoPreviewPlayer,
+  VideoActionBar,
+} from "@/components/tools/video";
 
-import { MessageSquare, Sparkles, Volume2 } from "lucide-react";
-import { VORIXA_VOICES } from "@/lib/voice-catalog";
+export default function VideoGenerationPage() {
+  // Saldo e limites
+  const [balance, setBalance] = useState<number>(2480);
+  const [creditMode, setCreditMode] = useState<string>("LIMITED");
 
-const VIDEO_MODELS = [
-  { id: "fal-ai/bytedance/seedance-2.0", name: "ByteDance Seedance 2.0", badge: "Áudio & Física 👑", cost: 25, description: "Motor líder da ByteDance. Geração de vídeo com física real e áudio sincronizado nativo", speed: "~ 45s" },
-  { id: "fal-ai/veo3.1", name: "Google Veo 3.1", badge: "Áudio/Fala Nativo 🎙️", cost: 30, description: "Vídeo cinematográfico com som ambiente e falas nativas em 1 clique", speed: "~ 60s" },
-  { id: "fal-ai/kling-video/v3/pro/image-to-video", name: "Kling 3.0 Pro", badge: "Cinema Ultra", cost: 20, description: "Renderização 4K cinematográfica com consistência temporal extrema", speed: "~ 60s" },
-  { id: "fal-ai/kling-video/v2.1/pro/image-to-video", name: "Kling 2.1 Pro", badge: "Cinema Master", cost: 15, description: "Última geração Kling com máxima consistência temporal e física", speed: "~ 50s" },
-  { id: "fal-ai/luma-dream-machine/ray-2", name: "Luma Ray 2", badge: "Física Realista", cost: 12, description: "Arquitetura Ray 2 de alta coerência dinâmica e controle de câmera", speed: "~ 45s" },
-  { id: "fal-ai/wan-i2v", name: "Wan 2.1 High-Motion", badge: "Fluidez Extrema", cost: 10, description: "Movimentos corporais fluidos e grande estabilidade em 720p", speed: "~ 35s" },
-  { id: "fal-ai/minimax/video-01-live", name: "Hailuo Minimax 01 Live", badge: "Expressões Vivas", cost: 12, description: "Renderização humana hiper-expressiva e ação contínua", speed: "~ 40s" },
-];
+  // Estado dos Inputs (Passo 1: Entrada)
+  const [creationMode, setCreationMode] = useState<VideoCreationMode>("text-to-video");
+  const [prompt, setPrompt] = useState<string>(
+    "Uma mulher futurista em uma cidade cyberpunk, chuva neon, olhando para a câmera, movimento de câmera suave, ambiente cinematográfico, ultra realista, 8k."
+  );
+  const [referenceImageUrl, setReferenceImageUrl] = useState<string>("/media/landing/gallery/editorial_fashion.jpg");
+  const [isUploadingRef, setIsUploadingRef] = useState<boolean>(false);
+  const [isOptimizing, setIsOptimizing] = useState<boolean>(false);
 
-export default function VideoToolPage() {
-  const [mode, setMode] = useState<"text" | "image">("text");
-  const [selectedModelId, setSelectedModelId] = useState<string>(VIDEO_MODELS[0].id);
-  const [enableTalkingVideo, setEnableTalkingVideo] = useState<boolean>(false);
-  const [speechText, setSpeechText] = useState<string>("");
-  const [selectedVoice, setSelectedVoice] = useState<string>("Rachel");
-  const [selectedGender, setSelectedGender] = useState<"all" | "female" | "male">("all");
+  // Estado do Motor de IA (Passo 2)
+  const [selectedModel, setSelectedModel] = useState<VideoModelDef>(VIDEO_MODELS[0]); // Kling 2.1 Pro
 
-  const selectedModel = VIDEO_MODELS.find((m) => m.id === selectedModelId) || VIDEO_MODELS[0];
-  // Custo total: se talking video estiver ativado com fala, soma 9 créditos (1 TTS + 8 LipSync)
-  const totalCost = selectedModel.cost + (enableTalkingVideo && speechText.trim() ? 9 : 0);
+  // Estado dos Ajustes (Passo 3)
+  const [duration, setDuration] = useState<VideoDuration>("5");
+  const [aspectRatio, setAspectRatio] = useState<string>("16:9");
+  const [quality, setQuality] = useState<VideoQuality>("standard");
+  const [cameraMovement, setCameraMovement] = useState<string>("none");
+  const [seed, setSeed] = useState<string>("");
+  const [negativePrompt, setNegativePrompt] = useState<string>("");
 
-  const filteredVoices = VORIXA_VOICES.filter((v) => {
-    if (selectedGender !== "all" && v.gender !== selectedGender) return false;
-    return true;
-  });
+  // Estados de Geração e Preview
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [activeStepText, setActiveStepText] = useState<string>("");
+  const [activeVideoUrl, setActiveVideoUrl] = useState<string>("");
+
+  // Histórico de Vídeos Reais do Usuário (sem fakes)
+  const [recentCreations, setRecentCreations] = useState<VideoRecentCreation[]>([]);
+
+  // Carrega configuração de saldo e histórico real
+  useEffect(() => {
+    async function loadConfig() {
+      try {
+        const res = await fetch("/api/tools/config");
+        if (res.ok) {
+          const data = await res.json();
+          setBalance(data.balance ?? 2480);
+          setCreditMode(data.creditMode ?? "LIMITED");
+        }
+      } catch (err) {
+        console.warn("Erro ao carregar saldo:", err);
+      }
+    }
+
+    async function loadHistory() {
+      try {
+        const res = await fetch("/api/library?type=video");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.items && data.items.length > 0) {
+            const mapped: VideoRecentCreation[] = data.items.map((it: any) => ({
+              id: it.id,
+              url: it.url,
+              thumbUrl: it.inputs?.image_url || it.thumbUrl || undefined,
+              title: it.prompt ? it.prompt.slice(0, 24) : "Criação de Vídeo",
+              duration: `${it.inputs?.duration || "5"}s`,
+              timeAgo: new Date(it.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+              prompt: it.prompt || "",
+              ratio: it.inputs?.aspect_ratio || "16:9",
+              quality: "Alta",
+              modelName: it.modelName || "Kling 2.1 Pro",
+            }));
+            setRecentCreations(mapped);
+            if (mapped[0]?.url) {
+              setActiveVideoUrl(mapped[0].url);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Histórico real de vídeo vazio ou inicial:", err);
+      }
+    }
+
+    loadConfig();
+    loadHistory();
+  }, []);
+
+  // Upload de Imagem de Referência
+  const handleUploadImage = async (file: File) => {
+    try {
+      setIsUploadingRef(true);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/tools/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Falha no upload da imagem de referência.");
+      const data = await res.json();
+      setReferenceImageUrl(data.url);
+      setCreationMode("image-to-video");
+      toast.success("Imagem de referência anexada com sucesso!");
+    } catch (err: any) {
+      toast.error(err.message || "Erro no upload.");
+    } finally {
+      setIsUploadingRef(false);
+    }
+  };
+
+  // Inspiração e Otimização com IA
+  const handleInspirationPrompt = () => {
+    const random = VIDEO_PROMPT_SUGGESTIONS[Math.floor(Math.random() * VIDEO_PROMPT_SUGGESTIONS.length)];
+    setPrompt(random);
+    toast.info("Prompt criativo sugerido!");
+  };
+
+  const handleClearPrompt = () => {
+    setPrompt("");
+    toast.info("Campo de texto limpo.");
+  };
+
+  const handleOptimizePrompt = async () => {
+    if (!prompt.trim()) {
+      toast.error("Digite uma ideia antes de inspirar.");
+      return;
+    }
+    try {
+      setIsOptimizing(true);
+      const res = await fetch("/api/tools/optimize-prompt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt,
+          enhanceQuality: true,
+          toolType: "video",
+        }),
+      });
+
+      if (!res.ok) throw new Error("Não foi possível otimizar o prompt.");
+      const data = await res.json();
+      if (data.optimizedPrompt) {
+        setPrompt(data.optimizedPrompt);
+        toast.success("Prompt enriquecido com iluminação e movimentos cinematográficos!");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Erro na otimização.");
+    } finally {
+      setIsOptimizing(false);
+    }
+  };
+
+  // Polling do Job de Geração
+  const pollJobStatus = (jobId: string) => {
+    let attempts = 0;
+    const interval = setInterval(async () => {
+      attempts++;
+      try {
+        const res = await fetch(`/api/tools/job/${jobId}`);
+        if (!res.ok) throw new Error("Erro ao consultar status do job.");
+
+        const data = await res.json();
+
+        if (data.status === "COMPLETED") {
+          clearInterval(interval);
+          setIsGenerating(false);
+          setActiveStepText("");
+
+          const outputUrl = data.outputs?.[0]?.fileUrl || activeVideoUrl;
+          setActiveVideoUrl(outputUrl);
+
+          const newCreation: VideoRecentCreation = {
+            id: data.id,
+            url: outputUrl,
+            thumbUrl: referenceImageUrl || undefined,
+            title: prompt.slice(0, 24),
+            duration: `${duration}s`,
+            timeAgo: "Agora",
+            prompt,
+            ratio: aspectRatio,
+            quality: quality === "high" ? "Alta" : "Padrão",
+            modelName: selectedModel.name,
+          };
+
+          setRecentCreations((prev) => [newCreation, ...prev]);
+          toast.success("Vídeo cinematográfico renderizado com sucesso!");
+        } else if (data.status === "FAILED") {
+          clearInterval(interval);
+          setIsGenerating(false);
+          setActiveStepText("");
+          toast.error(data.error || "A renderização do vídeo falhou na GPU.");
+        } else {
+          setActiveStepText(
+            attempts < 4
+              ? "Inicializando cluster neural"
+              : attempts < 8
+              ? "Calculando física e interpolação de movimento"
+              : "Codificando vídeo em 4K e aplicando color grading"
+          );
+        }
+      } catch (err) {
+        console.error("Erro no polling:", err);
+      }
+
+      if (attempts > 120) {
+        clearInterval(interval);
+        setIsGenerating(false);
+        setActiveStepText("");
+        toast.error("Tempo limite excedido na renderização do vídeo.");
+      }
+    }, 2500);
+  };
+
+  // Disparo de Geração de Vídeo
+  const handleGenerateVideo = async () => {
+    if (isGenerating) return;
+    if (!prompt.trim() && !referenceImageUrl) {
+      toast.error("Por favor, forneça uma descrição ou envie uma imagem de referência.");
+      return;
+    }
+
+    const cost = selectedModel.cost;
+
+    if (creditMode !== "UNLIMITED" && balance < cost) {
+      toast.error(`Saldo insuficiente (${balance} créditos disponíveis. Custo: ${cost}).`);
+      return;
+    }
+
+    try {
+      setIsGenerating(true);
+      setActiveStepText("Conectando ao cluster de GPUs");
+
+      const inputs: Record<string, any> = {
+        prompt,
+        duration,
+        aspect_ratio: aspectRatio,
+        quality,
+        camera_movement: cameraMovement,
+        seed: seed ? parseInt(seed, 10) : undefined,
+        negative_prompt: negativePrompt || undefined,
+      };
+
+      if (creationMode === "image-to-video" && referenceImageUrl) {
+        inputs.image_url = referenceImageUrl;
+        inputs.prompt_image_url = referenceImageUrl;
+      }
+
+      const idempotencyKey = `video-tool-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+
+      const res = await fetch("/api/tools/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          toolSlug: "imagem-video",
+          modelId: selectedModel.id,
+          inputs,
+          idempotencyKey,
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Erro ao iniciar renderização.");
+      }
+
+      const job = await res.json();
+      setActiveStepText("Renderizando frames de vídeo...");
+      pollJobStatus(job.id);
+    } catch (err: any) {
+      setIsGenerating(false);
+      setActiveStepText("");
+      toast.error(err.message || "Erro ao disparar inferência.");
+    }
+  };
 
   return (
-    <GenerationLayout
-      toolSlug="imagem-video"
-      title="Imagem/Texto para Vídeo"
-      description="Crie vídeos realistas a partir de descrições textuais ou dando movimento a uma imagem."
-      selectedModelId={selectedModelId}
-      customCost={totalCost}
-      initialInputs={{
-        prompt: "",
-        image_url: "",
-        duration: "5",
-        speech_text: "",
-        voice: "Rachel",
-        is_talking_video: false,
-      }}
-    >
-      {({ setInputVal, inputs }) => (
-        <div className="space-y-6">
-          {/* Seletor de Modelo de IA (Cards Táteis) */}
-          <div>
-            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-              Motor de IA para Vídeo
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {VIDEO_MODELS.map((model) => {
-                const isSelected = selectedModelId === model.id;
-                return (
-                  <button
-                    key={model.id}
-                    type="button"
-                    onClick={() => setSelectedModelId(model.id)}
-                    className={`p-3 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between ${
-                      isSelected
-                        ? "bg-[#13141B] border-violet-500 shadow-[0_0_20px_rgba(139,92,246,0.25)] ring-1 ring-violet-500/50"
-                        : "bg-[#070709] border-[#1E202E] hover:border-slate-700 opacity-85 hover:opacity-100"
-                    }`}
-                    style={{ minHeight: "82px" }}
-                  >
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="text-xs font-bold text-white truncate">
-                        {model.name}
-                      </span>
-                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/20 whitespace-nowrap">
-                        {model.cost} cr
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-300 leading-tight my-1">
-                      {model.description}
-                    </p>
-                    <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono pt-1 border-t border-[#1E202E]/60">
-                      <span className="text-cyan-400 font-semibold">{model.badge}</span>
-                      <span className="text-slate-500">{model.speed}</span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#070709] text-slate-100 p-3 sm:p-5 lg:p-6 space-y-6 max-w-[1700px] mx-auto font-sans">
+      {/* 1. Header com Título, Subtítulo e Citação VORIXA */}
+      <VideoHeader />
 
-          {/* Seletor de Modo */}
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Modo de Geração</label>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("text");
-                  setInputVal("image_url", "");
-                }}
-                className={`py-3 px-4 text-xs font-bold rounded-xl border transition-all duration-300 ${
-                  mode === "text"
-                    ? "bg-violet-600/10 border-violet-500 text-violet-400"
-                    : "bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700"
-                }`}
-                style={{ minHeight: "44px" }}
-              >
-                Texto para Vídeo
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode("image")}
-                className={`py-3 px-4 text-xs font-bold rounded-xl border transition-all duration-300 ${
-                  mode === "image"
-                    ? "bg-violet-600/10 border-violet-500 text-violet-400"
-                    : "bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700"
-                }`}
-                style={{ minHeight: "44px" }}
-              >
-                Imagem para Vídeo
-              </button>
-            </div>
-          </div>
-
-          {mode === "image" && (
-            <FileUploader
-              accept="image/*"
-              label="Imagem Estática de Origem"
-              onUploadSuccess={(url) => setInputVal("image_url", url)}
-              onClear={() => setInputVal("image_url", "")}
-            />
-          )}
-
-          <PromptInput
-            value={inputs.prompt || ""}
-            onChange={(val) => setInputVal("prompt", val)}
-            placeholder={
-              mode === "image"
-                ? "Descreva a movimentação ou a ação desejada no vídeo... Ex: A câmera faz zoom lento enquanto o cabelo da moça voa ao vento"
-                : "Descreva a cena cinematográfica que deseja gerar... Ex: Um astronauta caminhando na areia vermelha de Marte, iluminação dramática"
-            }
+      {/* 2. Grid Principal em 2 Colunas: Controles à Esquerda e Preview/Player à Direita */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Coluna da Esquerda: Blocos 1, 2, 3 e Barra de Ação */}
+        <div className="lg:col-span-6 space-y-4">
+          {/* Card 1: Entrada */}
+          <VideoInputSection
+            creationMode={creationMode}
+            onSelectMode={(mode) => setCreationMode(mode)}
+            prompt={prompt}
+            onChangePrompt={setPrompt}
+            referenceImageUrl={referenceImageUrl}
+            onRemoveReferenceImage={() => setReferenceImageUrl("")}
+            onUploadImage={handleUploadImage}
+            isUploadingRef={isUploadingRef}
+            onInspirationPrompt={handleInspirationPrompt}
+            onClearPrompt={handleClearPrompt}
+            onOptimizePrompt={handleOptimizePrompt}
+            isOptimizing={isOptimizing}
           />
 
-          {/* Seção One-Shot Talking Video (Fala com IA Integrada) */}
-          <div className="border border-[#1E202E] rounded-2xl p-4 bg-[#070709] space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-violet-400" />
-                <span className="text-xs font-bold text-white">
-                  ✦ Adicionar Fala com IA ao Vídeo (One-Shot)
-                </span>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={enableTalkingVideo}
-                  onChange={(e) => {
-                    const checked = e.target.checked;
-                    setEnableTalkingVideo(checked);
-                    setInputVal("is_talking_video", checked);
-                    if (!checked) {
-                      setInputVal("speech_text", "");
-                    } else {
-                      setInputVal("speech_text", speechText);
-                      setInputVal("voice", selectedVoice);
-                    }
-                  }}
-                  className="sr-only peer"
-                />
-                <div className="w-9 h-5 bg-[#1E202E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-violet-600 peer-checked:to-indigo-600"></div>
-              </label>
-            </div>
+          {/* Card 2: Motor de IA */}
+          <VideoModelSection
+            selectedModel={selectedModel}
+            onSelectModel={(model) => setSelectedModel(model)}
+          />
 
-            <p className="text-[11px] text-slate-400 leading-relaxed">
-              O VORIXA gera o vídeo do personagem e sincroniza os lábios (LipSync) automaticamente com fala neural em Português em 1 único clique. (+9 créditos)
-            </p>
+          {/* Card 3: Ajustes (Duração, Proporção, Qualidade e Avançado) */}
+          <VideoSettingsSection
+            duration={duration}
+            onChangeDuration={setDuration}
+            aspectRatio={aspectRatio}
+            onChangeAspectRatio={setAspectRatio}
+            quality={quality}
+            onChangeQuality={setQuality}
+            cameraMovement={cameraMovement}
+            onChangeCameraMovement={setCameraMovement}
+            seed={seed}
+            onChangeSeed={setSeed}
+            negativePrompt={negativePrompt}
+            onChangeNegativePrompt={setNegativePrompt}
+          />
 
-            {enableTalkingVideo && (
-              <div className="space-y-3 pt-2 border-t border-[#1E202E]/80 animate-in fade-in-50 duration-200">
-                {/* Filtros de Gênero e Idade */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-slate-300">Gênero & Faixa Etária</span>
-                    <span className="text-[10px] text-cyan-400 font-mono">Vozes Neurais</span>
-                  </div>
-
-                  {/* Filtro de Gênero */}
-                  <div className="grid grid-cols-3 gap-1.5 bg-[#13141B] p-1 rounded-xl border border-[#1E202E]">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedGender("all")}
-                      className={`py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
-                        selectedGender === "all" ? "bg-violet-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
-                      }`}
-                    >
-                      Todas
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedGender("female");
-                        setSelectedVoice("Rachel");
-                        setInputVal("voice", "Rachel");
-                      }}
-                      className={`py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
-                        selectedGender === "female" ? "bg-fuchsia-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
-                      }`}
-                    >
-                      Feminino 👩
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedGender("male");
-                        setSelectedVoice("Brian");
-                        setInputVal("voice", "Brian");
-                      }}
-                      className={`py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
-                        selectedGender === "male" ? "bg-blue-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
-                      }`}
-                    >
-                      Masculino 👨
-                    </button>
-                  </div>
-
-                  {/* Seletor Dropdown */}
-                  <div>
-                    <select
-                      value={selectedVoice}
-                      onChange={(e) => {
-                        const v = e.target.value;
-                        setSelectedVoice(v);
-                        setInputVal("voice", v);
-                      }}
-                      className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-violet-500 cursor-pointer"
-                    >
-                      {filteredVoices.map((voice) => (
-                        <option key={voice.id} value={voice.id}>
-                          {voice.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[11px] font-bold text-slate-300">O que o personagem deve falar?</span>
-                    <span className="text-[10px] text-slate-500 font-mono">{speechText.length}/1000</span>
-                  </div>
-                  <textarea
-                    value={speechText}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setSpeechText(val);
-                      setInputVal("speech_text", val);
-                    }}
-                    maxLength={1000}
-                    rows={3}
-                    placeholder="Digite exatamente o que o personagem irá falar em português... Ex: 'Olá, seja muito bem-vindo ao futuro da inteligência artificial.'"
-                    className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl p-3 text-xs text-white placeholder-slate-500 outline-none focus:border-violet-500 resize-none leading-relaxed"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Duração</label>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { name: "5 Segundos", value: "5" },
-                { name: "10 Segundos", value: "10" },
-              ].map((dur) => (
-                <button
-                  key={dur.value}
-                  type="button"
-                  onClick={() => setInputVal("duration", dur.value)}
-                  className={`py-3 px-4 text-xs font-bold rounded-xl border transition-all duration-300 ${
-                    inputs.duration === dur.value
-                      ? "bg-violet-600/10 border-violet-500 text-violet-400"
-                      : "bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700"
-                  }`}
-                  style={{ minHeight: "44px" }}
-                >
-                  {dur.name}
-                </button>
-              ))}
-            </div>
-          </div>
+          {/* Card 4: Barra de Ação (Custo e Botão Gerar Vídeo) */}
+          <VideoActionBar
+            cost={selectedModel.cost}
+            isGenerating={isGenerating}
+            activeStepText={activeStepText}
+            onGenerate={handleGenerateVideo}
+          />
         </div>
-      )}
-    </GenerationLayout>
+
+        {/* Coluna da Direita: Preview Player com Variações Recentes */}
+        <div className="lg:col-span-6 sticky top-6">
+          <VideoPreviewPlayer
+            isGenerating={isGenerating}
+            activeStepText={activeStepText}
+            activeVideoUrl={activeVideoUrl}
+            recentCreations={recentCreations}
+            onSelectCreation={(c) => {
+              setActiveVideoUrl(c.url);
+              setPrompt(c.prompt);
+            }}
+            aspectRatio={aspectRatio}
+          />
+        </div>
+      </div>
+    </div>
   );
 }

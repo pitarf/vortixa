@@ -8,6 +8,35 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Restauração do Acervo Oficial de Mídias (`rfpita.ti@gmail.com`)**:
+  - Recuperados e associados 16 jobs de mídias concluídas (`COMPLETED`) com seus arquivos físicos de alta resolução, prompts, modelos e proporções originais.
+  - As páginas `/dashboard/library`, `/dashboard/tools/image`, `/dashboard/tools/video` e `/dashboard/create` agora carregam todo o histórico de criações do usuário.
+  - Blindado o arquivo de testes automatizados `talking-video.test.ts` para nunca reciclar dados de desenvolvimento.
+- [x] **Reformulação Completa do Gerador de Vídeo (`/dashboard/tools/video`) Conforme Mockup**:
+  - Reconstrução da tela seguindo estritamente a identidade visual de referência:
+    - **Header**: Título 'Imagem / Texto para Vídeo' e citação '“Da ideia ao movimento.” — VORIXA'.
+    - **Bloco 1 (Entrada)**: Seletor 'Texto para Vídeo' / 'Imagem para Vídeo', prompt estilizado com botões de ação 'Inspirar', 'Prompt Aleatório' e 'Limpar', upload com drag-and-drop e miniatura com botão 'Trocar imagem'.
+    - **Bloco 2 (Motor de IA)**: Card do modelo com badge 'RECOMENDADO' para Kling 2.1 Pro, botão 'Alterar modelo >' e modal completo com catálogo de motores e custos unitários.
+    - **Bloco 3 (Ajustes)**: Duração (5s / 10s), Proporção (16:9, 9:16, 1:1), Qualidade (Padrão / Alta com ícone de coroa) e acordeão de configurações avançadas (câmera, seed e prompt negativo).
+    - **Bloco 4 (Barra de Ação)**: Custo estimado dinâmico e botão 'Gerar Vídeo' com gradiente de alta fidelidade.
+    - **Player de Preview**: Player de vídeo cinematográfico com botão central de play circular translúcido, barra de controle inferior com timeline e minutagem, badge 4K, tela cheia e carrossel com 5 variações recentes.
+  - Arquitetura 100% modular dividida em `components/tools/video/` sem dependência de código monolítico.
+- [x] **Dicas de Ferramenta Ultra-Detalhadas com Acordeões Interativos (Zero Falsos Positivos)**:
+  - Investigação profunda conduzida por 4 subagentes especializados cobrindo cada modalidade de IA.
+  - Modal contextual (`PageTipsModal.tsx`) reestruturado com acordeões expansíveis para dúvidas frequentes e tópicos técnicos sem precisar de suporte.
+  - Catálogo (`page-tips-data.ts`) expandido com instruções passo a passo, modelos recomendados reais e dicas especiais de pro.
+  - Mapeamento estrito das 4 abas de imagem, ByteDance Seedance 2.0 (vídeo com áudio nativo), Wan 2.1 e Kling, VORIXA FLOW (cabos, nós e estorno automático em falhas) e latência.
+- [x] **Sistema de Onboarding & Dicas Contextuais de Ferramenta por Página**:
+  - Modal contextual (`PageTipsModal.tsx`) adaptado automaticamente para cada página acessada pelo usuário.
+  - Abertura automática apenas na 1ª visita à tela (persistida no `localStorage`).
+  - Botão global no Header (`PageTipsButton.tsx`) com ícone de lâmpada para reler as instruções a qualquer momento.
+  - Catálogo de instruções detalhadas para todas as rotas em `lib/data/page-tips-data.ts`.
+- [x] **Central Integrada de Ajuda & Suporte (/dashboard/help)**:
+  - Criação da página completa de suporte ao usuário com design adaptativo claro/escuro.
+  - FAQ dinâmico com busca em tempo real e categorias organizadas (Geral, Créditos, Imagens, Vídeos, FLOW).
+  - Canais de contato direto (WhatsApp oficial de atendimento rápido e status de disponibilidade dos servidores de IA).
+  - Formulário para envio de chamado/mensagem diretamente ao suporte da plataforma com categorização de assunto.
+  - Link de Ajuda no menu lateral do Dashboard conectado à rota interna.
 - [x] **Componentização Modular em Larga Escala (Studio CREATE & Ferramenta de Imagem)**:
   - Eliminação de páginas monolíticas (>1.500 e >2.000 linhas) através de equipe de subagentes especializados sob supervisão contínua de integridade.
   - Extraídos 9 componentes modulares em `components/studio/` (`StudioHeader`, `StudioToolSelector`, `StudioModelSelector`, `StudioStyleSelector`, `StudioAspectRatioSelector`, `StudioVideoControls`, `StudioAdvancedSettings`, `StudioPreviewPlayer`, `StudioHistorySidebar`).

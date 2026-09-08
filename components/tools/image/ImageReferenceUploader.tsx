@@ -8,20 +8,16 @@ interface ImageReferenceUploaderProps {
   creationMode: CreationMode;
   referenceImageUrl: string;
   isUploadingRef: boolean;
-  denoiseStrength: number;
   onFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveImage: () => void;
-  onChangeDenoiseStrength: (val: number) => void;
 }
 
 export function ImageReferenceUploader({
   creationMode,
   referenceImageUrl,
   isUploadingRef,
-  denoiseStrength,
   onFileUpload,
   onRemoveImage,
-  onChangeDenoiseStrength,
 }: ImageReferenceUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -77,33 +73,6 @@ export function ImageReferenceUploader({
         onChange={onFileUpload}
         className="hidden"
       />
-
-      {creationMode === "image-to-image" && (
-        <div className="space-y-1.5 pt-1">
-          <div className="flex items-center justify-between text-[11px] text-slate-400">
-            <span className="flex items-center gap-1">
-              <span>Intensidade de Variação (Denoise)</span>
-              <span className="text-[10px] text-emerald-400 font-semibold">
-                {denoiseStrength <= 0.45 ? "(Preserva Rosto e Traços 👤)" : "(Cria Nova Pessoa ✨)"}
-              </span>
-            </span>
-            <span className="font-mono text-cyan-400 font-bold">{denoiseStrength}</span>
-          </div>
-          <input
-            type="range"
-            min={0.1}
-            max={0.9}
-            step={0.05}
-            value={denoiseStrength}
-            onChange={(e) => onChangeDenoiseStrength(parseFloat(e.target.value))}
-            className="w-full accent-cyan-400 cursor-pointer"
-          />
-          <p className="text-[10px] text-slate-400 leading-tight">
-            💡 Para manter a pessoa igual e só mudar o estilo/qualidade 8K, mantenha entre{" "}
-            <strong className="text-emerald-400">0.30 e 0.40</strong>.
-          </p>
-        </div>
-      )}
     </div>
   );
 }

@@ -327,7 +327,13 @@ O **Studio CREATE v2.0** é o ambiente integrado de alta performance para criaç
 6. Acompanhe a renderização em tempo real na área central com feedback do cluster.
 7. Ao concluir, reproduza, compare, faça o download ou envie para o **VORIXA FLOW**.
 
-### F. Tratamento de Erros Comuns
-* *Saldo insuficiente*: O sistema exibe um aviso com a quantidade necessária e mantém os campos intactos.
-* *Upload de arquivo inválido*: Caso o arquivo exceda o tamanho suportado, um toast notificará o usuário.
-* *Falha de conectividade no cluster*: Se o motor de IA falhar, os créditos são estornados automaticamente e o erro é detalhado no preview.
+### G. Gerador de Imagem e Vídeo Reformulados (Fidelidade Visual e Modularidade)
+* **Gerador de Imagens (`/dashboard/tools/image`)**:
+  - Novo design sem seção forçada de estilos, permitindo total liberdade criativa ao prompt.
+  - Seletor de proporção de imagem com detecção de tamanho original.
+  - Carrossel inferior de gerações recentes conectado à biblioteca real do usuário.
+* **Gerador de Vídeo (`/dashboard/tools/video`)**:
+  - Suporte aos motores Kling 2.1 Pro, Kling 3.0 Pro, ByteDance Seedance 2.0 (áudio nativo), Wan 2.1, Luma Ray 2 e Hailuo Minimax.
+  - Player integrado com timeline, modo tela cheia e carrossel de vídeos recentes reais.
+* **Central de Ajuda (`/dashboard/help`)**:
+  - FAQ categorizado, suporte via formulário e status dos motores de IA em tempo real.

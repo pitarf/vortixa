@@ -214,6 +214,111 @@ describe('Audit & Readiness Test: All 17 Generative AI Engines (Latest Versions)
       })
     );
 
+    // Test Image Engines Sanitization & Routing
+    // 1. FLUX Schnell
+    await provider.submitJob({
+      jobId: 'fake-job-flux-schnell',
+      modelTechnicalName: 'fal-ai/flux/schnell',
+      inputs: { prompt: 'cyberpunk cat', num_inference_steps: 25, guidance_scale: 7.5, style: 'anime' },
+      webhookUrl: 'https://vorixa.com/webhook',
+    });
+    expect(queueSpy).toHaveBeenLastCalledWith(
+      'fal-ai/flux/schnell',
+      expect.objectContaining({
+        input: expect.objectContaining({
+          prompt: 'cyberpunk cat',
+          num_inference_steps: 12, // Clamped to 12
+        }),
+      })
+    );
+
+    // 2. Recraft V3
+    await provider.submitJob({
+      jobId: 'fake-job-recraft',
+      modelTechnicalName: 'fal-ai/recraft-v3',
+      inputs: { prompt: 'modern vector logo', image_size: 'square_hd', style: 'vector' },
+      webhookUrl: 'https://vorixa.com/webhook',
+    });
+    expect(queueSpy).toHaveBeenLastCalledWith(
+      'fal-ai/recraft-v3',
+      expect.objectContaining({
+        input: expect.objectContaining({
+          prompt: 'modern vector logo',
+          image_size: 'square_hd',
+        }),
+      })
+    );
+
+    // 3. Nano Banana Pro (Google Imagen 3)
+    await provider.submitJob({
+      jobId: 'fake-job-banana-t2i',
+      modelTechnicalName: 'fal-ai/nano-banana-pro',
+      inputs: { prompt: 'photorealistic portrait', image_size: 'landscape_16_9' },
+      webhookUrl: 'https://vorixa.com/webhook',
+    });
+    expect(queueSpy).toHaveBeenLastCalledWith(
+      'fal-ai/nano-banana-pro',
+      expect.objectContaining({
+        input: expect.objectContaining({
+          prompt: 'photorealistic portrait',
+          aspect_ratio: '16:9',
+        }),
+      })
+    );
+
+    // 4. Nano Banana Pro Edit (Google Imagen 3 Edit - Img2Img)
+    await provider.submitJob({
+      jobId: 'fake-job-banana-edit',
+      modelTechnicalName: 'fal-ai/nano-banana-pro',
+      inputs: { prompt: 'add sunglasses', image_url: 'https://test.com/face.jpg', aspect_ratio: '16:9' },
+      webhookUrl: 'https://vorixa.com/webhook',
+    });
+    expect(queueSpy).toHaveBeenLastCalledWith(
+      'fal-ai/nano-banana-pro/edit',
+      expect.objectContaining({
+        input: expect.objectContaining({
+          prompt: 'add sunglasses',
+          image_urls: ['https://test.com/face.jpg'],
+          aspect_ratio: '16:9',
+        }),
+      })
+    );
+
+    // 5. FLUX PuLID
+    await provider.submitJob({
+      jobId: 'fake-job-pulid',
+      modelTechnicalName: 'fal-ai/flux/schnell',
+      inputs: { prompt: 'same person in space', image_url: 'https://test.com/person.png', mode: 'character' },
+      webhookUrl: 'https://vorixa.com/webhook',
+    });
+    expect(queueSpy).toHaveBeenLastCalledWith(
+      'fal-ai/flux-pulid',
+      expect.objectContaining({
+        input: expect.objectContaining({
+          prompt: 'same person in space',
+          reference_image_url: 'https://test.com/person.png',
+        }),
+      })
+    );
+
+    // 6. FLUX Pro Ultra
+    await provider.submitJob({
+      jobId: 'fake-job-flux-ultra',
+      modelTechnicalName: 'fal-ai/flux-pro/v1.1-ultra',
+      inputs: { prompt: 'hyper resolution landscape', image_size: '21:9', num_inference_steps: 28 },
+      webhookUrl: 'https://vorixa.com/webhook',
+    });
+    expect(queueSpy).toHaveBeenLastCalledWith(
+      'fal-ai/flux-pro/v1.1-ultra',
+      expect.objectContaining({
+        input: expect.objectContaining({
+          prompt: 'hyper resolution landscape',
+          aspect_ratio: '21:9',
+          num_inference_steps: 28,
+        }),
+      })
+    );
+
     queueSpy.mockRestore();
   });
 });

@@ -1,4 +1,4 @@
-export type CreationMode = "text-to-image" | "image-to-image" | "style-ref" | "character" | "composition";
+export type CreationMode = "text-to-image" | "image-to-image" | "style-ref" | "character";
 export type QualityMode = "fast" | "standard" | "hd" | "ultra";
 
 export interface StylePreset {

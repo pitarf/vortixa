@@ -40,15 +40,6 @@ async function main() {
       toolDesc: 'O modelo de vídeo mais avançado do mundo. Física cinematográfica, consistência absoluta e movimentos fluidos.',
     },
     {
-      name: 'Google Veo 3.1 (Som & Fala Nativa)',
-      technicalName: 'fal-ai/veo3.1',
-      creditCost: 30,
-      apiUnitCost: 0.35,
-      toolSlug: 'google-veo-3-1',
-      toolName: 'Google Veo 3.1 Som Nativo',
-      toolDesc: 'Geração de vídeo com áudio, efeitos sonoros e falas realistas gerados diretamente em 1 clique.',
-    },
-    {
       name: 'Kling 3.0 Pro Ultra',
       technicalName: 'fal-ai/kling-video/v3/pro/image-to-video',
       creditCost: 20,

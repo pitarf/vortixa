@@ -13,16 +13,24 @@ describe("One-Shot Talking Video Pipeline (Vídeo com Fala Integrada)", () => {
   let user: any;
 
   beforeEach(async () => {
-    await prisma.creditTransaction.deleteMany();
-    await prisma.aIJobOutput.deleteMany();
-    await prisma.aIJobInput.deleteMany();
-    await prisma.aIJob.deleteMany();
-    await prisma.user.deleteMany();
+    // Limpar apenas dados do usuário de teste específico para não limpar o banco de desenvolvimento
+    const existingTestUser = await prisma.user.findUnique({
+      where: { email: "talking.video@vorixa.com" },
+    });
+    if (existingTestUser) {
+      await prisma.creditTransaction.deleteMany({ where: { userId: existingTestUser.id } });
+      await prisma.aIJobOutput.deleteMany({ where: { job: { userId: existingTestUser.id } } });
+      await prisma.aIJobInput.deleteMany({ where: { job: { userId: existingTestUser.id } } });
+      await prisma.aIJob.deleteMany({ where: { userId: existingTestUser.id } });
+      await prisma.creditBalance.deleteMany({ where: { userId: existingTestUser.id } });
+      await prisma.user.delete({ where: { id: existingTestUser.id } });
+    }
 
     user = await prisma.user.create({
       data: {
         name: "Talking Video Tester",
         email: "talking.video@vorixa.com",
+
         role: "USER",
         isUnlimited: false,
       },

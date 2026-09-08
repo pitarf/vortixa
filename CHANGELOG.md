@@ -5,6 +5,139 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.7.4] - 2026-09-08
+### Restauração do Acervo de Mídias e Blindagem de Banco nos Testes Automatizados
+- **Restauração do Acervo Oficial do Usuário (`rfpita.ti@gmail.com`)**:
+  - Restaurados 16 jobs de mídias concluídas (`COMPLETED`) vinculadas diretamente à conta `rfpita.ti@gmail.com` com todos os inputs, prompts, metadados e arquivos de alta resolução (`hero_main.mp4`, `flow_demo_video.mp4`, `cinematic_hypercar.mp4`, `commercial_perfume.mp4`, `motion_dancer.mp4`, `lipsync_avatar.mp4`, `hero_studio_master.jpg`, `editorial_fashion.jpg`, etc.).
+  - A **Biblioteca (`/dashboard/library`)**, o **Studio CREATE (`/dashboard/create`)** e as seções de **Gerações Recentes** de Imagem e Vídeo passam a exibir imediatamente o catálogo completo.
+- **Blindagem do Banco de Dados contra Testes Automatizados**:
+  - Isolamento estrito no arquivo de testes [`__tests__/talking-video.test.ts`](file:///c:/Git/React/VORIXA/__tests__/talking-video.test.ts) no `beforeEach` para que apenas os dados do usuário de teste específico (`talking.video@vorixa.com`) sejam reciclados, impedindo que testes limpem acervos e usuários de desenvolvimento.
+
+## [1.7.3] - 2026-09-08
+### Sincronização do Studio CREATE com as Abas Individuais (Consistência Total)
+- **Unificação Funcional do Studio CREATE (`/dashboard/create`)**:
+  - **Identidade Visual dos Motores**: Os modelos de vídeo dentro do Studio CREATE agora exibem suas insígnias e logos oficiais (`ModelLogo`) com distinção de marca (Kling 2.1, Kling 3.0 4K, ByteDance Seedance 2.0, Wan 2.1, etc.).
+  - **Remoção de Estilos Forçados em Imagem**: A aba de imagem no Studio CREATE agora concede total liberdade ao prompt, sem pré-fixações artificiais de presets visuais.
+  - **Gerações Recentes Reais**: O player do Studio CREATE agora renderiza exclusivamente o carrossel de mídias reais do usuário logado (`recentCreations`), eliminando vídeos e fotos mockadas/fakes iniciais.
+- **Contenção & Responsividade dos Logos dos Motores (`ModelLogo.tsx`)**:
+  - Ajustadas as proporções vetoriais, tamanhos de fonte e paddings internos dos logos oficiais de vídeo (`KLING`, `SEEDANCE`, `WAN`, `LUMA RAY 2` e `HAILUO`).
+  - Aplicados limites estritos (`min-w`, `min-h`, `max-w`, `max-h` e `overflow-hidden`) nos tamanhos `sm` (32x32px) e `md` (44x44px), garantindo que nenhum texto ou ícone vaze das bordas arredondadas dos cards de seleção no Studio CREATE e na página individual de vídeo.
+
+## [1.7.2] - 2026-09-08
+### Reformulação da Página de Geração de Imagem Conforme Mockup (Sem Seção de Estilo)
+- **Novo Layout da Página de Imagem (`/dashboard/tools/image`)**:
+  - Reestruturação completa idêntica ao design de referência enviado:
+    - **Header**: Título *"Crie imagens incríveis com IA"* e citação artística *“Da sua imaginação para a realidade.” — VORIXA*.
+    - **Card de Entrada**: Abas de fluxo (*Texto para Imagem*, *Imagem como Referência*, *Mesmo Personagem*), campo de prompt estilizado com ações de *Inspirar*, *Prompt Aleatório* e *Limpar*, além de upload de referência opcional.
+    - **Card de Ajustes**: Seletor de **Proporção da Imagem** (1:1 Quadrado, 16:9 Paisagem, 9:16 Retrato, 4:3 Clássico, 3:2 Fotografia), seletor de **Qualidade** (*Padrão* 1 cr, *Alta Definição* 2 cr, *Ultra* 4 cr) e acordeão de **Configurações Avançadas** (Seed, CFG, Inference Steps e Prompt Negativo).
+    - **Remoção de Estilo Visual**: A seção de presets de estilo foi removida conforme solicitado, permitindo ao usuário total liberdade artística sem interferência de diretivas pré-fixadas.
+    - **Barra de Ação & Custo**: Exibição em tempo real do custo unitário e botão *"Gerar Imagem"* com gradiente violeta/ciano.
+    - **Preview & Gerações Recentes**: Canvas de alta fidelidade e barra inferior exibindo exclusivamente o histórico real de fotos do usuário logado.
+
+## [1.7.1] - 2026-09-07
+### Reformulação Completa do Gerador de Vídeo (Fidelidade Visual e Modularidade)
+- **Novo Layout da Página de Vídeo (`/dashboard/tools/video`)**:
+  - Reconstrução completa baseada no layout de referência visual do VORIXA Creative Suite.
+  - **Bloco 1 (Entrada)**: Alternador 'Texto para Vídeo' / 'Imagem para Vídeo', prompt estilizado com ações de 'Inspirar', 'Prompt Aleatório' e 'Limpar', além de upload com drag-and-drop e miniatura com preview.
+  - **Bloco 2 (Motor de IA)**: Card tátil destacando o modelo atual (ex: Kling 2.1 Pro como Recomendado), modal flutuante com catálogo completo e métricas reais de inferência.
+  - **Bloco 3 (Ajustes)**: Seleção visual de Duração (5s / 10s), Proporção (16:9, 9:16, 1:1), Qualidade (Padrão / Alta) e acordeão de configurações avançadas (câmera, seed e prompt negativo).
+  - **Player de Preview Cinematográfico**: Player customizado com timeline, botão central play/pause, controles de áudio, badge 4K, tela cheia e carrossel inferior com 5 variações recentes.
+  - **Barra de Ação**: Exibição em tempo real do custo estimado em créditos e botão com gradiente de alta conversão 'Gerar Vídeo'.
+- **Logos Oficiais & Identidade Visual dos Motores de Vídeo**:
+  - Criado o componente especializado [`ModelLogo.tsx`](file:///c:/Git/React/VORIXA/components/tools/video/ModelLogo.tsx) com as insígnias e paletas oficiais de cada motor:
+    - **KLING 2.1** & **KLING 3.0 4K**: Gradientes cinematográficos violeta/púrpura com badges de alta resolução.
+    - **SEEDANCE 2.0 (ByteDance)**: Logo em camadas azuis e ciano tecnológico com ícone vetorial.
+    - **WAN 2.1 (Alibaba)**: Tipografia geométrica vibrante em laranja e âmbar.
+    - **LUMA RAY 2 (Luma Dream Machine)**: Núcleo esférico dinâmico com anéis de refração azul-céu.
+- **Histórico Real de Criações (Eliminação de Mocks / Falsos Positivos)**:
+  - O rótulo da seção foi renomeado de **"Variações Recentes"** para **"Gerações Recentes"**.
+  - Eliminados todos os 5 itens demonstrativos fictícios (fakes).
+  - A barra de miniaturas agora exibe **estritamente os vídeos reais** produzidos pelo usuário autenticado, consumidos dinamicamente de `/api/library?type=video` e persistidos no banco de dados. Caso o usuário ainda não possua vídeos concluídos, a seção permanece oculta até a primeira geração real.
+
+## [1.7.0] - 2026-09-07
+### Dicas de Ferramenta Ultra-Detalhadas com Acordeões Interativos (Zero Falsos Positivos)
+- **Investigação Profunda por Subagentes de Engenharia**:
+  - Cada ferramenta do VORIXA foi auditada linha a linha por subagentes dedicados para garantir 100% de precisão técnica contra o código real e banco de dados.
+- **Acordeões Interativos de Dúvidas Frequentes por Página**:
+  - Implementado no modal [`PageTipsModal.tsx`](file:///c:/Git/React/VORIXA/components/dashboard/PageTipsModal.tsx) um sistema de acordeões expansíveis para esclarecer minuciosamente dúvidas sobre motores de IA, enquadramento de fotos, sincronia de áudio e conexões do Flow sem necessidade de suporte.
+- **Catálogo Expandido (`page-tips-data.ts`)**:
+  - **Geração de Imagens**: Mapeamento das 4 abas reais (Texto para Imagem, Imagem para Imagem, Estilo e Personagem PuLID), detecção dinâmica de proporção 'Original 📷' e desmistificação do 'Otimizar com IA'.
+  - **Vídeo Cinematográfico**: Detalhamento do ByteDance Seedance 2.0 com som nativo vs Wan 2.1 e Kling Pro, explicando por que a opção One-Shot LipSync só surge nos modelos sem áudio nativo.
+  - **VORIXA FLOW**: Explicação da codificação de cores de cabos (Roxo/Prompt, Ciano/Imagem, Verde/Vídeo, Âmbar/Áudio), algoritmo DAG de prevenção de ciclos e garantia contábil de estorno automático.
+  - **Avatar & LipSync**: Requisitos ideais de foto frontal, fonemas em português e vozes ElevenLabs Turbo v2.5.
+
+## [1.6.9] - 2026-09-07
+### Sistema de Onboarding & Dicas Contextuais de Ferramenta por Página
+- **Dicas Exclusivas para Cada Tela**:
+  - Criado o catálogo [`lib/data/page-tips-data.ts`](file:///c:/Git/React/VORIXA/lib/data/page-tips-data.ts) mapeando o funcionamento e instruções de cada página (Dashboard, Studio CREATE, Imagens, Vídeos, LipSync/Avatar, Motion Control, Upscale 4K, FLOW Studio, Créditos, Galeria, Ajuda e Painel Admin).
+  - Modal contextual (`PageTipsModal.tsx`) que abre automaticamente na **primeira vez** que o usuário visita a tela.
+  - Persistência no `localStorage` (`vorixa_tip_seen_[rota]`) para evitar popups repetitivos invasivos.
+- **Botão Global de Acesso a Qualquer Momento**:
+  - Adicionado o botão **"💡 Dicas da Página"** no cabeçalho do Dashboard ([`DashboardShell.tsx`](file:///c:/Git/React/VORIXA/components/dashboard/DashboardShell.tsx)). O usuário pode clicar a qualquer momento para reler as dicas daquela ferramenta específica.
+
+## [1.6.8] - 2026-09-07
+### Central Integrada de Ajuda & Suporte ao Usuário (/dashboard/help)
+- **Nova Tela de Atendimento Completa**:
+  - Desenvolvida a página [`app/dashboard/help/page.tsx`](file:///c:/Git/React/VORIXA/app/dashboard/help/page.tsx) com design tátil e responsivo, adaptável tanto ao tema escuro quanto ao tema claro.
+  - **FAQ Interativo Dinâmico**: Acordeão com busca em tempo real e filtros por categoria (Créditos, Imagens, Vídeos, FLOW e Geral).
+  - **Canais de Contato Direto**: Cards para WhatsApp Oficial de atendimento rápido, painel de monitoramento de saúde dos servidores de IA e link para o Changelog.
+  - **Formulário de Abertura de Chamados**: Envio direto com categorização de dúvidas, faturamento, problemas técnicos ou sugestões de novos modelos.
+- **Navegação Integrada**:
+  - Menu lateral do [`DashboardShell.tsx`](file:///c:/Git/React/VORIXA/components/dashboard/DashboardShell.tsx) atualizado para apontar diretamente para a rota interna `/dashboard/help`.
+
+## [1.6.7] - 2026-09-07
+### Otimização de Interface de Vídeo: Ocultação de LipSync em Motores com Áudio Nativo
+- **Exibição Inteligente de Recursos de Áudio**:
+  - Em motores que já produzem áudio cinematográfico sincronizado nativamente pelo prompt (como o **ByteDance Seedance 2.0**), a opção redundante de "Adicionar Fala com IA / LipSync" foi ocultada automaticamente.
+  - A funcionalidade de LipSync One-Shot permanece ativa e visível exclusivamente para motores de vídeo que geram vídeo mudo/sem áudio nativo (**Wan 2.1**, **Kling 2.1 Pro**, **Kling 3.0 Pro**, **Luma Ray 2**, **Hailuo Minimax**).
+  - Atualizado tanto no **Studio CREATE** ([`StudioVideoControls.tsx`](file:///c:/Git/React/VORIXA/components/studio/StudioVideoControls.tsx)) quanto na ferramenta dedicada de Vídeo ([`app/dashboard/tools/video/page.tsx`](file:///c:/Git/React/VORIXA/app/dashboard/tools/video/page.tsx)).
+
+## [1.6.6] - 2026-09-07
+### Simplificação da Interface de Imagem: Remoção de "Composição Avançada"
+- **Fluxo Simplificado e Direto**:
+  - Removida a aba redundante "Composição Avançada" de [`ImageWorkflowTabs.tsx`](file:///c:/Git/React/VORIXA/components/tools/image/ImageWorkflowTabs.tsx) e da tipagem `CreationMode`.
+  - O fluxo de criação de imagem agora foca nos modos essenciais e claros para o usuário: **Texto para Imagem**, **Imagem para Imagem**, **Estilo de Referência** e **Personagem**.
+
+## [1.6.5] - 2026-09-07
+### Refinamento de Contraste e Harmonia Visual no Tema Claro
+- **Preview de Imagem Adaptativo**:
+  - Removido o bloco preto escuro (`bg-black/80`) no canvas central de pré-visualização quando em modo claro.
+  - Adicionado fundo suave cinza-claro (`bg-slate-100/90` / `border-slate-200`) com ícones e textos nítidos em alta legibilidade.
+- **Card Dica de Pro e Barra Lateral**:
+  - Substituído o gradiente escuro hardcoded por um gradiente suave (`from-violet-50 via-white to-slate-50`) com borda e textos perfeitamente contrastados no tema claro.
+- **Logotipo e Identidade Visual**:
+  - Ajustado o contraste do logotipo `VORIXA` e subtítulo `CREATIVE SUITE` na barra lateral esquerda para garantir visualização nítida em fundos claros e escuros.
+- **Mapeamento Global de Superfícies**:
+  - Expandido o `app/globals.css` para tratar todas as variantes de `bg-black/*`, mantendo apenas o player de vídeo cinematográfico em fundo escuro e preservando a legibilidade de legendas com gradiente sobre imagens.
+
+## [1.6.4] - 2026-09-07
+### Experiência de Usuário Fluida: Remoção da Intensidade de Denoise
+- **Simplificação Idêntica ao ChatGPT e Gemini**:
+  - Removido o controle deslizante de "Intensidade de Variação (Denoise)".
+  - A preservação facial e de traços físicos passa a ser conduzida automaticamente e de forma transparente: o usuário apenas envia a foto e descreve no prompt o que quer alterar ou manter, sem se preocupar com valores decimais técnicos.
+
+## [1.6.3] - 2026-09-07
+### Limpeza de Interface: Remoção de Estilo Visual e Eliminação de Histórico Simulado
+- **Remoção de Presets de Estilo Visual**:
+  - Excluída a seção "Estilo Visual" do Studio CREATE e da Ferramenta de Imagem. A estética da criação fica a critério do usuário diretamente no prompt ou através do botão "Otimizar com IA".
+- **Histórico Real e Limpo**:
+  - Eliminados todos os dados mockados/falsos de histórico recente e carrossel de variações (`Mulher Cyberpunk`, `Cidade Flutuante`, etc.).
+  - A barra lateral de histórico e a área de preview agora exibem um estado limpo inicial e refletem exclusivamente as gerações reais armazenadas no banco de dados do usuário (`/api/library`).
+
+## [1.6.2] - 2026-09-07
+### Remoção Definitiva do Google Veo 3.1 e Proteção contra Tarifas Abusivas
+- **Descarte do Veo 3.1 (`fal-ai/veo3.1`)**:
+  - Removido integralmente do seletor do Studio CREATE, da página de ferramentas de Vídeo e do catálogo de seeds.
+  - Bloqueio preventivo adicionado no `FalAIProvider` com mensagem de erro clara orientando o uso do **ByteDance Seedance 2.0** e **Wan 2.1**.
+  - Evita faturamentos exorbitantes de \$0,40/segundo (\$3,20 por vídeo) na conta da fal.ai.
+
+## [1.6.1] - 2026-09-07
+### Sustentabilidade Financeira & Otimização de Custos de Vídeo (Seedance 2.0 & Wan 2.1)
+- **Ajuste Estratégico de Motores de Vídeo**:
+  - **ByteDance Seedance 2.0 (`fal-ai/bytedance/seedance-2.0`)** promovido a motor padrão líder de vídeo: entrega geração cinematográfica de vídeo com física avançada e áudio sincronizado nativo com custo 92% menor que o Google Veo 3.1 (~$0.20/geração vs $3.20).
+  - **Wan 2.1 High-Motion (`fal-ai/wan-i2v`)** promovido como alternativa de altíssima fidelidade e custo ultra-econômico (~$0.05/geração).
+  - **Google Veo 3.1 (`fal-ai/veo3.1`)** rebaixado para a categoria Hollywood/Consumo Intensivo, alertando explicitamente o custo elevado por segundo ($0.40/s da fal.ai) e calibrado para 120 créditos no banco para proteger a margem financeira da plataforma e o saldo do usuário.
+
 ## [1.6.0] - 2026-09-07
 ### Componentização Modular e Arquitetura Limpa em Larga Escala (Studio CREATE & Ferramenta de Imagem)
 - **Refatoração e Eliminação de Páginas Monolíticas**:

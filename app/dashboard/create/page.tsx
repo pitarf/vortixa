@@ -53,7 +53,7 @@ export default function StudioCreatePage() {
   const [imageSize, setImageSize] = useState<string>("landscape_16_9");
   const [resolution, setResolution] = useState<string>("1792 x 1024");
   const [qualityMode, setQualityMode] = useState<string>("fast");
-  const [selectedStyle, setSelectedStyle] = useState<string>("cinematic");
+  const [selectedStyle, setSelectedStyle] = useState<string>("");
   const [referenceImageUrl, setReferenceImageUrl] = useState<string>("");
   const [originalDimensions, setOriginalDimensions] = useState<{ width: number; height: number } | null>(null);
   const [isUploadingRef, setIsUploadingRef] = useState(false);
@@ -84,8 +84,8 @@ export default function StudioCreatePage() {
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [stepText, setStepText] = useState("");
   const [activeJob, setActiveJob] = useState<any>(null);
-  const [resultMediaUrl, setResultMediaUrl] = useState<string | null>("/media/landing/videos/cinematic_hypercar.mp4");
-  const [resultMediaType, setResultMediaType] = useState<"image" | "video">("video");
+  const [resultMediaUrl, setResultMediaUrl] = useState<string | null>(null);
+  const [resultMediaType, setResultMediaType] = useState<"image" | "video">("image");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isOpeningInFlow, setIsOpeningInFlow] = useState(false);
 
@@ -118,59 +118,18 @@ export default function StudioCreatePage() {
         const data = await res.json();
         if (data.items && data.items.length > 0) {
           setHistoryItems(data.items);
+          if (data.items[0]?.url) {
+            setResultMediaUrl(data.items[0].url);
+            setResultMediaType(data.items[0].mediaType || "image");
+          }
           return;
         }
       }
-      // Fallback rico e visual para o histórico caso o banco esteja novo
-      setHistoryItems([
-        {
-          id: "hist-1",
-          url: "/media/landing/videos/cinematic_hypercar.mp4",
-          mediaType: "video",
-          modelName: "FLUX.1 Schnell",
-          prompt: "Hypercar futurista com neon ciano e roxo em alta velocidade numa rodovia de Neo-Tóquio",
-          createdAt: new Date().toISOString(),
-          timeAgo: "Agora",
-        },
-        {
-          id: "hist-2",
-          url: "/media/landing/gallery/editorial_fashion.jpg",
-          mediaType: "image",
-          modelName: "FLUX.1 Pro",
-          prompt: "Retrato editorial com reflexos holográficos em luz de estúdio suave",
-          createdAt: new Date(Date.now() - 120000).toISOString(),
-          timeAgo: "2m atrás",
-        },
-        {
-          id: "hist-3",
-          url: "/media/landing/videos/commercial_perfume.mp4",
-          mediaType: "video",
-          modelName: "Kling AI",
-          prompt: "Frasco de perfume luxo emergindo de líquido dourado",
-          createdAt: new Date(Date.now() - 3600000).toISOString(),
-          timeAgo: "1h atrás",
-        },
-        {
-          id: "hist-4",
-          url: "/media/landing/videos/motion_dancer.mp4",
-          mediaType: "video",
-          modelName: "Motion Control",
-          prompt: "Transferência de pose para dançarino urbano sob neon",
-          createdAt: new Date(Date.now() - 10800000).toISOString(),
-          timeAgo: "3h atrás",
-        },
-        {
-          id: "hist-5",
-          url: "/media/landing/videos/lipsync_avatar.mp4",
-          mediaType: "video",
-          modelName: "LivePortrait",
-          prompt: "Apresentadora virtual hiper-realista com sincronia de fala",
-          createdAt: new Date(Date.now() - 18000000).toISOString(),
-          timeAgo: "5h atrás",
-        },
-      ]);
+      // Se não houver itens no banco do usuário, mantém lista limpa
+      setHistoryItems([]);
     } catch (e) {
       console.warn("Erro ao buscar histórico:", e);
+      setHistoryItems([]);
     } finally {
       setIsLoadingHistory(false);
     }
@@ -596,21 +555,6 @@ export default function StudioCreatePage() {
                 <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
                   Prompt de Criação
                 </label>
-                {selectedStyle && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-                    <span>
-                      Estilo: {STYLE_PRESETS.find((s) => s.id === selectedStyle)?.name || selectedStyle}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedStyle("")}
-                      className="hover:text-white transition-colors cursor-pointer"
-                      title="Remover estilo visual"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </span>
-                )}
               </div>
               <button
                 type="button"
@@ -699,12 +643,6 @@ export default function StudioCreatePage() {
             </div>
           </div>
 
-          {/* Seção Estilo Visual */}
-          <StudioStyleSelector
-            selectedStyle={selectedStyle}
-            onSelectStyle={handleSelectStyle}
-          />
-
           {/* Seção Proporção da Imagem e Resolução */}
           <StudioAspectRatioSelector
             activeTool={activeTool}
@@ -719,6 +657,7 @@ export default function StudioCreatePage() {
           {/* Controles Específicos para Vídeo */}
           {activeTool === "video" && (
             <StudioVideoControls
+              selectedModelId={selectedModelId}
               duration={duration}
               onDurationChange={setDuration}
               cameraMotion={cameraMotion}
@@ -822,6 +761,12 @@ export default function StudioCreatePage() {
               }
             }}
             defaultIcon={currentToolDef.icon}
+            recentCreations={historyItems}
+            onSelectRecentCreation={(url, mediaType) => {
+              setResultMediaUrl(url);
+              setResultMediaType(mediaType);
+              toast.success("Carregado no player!");
+            }}
           />
         </div>
 

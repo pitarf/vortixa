@@ -188,7 +188,11 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
   * Fallback neural Google TTS em Português do Brasil com latência ultra-baixa (~200ms).
 * Modelo Financeiro: Débito de 1 crédito no Ledger via `CreditService.consumeCredits`, com estorno automático via `CreditService.refundCredits` caso a síntese de voz apresente falha.
 
-### 2. Motor de Sincronia Labial (LipSync)
-* Identificador técnico oficial da fal.ai: **`fal-ai/latentsync`** (LatentSync Pro) e **`fal-ai/sync-lipsync`**.
-* O `FalAIProvider` implementa redirecionamento automático de chamadas legadas (`fal-ai/sync-v2` e `fal-ai/sync`) para `fal-ai/latentsync` para garantir retrocompatibilidade de nós e jobs em background.
+## 12. Modularização de Componentes e Acervo de Mídias
+* **Componentes Modulares**:
+  - As páginas de Vídeo (`/dashboard/tools/video`), Imagem (`/dashboard/tools/image`) e Studio CREATE (`/dashboard/create`) foram 100% modularizadas em `/components/tools/video/`, `/components/tools/image/` e `/components/studio/`.
+  - Remoção de códigos monolíticos (>1.500 linhas) garantindo manutenibilidade e performance de build.
+* **Isolamento de Testes**:
+  - Testes unitários com Vitest limpam exclusivamente os dados do usuário de teste específico (`talking.video@vorixa.com`), preservando dados reais e de desenvolvimento na base PostgreSQL.
+
 

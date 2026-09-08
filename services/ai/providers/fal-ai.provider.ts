@@ -131,18 +131,9 @@ export class FalAIProvider implements IAIProvider {
         }
       }
 
-      // Google Veo 3.1 (Áudio e Fala Nativa em 1 clique)
+      // Bloqueio preventivo contra custos abusivos do Google Veo 3.1 ($0.40/s)
       if (payload.modelTechnicalName.includes("veo")) {
-        // Se usuário solicitou fala ou é text-to-video com diálogo, ativa áudio nativo
-        if (modelInputs.speech_text || modelInputs.generate_audio !== false) {
-          modelInputs.generate_audio = true;
-          if (modelInputs.speech_text && !modelInputs.prompt?.includes(modelInputs.speech_text)) {
-            modelInputs.prompt = `${modelInputs.prompt || "A person looking at camera"}, speaking: "${modelInputs.speech_text}"`;
-          }
-        }
-        if (modelInputs.image_url && !modelInputs.image) {
-          modelInputs.image = modelInputs.image_url;
-        }
+        throw new Error("O motor Google Veo 3.1 foi descontinuado devido a custos abusivos de processamento. Por favor, utilize ByteDance Seedance 2.0 ou Wan 2.1.");
       }
 
       // ByteDance Seedance (2.0 / 2.5) & OmniHuman
@@ -208,6 +199,71 @@ export class FalAIProvider implements IAIProvider {
         }
         if (modelInputs.image_url && !modelInputs.prompt_image_url) {
           modelInputs.prompt_image_url = modelInputs.image_url;
+        }
+      }
+
+      // Tratamento unificado de parâmetros de vídeo para garantir que NENHUM ajuste seja ignorado
+      const isVideoModel = payload.modelTechnicalName.includes("video") ||
+                           payload.modelTechnicalName.includes("seedance") ||
+                           payload.modelTechnicalName.includes("wan") ||
+                           payload.modelTechnicalName.includes("luma") ||
+                           payload.modelTechnicalName.includes("minimax");
+
+      if (isVideoModel) {
+        // 1. Proporção (aspect_ratio)
+        if (modelInputs.aspect_ratio) {
+          const validRatioMap: Record<string, string> = {
+            "16:9": "16:9",
+            "9:16": "9:16",
+            "1:1": "1:1",
+            landscape_16_9: "16:9",
+            portrait_16_9: "9:16",
+            square: "1:1",
+          };
+          modelInputs.aspect_ratio = validRatioMap[modelInputs.aspect_ratio] || modelInputs.aspect_ratio;
+        }
+
+        // 2. Duração (5 ou 10)
+        if (modelInputs.duration) {
+          modelInputs.duration = String(modelInputs.duration);
+        }
+
+        // 3. Movimento de Câmera (injetar no prompt caso o modelo não possua slider dedicado de API)
+        if (modelInputs.camera_movement && modelInputs.camera_movement !== "none") {
+          const cameraDirectives: Record<string, string> = {
+            zoom_in: "slow smooth cinematic camera zoom in, push in towards subject",
+            zoom_out: "slow cinematic camera zoom out, revealing wider surroundings",
+            pan_left: "smooth cinematic horizontal pan left tracking shot",
+            pan_right: "smooth cinematic horizontal pan right tracking shot",
+            orbit_360: "360 degree orbital camera movement revolving around the subject",
+            crane_down: "dramatic descending crane camera shot moving downward",
+          };
+          const directive = cameraDirectives[modelInputs.camera_movement];
+          if (directive && modelInputs.prompt && !modelInputs.prompt.toLowerCase().includes(directive.toLowerCase())) {
+            modelInputs.prompt = `${modelInputs.prompt.trim()}, ${directive}`;
+          }
+        }
+
+        // 4. Prompt Negativo
+        if (modelInputs.negative_prompt && typeof modelInputs.negative_prompt === "string" && modelInputs.negative_prompt.trim()) {
+          modelInputs.negative_prompt = modelInputs.negative_prompt.trim();
+        } else {
+          delete modelInputs.negative_prompt;
+        }
+
+        // 5. Seed
+        if (modelInputs.seed !== undefined && modelInputs.seed !== null && modelInputs.seed !== "") {
+          modelInputs.seed = Number(modelInputs.seed);
+        } else {
+          delete modelInputs.seed;
+        }
+
+        // 6. Modo de Qualidade
+        if (modelInputs.quality === "high") {
+          // Em modelos que suportam modo HD/Pro, reforça resolução e sampling
+          if (payload.modelTechnicalName.includes("kling")) {
+            modelInputs.mode = "pro";
+          }
         }
       }
 
