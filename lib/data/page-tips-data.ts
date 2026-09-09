@@ -78,6 +78,42 @@ export const PAGE_TIPS_DATA: Record<string, PageTipData> = {
     proTip: "Dica: Mantenha sempre seus prompts salvos na Biblioteca de Favoritos para reaproveitar estruturas bem-sucedidas em novos projetos.",
   },
 
+  "/dashboard/models": {
+    route: "/dashboard/models",
+    title: "Vitrine de Modelos & Casting",
+    subtitle: "Catálogo completo de talentos virtuais (IA) e modelos reais verificados para produções digitais e físicas.",
+    icon: Sparkles,
+    color: "from-indigo-600 via-violet-600 to-cyan-500",
+    badgeText: "Marketplace de Modelos",
+    steps: [
+      {
+        title: "1. Escolha entre Modelos de IA ou Reais",
+        description: "Utilize as pílulas superiores para filtrar por personagens digitais consistentes ou modelos físicos para campanhas presenciais.",
+      },
+      {
+        title: "2. Selecione o Nicho Desejado",
+        description: "Filtre por Moda & Editorial, Comercial, Fitness, Games ou ative o Modo Adulto (+18) com verificação de idade.",
+      },
+      {
+        title: "3. Envie para o Studio CREATE ou Contrate",
+        description: "Para IA, clique em 'Usar no Studio' para carregar automaticamente o prompt trigger. Para Reais, solicite uma proposta de contratação com cachê base.",
+      },
+    ],
+    accordions: [
+      {
+        id: "models-consistency",
+        title: "Como funciona a consistência facial nos modelos de IA?",
+        content: "Cada modelo de IA da vitrine possui um trigger prompt calibrado e um ID de modelo LoRA dedicado, permitindo gerar o mesmo personagem em múltiplos cenários e iluminações com alta fidelidade.",
+      },
+      {
+        id: "models-booking",
+        title: "Como funciona a contratação de modelos reais?",
+        content: "Ao enviar uma proposta com o orçamento e briefing do seu projeto, nossa equipe de casting e a assessoria do modelo entram em contato para alinhar datas, detalhes da diária e contrato formal de uso de imagem.",
+      },
+    ],
+    proTip: "Dica: Clique em qualquer card para abrir o modal de detalhes e visualizar a galeria em carrossel e o trigger prompt completo.",
+  },
+
   "/dashboard/create": {
     route: "/dashboard/create",
     title: "Studio CREATE",

@@ -3,6 +3,7 @@
 import React from "react";
 import { StudioTool, TOOLS, QUALITY_MODES } from "./types";
 import { ModelLogo } from "@/components/tools/video/ModelLogo";
+import { Sparkles } from "lucide-react";
 
 interface StudioModelSelectorProps {
   activeTool: StudioTool;
@@ -10,6 +11,8 @@ interface StudioModelSelectorProps {
   onSelectModel: (modelId: string) => void;
   qualityMode?: string;
   onSelectQualityMode?: (modeId: string, steps: number, modelId: string) => void;
+  onOpenModelShowcasePicker?: () => void;
+  hasActiveShowcaseModel?: boolean;
 }
 
 export function StudioModelSelector({
@@ -18,6 +21,8 @@ export function StudioModelSelector({
   onSelectModel,
   qualityMode,
   onSelectQualityMode,
+  onOpenModelShowcasePicker,
+  hasActiveShowcaseModel,
 }: StudioModelSelectorProps) {
   const currentToolDef = TOOLS[activeTool];
   const currentModelDef =
@@ -26,6 +31,40 @@ export function StudioModelSelector({
 
   return (
     <div className="space-y-4">
+      {/* Atalho/Seção sutil: Usar Modelo da Vitrine / Casting */}
+      {onOpenModelShowcasePicker && (
+        <div className="p-3 rounded-2xl bg-gradient-to-r from-violet-950/40 to-[#13141B] border border-violet-500/30 flex items-center justify-between gap-3 shadow-md shadow-violet-950/20">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="text-xl shrink-0">🎭</span>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <h4 className="text-xs font-bold text-white truncate">
+                  {hasActiveShowcaseModel ? "Trocar Modelo da Vitrine" : "Casting & Vitrine de Modelos"}
+                </h4>
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 font-semibold uppercase">
+                  Identidade Fixa
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 truncate">
+                {hasActiveShowcaseModel
+                  ? "Modelo carregado com consistência facial e gatilho ativo."
+                  : "Selecione um rosto do catálogo da vitrine para consistência facial."}
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={onOpenModelShowcasePicker}
+            className="shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md shadow-violet-600/20 transition-all active:scale-95 cursor-pointer whitespace-nowrap"
+            style={{ minHeight: "44px" }}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-violet-200" />
+            <span>{hasActiveShowcaseModel ? "Trocar Modelo" : "Escolher da Vitrine"}</span>
+          </button>
+        </div>
+      )}
+
       {/* Seção Modelo de IA com Linguagem Amigável para Leigos */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">

@@ -16,6 +16,9 @@ import {
   ImageActionBar,
   ImagePreviewArea,
 } from "@/components/tools/image";
+import { MarketplaceModelItem } from "@/components/models/types";
+import { QuickModelPickerModal } from "@/components/models/QuickModelPickerModal";
+import { FALLBACK_MARKETPLACE_MODELS } from "@/lib/marketplace-models";
 
 export default function ImageGenerationPage() {
   // Saldo do usuário
@@ -33,6 +36,10 @@ export default function ImageGenerationPage() {
   const [originalDimensions, setOriginalDimensions] = useState<{ width: number; height: number } | null>(null);
   const [isUploadingRef, setIsUploadingRef] = useState<boolean>(false);
   const [isOptimizing, setIsOptimizing] = useState<boolean>(false);
+
+  // Integração com Vitrine de Modelos
+  const [activeShowcaseModel, setActiveShowcaseModel] = useState<MarketplaceModelItem | null>(null);
+  const [isModelPickerOpen, setIsModelPickerOpen] = useState<boolean>(false);
 
   // Ajustes de Proporção e Qualidade (sem seção de Estilo)
   const [aspectRatio, setAspectRatio] = useState<string>("landscape_16_9");
@@ -98,7 +105,76 @@ export default function ImageGenerationPage() {
 
     loadConfig();
     loadRealHistory();
+
+    // Suporte a query params vindos da Vitrine de Modelos (?modelRef=...)
+    if (typeof window !== "undefined") {
+      const sp = new URLSearchParams(window.location.search);
+      const modelRef = sp.get("modelRef");
+      const refImg = sp.get("refImg");
+      const promptParam = sp.get("prompt");
+      const modelName = sp.get("modelName");
+
+      if (modelRef) {
+        const found = FALLBACK_MARKETPLACE_MODELS.find(
+          (m) => m.id === modelRef || m.slug === modelRef
+        );
+        if (found) {
+          handleSelectShowcaseModel(found);
+        } else {
+          handleSelectShowcaseModel({
+            id: modelRef,
+            name: modelName || "Modelo da Vitrine",
+            slug: modelRef,
+            type: "AI",
+            category: "FASHION",
+            avatarUrl: refImg || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+            gallery: [],
+            tags: ["Casting", "Vitrine"],
+            promptTrigger: promptParam || null,
+            referenceFaceUrl: refImg || null,
+            creditsPricePerGen: 5,
+            status: true,
+            isFeatured: true,
+            isHot18: false,
+          });
+        }
+      } else {
+        if (promptParam) setPrompt(promptParam);
+        if (refImg) {
+          setReferenceImageUrl(refImg);
+          setCreationMode("character");
+        }
+      }
+    }
   }, []);
+
+  // Seleção de Modelo da Vitrine
+  const handleSelectShowcaseModel = (model: MarketplaceModelItem) => {
+    setActiveShowcaseModel(model);
+    const faceImg = model.referenceFaceUrl || model.avatarUrl;
+    if (faceImg) {
+      setReferenceImageUrl(faceImg);
+    }
+    setCreationMode("character"); // Ativa modo de preservação facial FLUX PuLID
+
+    if (model.promptTrigger) {
+      setPrompt((prevPrompt) => {
+        if (!prevPrompt.trim()) return model.promptTrigger || "";
+        if (model.promptTrigger && !prevPrompt.includes(model.promptTrigger)) {
+          return `${model.promptTrigger}, ${prevPrompt.trim()}`;
+        }
+        return prevPrompt;
+      });
+    }
+
+    toast.success(`Modelo "${model.name}" ativado com Preservação Facial (FLUX PuLID)!`);
+  };
+
+  const handleRemoveShowcaseModel = () => {
+    setActiveShowcaseModel(null);
+    setReferenceImageUrl("");
+    toast.info("Modelo da vitrine desvinculado.");
+  };
 
   // Upload de Imagem de Referência
   const handleUploadImage = async (file: File) => {
@@ -342,13 +418,18 @@ export default function ImageGenerationPage() {
             prompt={prompt}
             onChangePrompt={setPrompt}
             referenceImageUrl={referenceImageUrl}
-            onRemoveReferenceImage={() => setReferenceImageUrl("")}
+            onRemoveReferenceImage={() => {
+              setReferenceImageUrl("");
+              setActiveShowcaseModel(null);
+            }}
             onUploadImage={handleUploadImage}
             isUploadingRef={isUploadingRef}
             onInspirationPrompt={handleInspirationPrompt}
             onClearPrompt={handleClearPrompt}
             onOptimizePrompt={handleOptimizePrompt}
             isOptimizing={isOptimizing}
+            onOpenModelPicker={() => setIsModelPickerOpen(true)}
+            activeModelName={activeShowcaseModel?.name || null}
           />
 
           {/* Card 2: Proporção da Imagem e Qualidade (SEM Estilo) + Avançado */}
@@ -411,6 +492,14 @@ export default function ImageGenerationPage() {
           />
         </div>
       </div>
+
+      {/* Modal Rápido de Seleção de Modelo da Vitrine */}
+      <QuickModelPickerModal
+        isOpen={isModelPickerOpen}
+        onClose={() => setIsModelPickerOpen(false)}
+        onSelectModel={handleSelectShowcaseModel}
+        activeModelId={activeShowcaseModel?.id || null}
+      />
     </div>
   );
 }

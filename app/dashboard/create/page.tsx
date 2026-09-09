@@ -28,7 +28,11 @@ import {
   StudioAdvancedSettings,
   StudioPreviewPlayer,
   StudioHistorySidebar,
+  ActiveShowcaseModelBanner,
 } from "@/components/studio";
+import { MarketplaceModelItem } from "@/components/models/types";
+import { QuickModelPickerModal } from "@/components/models/QuickModelPickerModal";
+import { FALLBACK_MARKETPLACE_MODELS } from "@/lib/marketplace-models";
 
 export default function StudioCreatePage() {
   const router = useRouter();
@@ -58,6 +62,10 @@ export default function StudioCreatePage() {
   const [originalDimensions, setOriginalDimensions] = useState<{ width: number; height: number } | null>(null);
   const [isUploadingRef, setIsUploadingRef] = useState(false);
   const refFileInputRef = useRef<HTMLInputElement>(null);
+
+  // Integração com Vitrine de Modelos
+  const [activeShowcaseModel, setActiveShowcaseModel] = useState<MarketplaceModelItem | null>(null);
+  const [isModelPickerOpen, setIsModelPickerOpen] = useState(false);
 
   // Configurações Avançadas
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
@@ -136,18 +144,110 @@ export default function StudioCreatePage() {
     }
   };
 
+  // Aplica modelo selecionado da vitrine no Studio
+  const handleApplyShowcaseModel = (model: MarketplaceModelItem) => {
+    setActiveShowcaseModel(model);
+    setProjectName(`Campanha - ${model.name}`);
+
+    // Preenche foto de referência facial
+    const faceImg = model.referenceFaceUrl || model.avatarUrl;
+    if (faceImg) {
+      setReferenceImageUrl(faceImg);
+    }
+
+    // Injeta promptTrigger se ainda não presente
+    if (model.promptTrigger) {
+      setPrompt((prevPrompt) => {
+        if (!prevPrompt.trim()) {
+          return model.promptTrigger || "";
+        }
+        if (model.promptTrigger && !prevPrompt.includes(model.promptTrigger)) {
+          return `${model.promptTrigger}, ${prevPrompt.trim()}`;
+        }
+        return prevPrompt;
+      });
+    }
+
+    // Se for ferramenta de imagem, seleciona o motor ideal com preservação facial
+    if (activeTool === "image") {
+      setSelectedModelId("fal-ai/flux-pulid");
+      setQualityMode("standard");
+      setInferenceSteps(20);
+    }
+
+    toast.success(`Modelo "${model.name}" ativado com consistência facial (FLUX PuLID)!`);
+  };
+
+  const handleRemoveShowcaseModel = () => {
+    setActiveShowcaseModel(null);
+    setReferenceImageUrl("");
+    toast.info("Modelo da vitrine desvinculado.");
+  };
+
   useEffect(() => {
     fetchConfig();
     fetchHistory();
+
+    // Lê parâmetros da URL caso venha da Vitrine de Modelos
+    if (typeof window !== "undefined") {
+      const sp = new URLSearchParams(window.location.search);
+      const promptParam = sp.get("prompt");
+      const refImgParam = sp.get("refImg");
+      const modelRefParam = sp.get("modelRef");
+      const modelNameParam = sp.get("modelName");
+
+      if (modelRefParam) {
+        // Busca se existe no catálogo fallback ou se há dados
+        const found = FALLBACK_MARKETPLACE_MODELS.find(
+          (m) => m.id === modelRefParam || m.slug === modelRefParam
+        );
+
+        if (found) {
+          handleApplyShowcaseModel(found);
+        } else {
+          // Cria objeto de modelo sintetizado a partir dos query params
+          const dynamicModel: MarketplaceModelItem = {
+            id: modelRefParam,
+            name: modelNameParam || "Modelo da Vitrine",
+            slug: modelRefParam,
+            type: "AI",
+            category: "FASHION",
+            avatarUrl: refImgParam || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+            gallery: [],
+            tags: ["Casting", "Vitrine"],
+            promptTrigger: promptParam || null,
+            referenceFaceUrl: refImgParam || null,
+            creditsPricePerGen: 5,
+            status: true,
+            isFeatured: true,
+            isHot18: false,
+          };
+          handleApplyShowcaseModel(dynamicModel);
+        }
+      } else {
+        if (promptParam) {
+          setPrompt(promptParam);
+          toast.info("Prompt carregado no Studio CREATE!");
+        }
+        if (refImgParam) {
+          setReferenceImageUrl(refImgParam);
+          setSelectedModelId("fal-ai/flux-pulid");
+        }
+      }
+    }
   }, []);
 
-  // Sincroniza modelo padrão ao alternar ferramenta
+  // Sincroniza modelo padrão ao alternar ferramenta (caso não haja modelo da vitrine ativo)
   useEffect(() => {
+    if (activeShowcaseModel && activeTool === "image") {
+      setSelectedModelId("fal-ai/flux-pulid");
+      return;
+    }
     const currentToolDef = TOOLS[activeTool];
     if (currentToolDef.models.length > 0) {
       setSelectedModelId(currentToolDef.models[0].id);
     }
-  }, [activeTool]);
+  }, [activeTool, activeShowcaseModel]);
 
   // Aplica Presets de Estilo com Toggle e Parâmetros Ideais
   const handleSelectStyle = (styleId: string) => {
@@ -521,6 +621,14 @@ export default function StudioCreatePage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* COLUNA DA ESQUERDA: PARÂMETROS & CONTROLES (lg:col-span-4) */}
         <div className="lg:col-span-4 space-y-5 bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-4 sm:p-5">
+          {/* Banner de Modelo da Vitrine Ativo */}
+          {activeShowcaseModel && (
+            <ActiveShowcaseModelBanner
+              model={activeShowcaseModel}
+              onRemove={handleRemoveShowcaseModel}
+            />
+          )}
+
           {/* Seção Tipo de Mídia */}
           <StudioToolSelector
             activeTool={activeTool}
@@ -549,6 +657,9 @@ export default function StudioCreatePage() {
                 } else if (modelId === "fal-ai/flux-pro/v1.1-ultra") {
                   setQualityMode("hd");
                   setInferenceSteps(28);
+                } else if (modelId === "fal-ai/flux-pulid") {
+                  setQualityMode("standard");
+                  setInferenceSteps(20);
                 }
               }
             }}
@@ -558,6 +669,8 @@ export default function StudioCreatePage() {
               setInferenceSteps(steps);
               setSelectedModelId(modelId);
             }}
+            onOpenModelShowcasePicker={() => setIsModelPickerOpen(true)}
+            hasActiveShowcaseModel={!!activeShowcaseModel}
           />
 
           {/* Seção Prompt de Criação */}
@@ -626,7 +739,7 @@ export default function StudioCreatePage() {
                     onClick={() => refFileInputRef.current?.click()}
                     disabled={isUploadingRef}
                     className="p-1.5 rounded-lg hover:bg-[#13141B] hover:text-violet-400 transition-colors cursor-pointer"
-                    title="Anexar imagem de referência"
+                    title="Anexar imagem de referência local"
                     style={{ minHeight: "36px", minWidth: "36px" }}
                   >
                     {isUploadingRef ? (
@@ -634,6 +747,19 @@ export default function StudioCreatePage() {
                     ) : (
                       <Upload className="h-4 w-4" />
                     )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsModelPickerOpen(true)}
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#13141B] hover:bg-violet-600/20 border border-[#1E202E] hover:border-violet-500/50 text-slate-300 hover:text-violet-300 text-[11px] font-medium transition-all cursor-pointer"
+                    title="Escolher modelo do catálogo da vitrine"
+                    style={{ minHeight: "36px" }}
+                  >
+                    <span>🎭</span>
+                    <span className="hidden sm:inline">
+                      {activeShowcaseModel ? activeShowcaseModel.name : "Modelo da Vitrine"}
+                    </span>
                   </button>
                 </div>
 
@@ -880,6 +1006,14 @@ export default function StudioCreatePage() {
           <span className="text-[10px] text-slate-500">Compatível com Upscale Neural 4K/8K</span>
         </div>
       </div>
+
+      {/* Modal de Seleção Rápida de Modelo da Vitrine / Casting */}
+      <QuickModelPickerModal
+        isOpen={isModelPickerOpen}
+        onClose={() => setIsModelPickerOpen(false)}
+        onSelectModel={handleApplyShowcaseModel}
+        activeModelId={activeShowcaseModel?.id || null}
+      />
     </div>
   );
 }

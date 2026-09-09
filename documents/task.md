@@ -8,6 +8,71 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Blindagem Adversária Contra Fraudes de Créditos, Saldos e Bypass Financeiro**:
+  - Implementação de suíte de testes de estresse adversário (`__tests__/malicious-credits-bypass.test.ts`) com 11 vetores de ataque cobertos (100% de aprovação).
+  - Bloqueio de injeção de créditos por usuários sem privilégios (`Role.USER`) ou administradores suspensos (`isBlocked: true`).
+  - Rejeição de tipos maliciosos de crédito (0, floats, NaN, negativos ou strings em endpoints de ajuste).
+  - Bloqueio de execução de jobs de IA com saldo 0 ou insuficiente, impedindo saldo negativo no banco.
+  - Imutabilidade do custo no backend: qualquer `creditCost`, `credits` ou `cost: 0` enviado pelo cliente é descartado e recalculado pelas regras do servidor.
+  - Recálculo forçado de multiplicadores (10s e 4K) inviabilizando geração de alta definição a preço de baixa qualidade.
+  - Proteção no `TalkingVideoService` contra bypass de pacotes bundle (vídeo + áudio + lipsync).
+  - Proteção contra Webhook Forging (rejeição de pagamentos sem registro prévio com 404) e Replay Attack (duplicação de saldo evitada com idempotência).
+  - Proteção na rota de aprovação manual com validação de RBAC e locks pessimistas contra race conditions.
+  - **Infraestrutura de Banco & Seed de Modelos**:
+    * Criação dos modelos `MarketplaceModel`, `ModelBooking` e enums `ModelType` (`AI`, `REAL`) e `ModelCategory` (`FASHION`, `COMMERCIAL`, `FITNESS`, `LIFESTYLE`, `CORPORATE`, `AVATAR`, `HOT_18`, `GAMES`).
+    * Script de seed executado populando 9 modelos realistas e diversificados (Elena Vance, Lucas Alencar, Aria Cyber, Chloe Sweet, Valentina Noir, Mariana Rios, Rodrigo Santoro, Gabriel Ramos, Beatriz Nogueira).
+  - **Endpoints de API Públicos e Administrativos**:
+    * `GET /api/models`: listagem pública com paginação, filtros, ordenação e barreira de conteúdo +18.
+    * `GET /api/models/[slug]`: detalhes técnicos e portfólio completo com metadados para IA (`studioConfig`).
+    * `POST /api/models/book`: solicitação de contratação/reserva com autenticação de sessão.
+    * `GET/POST /api/admin/models`, `PATCH/DELETE /api/admin/models/[id]`, e `/api/admin/models/bookings`: gestão administrativa completa com RBAC de ADMIN e trilha de auditoria (`AuditLog`).
+  - **Interface da Vitrine Pública (`/dashboard/models`)**:
+    * Pílulas deslizantes horizontais (Todos, IA 🤖, Reais 👤, Categorias e Hot +18 com verificação etária).
+    * Cards em alta definição com botões de ação dinâmicos ("Usar no Studio" para IA e "Contratar / Reservar" para Reais).
+    * Modal expansivo com galeria de fotos, prompt triggers copiáveis e modal de proposta de contratação com Sonner toasts.
+    * Adicionado o atalho "Vitrine de Modelos" na Sidebar do VORIXA.
+  - **Gestão no Painel Administrativo (`/dashboard/admin`)**:
+    * 5ª aba "Vitrine de Modelos & Casting" com KPIs consolidados, filtros, ativação rápida e modal de cadastro de novos modelos (IA e Reais).
+    * Central de gerenciamento de propostas de contratação/casting com aprovação e recusa.
+  - **Integração no Studio CREATE (`/dashboard/create`)**:
+    * Suporte a query params para pré-carregamento automático da foto de referência facial e prompt trigger.
+    * Banner de destaque de modelo ativo com botão para desvincular.
+    * Modal de seleção rápida "🎭 Escolher Modelo da Vitrine" dentro do Studio sem precisar sair da tela.
+- [x] **Expansão Modular do Painel Administrativo Geral (`/dashboard/admin`)**:
+  - **Gestão de Usuários & Ações em Massa**:
+    * Tabela com busca, filtros de papel/status, ordenação e paginação.
+    * Barra flutuante de ações em lote para bloquear, desbloquear, promover a admin, rebaixar a usuário comum, conceder créditos em massa ou excluir.
+    * Gaveta lateral do usuário com histórico completo de pagamentos, recargas pendentes com botão de **"Aprovar Recarga Manualmente"**, histórico de jobs com créditos e custos reais da API em dólares ($), e alteração de senha segura com bcryptjs.
+    * Proteção contra auto-bloqueio, auto-rebaixamento e auto-exclusão do admin da sessão.
+  - **Catálogo de Serviços & Precificação Dinâmica com Cotação de Dólar**:
+    * Exibição de todos os motores de IA e variações por categoria com custos em USD e R$.
+    * Cotação em tempo real do dólar comercial (USD/BRL) via AwesomeAPI com cache e botão de atualização imediata.
+    * Edição inline de créditos e botão rápido de salvamento.
+    * Toggle on/off de modelos e ferramentas, além de ações em massa para ativação/desativação e reajuste percentual de créditos.
+  - **Central de Logs do Sistema & Auditoria CRM**:
+    * Abas para Logs de Recargas, Logs de Gerações IA & Diagnóstico de Falhas e Trilha de Auditoria administrativa (`AuditLog`).
+    * Exibição destacada dos erros retornados pelas APIs para diagnóstico imediato.
+    * Modal de inspeção rápida do payload JSON completo.
+  - **Navegação Integrada e Mobile-First**:
+    * Comutador de 4 abas ergonômicas no topo: Visão Geral, Catálogo de Serviços, Gestão de Usuários e Logs do Sistema.
+- [x] **Painel Executivo Administrativo Geral 360º (`/dashboard/admin`) & Otimizações Mobile Padrão Ouro**:
+  - Filtros temporais: Hoje (Horas), Semanal, Mensal, Anual, Todo o Período e Personalizado.
+  - Destaque em tempo real do dia atual: faturamento de hoje, lucro líquido, novos cadastros, gastos com API e mídias geradas.
+  - Gráficos SVG dinâmicos com eixo X adaptativo e curvas de Receita, Lucro, Cadastros e Gastos de API.
+  - **Experiência Mobile Padrão Ouro (Thumb Zone & Ergonomia)**:
+    - Filtros em pílulas deslizantes horizontais táteis (`min-h-[44px]`) e gaveta de datas expansível.
+    - Gráfico com HUD Superior Fixo (elimina tooltips cobertos pelo dedo) e hitboxes de toque ampliadas (36px).
+    - Top Serviços em visualização híbrida: Cards Mobile dedicados no smartphone e tabela detalhada no desktop.
+    - Abas comutadoras inferiores no celular ("Ajustar Créditos" / "Branding & SEO") evitando rolagens excessivas.
+    - Leaderboard de clientes com atalho direto e scroll suave até o formulário de ajuste.
+  - Tabela de Top Serviços e Modelos mais utilizados e rentáveis.
+  - Leaderboards de clientes: Maior Saldo e Maior Consumo.
+  - Módulos preservados com auditoria: Configurações de Branding/SEO e Ajuste Manual de Créditos.
+- [x] **Integração do Motor WaveSpeed AI & Gerador Hot (+18)**:
+  - Criação do provedor `WaveSpeedAIProvider` dedicado exclusivamente a modelos não censurados (`pony-diffusion-v6-xl`, `flux-uncensored-dev`, `wan-2.1-uncensored-i2v`).
+  - Nova página `/dashboard/tools/hot` isolada do catálogo principal, com barreira de idade (+18) via modal `AgeVerificationModal` (persistido em `localStorage`).
+  - Blindagem completa de SEO em `robots.ts` (`disallow`) e metadados com diretiva `noindex, nofollow, noimageindex`.
+  - Item "Gerador Hot (+18)" adicionado ao menu lateral do Dashboard com ícone de chama e badge destacado.
 - [x] **Restauração do Acervo Oficial de Mídias (`rfpita.ti@gmail.com`)**:
   - Recuperados e associados 16 jobs de mídias concluídas (`COMPLETED`) com seus arquivos físicos de alta resolução, prompts, modelos e proporções originais.
   - As páginas `/dashboard/library`, `/dashboard/tools/image`, `/dashboard/tools/video` e `/dashboard/create` agora carregam todo o histórico de criações do usuário.

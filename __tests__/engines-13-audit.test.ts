@@ -111,6 +111,14 @@ describe('Audit & Readiness Test: All 17 Generative AI Engines (Latest Versions)
   });
 
   it('2. POST /api/tools/generate must be capable of generating jobs for all 13 models', async () => {
+    vi.spyOn(fal.queue, 'submit').mockResolvedValue({
+      request_id: 'mock-audit-request-id-123',
+    } as any);
+    vi.spyOn(fal, 'subscribe').mockResolvedValue({
+      data: { images: [{ url: 'https://vorixa.com/mock.jpg' }] },
+      requestId: 'mock-audit-request-id-123',
+    } as any);
+
     for (const exp of EXPECTED_MODELS) {
       (auth as any).mockResolvedValueOnce({ user: { id: testUser.id } });
 

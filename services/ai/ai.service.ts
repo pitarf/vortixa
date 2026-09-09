@@ -130,8 +130,8 @@ export class AIService {
         processedInputs.prompt = optimized.optimizedPrompt;
       }
 
-      // 8. Submeter ao Provedor (Factory escolhe Live ou Mock)
-      const provider = AIProviderFactory.getProvider();
+      // 8. Submeter ao Provedor (Factory escolhe Live Fal.ai, WaveSpeed ou Mock)
+      const provider = AIProviderFactory.getProvider(targetModel.technicalName);
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3005";
       const webhookUrl = `${baseUrl}/api/webhooks/fal`;
 

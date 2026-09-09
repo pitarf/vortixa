@@ -31,6 +31,9 @@ import {
   User as UserIcon,
   CheckCircle2,
   ArrowRight,
+  Flame,
+  Users,
+  Sparkles,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { ProviderModeSwitch } from "@/components/layout/ProviderModeSwitch";
@@ -147,6 +150,13 @@ export function DashboardShell({
       color: "text-violet-400",
     },
     {
+      name: "Vitrine de Modelos",
+      href: "/dashboard/models",
+      icon: Sparkles,
+      badge: "NOVO",
+      color: "text-indigo-400",
+    },
+    {
       name: "VORIXA FLOW",
       href: "/dashboard/flow",
       icon: Boxes,
@@ -165,6 +175,7 @@ export function DashboardShell({
   const engineItems = [
     { name: "Gerador de Imagem", href: "/dashboard/tools/image", icon: ImageIcon, color: "text-violet-400" },
     { name: "Gerador de Vídeo", href: "/dashboard/tools/video", icon: Video, color: "text-cyan-400" },
+    { name: "Gerador Hot (+18)", href: "/dashboard/tools/hot", icon: Flame, color: "text-rose-500", badge: "18+ 🔥" },
     { name: "LivePortrait (LipSync)", href: "/dashboard/tools/lipsync", icon: Navigation, color: "text-emerald-400" },
     { name: "Motion Control", href: "/dashboard/tools/motion", icon: Activity, color: "text-fuchsia-400" },
     { name: "Upscale 4K", href: "/dashboard/tools/upscale", icon: Layers, color: "text-amber-400" },
@@ -308,15 +319,22 @@ export function DashboardShell({
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-medium transition-all group ${
+                  className={`flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-medium transition-all group ${
                     isActive
                       ? "bg-[#13141B] text-white border border-[#1E202E]"
                       : "text-slate-400 hover:text-slate-200 hover:bg-[#13141B]/50"
                   }`}
                   style={{ minHeight: "44px" }}
                 >
-                  <item.icon className={`h-4 w-4 ${item.color} group-hover:scale-110 transition-transform`} />
-                  <span>{item.name}</span>
+                  <div className="flex items-center gap-3">
+                    <item.icon className={`h-4 w-4 ${item.color} group-hover:scale-110 transition-transform`} />
+                    <span>{item.name}</span>
+                  </div>
+                  {item.badge && (
+                    <span className="px-2 py-0.5 rounded-md bg-rose-500/20 border border-rose-500/40 text-[9px] font-mono font-bold text-rose-300 animate-pulse">
+                      {item.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}

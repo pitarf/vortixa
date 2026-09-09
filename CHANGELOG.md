@@ -5,6 +5,125 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.8.1] - 2026-09-09
+### Blindagem de Segurança Adversária: Proteção Contra Fraude de Créditos, Saldos Negativos e Bypass Financeiro
+- **Suíte de Testes Adversários Maliciosos (`__tests__/malicious-credits-bypass.test.ts`)**:
+  - Implementação e aprovação de 11 cenários de ataque agressivos cobrindo as tentativas mais críticas de fraudar o sistema.
+  - **Ataques de Injeção de Crédito Rejeitados**: Tentativas de usuários comuns (`Role.USER`) ou administradores suspensos (`isBlocked: true`) de chamar a API `/api/admin/adjust-credits` retornam imediatamente `HTTP 403 Forbidden`.
+  - **Sanitização Numérica Estrita**: Tipos maliciosos (`creditsAmount: 0`, floats, NaN, strings, negativos sem justificativa) rejeitados com `HTTP 400 Bad Request`.
+  - **Bypass de Saldo Zero / Negativo**: Bloqueio sumário de qualquer requisição de geração generativa (`POST /api/tools/generate`) quando o saldo do usuário for zero ou insuficiente, garantindo que o saldo jamais fique negativo.
+  - **Imutabilidade de Custos no Servidor**: O backend recalcula compulsoriamente os custos dos modelos via banco de dados e ignora quaisquer campos fraudulentos injetados pelo cliente (`creditCost: 0`, `credits: -50`, etc.).
+  - **Multiplicadores de Alta Resolução / Duração Forçados**: Solicitações de vídeo 10s e resolução 4K têm seus multiplicadores (2x e 2x) recalculados no servidor, impedindo que o cliente pague custo de imagem por vídeos longos em 4K.
+  - **Blindagem do Pacote Bundle (`TalkingVideoService`)**: Exige saldo total para Vídeo + Áudio Neural + LipSync Pro antes do disparo de qualquer tarefa.
+  - **Proteção Contra Webhook Forging & Replay**: Webhooks forjados sem registro de pagamento existente no banco de dados retornam `HTTP 404`, e reenvios do mesmo evento de pagamento (Replay Attack) são tratados de forma idempotente sem conceder créditos duplicados.
+  - **Proteção na Aprovação Manual**: Locks pessimistas (`SELECT ... FOR UPDATE`) e barreira de RBAC impedem requisições não autorizadas ou race conditions.
+
+## [1.8.0] - 2026-09-09
+### Vitrine de Modelos & Casting: Venda e Uso de Modelos de IA e Modelos Reais
+- **Infraestrutura de Banco & Seed de Modelos (`MarketplaceModel` & `ModelBooking`)**:
+  - Modelagem no Prisma com enums `ModelType` (`AI`, `REAL`) e `ModelCategory` (`FASHION`, `COMMERCIAL`, `FITNESS`, `LIFESTYLE`, `CORPORATE`, `AVATAR`, `HOT_18`, `GAMES`).
+  - Script de seed com 9 modelos realistas e diversificados (Elena Vance, Lucas Alencar, Aria Cyber, Chloe Sweet, Valentina Noir, Mariana Rios, Rodrigo Santoro, Gabriel Ramos, Beatriz Nogueira) com avatares HD, fotos de capa, galerias e prompt triggers.
+- **Endpoints de API Públicos e Administrativos**:
+  - `GET /api/models`: catálogo paginado com busca, filtros por nicho/tipo, ordenação e isolamento seguro de conteúdo +18.
+  - `GET /api/models/[slug]`: ficha técnica completa com metadados `studioConfig` para IA.
+  - `POST /api/models/book`: contratação/reserva com autenticação via `auth()`.
+  - `GET/POST /api/admin/models`, `PATCH/DELETE /api/admin/models/[id]` e `/api/admin/models/bookings`: gestão administrativa completa com RBAC de ADMIN e `AuditLog`.
+- **Vitrine Pública de Modelos (`/dashboard/models`)**:
+  - Design futurista dark mode com banner de métricas e filtros em pílulas deslizantes horizontais tipo pill buttons com scroll suave no celular.
+  - Cards com ações contextuais: **"Usar no Studio"** para modelos de IA e **"Contratar / Reservar"** para modelos reais.
+  - Modal com fotos em alta definição, prompt trigger copiável e modal de proposta de contratação com toasts da Sonner.
+  - Novo atalho com selo "NOVO" adicionado à sidebar do Dashboard.
+- **Painel Administrativo da Vitrine (`/dashboard/admin`)**:
+  - Nova aba comutadora **"Vitrine de Modelos & Casting"** no painel executivo com cards de KPIs e alternância rápida de status.
+  - Modal de cadastro e edição de modelos (`AdminModelFormModal`) e gestão de solicitações de casting (`AdminBookingsModal`).
+- **Integração Fluida no Studio CREATE (`/dashboard/create`)**:
+  - Banner dinâmico de "Modelo da Vitrine Ativo" com opção de desvinculação em um clique.
+  - Suporte a query params e seletor rápido **"🎭 Escolher da Vitrine"** sem precisar trocar de página, aplicando automaticamente o rosto de referência e o prompt trigger no motor de consistência facial (`FLUX PuLID`).
+
+## [1.7.7] - 2026-09-09
+### Expansão Modular do Painel Administrativo: Gestão de Usuários, Catálogo de Serviços com Dólar do Dia e Logs do Sistema
+- **Gestão Avançada de Usuários & Ações em Massa (`components/admin/users/`)**:
+  - Tabela completa de usuários com busca em tempo real, filtros por privilégio (`ADMIN` / `USER`), status (`Ativo` / `Bloqueado`), ordenação dinâmica e paginação.
+  - **Barra de Ações em Lote (`AdminBatchActionsBar`)**: Seleção múltipla para bloquear, desbloquear, promover a administrador, rebaixar a usuário comum, adicionar créditos em massa ou excluir com confirmação e auditoria.
+  - **Gaveta Lateral de Detalhes (`AdminUserDrawer`)**:
+    * **Ações do Usuário**: Alteração direta de senha com hash `bcryptjs` (12 rounds), bloqueio/desbloqueio, comutador de Acesso Ilimitado e ajuste manual de créditos com justificativa compulsória.
+    * **Recargas & Pagamentos**: Histórico completo com status (`PAID`, `PENDING`, `FAILED`, `REFUNDED`) e botão de **"Aprovar Recarga Manualmente"** integrado ao endpoint transacional `/api/admin/payments/manual-approve`.
+    * **Histórico de Gerações IA**: Inspeção detalhada dos jobs do usuário com status, créditos consumidos e **custo real da API em dólar ($)** visível exclusivamente para administradores.
+  - **Blindagem de Segurança**: O administrador logado na sessão é proibido de bloquear, rebaixar ou excluir a si próprio.
+- **Catálogo de Serviços, Precificação Dinâmica & Conversão de Câmbio (`components/admin/services/`)**:
+  - Listagem de todos os motores de IA e suas variações com filtros rápidos por categoria (Imagem, Vídeo, LipSync, Motion, Upscale, Hot +18).
+  - **Serviço de Cotação de Câmbio (`currency.service.ts`)**: Consulta em tempo real da cotação USD/BRL com cache em memória (TTL 30 min) e fallback gracioso.
+  - Badge dinâmico de cotação do dia com botão de recarga instantânea.
+  - Exibição simultânea do custo da API em USD ($) e do custo estimado convertido em Reais (R$).
+  - Coluna de créditos com input inline para edição rápida e botão de salvar.
+  - Switch toggle on/off para ativação/desativação imediata de modelos e ferramentas.
+  - Barra de ações em massa para reajuste percentual, fixação de créditos ou pausa de múltiplos serviços em lote.
+- **Central de Logs do Sistema & Auditoria CRM (`components/admin/logs/`)**:
+  - Abas especializadas: **Recargas & Financeiro**, **Gerações & Falhas de IA** e **Trilha de Auditoria**.
+  - Rastreamento detalhado de falhas em jobs de IA com exibição destacada do motivo retornado pelo provedor (ex: timeout, filtro de conteúdo, parâmetros).
+  - Modal de inspeção rápida de payload JSON com cópia em um clique e feedback via Sonner toast.
+  - Trilha de auditoria (`AuditLog`) registrando o autor, ação e detalhes de cada operação administrativa.
+- **Navegação Unificada & Mobile-First**:
+  - Abas principais horizontais com toque ergonômico no topo do painel: **Visão Geral & Métricas**, **Catálogo de Serviços & Precificação**, **Gestão de Usuários & Ações em Massa** e **Logs do Sistema & Auditoria CRM**.
+- **Testes Automatizados & Integridade**:
+  - 152 testes em 22 suítes do Vitest aprovados com 100% de sucesso.
+  - Tipagem estrita de TypeScript (`tsc --noEmit`) com 0 erros.
+
+## [1.7.6] - 2026-09-09
+### Novo Painel Executivo Administrativo 360º (Métricas, Gráficos Dinâmicos e Rankings)
+- **Filtros Temporais Inteligentes (`AdminDateFilter`)**:
+  - Modos de seleção com um clique: **Hoje (Horas)**, **Últimos 7 Dias (Semanal)**, **Últimos 30 Dias (Mensal)**, **Último Ano (Anual)**, **Todo o Período** e **Período Personalizado** (seleção de Data Início e Fim).
+- **Indicadores Principais e Destaques de Hoje**:
+  - Exibição em tempo real do faturamento de hoje, lucro líquido, novos cadastros, gastos com API e mídias geradas.
+  - Cards consolidados para o período filtrado: Receita Total, Lucro Líquido, Custo com APIs e Cadastros.
+- **Gráficos Dinâmicos SVG / Tailwind CSS (`AdminAnalyticsCharts`)**:
+  - Eixo X adaptativo: horas (`00:00` às `23:00`) para o filtro de Hoje, dias (`DD/MM`) para semanal/mensal e meses (`MMM/AA`) para anual.
+  - Alternância entre curvas de **Receita & Lucro**, **Cadastros** e **Mídias IA** com tooltips interativos ao passar o mouse.
+- **Top Serviços & Motores Mais Rentáveis (`AdminTopServicesTable`)**:
+  - Ranking detalhado dos modelos de IA mais executados, exibindo total de gerações, créditos consumidos, custo de API em dólares e receita estimada em reais.
+- **Leaderboard de Clientes (`AdminUsersLeaderboard`)**:
+  - Abas para visualizar usuários com **Maior Saldo em Conta** e usuários com **Maior Consumo de Mídias**, com atalho direto para ajuste de créditos.
+- **Otimizações Mobile Padrão Ouro (Thumb Zone & Ergonomia Executiva)**:
+  - **Filtro Temporal em Pílulas Deslizantes (`AdminDateFilter`)**:
+    - Substituição do seletor estático por barra horizontal deslizante com toque suave (*pill buttons*) com áreas de clique `>= 44px`.
+    - Gaveta de Período Personalizado expansível com botão tátil de fechamento e validação visual de datas.
+  - **Gráficos SVG com HUD Superior Fixo (`AdminAnalyticsCharts`)**:
+    - Eliminação de tooltips flutuantes que ficavam cobertos pelo polegar do usuário em celulares.
+    - Implementação de HUD fixo no topo do card exibindo os dados do ponto selecionado com clareza imediata e crosshair vertical tracejado.
+    - Hitbox de toque com raio ampliado (36px) para garantir facilidade de toque com uma só mão.
+  - **Visualização Híbrida de Top Serviços (`AdminTopServicesTable`)**:
+    - **Cards Mobile Compactos (`sm:hidden`)**: Exibição dos serviços mais vendidos em cartões individuais para smartphone, com pódio em destaque (1º ouro, 2º prata, 3º bronze), grid de 4 KPIs e barra percentual de participação de receita sem necessidade de rolar horizontalmente.
+    - Tabela analítica completa preservada para telas desktop (`sm:table`).
+  - **Leaderboard de Usuários Amigável ao Toque (`AdminUsersLeaderboard`)**:
+    - Avatares circulares com iniciais e gradiente, botão de cópia de ID com clique seguro (`min-h-[44px]`) e botão "Ajustar" que direciona instantaneamente com scroll suave para a aba de créditos.
+  - **Comutador de Abas Mobile Inferiores (`app/dashboard/admin/page.tsx`)**:
+    - Abas móveis dedicadas para alternar entre "Ajustar Créditos" e "Branding & SEO", impedindo páginas verticais excessivamente longas em smartphones.
+- **Compatibilidade e Testes Automatizados**:
+  - 100% de aprovação na suíte de testes unitários (`__tests__/admin-panel.test.ts` - 14/14 testes) e tipagem estrita `tsc --noEmit`.
+
+## [1.7.5] - 2026-09-09
+### Integração WaveSpeed AI e Gerador Hot (+18) com Barreira de Idade e Blindagem de SEO
+- **Novo Provedor WaveSpeed AI (`WaveSpeedAIProvider`)**:
+  - Implementado provedor assíncrono dedicado a modelos sem censura e geração Hot (+18) via API da WaveSpeed (`https://api.wavespeed.ai`).
+  - Suporte aos modelos líderes sem censura:
+    - **Pony Diffusion V6 XL** (`wavespeed/pony-diffusion-v6-xl` - 2 créditos): Especialista em arte e estética sem censura.
+    - **FLUX Uncensored Dev** (`wavespeed/flux-uncensored-dev` - 3 créditos): Fotorrealismo ultra-detalhado anatômico sem restrições de prompt.
+    - **Wan 2.1 Uncensored I2V** (`wavespeed/wan-2.1-uncensored-i2v` - 15 créditos): Vídeo cinemático realista e dinâmico de 5s ou 10s sem censura.
+  - Orquestração de fila e polling em segundo plano com estorno seguro de créditos em caso de falha de renderização.
+- **Nova Ferramenta & Página Dedicada (`/dashboard/tools/hot`)**:
+  - Interface escura premium com tema exclusivo Rosa/Carmesim Neon (`rose-500` / `fuchsia-500`).
+  - Alternância instantânea entre **Foto Hot** e **Vídeo Hot**.
+  - Suporte a proporções de tela (1:1, 16:9, 9:16) e durações de vídeo (5s e 10s).
+  - Upload opcional de imagem guia/referência para animação em vídeo sem censura.
+- **Barreira Obrigatória de Maioridade (+18 Anos)**:
+  - Componente modal `AgeVerificationModal` que bloqueia a visualização e operação até a confirmação explícita do usuário de ter mais de 18 anos.
+  - Persistência segura em `localStorage` para evitar popups desnecessários em navegações subsequentes.
+- **Blindagem Rigorosa de SEO**:
+  - Bloqueio explícito em `app/robots.ts` (`disallow: ["/dashboard/tools/hot", "/dashboard/tools/hot/*"]`).
+  - Metadados restritos na rota (`robots: { index: false, follow: false, noimageindex: true }`), assegurando sigilo perante motores de busca e conformidade de gateway.
+- **Menu do Painel (`DashboardShell.tsx`)**:
+  - Nova entrada no menu lateral: **"Gerador Hot (+18)"** com ícone `Flame`, destaque em cor carmesim e badge animado `"18+ 🔥"`.
+
 ## [1.7.4] - 2026-09-08
 ### Restauração do Acervo de Mídias e Blindagem de Banco nos Testes Automatizados
 - **Restauração do Acervo Oficial do Usuário (`rfpita.ti@gmail.com`)**:

@@ -337,3 +337,24 @@ O **Studio CREATE v2.0** é o ambiente integrado de alta performance para criaç
   - Player integrado com timeline, modo tela cheia e carrossel de vídeos recentes reais.
 * **Central de Ajuda (`/dashboard/help`)**:
   - FAQ categorizado, suporte via formulário e status dos motores de IA em tempo real.
+
+---
+
+## 7. Vitrine de Modelos & Casting (`/dashboard/models`)
+
+A Vitrine de Modelos do VORIXA é um marketplace completo para encontrar, explorar e contratar tanto **Modelos Virtuais de IA** quanto **Modelos Reais**.
+
+### A. Como Usar um Modelo de IA no Studio CREATE
+1. Acesse **Vitrine de Modelos** no menu lateral.
+2. Utilize as pílulas deslizantes no topo para filtrar por nicho (Moda, Comercial, Fitness, Games, etc.).
+3. Clique em um modelo de IA (identificado pelo selo `🤖 IA`).
+4. No card ou no modal de detalhes, clique em **"⚡ Usar no Studio CREATE"**.
+5. O Studio CREATE será aberto automaticamente com a foto de referência facial pré-carregada no motor de preservação de consistência facial (`FLUX PuLID`) e o prompt trigger já configurado para você criar ensaios com o mesmo rosto.
+
+### B. Como Contratar / Reservar um Modelo Real
+1. Na Vitrine, filtre por `👤 Modelos Reais`.
+2. Visualize o cachê estimado por diária (R$) ou a indicação de sob consulta, localização e redes sociais.
+3. Clique em **"👤 Contratar / Reservar"**.
+4. Preencha o formulário de proposta com seu orçamento estimado e notas/briefing da sua campanha.
+5. A solicitação é enviada para a assessoria e equipe administrativa do VORIXA e você poderá acompanhar o status da proposta.
+

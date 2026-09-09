@@ -283,6 +283,10 @@ async function main() {
     console.log(`✅ Usuário ${adminEmail} promovido para ADMIN com isUnlimited=true!`);
   }
 
+  // 5. Modelos do Marketplace (IA e Reais)
+  const { seedMarketplaceModels } = await import('../scripts/seed-models');
+  await seedMarketplaceModels();
+
   console.log('Seed do banco executado com sucesso!');
 }
 

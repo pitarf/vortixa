@@ -13,10 +13,15 @@ export async function POST(req: Request) {
 
     const admin = await prisma.user.findUnique({
       where: { email: session.user.email },
+      select: { id: true, role: true, isBlocked: true },
     });
 
     if (!admin || admin.role !== "ADMIN") {
       return NextResponse.json({ error: "Acesso não autorizado." }, { status: 403 });
+    }
+
+    if (admin.isBlocked) {
+      return NextResponse.json({ error: "Conta administrativa suspensa. Entre em contato com o suporte." }, { status: 403 });
     }
 
     let body: any;

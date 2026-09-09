@@ -12,6 +12,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Nenhum arquivo enviado." }, { status: 400 });
     }
 
+    // Validações de segurança: lista branca rigorosa de extensões multimídia (mitigação contra Web Shells e RCE)
+    const allowedExtensions = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".mp4", ".mov", ".webm", ".mp3", ".wav", ".m4a"];
+    const ext = (path.extname(file.name || "") || ".png").toLowerCase();
+
+    if (!allowedExtensions.includes(ext)) {
+      return NextResponse.json(
+        { error: "Formato de arquivo não permitido. Apenas imagens, áudios e vídeos são aceitos." },
+        { status: 400 }
+      );
+    }
+
     // Validações básicas de formato e tamanho no backend (limite 50MB)
     const maxSizeBytes = 50 * 1024 * 1024;
     if (file.size > maxSizeBytes) {
@@ -24,7 +35,6 @@ export async function POST(req: Request) {
     const uploadDir = path.join(process.cwd(), "public", "uploads");
     await fs.mkdir(uploadDir, { recursive: true });
 
-    const ext = path.extname(file.name) || ".png";
     const uniqueName = `${crypto.randomUUID()}${ext}`;
     const filePath = path.join(uploadDir, uniqueName);
     await fs.writeFile(filePath, buffer);

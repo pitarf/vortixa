@@ -195,4 +195,19 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
 * **Isolamento de Testes**:
   - Testes unitários com Vitest limpam exclusivamente os dados do usuário de teste específico (`talking.video@vorixa.com`), preservando dados reais e de desenvolvimento na base PostgreSQL.
 
+---
+
+## 13. Vitrine de Modelos, Booking & Segurança Adversária de Modelos (Fase 14)
+
+### 1. Política de Booking Seguro (`POST /api/models/book`)
+* **Rate-Limiting por Janela Relacional**: Máximo de 3 solicitações por minuto por usuário no banco de dados (`createdAt >= now() - 60s`), neutralizando flood de propostas e retornando HTTP 429.
+* **Validação Numérica Estrita**: `estimatedBudgetCents` deve ser obrigatoriamente um número inteiro estritamente positivo (`> 0`), com teto máximo de R$ 1.000.000,00 para impedir estouro de dados. Valores negativos, zero, floats ou strings retornam HTTP 400.
+* **Neutralização de Stored XSS & DoS**: O campo `notes` é restrito a 2.000 caracteres e passa por regex de sanitização expurgando blocos `<script>` e quaisquer elementos HTML antes de persistir no PostgreSQL.
+* **Controle de Estado de Modelo & Usuário**: Modelos inativos (`status: false`) e contas suspensas (`isBlocked: true`) são terminantemente rejeitados (HTTP 400 e 403).
+
+### 2. Governança Administrativa & RBAC (`/api/admin/models/**`)
+* Validação de sessão e role `ADMIN` via `checkAdmin()`.
+* Administradores marcados como `isBlocked: true` têm suas credenciais revogadas imediatamente (HTTP 403).
+* Preços de reserva cadastrados por administradores não podem ser negativos (`bookingPriceCents >= 0`).
+
 

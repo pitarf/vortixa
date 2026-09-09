@@ -17,6 +17,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
     }
 
+    const { default: prisma } = await import("@/lib/prisma");
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { isBlocked: true },
+    });
+
+    if (!user || user.isBlocked) {
+      return NextResponse.json(
+        { error: "Sua conta está suspensa. Entre em contato com o suporte." },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const parsed = generateSchema.safeParse(body);
     if (!parsed.success) {

@@ -17,6 +17,8 @@ interface ImageInputSectionProps {
   onClearPrompt: () => void;
   onOptimizePrompt: () => void;
   isOptimizing: boolean;
+  onOpenModelPicker?: () => void;
+  activeModelName?: string | null;
 }
 
 export function ImageInputSection({
@@ -32,6 +34,8 @@ export function ImageInputSection({
   onClearPrompt,
   onOptimizePrompt,
   isOptimizing,
+  onOpenModelPicker,
+  activeModelName,
 }: ImageInputSectionProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -145,9 +149,23 @@ export function ImageInputSection({
       {/* Upload de Imagem de Referência quando ativado */}
       {(creationMode === "image-to-image" || creationMode === "character" || referenceImageUrl) && (
         <div className="space-y-2 pt-1 border-t border-[#1E202E]/60 animate-in fade-in-50 duration-200">
-          <label className="text-[11px] font-medium text-slate-400 block">
-            Imagem de Referência
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="text-[11px] font-medium text-slate-400 block">
+              {creationMode === "character" ? "Foto do Personagem / Preservação Facial (PuLID)" : "Imagem de Referência"}
+            </label>
+
+            {onOpenModelPicker && (
+              <button
+                type="button"
+                onClick={onOpenModelPicker}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#13141B] hover:bg-violet-600/20 border border-[#1E202E] hover:border-violet-500/50 text-slate-300 hover:text-violet-300 text-[11px] font-semibold transition-all cursor-pointer"
+                style={{ minHeight: "32px" }}
+              >
+                <span>🎭</span>
+                <span>{activeModelName ? `Modelo: ${activeModelName}` : "Escolher da Vitrine"}</span>
+              </button>
+            )}
+          </div>
 
           <input
             type="file"
