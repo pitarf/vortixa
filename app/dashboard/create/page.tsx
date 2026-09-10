@@ -415,7 +415,38 @@ export default function StudioCreatePage() {
     try {
       setIsGenerating(true);
       setActiveStep(4);
+      setStepText("Otimizando prompt com Inteligência Artificial...");
+
+      // Auto-otimização de prompt transparente antes do disparo
+      let finalPrompt = prompt.trim();
+      if (finalPrompt && (activeTool === "image" || activeTool === "video")) {
+        try {
+          const optRes = await fetch("/api/tools/optimize-prompt", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prompt: finalPrompt,
+              enhanceQuality: true,
+              toolType: activeTool,
+              style: selectedStyle || undefined,
+            }),
+          });
+          if (optRes.ok) {
+            const optData = await optRes.json();
+            if (optData.optimizedPrompt) {
+              finalPrompt = optData.optimizedPrompt;
+              setPrompt(finalPrompt);
+            }
+          }
+        } catch (optErr) {
+          console.warn("Auto-otimização no Studio Create utilizou fallback:", optErr);
+        }
+      }
+
       setStepText("Conectando ao cluster de IA");
+
+      // Atualiza prompt final nos inputs
+      inputs.prompt = finalPrompt;
 
       const idempotencyKey = `studio-${activeTool}-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
 

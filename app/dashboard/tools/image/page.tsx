@@ -331,10 +331,35 @@ export default function ImageGenerationPage() {
 
     try {
       setIsGenerating(true);
+      setActiveStepText("Otimizando prompt com Inteligência Artificial...");
+
+      // Auto-otimização inteligente de prompt antes de disparar para as GPUs
+      let finalPrompt = prompt.trim();
+      try {
+        const optRes = await fetch("/api/tools/optimize-prompt", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt: finalPrompt,
+            enhanceQuality: true,
+            toolType: "image",
+          }),
+        });
+        if (optRes.ok) {
+          const optData = await optRes.json();
+          if (optData.optimizedPrompt) {
+            finalPrompt = optData.optimizedPrompt;
+            setPrompt(finalPrompt); // Atualiza o textarea em tempo real para o usuário ver
+          }
+        }
+      } catch (optErr) {
+        console.warn("Auto-otimização de prompt utilizou fallback:", optErr);
+      }
+
       setActiveStepText("Conectando ao cluster de GPUs");
 
       const inputs: Record<string, any> = {
-        prompt,
+        prompt: finalPrompt,
         image_size: aspectRatio,
         aspect_ratio: aspectRatio,
         num_inference_steps: inferenceSteps,

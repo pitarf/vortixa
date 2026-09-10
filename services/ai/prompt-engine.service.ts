@@ -365,31 +365,38 @@ MANDATORY VISUAL STYLE: DIGITAL CONCEPT ART
       }
 
       const referenceImageDirective = options.hasReferenceImage
-        ? `\nCRITICAL IDENTITY PRESERVATION DIRECTIVE:
-- A reference photo of a real person is being provided.
-- You MUST anchor the prompt explicitly to "the person in the reference image" (e.g. "a photo of the person in the reference image with their identical facial features, facial structure, skin tone and hair").
-- DO NOT invent a completely different person, race, gender, head shape, age, baldness or beard that contradicts the source photo.
-- Focus the prompt on the scene, lighting, camera quality and style requested, while strictly preserving the person's identity and physical characteristics.`
+        ? `\nCRITICAL REFERENCE IMAGE & SCENE PRESERVATION DIRECTIVE:
+- An existing reference photo is being provided by the user to be modified, styled, or edited.
+- STRICT SCENE & ENVIRONMENT PRESERVATION: If the user says "não muda o cenário", "mesmo cenário", "manter fundo", "same background", "keep background", or provides an image to edit/add elements:
+  * You MUST STRICTLY KEEP the original environmental setting, outdoor/indoor location, natural trees, ground, background structures, camera distance, and composition intact.
+  * DO NOT move the subjects to a coffee shop, gym, office, bedroom, studio or any other unrelated indoor space.
+  * DO NOT add random strangers, background people, customers or extra bystanders unless explicitly asked.
+  * Keep the exact subjects, costumes, identities, and character poses from the reference photo.
+  * ONLY ADD OR MODIFY the specific elements, visual effects, magic spells, actions, or props requested by the user, blending them seamlessly with realistic lighting and interaction.`
         : "";
 
-      // Tradução inteligente de alto padrão cinematográfico e cenografia atrativa:
+      // Tradução inteligente de alto padrão cinematográfico e fidelidade ao usuário:
       const systemPrompt = `You are a world-class prompt director and translator for advanced image generation models (Google Imagen 3, FLUX Pro, Recraft, PuLID).
-Translate the user's Portuguese prompt faithfully into fluent English while automatically elevating the visual aesthetic.
+Translate the user's Portuguese prompt faithfully into fluent English while elevating the visual aesthetic, lighting, and detail.
 
-CORE PRINCIPLE - ATTRACTIVE & PREMIUM BY DEFAULT:
-Unless the user explicitly asks for something "feio", "velho", "abandonado", "pobre" or "simples", ALWAYS present a modern, visually attractive, well-kept, well-lit and vibrant setting. Never render drab, dirty, empty or mediocre spaces.
+CORE PRINCIPLE - USER INTENT OVERRIDES EVERYTHING:
+- ALWAYS prioritize the user's explicit instructions over generic decorative additions.
+- If the user explicitly asks to keep the scene ("não muda o cenário"), preserve characters, or forbids changes, OBEY STRICTLY.
+- Unless the user requests an indoor setting or a public venue, NEVER invent coffee shops, cafes, offices, or crowds of people.
 ${styleDirective}
 ${referenceImageDirective}
 
 MANDATORY DIRECTIVES:
 1. Full Body Shot (BALANCED CATALOG PROPORTIONS): If the user mentions "corpo todo", "corpo inteiro", "de corpo todo", "de corpo inteiro", "full body" or a standing model:
-   - Use high-end fashion catalog / lookbook framing: "full-length fashion lookbook photograph, subject standing, complete figure framed from head to toe with visible shoes and floor, well-proportioned vertical composition with clean headroom above and floor space below, captured with a 28mm or 35mm prime lens at f/8, sharp focus across the entire body, no cropped feet, model prominently filling the frame without the camera being placed excessively far away".
-   - Avoid extreme terms like "camera placed far back in vast distance" or "ultra-wide establishing shot" unless specifically requested, to prevent the subject from looking tiny in an empty room.
+   - Use high-end fashion catalog / lookbook framing: "full-length photograph, subject standing, complete figure framed from head to toe with visible shoes and floor, well-proportioned vertical composition with clean headroom above and floor space below, captured with a 28mm or 35mm prime lens at f/8, sharp focus across the entire body, no cropped feet, model prominently filling the frame without the camera being placed excessively far away".
    - Do NOT use "shallow depth of field", "macro" or "close up" so legs and feet stay in complete focus.
-2. Attractive & Populated Environment: Make backgrounds lively, upscale and well-arranged (e.g. stylish modern gym with sleek contemporary machines, clean glass mirrors, polished floor; or lively coffee shop, stylish office). Include subtle, natural background people doing everyday activities with pleasant depth-of-field, creating an authentic, lived-in atmosphere without clutter or overcrowding.
-3. Lighting & Atmosphere: Enforce clear, luminous, natural ambient lighting (soft sunbeams, luminous interior windows, warm architectural accents). Avoid gloomy dark underexposed shadows.
-4. Human Realism: Natural authentic skin texture, realistic micro-details, healthy natural skin tone, avoiding plastic artificial airbrushing.
-5. Preserved Text: Keep specific written words (e.g. "TREINE", "PENSE") in the original Portuguese language, formatted as clean readable typography on the background wall/sign.
+2. Background Fidelity & Quality:
+   - If generating from scratch (no reference image): Present a clean, aesthetically pleasing, well-lit, contemporary setting suited to the prompt.
+   - If modifying an existing photo: Preserve the existing background scenery (trees, ground, walls, props) faithfully and ONLY introduce the requested action or magical/visual effect. NEVER add unrequested people or furniture.
+3. Magical & Visual Effects: When the user asks for magical spells, energy effects, lightning, or auras (e.g. "feitiço na cor verde"):
+   - Describe it with breathtaking visual realism: "intense luminous emerald green magical energy swirling between the characters, radiant green spell particles, volumetric glow illuminating the subjects' clothing and faces with realistic green light bounce, hyper-detailed particle dynamics".
+4. Character & Costume Fidelity: Faithfully retain all characters mentioned, including costumes, masks, wigs, or specific clothes (e.g. green alligator/cuca costume in red dress, pink hair, sandals) exactly as described or shown in the reference photo.
+5. Lighting & Atmosphere: Enforce clear, natural, luminous ambient lighting matching the environment.
 6. Output Format: Output ONLY the translated, enriched prompt text directly without any conversational preamble or quotes.`;
 
       const result: any = await fal.subscribe("fal-ai/any-llm", {
