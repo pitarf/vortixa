@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { HeroCinematic } from "@/components/landing/HeroCinematic";
@@ -21,6 +21,29 @@ import { ThemeToggle } from "@/components/layout/ThemeToggle";
  * e uso protagonista de vídeos reais em alta definição.
  */
 export default function LandingPage() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -40px 0px",
+      }
+    );
+
+    const elements = document.querySelectorAll(".reveal-on-scroll");
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-violet-500/30 selection:text-white">
       {/* Header Fixo Minimalista */}
@@ -69,32 +92,44 @@ export default function LandingPage() {
         <HeroCinematic />
 
         {/* 2. DEMONSTRAÇÃO & RESULTADO: "Tudo numa ferramenta só" + Card Workflow + 3 Cards de Vídeos e Before/After */}
-        <EnginesShowcase />
+        <div className="reveal-on-scroll">
+          <EnginesShowcase />
+        </div>
 
         {/* 3. TECNOLOGIA: VORIXA FLOW — Grafo Interativo Nó por Nó */}
-        <FlowInteractiveDemo />
+        <div className="reveal-on-scroll">
+          <FlowInteractiveDemo />
+        </div>
 
         {/* 4. AUTOMAÇÃO: Build with AI — Da fala ao pipeline sintetizado */}
-        <BuildWithAiVisual />
+        <div className="reveal-on-scroll">
+          <BuildWithAiVisual />
+        </div>
 
         {/* 5. PROVA VISUAL: Galeria Editorial Mosaico com Vídeos Reais */}
-        <div id="gallery">
+        <div id="gallery" className="reveal-on-scroll">
           <ResultsMasonryGallery />
         </div>
 
         {/* 6. ECONOMIA: Planos de Assinatura com Quebra Visual Off-White */}
-        <PricingSection />
+        <div className="reveal-on-scroll">
+          <PricingSection />
+        </div>
 
         {/* 7. PROVA SOCIAL: Depoimentos de Agências e Criadores */}
-        <TestimonialsTrust />
+        <div className="reveal-on-scroll">
+          <TestimonialsTrust />
+        </div>
 
         {/* 8. FAQ: Dúvidas Frequentes em Linhas Minimalistas */}
-        <div id="faq">
+        <div id="faq" className="reveal-on-scroll">
           <FaqSection />
         </div>
 
         {/* 9. FECHAMENTO & CONVERSÃO: Banner Final com Vídeo de Fundo e 100 Créditos */}
-        <FinalCtaSection />
+        <div className="reveal-on-scroll">
+          <FinalCtaSection />
+        </div>
       </main>
 
       {/* Rodapé Master com Status Operacional e Logo Oficial */}

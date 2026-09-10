@@ -14,20 +14,20 @@ export function HeroCinematic() {
 
   return (
     <section className="pt-24 pb-8 md:pt-28 md:pb-12 px-3 sm:px-6 max-w-7xl mx-auto relative">
-      {/* Glow Difuso Azul / Violeta nas Bordas Externas */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[80%] bg-gradient-to-r from-indigo-500/20 via-sky-400/15 to-violet-500/20 blur-[130px] pointer-events-none -z-10" />
+      {/* Glow Difuso Azul / Violeta nas Bordas Externas com Pulsação Suave */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[80%] bg-gradient-to-r from-indigo-500/20 via-sky-400/15 to-violet-500/20 blur-[130px] pointer-events-none -z-10 animate-hero-glow" />
 
-      {/* Card Grande Off-White do Hero */}
-      <div className="bg-[#F4F4F6] text-slate-900 border border-slate-200/80 rounded-[32px] sm:rounded-[44px] p-6 sm:p-10 md:p-16 shadow-[0_20px_80px_rgba(0,0,0,0.4)] flex flex-col items-center text-center space-y-8 relative overflow-hidden">
+      {/* Card Grande Off-White do Hero com Entrada Suave */}
+      <div className="bg-[#F4F4F6] text-slate-900 border border-slate-200/80 rounded-[32px] sm:rounded-[44px] p-6 sm:p-10 md:p-16 shadow-[0_20px_80px_rgba(0,0,0,0.4)] flex flex-col items-center text-center space-y-8 relative overflow-hidden animate-hero-fade-1">
         
         {/* Pílula Superior */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-slate-200 shadow-sm text-slate-700 text-xs font-medium backdrop-blur-md">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-slate-200 shadow-sm text-slate-700 text-xs font-medium backdrop-blur-md animate-hero-fade-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span>Reinvente sua forma de criar</span>
         </div>
 
         {/* Headline com Tipografia Editorial (Sans + Serif Italic) */}
-        <div className="max-w-4xl mx-auto space-y-2">
+        <div className="max-w-4xl mx-auto space-y-2 animate-hero-fade-2">
           <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-[68px] font-bold text-slate-950 tracking-tight leading-[1.12] font-sans">
             Gere seu <span className="font-serif italic font-normal text-slate-800 text-[1.08em]">Influencer IA</span> ultra realista em{" "}
             <span className="font-serif italic font-normal text-slate-800 text-[1.08em]">1 minuto</span> e faça vendas{" "}
@@ -35,8 +35,8 @@ export function HeroCinematic() {
           </h1>
         </div>
 
-        {/* Video Player Protagonista (Logo Abaixo do Headline) */}
-        <div className="w-full max-w-4xl mx-auto rounded-2xl sm:rounded-3xl overflow-hidden bg-black border border-slate-300/80 shadow-2xl relative aspect-video group transition-all duration-700 hover:shadow-[0_25px_60px_rgba(99,102,241,0.25)]">
+        {/* Video Player Protagonista (Logo Abaixo do Headline) com Expansão Elegante */}
+        <div className="w-full max-w-4xl mx-auto rounded-2xl sm:rounded-3xl overflow-hidden bg-black border border-slate-300/80 shadow-2xl relative aspect-video group transition-all duration-700 hover:shadow-[0_25px_60px_rgba(99,102,241,0.25)] animate-hero-fade-3">
           <video
             src="/media/landing/hero/hero_main.mp4"
             autoPlay
@@ -67,7 +67,7 @@ export function HeroCinematic() {
         </div>
 
         {/* Subheadline e Botão CTA (Abaixo do Vídeo, Dentro da Caixa Clara) */}
-        <div className="max-w-2xl mx-auto space-y-6 pt-2">
+        <div className="max-w-2xl mx-auto space-y-6 pt-2 animate-hero-fade-4">
           <p className="text-xs sm:text-sm md:text-base text-slate-600 leading-relaxed font-sans font-normal">
             Copie workflows que funcionam como máquina de conteúdos 24h por dia, 7d por semana, gerando vídeos virais infinitos para TikTok, Reels, Anúncios... sem mostrar o seu rosto!
           </p>
