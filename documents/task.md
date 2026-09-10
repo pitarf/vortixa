@@ -8,6 +8,10 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Animações Cinematográficas com GSAP & ScrollTrigger na Home**:
+  - Implementação do hook utilitário `useGsapContext` com `gsap.context()` para cleanup limpo no React 19 / Next.js.
+  - Animação do Hero Cinematográfico com entrada suave e orquestrada de headline, vídeo e glow pulsante.
+  - ScrollTriggers com efeito stagger nos cards de ferramentas, fluxo interativo, galeria editorial e comparativo de preços.
 - [x] **Transparência de Requisitos de Modelos e Diagnóstico de Erros (FLUX PuLID / Provedores)**:
   - Badge explícita `📷 Exige Foto` nos modelos que preservam identidade facial e alerta visual dinâmico.
   - Bloqueio preventivo no botão "Gerar" com mensagem instrutiva e card de erro na interface.

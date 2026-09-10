@@ -1,18 +1,41 @@
-"use client";
-
 import React, { useState } from "react";
 import { Copy, Check } from "lucide-react";
+import { useGsapContext, gsap } from "@/hooks/useGsapContext";
 
 /**
- * Galeria Editorial Estática e Limpa:
- * - ZERO zoom
- * - ZERO escala
+ * Galeria Editorial Estática e Limpa com Revelação Suave via GSAP ScrollTrigger:
  * - ZERO distorção ou efeito estranho
  * - Reprodução suave e estável dos vídeos originais em alta definição.
+ * - Efeito stagger elegante ao rolar a página.
  */
 export function ResultsMasonryGallery() {
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [copiedId, setCopiedId] = useState<number | null>(null);
+
+  const containerRef = useGsapContext(() => {
+    gsap.from(".gallery-header-block", {
+      scrollTrigger: {
+        trigger: ".gallery-header-block",
+        start: "top 85%",
+      },
+      opacity: 0,
+      y: 30,
+      duration: 0.8,
+      ease: "power3.out",
+    });
+
+    gsap.from(".gallery-item-card", {
+      scrollTrigger: {
+        trigger: ".gallery-items-grid",
+        start: "top 80%",
+      },
+      opacity: 0,
+      y: 40,
+      duration: 0.9,
+      stagger: 0.12,
+      ease: "power3.out",
+    });
+  }, [activeFilter]);
 
   const galleryItems = [
     {
@@ -95,9 +118,9 @@ export function ResultsMasonryGallery() {
   };
 
   return (
-    <section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto space-y-12">
+    <section ref={containerRef} className="py-20 px-4 sm:px-6 max-w-7xl mx-auto space-y-12">
       {/* Cabeçalho */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="gallery-header-block flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
           <span className="text-[11px] font-mono tracking-widest text-slate-500 uppercase font-semibold block">
             GALERIA & PRODUÇÕES REAIS
@@ -135,11 +158,11 @@ export function ResultsMasonryGallery() {
       </div>
 
       {/* Grid Mosaico Limpo — Sem Zoom e Sem Distorções */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+      <div className="gallery-items-grid grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
         {filteredItems.map((item) => (
           <div
             key={item.id}
-            className={`relative rounded-3xl overflow-hidden bg-[#0D0E12] border border-[#1E202E] hover:border-slate-600 shadow-2xl group flex flex-col justify-between ${item.aspectRatio}`}
+            className={`gallery-item-card relative rounded-3xl overflow-hidden bg-[#0D0E12] border border-[#1E202E] hover:border-slate-600 shadow-2xl group flex flex-col justify-between ${item.aspectRatio}`}
           >
             {/* Vídeo Estável e Estático — Sem Transform / Scale */}
             <video

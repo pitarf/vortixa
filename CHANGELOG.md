@@ -5,6 +5,21 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.9.3] - 2026-09-10
+### Animações Cinematográficas com GSAP & ScrollTrigger na Home
+- **Hook useGsapContext (`hooks/useGsapContext.ts`)**:
+  - Implementado wrapper customizado em torno do `gsap.context()` com registro atômico do `ScrollTrigger`.
+  - Gerenciamento seguro de memória e reversão limpa de propriedades CSS no ciclo de vida do React 19 / Next.js.
+  - Compatibilidade com preferências de acessibilidade do usuário (`prefers-reduced-motion`).
+- **Hero Cinematográfico (`components/landing/HeroCinematic.tsx`)**:
+  - Orquestração de entrada em cascata suave (`power3.out` e `power4.out`): revelação sequencial do card, pílula de novidades, tipografia editorial e expansão do vídeo protagonista.
+  - Floating glow difuso com timeline infinita e pulsação sutil (`sine.inOut`).
+- **ScrollTriggers nas Seções Centrais**:
+  - **Workflows & Ferramentas (`EnginesShowcase.tsx`)**: fade-up do card principal e cascata escalonada (`stagger: 0.18`) nos cards de IA, Motion 60 FPS e Antes/Depois.
+  - **Simulador do VORIXA FLOW (`FlowInteractiveDemo.tsx`)**: entrada em escala fluida do canvas visual ao atingir a área de rolagem.
+  - **Galeria Editorial (`ResultsMasonryGallery.tsx`)**: revelação suave dos cards de vídeo sem qualquer distorção ótica.
+  - **Planos e Preços (`PricingSection.tsx`)**: animação de entrada com destaque nos comparativos de economia e cards de planos.
+
 ## [1.9.2] - 2026-09-10
 ### Transparência de Requisitos de Modelos e Diagnóstico de Erros
 - **Aviso Visual de Modelos com Imagem Obrigatória (`components/studio/StudioModelSelector.tsx` & `components/studio/types.ts`)**:

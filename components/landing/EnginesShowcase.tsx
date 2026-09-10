@@ -1,15 +1,54 @@
-"use client";
-
 import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { Check, ArrowRight, Zap, Activity } from "lucide-react";
+import { useGsapContext, gsap } from "@/hooks/useGsapContext";
 
 /**
- * Seção de Recursos e Workflows com Animações e Comportamentos Diferenciados para cada Card.
+ * Seção de Recursos e Workflows com Animações GSAP ScrollTrigger e Comportamentos Diferenciados.
  */
 export function EnginesShowcase() {
   const [sliderPosition, setSliderPosition] = useState<number>(50);
   const sliderRef = useRef<HTMLDivElement>(null);
+
+  const sectionRef = useGsapContext(() => {
+    // 1. Entrada do Cabeçalho da Seção
+    gsap.from(".showcase-header", {
+      scrollTrigger: {
+        trigger: ".showcase-header",
+        start: "top 85%",
+      },
+      opacity: 0,
+      y: 35,
+      duration: 0.8,
+      ease: "power3.out",
+    });
+
+    // 2. Revelação Cinematográfica do Card Principal de Workflow
+    gsap.from(".workflow-main-card", {
+      scrollTrigger: {
+        trigger: ".workflow-main-card",
+        start: "top 80%",
+      },
+      opacity: 0,
+      y: 45,
+      scale: 0.97,
+      duration: 1.0,
+      ease: "power3.out",
+    });
+
+    // 3. Cascata Escalonada nos 3 Cards Secundários
+    gsap.from(".feature-subcard", {
+      scrollTrigger: {
+        trigger: ".feature-subcards-grid",
+        start: "top 80%",
+      },
+      opacity: 0,
+      y: 40,
+      duration: 0.9,
+      stagger: 0.18,
+      ease: "power3.out",
+    });
+  });
 
   const handleMove = (clientX: number) => {
     if (!sliderRef.current) return;
@@ -23,9 +62,9 @@ export function EnginesShowcase() {
   const handleTouchMove = (e: React.TouchEvent) => handleMove(e.touches[0].clientX);
 
   return (
-    <section id="features" className="py-16 md:py-24 px-4 sm:px-6 max-w-7xl mx-auto space-y-12">
+    <section ref={sectionRef} id="features" className="py-16 md:py-24 px-4 sm:px-6 max-w-7xl mx-auto space-y-12">
       {/* Cabeçalho */}
-      <div className="space-y-2">
+      <div className="showcase-header space-y-2">
         <span className="text-[11px] font-mono tracking-widest text-slate-500 uppercase font-semibold block">
           FERRAMENTAS
         </span>
@@ -35,7 +74,7 @@ export function EnginesShowcase() {
       </div>
 
       {/* Card Amplo de Workflow Automático com Grafo Animado */}
-      <div className="bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-6 sm:p-10 md:p-12 shadow-2xl overflow-hidden relative group">
+      <div className="workflow-main-card bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-6 sm:p-10 md:p-12 shadow-2xl overflow-hidden relative group">
         <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-cyan-500/20 transition-all duration-700" />
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
@@ -100,10 +139,10 @@ export function EnginesShowcase() {
       </div>
 
       {/* Grid Inferior: 3 Cards com Animações Distintas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+      <div className="feature-subcards-grid grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
         
         {/* Card 1: Influencer IA (Animação de Foco e Glow com Respiração) */}
-        <div className="bg-[#0D0E12] border border-[#1E202E] hover:border-violet-500/50 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between group transition-all duration-500">
+        <div className="feature-subcard bg-[#0D0E12] border border-[#1E202E] hover:border-violet-500/50 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between group transition-all duration-500">
           <div className="relative aspect-[4/5] overflow-hidden bg-black">
             <video
               src="/media/landing/videos/lipsync_avatar.mp4"
@@ -132,7 +171,7 @@ export function EnginesShowcase() {
         </div>
 
         {/* Card 2: Motion & Dança (Animação de Rastreamento de Movimento e Tilt) */}
-        <div className="bg-[#0D0E12] border border-[#1E202E] hover:border-emerald-500/50 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between group transition-all duration-500">
+        <div className="feature-subcard bg-[#0D0E12] border border-[#1E202E] hover:border-emerald-500/50 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between group transition-all duration-500">
           <div className="relative aspect-[4/5] overflow-hidden bg-black">
             <video
               src="/media/landing/videos/motion_dancer.mp4"
@@ -161,7 +200,7 @@ export function EnginesShowcase() {
         </div>
 
         {/* Card 3: Slider Antes & Depois Integrado (Skin Enhancer & Upscale 8K com Scanline) */}
-        <div className="bg-[#0D0E12] border border-[#1E202E] hover:border-cyan-500/50 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between transition-all duration-500">
+        <div className="feature-subcard bg-[#0D0E12] border border-[#1E202E] hover:border-cyan-500/50 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between transition-all duration-500">
           <div
             ref={sliderRef}
             onMouseMove={handleMouseMove}
