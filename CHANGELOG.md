@@ -5,6 +5,16 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.9.1] - 2026-09-10
+### Correção na Resolução de Imagens para Geração de Vídeo na Nuvem (fal.ai / Kling)
+- **Normalização Automática de URLs de Mídia (`services/ai/providers/fal-ai.provider.ts`)**:
+  - Implementado o método `ensureValidPublicFalUrl` que intercepta qualquer caminho local relativo (`/uploads/...`) ou URL inacessível antes do envio para a fal.ai.
+  - O sistema lê diretamente o arquivo físico correspondente em disco e realiza o upload imediato para o cluster CDN seguro da `fal.storage` (`https://v3b.fal.media/...`).
+  - Fallback garantido com o domínio público canônico `https://vortixia.com.br/uploads/...` caso o arquivo já esteja servido pelo Nginx.
+- **Resiliência no Upload de Arquivos (`app/api/tools/upload/route.ts`)**:
+  - Adicionado bloco `try/catch` no upload para `fal.storage` retornando a URL pública absoluta `https://vortixia.com.br/uploads/...` como contingência para evitar o envio de caminhos relativos ao frontend.
+  - Eliminação definitiva do erro `Value error, Input must be a valid HTTPS URL or a Data URI` em gerações com imagem de referência.
+
 ## [1.9.0] - 2026-09-10
 ### Refatoração Geral Adaptativa: Mobile-First, Ergonomia Touch e Acessibilidade Total
 - **Studio CREATE (`app/dashboard/create/page.tsx` & `components/studio/*`)**:

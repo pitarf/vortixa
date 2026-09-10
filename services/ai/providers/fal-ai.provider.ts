@@ -1,6 +1,8 @@
 import { fal } from "@fal-ai/client";
 import { IAIProvider, AISubmitPayload } from "../ai-provider.interface";
 import prisma from "@/lib/prisma";
+import fs from "fs/promises";
+import path from "path";
 
 export class FalAIProvider implements IAIProvider {
   constructor() {
@@ -360,6 +362,36 @@ export class FalAIProvider implements IAIProvider {
         }
       }
 
+      // Normalização e Garantia Absoluta de URLs Públicas HTTPS para o fal.ai:
+      // Converte qualquer '/uploads/...' em URL pública HTTPS ou faz upload direto na fal.storage
+      const mediaKeys = [
+        "image_url",
+        "prompt_image_url",
+        "image",
+        "reference_image_url",
+        "start_image_url",
+        "character_image_url",
+        "face_image_url",
+        "video_url",
+        "video",
+        "reference_video_url",
+        "audio_url",
+        "audio",
+        "driving_audio_url",
+      ];
+
+      for (const k of mediaKeys) {
+        if (typeof modelInputs[k] === "string" && modelInputs[k].trim()) {
+          modelInputs[k] = await this.ensureValidPublicFalUrl(modelInputs[k]);
+        }
+      }
+
+      if (Array.isArray(modelInputs.image_urls)) {
+        modelInputs.image_urls = await Promise.all(
+          modelInputs.image_urls.map((u: string) => (typeof u === "string" ? this.ensureValidPublicFalUrl(u) : u))
+        );
+      }
+
       const submitOptions: any = {
         input: modelInputs,
       };
@@ -579,5 +611,55 @@ export class FalAIProvider implements IAIProvider {
       console.error(`Erro ao cancelar job no fal.ai: ${error}`);
       return false;
     }
+  }
+
+  /**
+   * Converte URLs relativas locais (/uploads/...) ou caminhos inacessíveis
+   * para uma URL pública absoluta HTTPS ou faz upload direto na fal.storage.
+   */
+  private async ensureValidPublicFalUrl(rawUrl: string): Promise<string> {
+    if (!rawUrl || typeof rawUrl !== "string") return rawUrl;
+    const trimmed = rawUrl.trim();
+
+    // Se já for uma URL externa HTTPS válida da fal.storage ou cdn conhecido, retorna diretamente
+    if (trimmed.startsWith("https://v3b.fal.media") || trimmed.startsWith("https://fal.media") || trimmed.startsWith("data:")) {
+      return trimmed;
+    }
+
+    // Se for um arquivo local (/uploads/...) ou URL pública do próprio servidor
+    const isLocalUpload = trimmed.startsWith("/uploads/") || trimmed.includes("/uploads/");
+    if (isLocalUpload) {
+      try {
+        const fileName = trimmed.split("/uploads/").pop()?.split("?")[0];
+        if (fileName) {
+          const filePath = path.join(process.cwd(), "public", "uploads", fileName);
+          // Verifica se o arquivo existe fisicamente no disco local
+          try {
+            const buffer = await fs.readFile(filePath);
+            const ext = path.extname(fileName).toLowerCase() || ".jpg";
+            const mimeType = ext === ".png" ? "image/png" : ext === ".webp" ? "image/webp" : ext === ".mp4" ? "video/mp4" : "image/jpeg";
+            const cleanFile = new File([buffer], fileName, { type: mimeType });
+            
+            if (process.env.FAL_KEY) {
+              fal.config({ credentials: process.env.FAL_KEY });
+            }
+            const falUploadedUrl = await fal.storage.upload(cleanFile);
+            console.log(`[FalAIProvider] Imagem local ${fileName} carregada com sucesso no fal.storage: ${falUploadedUrl}`);
+            return falUploadedUrl;
+          } catch (fileReadErr) {
+            console.warn(`[FalAIProvider] Arquivo local não encontrado fisicamente em ${filePath}, usando fallback de URL pública.`);
+          }
+        }
+      } catch (err: any) {
+        console.warn(`[FalAIProvider] Não foi possível fazer upload direto no fal.storage:`, err.message);
+      }
+
+      // Fallback: Concatena com o domínio público da aplicação
+      const appUrl = (process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://vortixia.com.br").replace(/\/$/, "");
+      const cleanPath = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+      return `${appUrl}${cleanPath}`;
+    }
+
+    return trimmed;
   }
 }

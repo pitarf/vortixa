@@ -8,6 +8,10 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Correção na Resolução de Imagens para Geração de Vídeo na Nuvem (fal.ai / Kling)**:
+  - Implementação de sanitização e garantia de URLs públicas HTTPS (`ensureValidPublicFalUrl`) em `FalAIProvider`.
+  - Conversão e upload automático de arquivos locais em `fal.storage` ou fallback para `https://vortixia.com.br/uploads/...`.
+  - Tratamento de erro resiliente em `app/api/tools/upload/route.ts` eliminando caminhos relativos no frontend.
 - [x] **Refatoração Geral Adaptativa: Mobile-First, Ergonomia Touch e Acessibilidade Total**:
   - Studio CREATE e componentes do Studio: eliminação de larguras fixas, stepper adaptativo horizontal com `no-scrollbar` e touch targets >= 44x44px.
   - Ferramenta de Imagem: abas deslizantes tipo pill, seletor de proporção ergonômico com botão "Original 📷" e modal fullscreen no celular.
