@@ -619,7 +619,7 @@ export default function StudioCreatePage() {
     currentToolDef.models.find((m) => m.id === selectedModelId) || currentToolDef.models[0];
 
   return (
-    <div className="max-w-[1700px] mx-auto space-y-6 pb-20 text-slate-100 antialiased font-sans">
+    <div className="w-full max-w-[1700px] mx-auto space-y-6 pb-20 text-slate-100 antialiased font-sans overflow-x-hidden">
       {/* 1. HEADER DO STUDIO */}
       <StudioHeader
         projectName={projectName}
@@ -662,7 +662,7 @@ export default function StudioCreatePage() {
       {/* 2. GRID PRINCIPAL: 3 COLUNAS */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* COLUNA DA ESQUERDA: PARÂMETROS & CONTROLES (lg:col-span-4) */}
-        <div className="lg:col-span-4 space-y-5 bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-4 sm:p-5">
+        <div className="lg:col-span-4 space-y-5 bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-3.5 sm:p-5 w-full min-w-0">
           {/* Banner de Modelo da Vitrine Ativo */}
           {activeShowcaseModel && (
             <ActiveShowcaseModelBanner
@@ -717,7 +717,7 @@ export default function StudioCreatePage() {
 
           {/* Seção Prompt de Criação */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
               <div className="flex items-center gap-2">
                 <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
                   Prompt de Criação
@@ -727,13 +727,12 @@ export default function StudioCreatePage() {
                 type="button"
                 onClick={handleOptimizePrompt}
                 disabled={isOptimizing || !prompt.trim()}
-                className="flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 hover:opacity-90 disabled:opacity-40 text-white shadow-md shadow-violet-600/20 transition-all active:scale-95 cursor-pointer"
-                style={{ minHeight: "34px" }}
+                className="flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 hover:opacity-90 disabled:opacity-40 text-white shadow-md shadow-violet-600/20 transition-all active:scale-95 cursor-pointer min-h-[44px]"
               >
                 {isOptimizing ? (
-                  <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                  <RefreshCw className="h-4 w-4 animate-spin" />
                 ) : (
-                  <Wand2 className="h-3.5 w-3.5 text-cyan-200" />
+                  <Wand2 className="h-4 w-4 text-cyan-200" />
                 )}
                 <span>Otimizar com IA</span>
               </button>
@@ -745,29 +744,30 @@ export default function StudioCreatePage() {
                 onChange={(e) => setPrompt(e.target.value)}
                 rows={4}
                 placeholder="Ex: Close cinematográfico de um samurai futurista com armadura cibernética de titânio e luzes néon azuis sob chuva, iluminação volumétrica, fotorrealista..."
-                className="w-full bg-transparent p-3.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 outline-none resize-none leading-relaxed"
+                className="w-full bg-transparent p-3.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 outline-none resize-none leading-relaxed break-words"
                 maxLength={1500}
               />
 
               {/* Preview de imagem de referência, se carregada */}
               {referenceImageUrl && (
                 <div className="px-3 pb-2 flex items-center gap-2">
-                  <div className="relative h-10 w-10 rounded-lg overflow-hidden border border-violet-500/50">
+                  <div className="relative h-11 w-11 rounded-lg overflow-hidden border border-violet-500/50 aspect-square shrink-0">
                     <img src={referenceImageUrl} alt="Referência" className="h-full w-full object-cover" />
                     <button
                       type="button"
                       onClick={() => setReferenceImageUrl("")}
-                      className="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 flex items-center justify-center text-white transition-opacity"
+                      className="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 flex items-center justify-center text-white transition-opacity min-h-[44px] min-w-[44px]"
+                      aria-label="Remover imagem de referência"
                     >
-                      <X className="h-3.5 w-3.5" />
+                      <X className="h-4 w-4" />
                     </button>
                   </div>
-                  <span className="text-[11px] text-slate-400 font-mono">Imagem de referência ativa</span>
+                  <span className="text-[11px] text-slate-400 font-mono truncate">Imagem de referência ativa</span>
                 </div>
               )}
 
               {/* Rodapé da Textarea com Upload de Referência */}
-              <div className="flex items-center justify-between border-t border-[#1E202E] px-3 py-2 text-slate-400">
+              <div className="flex items-center justify-between border-t border-[#1E202E] px-3 py-2 text-slate-400 gap-2 flex-wrap">
                 <div className="flex items-center gap-2">
                   <input
                     ref={refFileInputRef}
@@ -780,9 +780,9 @@ export default function StudioCreatePage() {
                     type="button"
                     onClick={() => refFileInputRef.current?.click()}
                     disabled={isUploadingRef}
-                    className="p-1.5 rounded-lg hover:bg-[#13141B] hover:text-violet-400 transition-colors cursor-pointer"
+                    className="p-2.5 rounded-lg hover:bg-[#13141B] hover:text-violet-400 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
                     title="Anexar imagem de referência local"
-                    style={{ minHeight: "36px", minWidth: "36px" }}
+                    aria-label="Anexar imagem de referência"
                   >
                     {isUploadingRef ? (
                       <RefreshCw className="h-4 w-4 animate-spin text-violet-400" />
@@ -794,9 +794,8 @@ export default function StudioCreatePage() {
                   <button
                     type="button"
                     onClick={() => setIsModelPickerOpen(true)}
-                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#13141B] hover:bg-violet-600/20 border border-[#1E202E] hover:border-violet-500/50 text-slate-300 hover:text-violet-300 text-[11px] font-medium transition-all cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#13141B] hover:bg-violet-600/20 border border-[#1E202E] hover:border-violet-500/50 text-slate-300 hover:text-violet-300 text-xs font-medium transition-all cursor-pointer min-h-[44px]"
                     title="Escolher modelo do catálogo da vitrine"
-                    style={{ minHeight: "36px" }}
                   >
                     <span>🎭</span>
                     <span className="hidden sm:inline">
@@ -810,12 +809,12 @@ export default function StudioCreatePage() {
                     <button
                       type="button"
                       onClick={() => setPrompt("")}
-                      className="text-[11px] text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
+                      className="text-xs text-slate-500 hover:text-slate-300 transition-colors cursor-pointer min-h-[44px] px-2 flex items-center"
                     >
                       Limpar
                     </button>
                   )}
-                  <span className="text-[10px] font-mono text-slate-500">
+                  <span className="text-[10px] font-mono text-slate-500 shrink-0">
                     {prompt.length}/1500
                   </span>
                 </div>

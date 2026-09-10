@@ -311,8 +311,8 @@ export function AdminUserDrawer({ userId, onClose, onUserUpdated }: AdminUserDra
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-slate-950 border-l border-slate-900 h-full flex flex-col shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/80 backdrop-blur-sm animate-in fade-in duration-200 overscroll-contain">
+      <div className="relative w-full max-w-2xl bg-slate-950 border-l border-slate-900 h-full flex flex-col shadow-2xl overflow-hidden overscroll-contain">
         {/* Header do Drawer */}
         <div className="p-4 sm:p-6 border-b border-slate-900 flex items-center justify-between bg-slate-950/80 sticky top-0 z-10">
           <div className="flex items-center gap-3 overflow-hidden">
@@ -358,7 +358,7 @@ export function AdminUserDrawer({ userId, onClose, onUserUpdated }: AdminUserDra
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900 transition-colors"
+            className="p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
             aria-label="Fechar gaveta"
           >
             <X className="h-5 w-5" />

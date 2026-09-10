@@ -40,12 +40,15 @@ export function ModelFilterPills({
     <div className="space-y-4 mb-6">
       {/* Linha Superior: Tipos de Modelo + Ordenação */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        {/* Pílulas de Tipo (Todos / IA / Reais) */}
-        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#0D0E12] border border-[#1E202E] w-fit">
+        {/* Pílulas de Tipo (Todos / IA / Reais) com rolagem horizontal suave no mobile */}
+        <div
+          className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#0D0E12] border border-[#1E202E] w-full sm:w-fit overflow-x-auto no-scrollbar"
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
           <button
             type="button"
             onClick={() => onSelectType("ALL")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer shrink-0 whitespace-nowrap ${
               selectedType === "ALL"
                 ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md shadow-violet-600/30"
                 : "text-slate-400 hover:text-white hover:bg-slate-800/50"
@@ -57,7 +60,7 @@ export function ModelFilterPills({
           <button
             type="button"
             onClick={() => onSelectType("AI")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-1.5 ${
               selectedType === "AI"
                 ? "bg-violet-600 text-white shadow-md shadow-violet-600/30"
                 : "text-slate-400 hover:text-white hover:bg-slate-800/50"
@@ -69,7 +72,7 @@ export function ModelFilterPills({
           <button
             type="button"
             onClick={() => onSelectType("REAL")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-1.5 ${
               selectedType === "REAL"
                 ? "bg-cyan-600 text-white shadow-md shadow-cyan-600/30"
                 : "text-slate-400 hover:text-white hover:bg-slate-800/50"

@@ -68,7 +68,8 @@ export default function LipSyncToolPage() {
               })}
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* Uploads Duplos: Vídeo Original + Áudio de Fala (1 coluna mobile, 2 colunas desktop) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
             <FileUploader
               accept="video/*"
               label="1. Vídeo Original"

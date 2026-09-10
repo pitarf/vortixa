@@ -148,7 +148,7 @@ export function AdminTopServicesTable({ services }: AdminTopServicesTableProps) 
       </div>
 
       {/* VISUALIZAÇÃO DESKTOP EM TABELA EXPANDIDA (SM+) */}
-      <div className="hidden sm:block overflow-x-auto scrollbar-thin">
+      <div className="hidden sm:block overflow-x-auto overscroll-x-contain scrollbar-thin">
         <table className="w-full text-left text-xs whitespace-nowrap">
           <thead>
             <tr className="border-b border-slate-800/80 text-slate-400 font-semibold uppercase tracking-wider text-[10px]">

@@ -384,8 +384,160 @@ export function AdminServicesCatalog() {
         </div>
       </div>
 
-      {/* Lista de Modelos / Tabela Responsiva */}
-      <div className="bg-slate-950/60 border border-slate-900 rounded-2xl overflow-hidden shadow-xl">
+      {/* Visualização Mobile em Cards Empilháveis (Oculto em telas sm e maiores) */}
+      <div className="space-y-3 sm:hidden">
+        {loading ? (
+          <div className="py-16 flex flex-col items-center justify-center gap-3 bg-slate-950/60 border border-slate-900 rounded-2xl">
+            <RefreshCw className="h-8 w-8 text-violet-500 animate-spin" />
+            <p className="text-slate-400 text-xs">Carregando catálogo de serviços...</p>
+          </div>
+        ) : filteredServices.length === 0 ? (
+          <div className="py-16 text-center text-slate-500 text-xs bg-slate-950/60 border border-slate-900 rounded-2xl">
+            Nenhum serviço encontrado para os filtros selecionados.
+          </div>
+        ) : (
+          filteredServices.map((service) => {
+            const isSelected = selectedIds.includes(service.id);
+            const isSaving = savingId === service.id;
+            const draftCredit = creditDrafts[service.id] ?? service.creditCost;
+            const draftApiCost = apiCostDrafts[service.id] ?? service.apiUnitCostUsd;
+            const isDirty = draftCredit !== service.creditCost || draftApiCost !== service.apiUnitCostUsd;
+
+            return (
+              <div
+                key={service.id}
+                className={`p-4 rounded-2xl border transition-all space-y-3 ${
+                  isSelected
+                    ? "bg-violet-950/30 border-violet-500/50 shadow-lg shadow-violet-950/30"
+                    : "bg-slate-950/80 border-slate-900"
+                }`}
+              >
+                {/* Header do Card Mobile de Serviço */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3 min-w-0">
+                    <div className="pt-0.5">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => handleToggleSelectOne(service.id)}
+                        aria-label={`Selecionar serviço ${service.name}`}
+                        className="rounded border-slate-700 text-violet-600 focus:ring-violet-500 h-5 w-5 bg-slate-900 cursor-pointer"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="font-bold text-white text-sm truncate">
+                        {service.name}
+                      </div>
+                      <div className="font-mono text-[11px] text-slate-400 truncate">
+                        {service.technicalName}
+                      </div>
+                      {service.tools.length > 0 && (
+                        <div className="text-[10px] text-violet-400 mt-0.5 truncate">
+                          {service.tools.map((t) => t.name).join(", ")}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <span className="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wide bg-slate-800 text-slate-300 border border-slate-700/50">
+                      {service.category}
+                    </span>
+                    {/* Toggle Switch com min-h 44px de área de clique */}
+                    <button
+                      type="button"
+                      onClick={() => handleToggleStatus(service)}
+                      disabled={isSaving}
+                      className="p-1 min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+                      title={service.status ? "Desativar serviço" : "Ativar serviço"}
+                    >
+                      <span className={`relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                        service.status ? "bg-emerald-500" : "bg-slate-800"
+                      } disabled:opacity-50`}>
+                        <span
+                          aria-hidden="true"
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                            service.status ? "translate-x-5" : "translate-x-0"
+                          }`}
+                        />
+                      </span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Grid de Custos e Precificação Mobile */}
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-900">
+                  <div className="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60 space-y-1">
+                    <span className="text-[10px] text-slate-500 font-medium block">Custo da API</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-slate-400 font-mono text-xs">$</span>
+                      <input
+                        type="number"
+                        step="0.001"
+                        min="0"
+                        value={draftApiCost}
+                        onChange={(e) =>
+                          setApiCostDrafts({
+                            ...apiCostDrafts,
+                            [service.id]: parseFloat(e.target.value) || 0,
+                          })
+                        }
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-amber-500 transition-colors min-h-[36px]"
+                      />
+                    </div>
+                    <span className="text-[10px] text-emerald-400 font-mono block">
+                      ~ R$ {(draftApiCost * dollarRate).toFixed(4).replace(".", ",")}
+                    </span>
+                  </div>
+
+                  <div className="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60 space-y-1">
+                    <span className="text-[10px] text-slate-500 font-medium block">Cobrança Cliente</span>
+                    <div className="flex items-center gap-1.5">
+                      <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        value={draftCredit}
+                        onChange={(e) =>
+                          setCreditDrafts({
+                            ...creditDrafts,
+                            [service.id]: parseInt(e.target.value, 10) || 0,
+                          })
+                        }
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white font-bold text-center focus:outline-none focus:border-violet-500 transition-colors min-h-[36px]"
+                      />
+                      <span className="text-slate-400 text-[11px] font-semibold">cr</span>
+                    </div>
+                    <span className="text-[10px] text-slate-500 block truncate">
+                      {service.variations.durations.slice(0, 2).join(", ")}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Botão de Salvar Alterações se houver diferença no Mobile */}
+                {isDirty && (
+                  <button
+                    type="button"
+                    onClick={() => handleSavePricing(service.id)}
+                    disabled={isSaving}
+                    className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold transition-all shadow-md shadow-violet-600/20 disabled:opacity-50 min-h-[44px] cursor-pointer"
+                  >
+                    {isSaving ? (
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Check className="h-4 w-4" />
+                    )}
+                    <span>Salvar Alterações de Preço</span>
+                  </button>
+                )}
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Lista de Modelos / Tabela Responsiva (Desktop & Tablet: sm em diante) */}
+      <div className="hidden sm:block bg-slate-950/60 border border-slate-900 rounded-2xl overflow-hidden shadow-xl">
         {loading ? (
           <div className="py-16 flex flex-col items-center justify-center gap-3">
             <RefreshCw className="h-8 w-8 text-violet-500 animate-spin" />
@@ -396,7 +548,7 @@ export function AdminServicesCatalog() {
             Nenhum serviço encontrado para os filtros selecionados.
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto overscroll-x-contain">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-800/80 bg-slate-900/60 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
@@ -408,6 +560,7 @@ export function AdminServicesCatalog() {
                         selectedIds.length === filteredServices.length
                       }
                       onChange={handleSelectAll}
+                      aria-label="Selecionar todos os serviços"
                       className="rounded border-slate-700 text-violet-600 focus:ring-violet-500 h-4 w-4 bg-slate-900 cursor-pointer"
                     />
                   </th>

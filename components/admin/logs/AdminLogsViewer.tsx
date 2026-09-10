@@ -279,271 +279,493 @@ export function AdminLogsViewer() {
           <>
             {/* TABELA: PAGAMENTOS */}
             {activeTab === "payments" && (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-900 bg-slate-950/80 text-slate-400 uppercase tracking-wider font-semibold">
-                      <th className="py-3 px-4">Status</th>
-                      <th className="py-3 px-4">Usuário</th>
-                      <th className="py-3 px-4">Valor (R$)</th>
-                      <th className="py-3 px-4">Créditos</th>
-                      <th className="py-3 px-4">Gateway</th>
-                      <th className="py-3 px-4">Data / Hora</th>
-                      <th className="py-3 px-4 text-right">Ação</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-900/60">
-                    {items.map((payment) => {
-                      const isPaid = payment.status === "PAID";
-                      const isFailed = payment.status === "FAILED" || payment.isRefunded;
-                      const isPending = payment.status === "PENDING";
+              <>
+                {/* Mobile Cards Stack */}
+                <div className="space-y-3 p-3 sm:hidden">
+                  {items.map((payment) => {
+                    const isPaid = payment.status === "PAID";
+                    const isFailed = payment.status === "FAILED" || payment.isRefunded;
+                    const isPending = payment.status === "PENDING";
 
-                      return (
-                        <tr
-                          key={payment.id}
-                          className="hover:bg-slate-900/40 transition-colors group cursor-pointer"
-                          onClick={() => setSelectedLog(payment)}
-                        >
-                          <td className="py-3.5 px-4 whitespace-nowrap">
+                    return (
+                      <div
+                        key={payment.id}
+                        onClick={() => setSelectedLog(payment)}
+                        className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 space-y-3 cursor-pointer hover:border-slate-700 transition-colors"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <div>
                             {isPaid && (
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-950/60 text-emerald-400 border border-emerald-800/60">
-                                <CheckCircle2 className="h-3.5 w-3.5" /> Pago
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-950/60 text-emerald-400 border border-emerald-800/60">
+                                <CheckCircle2 className="h-3 w-3" /> Pago
                               </span>
                             )}
                             {payment.isRefunded && (
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-950/60 text-purple-400 border border-purple-800/60">
-                                <RotateCcwIcon className="h-3.5 w-3.5" /> Estornado
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-950/60 text-purple-400 border border-purple-800/60">
+                                <RotateCcwIcon className="h-3 w-3" /> Estornado
                               </span>
                             )}
                             {isFailed && !payment.isRefunded && (
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-950/60 text-rose-400 border border-rose-800/60">
-                                <XCircle className="h-3.5 w-3.5" /> Falhou / Recusado
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-950/60 text-rose-400 border border-rose-800/60">
+                                <XCircle className="h-3 w-3" /> Falhou
                               </span>
                             )}
                             {isPending && (
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-950/60 text-amber-400 border border-amber-800/60">
-                                <Clock className="h-3.5 w-3.5" /> Pendente
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-950/60 text-amber-400 border border-amber-800/60">
+                                <Clock className="h-3 w-3" /> Pendente
                               </span>
                             )}
-                          </td>
-                          <td className="py-3.5 px-4">
-                            <div className="font-semibold text-white truncate max-w-[180px]">
+                          </div>
+
+                          <span className="px-2 py-0.5 rounded bg-slate-950 border border-slate-800 font-mono text-[10px] text-slate-300 uppercase">
+                            {payment.gateway}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="min-w-0">
+                            <div className="font-semibold text-white text-xs truncate">
                               {payment.user?.name || "Sem nome"}
                             </div>
-                            <div className="text-[11px] text-slate-400 truncate max-w-[200px]">
+                            <div className="text-[11px] text-slate-400 truncate">
                               {payment.user?.email || payment.user?.id || "N/A"}
                             </div>
-                          </td>
-                          <td className="py-3.5 px-4 font-mono font-bold text-white whitespace-nowrap">
-                            {payment.amountBRL}
-                          </td>
-                          <td className="py-3.5 px-4 whitespace-nowrap">
-                            <span className="font-bold text-cyan-400 font-mono">
-                              +{payment.creditsGranted.toLocaleString("pt-BR")}
-                            </span>
-                          </td>
-                          <td className="py-3.5 px-4 whitespace-nowrap">
-                            <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 font-mono text-[11px] text-slate-300 uppercase">
-                              {payment.gateway}
-                            </span>
-                          </td>
-                          <td className="py-3.5 px-4 text-slate-400 text-[11px] whitespace-nowrap">
-                            {formatDate(payment.createdAt)}
-                          </td>
-                          <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedLog(payment);
-                              }}
-                              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors inline-flex items-center gap-1"
-                              title="Inspecionar Detalhes"
-                            >
-                              <Eye className="h-3.5 w-3.5" />
-                              <span className="hidden sm:inline text-[11px]">Ver Payload</span>
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            {/* TABELA: GERAÇÕES IA & FALHAS */}
-            {activeTab === "jobs" && (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-900 bg-slate-950/80 text-slate-400 uppercase tracking-wider font-semibold">
-                      <th className="py-3 px-4">Status & Diagnóstico</th>
-                      <th className="py-3 px-4">Usuário</th>
-                      <th className="py-3 px-4">Modelo / Ferramenta</th>
-                      <th className="py-3 px-4">Custo</th>
-                      <th className="py-3 px-4">Tempo Resposta</th>
-                      <th className="py-3 px-4">Data / Hora</th>
-                      <th className="py-3 px-4 text-right">Ação</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-900/60">
-                    {items.map((job) => {
-                      const isCompleted = job.status === "COMPLETED";
-                      const isFailed = job.status === "FAILED" || job.status === "CANCELLED";
-                      const isPending = job.status === "PENDING" || job.status === "PROCESSING";
-
-                      return (
-                        <tr
-                          key={job.id}
-                          className="hover:bg-slate-900/40 transition-colors group cursor-pointer"
-                          onClick={() => setSelectedLog(job)}
-                        >
-                          <td className="py-3.5 px-4">
-                            <div className="flex flex-col gap-1 items-start">
-                              {isCompleted && (
-                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-950/60 text-emerald-400 border border-emerald-800/60">
-                                  <CheckCircle2 className="h-3.5 w-3.5" /> Concluído
-                                </span>
-                              )}
-                              {isFailed && (
-                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-950/60 text-rose-400 border border-rose-800/60">
-                                  <AlertTriangle className="h-3.5 w-3.5" /> Falha na Geração
-                                </span>
-                              )}
-                              {isPending && (
-                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-950/60 text-amber-400 border border-amber-800/60">
-                                  <Clock className="h-3.5 w-3.5" /> {job.status === "PROCESSING" ? "Processando..." : "Na Fila"}
-                                </span>
-                              )}
-                              {/* Destaque para Categoria de Erro */}
-                              {job.error && (
-                                <div className="text-[11px] text-rose-400/90 font-medium truncate max-w-[260px] flex items-center gap-1">
-                                  <AlertOctagon className="h-3 w-3 shrink-0" />
-                                  <span className="truncate">{job.error}</span>
-                                </div>
-                              )}
-                            </div>
-                          </td>
-                          <td className="py-3.5 px-4">
-                            <div className="font-semibold text-white truncate max-w-[160px]">
-                              {job.user?.name || "Sem nome"}
-                            </div>
-                            <div className="text-[11px] text-slate-400 truncate max-w-[180px]">
-                              {job.user?.email || job.user?.id || "N/A"}
-                            </div>
-                          </td>
-                          <td className="py-3.5 px-4">
-                            <div className="font-semibold text-cyan-300 truncate max-w-[180px]">
-                              {job.tool?.name || "Ferramenta IA"}
-                            </div>
-                            <div className="text-[11px] text-slate-400 font-mono truncate max-w-[200px]">
-                              {job.model?.technicalName || job.model?.name || "N/A"}
-                            </div>
-                          </td>
-                          <td className="py-3.5 px-4 whitespace-nowrap">
-                            <div className="font-mono text-xs font-bold text-violet-400">
-                              {job.creditCost} créditos
-                            </div>
-                            <div className="text-[10px] text-slate-500 font-mono">
-                              ${job.apiUnitCostUsd?.toFixed(4) || "0.0000"} USD
-                            </div>
-                          </td>
-                          <td className="py-3.5 px-4 whitespace-nowrap">
-                            {job.durationSeconds !== null ? (
-                              <span className="text-slate-300 font-mono text-[11px]">
-                                {job.durationSeconds}s
-                              </span>
-                            ) : (
-                              <span className="text-slate-600 font-mono text-[11px]">-</span>
-                            )}
-                          </td>
-                          <td className="py-3.5 px-4 text-slate-400 text-[11px] whitespace-nowrap">
-                            {formatDate(job.createdAt)}
-                          </td>
-                          <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedLog(job);
-                              }}
-                              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors inline-flex items-center gap-1"
-                              title="Inspecionar Detalhes do Job"
-                            >
-                              <Eye className="h-3.5 w-3.5" />
-                              <span className="hidden sm:inline text-[11px]">Detalhes</span>
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            {/* TABELA: TRILHA DE AUDITORIA */}
-            {activeTab === "audit" && (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-900 bg-slate-950/80 text-slate-400 uppercase tracking-wider font-semibold">
-                      <th className="py-3 px-4">Ação Administrativa</th>
-                      <th className="py-3 px-4">Administrador</th>
-                      <th className="py-3 px-4">Detalhes da Modificação</th>
-                      <th className="py-3 px-4">Data / Hora</th>
-                      <th className="py-3 px-4 text-right">Ação</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-900/60">
-                    {items.map((log) => (
-                      <tr
-                        key={log.id}
-                        className="hover:bg-slate-900/40 transition-colors group cursor-pointer"
-                        onClick={() => setSelectedLog(log)}
-                      >
-                        <td className="py-3.5 px-4 whitespace-nowrap">
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold bg-amber-950/40 text-amber-300 border border-amber-800/50">
-                            <ShieldCheck className="h-3.5 w-3.5 text-amber-400" />
-                            {log.action}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <div className="font-semibold text-white truncate max-w-[180px]">
-                            {log.adminUser?.name || "Admin"}
                           </div>
-                          <div className="text-[11px] text-slate-400 font-mono truncate max-w-[200px]">
-                            {log.adminUser?.email || log.adminUser?.id || "N/A"}
+
+                          <div className="text-right flex-shrink-0">
+                            <div className="font-mono font-bold text-white text-sm">
+                              {payment.amountBRL}
+                            </div>
+                            <div className="font-bold text-cyan-400 font-mono text-xs">
+                              +{payment.creditsGranted.toLocaleString("pt-BR")} cr
+                            </div>
                           </div>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <p className="text-slate-300 text-xs line-clamp-2 max-w-md font-sans">
-                            {log.details || "Nenhum detalhe adicional informado."}
-                          </p>
-                        </td>
-                        <td className="py-3.5 px-4 text-slate-400 text-[11px] whitespace-nowrap">
-                          {formatDate(log.createdAt)}
-                        </td>
-                        <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                        </div>
+
+                        <div className="flex items-center justify-between pt-2 border-t border-slate-800/60 text-[11px] text-slate-400">
+                          <span>{formatDate(payment.createdAt)}</span>
                           <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              setSelectedLog(log);
+                              setSelectedLog(payment);
                             }}
-                            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors inline-flex items-center gap-1"
-                            title="Ver Log Completo"
+                            className="p-2 rounded-xl bg-slate-800 text-slate-200 hover:text-white flex items-center gap-1 text-xs min-h-[44px] px-3"
                           >
                             <Eye className="h-3.5 w-3.5" />
-                            <span className="hidden sm:inline text-[11px]">Ver</span>
+                            <span>Payload</span>
                           </button>
-                        </td>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Desktop Table */}
+                <div className="hidden sm:block overflow-x-auto overscroll-x-contain">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-slate-900 bg-slate-950/80 text-slate-400 uppercase tracking-wider font-semibold">
+                        <th className="py-3 px-4">Status</th>
+                        <th className="py-3 px-4">Usuário</th>
+                        <th className="py-3 px-4">Valor (R$)</th>
+                        <th className="py-3 px-4">Créditos</th>
+                        <th className="py-3 px-4">Gateway</th>
+                        <th className="py-3 px-4">Data / Hora</th>
+                        <th className="py-3 px-4 text-right">Ação</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="divide-y divide-slate-900/60">
+                      {items.map((payment) => {
+                        const isPaid = payment.status === "PAID";
+                        const isFailed = payment.status === "FAILED" || payment.isRefunded;
+                        const isPending = payment.status === "PENDING";
+
+                        return (
+                          <tr
+                            key={payment.id}
+                            className="hover:bg-slate-900/40 transition-colors group cursor-pointer"
+                            onClick={() => setSelectedLog(payment)}
+                          >
+                            <td className="py-3.5 px-4 whitespace-nowrap">
+                              {isPaid && (
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-950/60 text-emerald-400 border border-emerald-800/60">
+                                  <CheckCircle2 className="h-3.5 w-3.5" /> Pago
+                                </span>
+                              )}
+                              {payment.isRefunded && (
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-950/60 text-purple-400 border border-purple-800/60">
+                                  <RotateCcwIcon className="h-3.5 w-3.5" /> Estornado
+                                </span>
+                              )}
+                              {isFailed && !payment.isRefunded && (
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-950/60 text-rose-400 border border-rose-800/60">
+                                  <XCircle className="h-3.5 w-3.5" /> Falhou / Recusado
+                                </span>
+                              )}
+                              {isPending && (
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-950/60 text-amber-400 border border-amber-800/60">
+                                  <Clock className="h-3.5 w-3.5" /> Pendente
+                                </span>
+                              )}
+                            </td>
+                            <td className="py-3.5 px-4">
+                              <div className="font-semibold text-white truncate max-w-[180px]">
+                                {payment.user?.name || "Sem nome"}
+                              </div>
+                              <div className="text-[11px] text-slate-400 truncate max-w-[200px]">
+                                {payment.user?.email || payment.user?.id || "N/A"}
+                              </div>
+                            </td>
+                            <td className="py-3.5 px-4 font-mono font-bold text-white whitespace-nowrap">
+                              {payment.amountBRL}
+                            </td>
+                            <td className="py-3.5 px-4 whitespace-nowrap">
+                              <span className="font-bold text-cyan-400 font-mono">
+                                +{payment.creditsGranted.toLocaleString("pt-BR")}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-4 whitespace-nowrap">
+                              <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 font-mono text-[11px] text-slate-300 uppercase">
+                                {payment.gateway}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-4 text-slate-400 text-[11px] whitespace-nowrap">
+                              {formatDate(payment.createdAt)}
+                            </td>
+                            <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedLog(payment);
+                                }}
+                                className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors inline-flex items-center gap-1"
+                                title="Inspecionar Detalhes"
+                              >
+                                <Eye className="h-3.5 w-3.5" />
+                                <span className="hidden sm:inline text-[11px]">Ver Payload</span>
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {/* TABELA: GERAÇÕES IA & FALHAS */}
+            {activeTab === "jobs" && (
+              <>
+                {/* Mobile Cards Stack para Jobs */}
+                <div className="space-y-3 p-3 sm:hidden">
+                  {items.map((job) => {
+                    const isCompleted = job.status === "COMPLETED";
+                    const isFailed = job.status === "FAILED" || job.status === "CANCELLED";
+                    const isPending = job.status === "PENDING" || job.status === "PROCESSING";
+
+                    return (
+                      <div
+                        key={job.id}
+                        onClick={() => setSelectedLog(job)}
+                        className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 space-y-3 cursor-pointer hover:border-slate-700 transition-colors"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <div>
+                            {isCompleted && (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-950/60 text-emerald-400 border border-emerald-800/60">
+                                <CheckCircle2 className="h-3 w-3" /> Concluído
+                              </span>
+                            )}
+                            {isFailed && (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-950/60 text-rose-400 border border-rose-800/60">
+                                <AlertTriangle className="h-3 w-3" /> Falha
+                              </span>
+                            )}
+                            {isPending && (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-950/60 text-amber-400 border border-amber-800/60">
+                                <Clock className="h-3 w-3" /> {job.status === "PROCESSING" ? "Processando..." : "Na Fila"}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="text-right">
+                            <span className="font-mono text-xs font-bold text-violet-400">
+                              {job.creditCost} cr
+                            </span>
+                            {job.durationSeconds !== null && (
+                              <span className="text-[10px] text-slate-500 font-mono block">
+                                {job.durationSeconds}s
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {job.error && (
+                          <div className="text-[11px] text-rose-400/90 font-medium truncate flex items-center gap-1 bg-rose-950/20 p-2 rounded-lg border border-rose-900/40">
+                            <AlertOctagon className="h-3.5 w-3.5 shrink-0" />
+                            <span className="truncate">{job.error}</span>
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="min-w-0">
+                            <div className="font-semibold text-cyan-300 text-xs truncate">
+                              {job.tool?.name || "Ferramenta IA"}
+                            </div>
+                            <div className="text-[11px] text-slate-400 font-mono truncate">
+                              {job.model?.technicalName || job.model?.name || "N/A"}
+                            </div>
+                          </div>
+
+                          <div className="text-right text-[11px] text-slate-400 truncate max-w-[140px]">
+                            {job.user?.name || job.user?.email || "Sem identificação"}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-2 border-t border-slate-800/60 text-[11px] text-slate-400">
+                          <span>{formatDate(job.createdAt)}</span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedLog(job);
+                            }}
+                            className="p-2 rounded-xl bg-slate-800 text-slate-200 hover:text-white flex items-center gap-1 text-xs min-h-[44px] px-3"
+                          >
+                            <Eye className="h-3.5 w-3.5" />
+                            <span>Detalhes</span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Desktop Table para Jobs */}
+                <div className="hidden sm:block overflow-x-auto overscroll-x-contain">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-slate-900 bg-slate-950/80 text-slate-400 uppercase tracking-wider font-semibold">
+                        <th className="py-3 px-4">Status & Diagnóstico</th>
+                        <th className="py-3 px-4">Usuário</th>
+                        <th className="py-3 px-4">Modelo / Ferramenta</th>
+                        <th className="py-3 px-4">Custo</th>
+                        <th className="py-3 px-4">Tempo Resposta</th>
+                        <th className="py-3 px-4">Data / Hora</th>
+                        <th className="py-3 px-4 text-right">Ação</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-900/60">
+                      {items.map((job) => {
+                        const isCompleted = job.status === "COMPLETED";
+                        const isFailed = job.status === "FAILED" || job.status === "CANCELLED";
+                        const isPending = job.status === "PENDING" || job.status === "PROCESSING";
+
+                        return (
+                          <tr
+                            key={job.id}
+                            className="hover:bg-slate-900/40 transition-colors group cursor-pointer"
+                            onClick={() => setSelectedLog(job)}
+                          >
+                            <td className="py-3.5 px-4">
+                              <div className="flex flex-col gap-1 items-start">
+                                {isCompleted && (
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-950/60 text-emerald-400 border border-emerald-800/60">
+                                    <CheckCircle2 className="h-3.5 w-3.5" /> Concluído
+                                  </span>
+                                )}
+                                {isFailed && (
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-950/60 text-rose-400 border border-rose-800/60">
+                                    <AlertTriangle className="h-3.5 w-3.5" /> Falha na Geração
+                                  </span>
+                                )}
+                                {isPending && (
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-950/60 text-amber-400 border border-amber-800/60">
+                                    <Clock className="h-3.5 w-3.5" /> {job.status === "PROCESSING" ? "Processando..." : "Na Fila"}
+                                  </span>
+                                )}
+                                {/* Destaque para Categoria de Erro */}
+                                {job.error && (
+                                  <div className="text-[11px] text-rose-400/90 font-medium truncate max-w-[260px] flex items-center gap-1">
+                                    <AlertOctagon className="h-3 w-3 shrink-0" />
+                                    <span className="truncate">{job.error}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                            <td className="py-3.5 px-4">
+                              <div className="font-semibold text-white truncate max-w-[160px]">
+                                {job.user?.name || "Sem nome"}
+                              </div>
+                              <div className="text-[11px] text-slate-400 truncate max-w-[180px]">
+                                {job.user?.email || job.user?.id || "N/A"}
+                              </div>
+                            </td>
+                            <td className="py-3.5 px-4">
+                              <div className="font-semibold text-cyan-300 truncate max-w-[180px]">
+                                {job.tool?.name || "Ferramenta IA"}
+                              </div>
+                              <div className="text-[11px] text-slate-400 font-mono truncate max-w-[200px]">
+                                {job.model?.technicalName || job.model?.name || "N/A"}
+                              </div>
+                            </td>
+                            <td className="py-3.5 px-4 whitespace-nowrap">
+                              <div className="font-mono text-xs font-bold text-violet-400">
+                                {job.creditCost} créditos
+                              </div>
+                              <div className="text-[10px] text-slate-500 font-mono">
+                                ${job.apiUnitCostUsd?.toFixed(4) || "0.0000"} USD
+                              </div>
+                            </td>
+                            <td className="py-3.5 px-4 whitespace-nowrap">
+                              {job.durationSeconds !== null ? (
+                                <span className="text-slate-300 font-mono text-[11px]">
+                                  {job.durationSeconds}s
+                                </span>
+                              ) : (
+                                <span className="text-slate-600 font-mono text-[11px]">-</span>
+                              )}
+                            </td>
+                            <td className="py-3.5 px-4 text-slate-400 text-[11px] whitespace-nowrap">
+                              {formatDate(job.createdAt)}
+                            </td>
+                            <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedLog(job);
+                                }}
+                                className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors inline-flex items-center gap-1"
+                                title="Inspecionar Detalhes do Job"
+                              >
+                                <Eye className="h-3.5 w-3.5" />
+                                <span className="hidden sm:inline text-[11px]">Detalhes</span>
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {/* TABELA: TRILHA DE AUDITORIA */}
+            {activeTab === "audit" && (
+              <>
+                {/* Mobile Cards Stack para Auditoria */}
+                <div className="space-y-3 p-3 sm:hidden">
+                  {items.map((log) => (
+                    <div
+                      key={log.id}
+                      onClick={() => setSelectedLog(log)}
+                      className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 space-y-3 cursor-pointer hover:border-slate-700 transition-colors"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold bg-amber-950/40 text-amber-300 border border-amber-800/50">
+                          <ShieldCheck className="h-3.5 w-3.5 text-amber-400" />
+                          {log.action}
+                        </span>
+
+                        <span className="text-[10px] text-slate-400 font-mono">
+                          {formatDate(log.createdAt)}
+                        </span>
+                      </div>
+
+                      <div className="text-xs text-white font-medium">
+                        Admin: <span className="text-slate-300">{log.adminUser?.name || "Admin"}</span>
+                        <span className="text-[11px] text-slate-500 font-mono block truncate">
+                          {log.adminUser?.email || "N/A"}
+                        </span>
+                      </div>
+
+                      <p className="text-slate-300 text-xs line-clamp-3 bg-slate-950/40 p-2 rounded-lg border border-slate-900 font-sans">
+                        {log.details || "Nenhum detalhe adicional informado."}
+                      </p>
+
+                      <div className="flex justify-end pt-1">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedLog(log);
+                          }}
+                          className="p-2 rounded-xl bg-slate-800 text-slate-200 hover:text-white flex items-center gap-1 text-xs min-h-[44px] px-3"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                          <span>Ver Detalhes</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop Table para Auditoria */}
+                <div className="hidden sm:block overflow-x-auto overscroll-x-contain">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-slate-900 bg-slate-950/80 text-slate-400 uppercase tracking-wider font-semibold">
+                        <th className="py-3 px-4">Ação Administrativa</th>
+                        <th className="py-3 px-4">Administrador</th>
+                        <th className="py-3 px-4">Detalhes da Modificação</th>
+                        <th className="py-3 px-4">Data / Hora</th>
+                        <th className="py-3 px-4 text-right">Ação</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-900/60">
+                      {items.map((log) => (
+                        <tr
+                          key={log.id}
+                          className="hover:bg-slate-900/40 transition-colors group cursor-pointer"
+                          onClick={() => setSelectedLog(log)}
+                        >
+                          <td className="py-3.5 px-4 whitespace-nowrap">
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold bg-amber-950/40 text-amber-300 border border-amber-800/50">
+                              <ShieldCheck className="h-3.5 w-3.5 text-amber-400" />
+                              {log.action}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <div className="font-semibold text-white truncate max-w-[180px]">
+                              {log.adminUser?.name || "Admin"}
+                            </div>
+                            <div className="text-[11px] text-slate-400 font-mono truncate max-w-[200px]">
+                              {log.adminUser?.email || log.adminUser?.id || "N/A"}
+                            </div>
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <p className="text-slate-300 text-xs line-clamp-2 max-w-md font-sans">
+                              {log.details || "Nenhum detalhe adicional informado."}
+                            </p>
+                          </td>
+                          <td className="py-3.5 px-4 text-slate-400 text-[11px] whitespace-nowrap">
+                            {formatDate(log.createdAt)}
+                          </td>
+                          <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedLog(log);
+                              }}
+                              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors inline-flex items-center gap-1"
+                              title="Ver Log Completo"
+                            >
+                              <Eye className="h-3.5 w-3.5" />
+                              <span className="hidden sm:inline text-[11px]">Ver</span>
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </>
         )}
@@ -582,10 +804,10 @@ export function AdminLogsViewer() {
         )}
       </div>
 
-      {/* Modal de Inspeção Rápida de Payload & Detalhes */}
+      {/* Modal / Gaveta de Inspeção Rápida de Payload & Detalhes (Fullscreen no Mobile) */}
       {selectedLog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-slate-950 border border-slate-800 rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 overscroll-contain">
+          <div className="bg-slate-950 border-0 sm:border border-slate-800 rounded-none sm:rounded-2xl w-full sm:max-w-2xl h-full sm:h-auto sm:max-h-[85vh] flex flex-col shadow-2xl overflow-hidden overscroll-contain">
             {/* Cabeçalho do Modal */}
             <div className="p-4 sm:p-5 border-b border-slate-900 flex items-center justify-between bg-slate-900/50">
               <div className="flex items-center gap-2.5">

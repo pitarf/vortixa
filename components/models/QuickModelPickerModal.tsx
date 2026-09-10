@@ -61,9 +61,9 @@ export function QuickModelPickerModal({
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 md:p-6 bg-black/80 backdrop-blur-md overscroll-contain animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-3xl max-h-[90vh] rounded-3xl bg-[#0D0E12] border border-[#1E202E] shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200"
+        className="relative w-full sm:max-w-3xl h-full sm:h-auto max-h-screen sm:max-h-[90vh] rounded-none sm:rounded-3xl bg-[#0D0E12] border-0 sm:border border-[#1E202E] shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200"
         role="dialog"
         aria-modal="true"
       >
@@ -71,7 +71,7 @@ export function QuickModelPickerModal({
         <div className="absolute top-0 right-0 w-80 h-80 bg-violet-600/10 blur-3xl pointer-events-none" />
 
         {/* Header do Modal */}
-        <div className="p-4 sm:p-5 border-b border-[#1E202E] flex items-center justify-between gap-3 relative z-10 bg-[#0D0E12]/90">
+        <div className="p-4 sm:p-5 border-b border-[#1E202E] flex items-center justify-between gap-3 relative z-10 bg-[#0D0E12]/90 shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-violet-600/20 text-lg">
               🎭
@@ -101,7 +101,7 @@ export function QuickModelPickerModal({
         </div>
 
         {/* Filtros e Barra de Pesquisa */}
-        <div className="p-4 border-b border-[#1E202E] bg-[#070709]/60 flex flex-col sm:flex-row gap-3 items-center justify-between">
+        <div className="p-4 border-b border-[#1E202E] bg-[#070709]/60 flex flex-col sm:flex-row gap-3 items-center justify-between shrink-0">
           <div className="relative w-full sm:w-72">
             <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
@@ -110,32 +110,30 @@ export function QuickModelPickerModal({
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar por nome, tag ou estilo..."
               className="w-full bg-[#0D0E12] border border-[#1E202E] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-violet-500/80 transition-colors"
-              style={{ minHeight: "40px" }}
+              style={{ minHeight: "44px" }}
             />
           </div>
 
-          <div className="flex items-center gap-1.5 self-stretch sm:self-auto overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-1.5 self-stretch sm:self-auto overflow-x-auto no-scrollbar pb-1 sm:pb-0">
             <button
               type="button"
               onClick={() => setTypeFilter("ALL")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap min-h-[44px] touch-manipulation ${
                 typeFilter === "ALL"
                   ? "bg-violet-600 text-white shadow-md shadow-violet-600/20"
                   : "bg-[#0D0E12] border border-[#1E202E] text-slate-400 hover:text-white"
               }`}
-              style={{ minHeight: "40px" }}
             >
               Todos ({models.length})
             </button>
             <button
               type="button"
               onClick={() => setTypeFilter("AI")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap min-h-[44px] touch-manipulation ${
                 typeFilter === "AI"
                   ? "bg-violet-600 text-white shadow-md shadow-violet-600/20"
                   : "bg-[#0D0E12] border border-[#1E202E] text-slate-400 hover:text-white"
               }`}
-              style={{ minHeight: "40px" }}
             >
               <Sparkles className="w-3.5 h-3.5 text-violet-300" />
               <span>Modelos IA</span>
@@ -143,12 +141,11 @@ export function QuickModelPickerModal({
             <button
               type="button"
               onClick={() => setTypeFilter("REAL")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap min-h-[44px] touch-manipulation ${
                 typeFilter === "REAL"
                   ? "bg-cyan-600 text-white shadow-md shadow-cyan-600/20"
                   : "bg-[#0D0E12] border border-[#1E202E] text-slate-400 hover:text-white"
               }`}
-              style={{ minHeight: "40px" }}
             >
               <User className="w-3.5 h-3.5 text-cyan-300" />
               <span>Modelos Reais</span>
@@ -156,8 +153,8 @@ export function QuickModelPickerModal({
           </div>
         </div>
 
-        {/* Grade de Modelos Disponíveis */}
-        <div className="p-4 sm:p-5 overflow-y-auto max-h-[60vh] space-y-3">
+        {/* Grade de Modelos Disponíveis com scroll interno */}
+        <div className="p-4 sm:p-5 overflow-y-auto flex-1 overscroll-contain space-y-3">
           {filteredModels.length === 0 ? (
             <div className="py-12 text-center space-y-2">
               <p className="text-sm font-semibold text-slate-300">
@@ -251,19 +248,19 @@ export function QuickModelPickerModal({
         </div>
 
         {/* Rodapé Informativo */}
-        <div className="p-3.5 border-t border-[#1E202E] bg-[#070709] flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
+        <div className="p-3.5 sm:p-4 border-t border-[#1E202E] bg-[#070709] flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400 shrink-0">
           <div className="flex items-center gap-2">
-            <span>🎭 Preservação facial e prompt trigger serão injetados automaticamente.</span>
+            <span className="text-xs">🎭 Preservação facial e prompt trigger serão injetados automaticamente.</span>
           </div>
 
           <a
             href="/dashboard/models"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1 text-violet-400 hover:text-violet-300 hover:underline font-semibold"
+            className="inline-flex items-center gap-1.5 text-violet-400 hover:text-violet-300 hover:underline font-semibold min-h-[44px] py-1 px-1 touch-manipulation"
           >
-            <span>Ver Vitrine Completa com Portfólios</span>
-            <ExternalLink className="w-3 h-3" />
+            <span>Ver Vitrine Completa</span>
+            <ExternalLink className="w-3.5 h-3.5" />
           </a>
         </div>
       </div>

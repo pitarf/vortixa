@@ -57,24 +57,22 @@ export function VideoSettingsSection({
             <button
               type="button"
               onClick={() => onChangeDuration("5")}
-              className={`py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+              className={`min-h-[44px] py-2 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center ${
                 duration === "5"
                   ? "bg-violet-600 text-white shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
-              style={{ minHeight: "36px" }}
             >
               5s
             </button>
             <button
               type="button"
               onClick={() => onChangeDuration("10")}
-              className={`py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+              className={`min-h-[44px] py-2 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center ${
                 duration === "10"
                   ? "bg-violet-600 text-white shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
-              style={{ minHeight: "36px" }}
             >
               10s
             </button>
@@ -94,12 +92,11 @@ export function VideoSettingsSection({
                 key={r.id}
                 type="button"
                 onClick={() => onChangeAspectRatio(r.id)}
-                className={`py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`min-h-[44px] py-2 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center ${
                   aspectRatio === r.id
                     ? "bg-violet-600 text-white shadow-sm"
                     : "text-slate-400 hover:text-white"
                 }`}
-                style={{ minHeight: "36px" }}
               >
                 {r.label}
               </button>
@@ -114,12 +111,11 @@ export function VideoSettingsSection({
             <button
               type="button"
               onClick={() => onChangeQuality("standard")}
-              className={`py-2 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+              className={`min-h-[44px] py-2 text-[11px] font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center ${
                 quality === "standard"
                   ? "bg-violet-600 text-white shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
-              style={{ minHeight: "36px" }}
               title="720p HD - Resolução Padrão rápida e econômica (1x créditos)"
             >
               720p HD
@@ -127,12 +123,11 @@ export function VideoSettingsSection({
             <button
               type="button"
               onClick={() => onChangeQuality("high")}
-              className={`py-2 text-[11px] font-bold rounded-lg transition-all flex items-center justify-center gap-0.5 cursor-pointer ${
+              className={`min-h-[44px] py-2 text-[11px] font-bold rounded-lg transition-all flex items-center justify-center gap-0.5 cursor-pointer ${
                 quality === "high"
                   ? "bg-violet-600 text-white shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
-              style={{ minHeight: "36px" }}
               title="1080p Full HD Pro - Máxima nitidez e amostragem densa (1.5x créditos)"
             >
               <span>1080p</span>
@@ -141,12 +136,11 @@ export function VideoSettingsSection({
             <button
               type="button"
               onClick={() => onChangeQuality("ultra4k")}
-              className={`py-2 text-[11px] font-bold rounded-lg transition-all flex items-center justify-center gap-0.5 cursor-pointer ${
+              className={`min-h-[44px] py-2 text-[11px] font-bold rounded-lg transition-all flex items-center justify-center gap-0.5 cursor-pointer ${
                 quality === "ultra4k"
                   ? "bg-gradient-to-r from-violet-600 to-cyan-500 text-white shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
-              style={{ minHeight: "36px" }}
               title="4K Ultra Cinema - Resolução cinematográfica de estúdio (2x créditos)"
             >
               <span>4K Ultra</span>
@@ -161,11 +155,11 @@ export function VideoSettingsSection({
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="w-full flex items-center justify-between py-2 text-xs text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
+          className="w-full min-h-[44px] flex items-center justify-between py-2 px-1 text-xs text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
         >
           <div className="flex items-center gap-2">
-            <Settings2 className="w-3.5 h-3.5 text-slate-400" />
-            <span className="font-semibold">Configurações avançadas (opcional)</span>
+            <Settings2 className="w-4 h-4 text-slate-400" />
+            <span className="font-semibold text-xs sm:text-sm">Configurações avançadas (câmera, seed)</span>
           </div>
           <ChevronDown
             className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
@@ -184,7 +178,7 @@ export function VideoSettingsSection({
               <select
                 value={cameraMovement}
                 onChange={(e) => onChangeCameraMovement(e.target.value)}
-                className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-violet-500 cursor-pointer"
+                className="w-full min-h-[44px] bg-[#070709] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-violet-500 cursor-pointer"
               >
                 <option value="none">Automático / Dinâmico pelo Prompt</option>
                 <option value="zoom_in">Zoom In (Aproximação Lenta)</option>
@@ -206,7 +200,7 @@ export function VideoSettingsSection({
                 value={seed}
                 onChange={(e) => onChangeSeed(e.target.value)}
                 placeholder="Aleatória (deixe em branco se não souber)"
-                className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white placeholder-slate-600 outline-none focus:border-violet-500"
+                className="w-full min-h-[44px] bg-[#070709] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white placeholder-slate-600 outline-none focus:border-violet-500"
               />
             </div>
 
@@ -220,7 +214,7 @@ export function VideoSettingsSection({
                 value={negativePrompt}
                 onChange={(e) => onChangeNegativePrompt(e.target.value)}
                 placeholder="Ex: borrões, distorções, membros extras, glitch, watermark"
-                className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white placeholder-slate-600 outline-none focus:border-violet-500"
+                className="w-full min-h-[44px] bg-[#070709] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white placeholder-slate-600 outline-none focus:border-violet-500"
               />
             </div>
           </div>

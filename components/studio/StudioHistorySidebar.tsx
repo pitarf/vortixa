@@ -39,7 +39,7 @@ export function StudioHistorySidebar({
       </div>
 
       {/* Lista de Gerações Anteriores */}
-      <div className="space-y-2.5 max-h-[600px] overflow-y-auto pr-1">
+      <div className="space-y-2.5 max-h-[600px] overflow-y-auto pr-1 no-scrollbar">
         {isLoading && historyItems.length === 0 ? (
           <div className="text-center py-6 text-xs text-slate-500 font-mono">
             Carregando histórico...
@@ -53,10 +53,10 @@ export function StudioHistorySidebar({
             <div
               key={item.id}
               onClick={() => onSelectItem(item)}
-              className="group p-2 rounded-2xl bg-[#070709] border border-[#1E202E] hover:border-violet-500/50 transition-all cursor-pointer flex items-center gap-3"
+              className="group p-2.5 rounded-2xl bg-[#070709] border border-[#1E202E] hover:border-violet-500/50 transition-all cursor-pointer flex items-center gap-3 min-h-[44px]"
             >
               {/* Thumbnail */}
-              <div className="relative h-14 w-14 rounded-xl overflow-hidden bg-black flex-shrink-0 border border-[#1E202E]">
+              <div className="relative h-14 w-14 rounded-xl overflow-hidden bg-black shrink-0 border border-[#1E202E] aspect-square">
                 {item.mediaType === "video" ? (
                   <video src={item.url} className="h-full w-full object-cover" />
                 ) : (
@@ -77,7 +77,7 @@ export function StudioHistorySidebar({
                   </span>
                   <span>{item.timeAgo || "recente"}</span>
                 </div>
-                <p className="text-[11px] text-slate-300 font-medium truncate mt-0.5">
+                <p className="text-[11px] text-slate-300 font-medium truncate mt-0.5 break-words">
                   {item.prompt || "Criação de estúdio"}
                 </p>
               </div>
@@ -88,10 +88,11 @@ export function StudioHistorySidebar({
                   e.stopPropagation();
                   onCopyPrompt(item.prompt || "");
                 }}
-                className="text-slate-500 hover:text-white p-1"
+                className="text-slate-500 hover:text-white p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-[#13141B]"
                 title="Copiar prompt"
+                aria-label="Copiar prompt"
               >
-                <Copy className="h-3.5 w-3.5" />
+                <Copy className="h-4 w-4" />
               </button>
             </div>
           ))

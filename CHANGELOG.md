@@ -5,6 +5,29 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.9.0] - 2026-09-10
+### Refatoração Geral Adaptativa: Mobile-First, Ergonomia Touch e Acessibilidade Total
+- **Studio CREATE (`app/dashboard/create/page.tsx` & `components/studio/*`)**:
+  - Eliminação de larguras fixas (`w-[...]`), adoção de `w-full` com unidades relativas e contenção de overflow horizontal (`overflow-x-hidden`).
+  - Stepper de 4 etapas e abas com scroll suave horizontal sem scrollbars feias (`no-scrollbar` cross-browser e `touch-pan-x`).
+  - Touch targets aumentados para o padrão WCAG 2.2 AA (>= 44x44px) em todos os botões, switches de voz, seletores de estilo e sliders de duração.
+  - Prevenção ativa de Cumulative Layout Shift (CLS) com classes de aspect ratio (`aspect-video`, `aspect-square`).
+- **Ferramenta de Imagem (`app/dashboard/tools/image/page.tsx` & `components/tools/image/*`)**:
+  - Abas de workflow em carrossel ergonômico no mobile com pill buttons táteis min-h-[44px].
+  - Seletor de proporção fluido com destaque tátil para o botão "Original 📷" (min-h-[52px]).
+  - Visualizador fullscreen com `overscroll-contain` e scroll interno independente, evitando rolagem indesejada da página ao fundo.
+- **Ferramentas de Mídia (`video`, `lipsync`, `motion` e `upscale`)**:
+  - Formulários de upload duplo reestruturados para pilha vertical fluida no mobile (`grid-cols-1 md:grid-cols-2`).
+  - Players de vídeo com contenção visual estrita (`w-full aspect-video object-contain`) eliminando quebras em smartphones.
+  - Controles do player, timeline e seletores com áreas de toque ampliadas (>= 44px) e acessibilidade ARIA completa.
+- **Painel Executivo Administrativo & Vitrine de Modelos (`admin` & `models`)**:
+  - Tabelas de auditoria, usuários e serviços convertidas em visual de cards empilháveis e limpos em telas móveis.
+  - Modais de booking e detalhes de modelos adaptados para gaveta fullscreen em celulares (`fixed inset-0 h-full w-full rounded-none sm:rounded-3xl`).
+  - Pílulas de categorias deslizantes horizontais e cards de casting com aspect-ratio fotográfico sem saltos visuais.
+- **Auditoria de Qualidade e Conformidade**:
+  - 100% de aprovação na compilação estática (`npx tsc --noEmit` com 0 erros).
+  - 100% de aprovação na suíte de testes Vitest (23 arquivos, 163 testes passando).
+
 ## [1.8.2] - 2026-09-09
 ### Correção de Preservação de Cenário, Auto-Otimização de Prompt e Auditoria Integral
 - **Correção da Diretiva de Preservação de Cenário (`services/ai/prompt-engine.service.ts`)**:

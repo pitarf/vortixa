@@ -91,12 +91,13 @@ export function ModelCard({ model, onOpenDetails, onBookModel }: ModelCardProps)
             )}
           </div>
 
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-black/60 text-slate-200 border border-white/10 backdrop-blur-md">
-            {categoryMeta.icon} {categoryMeta.label}
+          <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-black/60 text-slate-200 border border-white/10 backdrop-blur-md shrink-0 flex items-center gap-1">
+            <span>{categoryMeta.icon}</span>
+            <span>{categoryMeta.label}</span>
           </span>
         </div>
 
-        {/* Botão Flutuante de Ver Perfil no Hover */}
+        {/* Botão de Ver Perfil (Hover no Desktop) */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none">
           <span className="px-4 py-2 rounded-2xl bg-black/80 backdrop-blur-md border border-white/20 text-xs font-bold text-white shadow-xl flex items-center gap-1.5">
             <Eye className="w-3.5 h-3.5 text-violet-400" />

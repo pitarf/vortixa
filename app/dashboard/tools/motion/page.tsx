@@ -65,7 +65,8 @@ export default function MotionToolPage() {
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* Uploads Duplos: Personagem + Movimento de Referência (1 coluna mobile, 2 colunas desktop) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
             <FileUploader
               accept="image/*"
               label="1. Personagem (Imagem)"

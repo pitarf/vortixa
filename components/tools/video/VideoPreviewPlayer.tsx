@@ -97,10 +97,10 @@ export function VideoPreviewPlayer({
         </button>
       </div>
 
-      {/* Janela de Renderização / Vídeo com Player Centralizado */}
-      <div className="relative rounded-2xl overflow-hidden border border-[#1E202E] bg-black flex items-center justify-center min-h-[380px] max-h-[520px] shadow-2xl group">
+      {/* Janela de Renderização / Vídeo com Player Centralizado com aspect-video contido sem esticar */}
+      <div className="relative rounded-2xl overflow-hidden border border-[#1E202E] bg-black flex items-center justify-center w-full aspect-video min-h-[260px] sm:min-h-[360px] max-h-[520px] shadow-2xl group">
         {isGenerating ? (
-          <div className="flex flex-col items-center justify-center gap-3 p-6 text-center">
+          <div className="flex flex-col items-center justify-center gap-3 p-4 sm:p-6 text-center">
             <div className="relative h-14 w-14 rounded-2xl bg-gradient-to-tr from-violet-600 via-indigo-600 to-cyan-500 p-0.5 animate-spin">
               <div className="h-full w-full bg-[#070709] rounded-2xl flex items-center justify-center">
                 <VideoIcon className="h-6 w-6 text-cyan-400 animate-pulse" />
@@ -122,7 +122,7 @@ export function VideoPreviewPlayer({
               src={activeVideoUrl}
               onTimeUpdate={handleTimeUpdate}
               onEnded={() => setIsPlaying(false)}
-              className="w-full h-full object-contain max-h-[500px]"
+              className="w-full h-full object-contain"
               playsInline
               loop
             />
@@ -134,66 +134,73 @@ export function VideoPreviewPlayer({
             >
               <button
                 type="button"
-                className="h-16 w-16 rounded-full bg-violet-600/80 hover:bg-violet-600 text-white flex items-center justify-center shadow-2xl shadow-violet-600/60 border border-white/30 backdrop-blur-md transition-transform hover:scale-105"
+                className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-violet-600/80 hover:bg-violet-600 text-white flex items-center justify-center shadow-2xl shadow-violet-600/60 border border-white/30 backdrop-blur-md transition-transform hover:scale-105 cursor-pointer"
+                aria-label={isPlaying ? "Pausar vídeo" : "Reproduzir vídeo"}
               >
                 {isPlaying ? (
-                  <Pause className="w-7 h-7 fill-white" />
+                  <Pause className="w-6 h-6 sm:w-7 sm:h-7 fill-white" />
                 ) : (
-                  <Play className="w-7 h-7 fill-white ml-1" />
+                  <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-white ml-1" />
                 )}
               </button>
             </div>
 
             {/* Barra de Controles Inferior Estilo Cinema */}
-            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-3 pt-6 flex items-center gap-3 text-white text-xs">
+            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-2.5 sm:p-3 pt-6 flex items-center gap-2 sm:gap-3 text-white text-xs">
               <button
                 type="button"
                 onClick={togglePlay}
-                className="hover:text-cyan-400 transition-colors cursor-pointer"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center hover:text-cyan-400 transition-colors cursor-pointer"
+                aria-label={isPlaying ? "Pausar" : "Reproduzir"}
               >
                 {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               </button>
 
-              <span className="text-[11px] font-mono text-slate-300 min-w-[70px]">
+              <span className="text-[11px] font-mono text-slate-300 min-w-[65px] sm:min-w-[70px]">
                 {formatTime(currentTime)} / {formatTime(duration)}
               </span>
 
-              {/* Slider de Progresso */}
-              <input
-                type="range"
-                min={0}
-                max={duration || 5}
-                step={0.1}
-                value={currentTime}
-                onChange={handleSeek}
-                className="w-full accent-violet-500 h-1.5 bg-slate-700/80 rounded-lg cursor-pointer"
-              />
+              {/* Slider de Progresso com altura de toque adequada */}
+              <div className="flex-1 flex items-center py-2">
+                <input
+                  type="range"
+                  min={0}
+                  max={duration || 5}
+                  step={0.1}
+                  value={currentTime}
+                  onChange={handleSeek}
+                  className="w-full accent-violet-500 h-2 bg-slate-700/80 rounded-lg cursor-pointer"
+                  aria-label="Controle de linha do tempo do vídeo"
+                />
+              </div>
 
               <button
                 type="button"
                 onClick={toggleMute}
-                className="hover:text-cyan-400 transition-colors cursor-pointer"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center hover:text-cyan-400 transition-colors cursor-pointer"
+                aria-label={isMuted ? "Ativar som" : "Silenciar som"}
               >
                 {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
               </button>
 
-              <span className="px-1.5 py-0.5 rounded bg-[#1E202E] text-[10px] font-mono font-bold text-slate-300">
+              <span className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-[#1E202E] text-[10px] font-mono font-bold text-slate-300">
                 4K
               </span>
 
               <button
                 type="button"
                 onClick={() => setIsFullscreen(true)}
-                className="hover:text-cyan-400 transition-colors cursor-pointer"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center hover:text-cyan-400 transition-colors cursor-pointer"
+                aria-label="Tela cheia"
               >
                 <Maximize2 className="w-4 h-4" />
               </button>
             </div>
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center gap-3 p-8 text-center text-slate-500">
-            <div className="h-16 w-16 rounded-2xl bg-[#0D0E12] border border-[#1E202E] flex items-center justify-center text-slate-400 shadow-sm">
-              <VideoIcon className="h-7 w-7 text-violet-400/60" />
+          <div className="flex flex-col items-center justify-center gap-3 p-6 sm:p-8 text-center text-slate-500">
+            <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[#0D0E12] border border-[#1E202E] flex items-center justify-center text-slate-400 shadow-sm">
+              <VideoIcon className="h-6 w-6 sm:h-7 sm:w-7 text-violet-400/60" />
             </div>
             <div className="space-y-1 max-w-xs">
               <p className="text-sm font-bold text-slate-300">Área de Visualização de Vídeo</p>
@@ -215,7 +222,8 @@ export function VideoPreviewPlayer({
             </span>
           </div>
 
-          <div className="grid grid-cols-5 gap-2">
+          {/* Miniaturas Recentes (Grid responsiva fluida: 2 colunas mobile, 3 sm, 5 md) */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 w-full">
             {recentCreations.slice(0, 5).map((item, idx) => {
               const isActive = activeVideoUrl === item.url;
               return (
@@ -223,7 +231,7 @@ export function VideoPreviewPlayer({
                   key={item.id || idx}
                   type="button"
                   onClick={() => onSelectCreation(item)}
-                  className={`relative rounded-xl overflow-hidden border aspect-video cursor-pointer transition-all ${
+                  className={`relative rounded-xl overflow-hidden border aspect-video cursor-pointer transition-all min-h-[44px] ${
                     isActive
                       ? "border-cyan-400 shadow-md shadow-cyan-400/30 ring-1 ring-cyan-400 scale-[1.02]"
                       : "border-[#1E202E] hover:border-slate-600 opacity-70 hover:opacity-100"

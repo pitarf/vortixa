@@ -48,30 +48,35 @@ export function ImageRatioSelector({
         </div>
       </div>
 
-      <div className={`grid gap-1.5 ${showOriginalButton ? "grid-cols-6" : "grid-cols-5"}`}>
+      <div
+        className={`grid gap-1.5 sm:gap-2 ${
+          showOriginalButton
+            ? "grid-cols-3 sm:grid-cols-6"
+            : "grid-cols-3 sm:grid-cols-5"
+        }`}
+      >
         {showOriginalButton && (
           <button
             type="button"
             onClick={() => onSelectRatio("original")}
-            className={`py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
+            className={`p-2 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer min-h-[52px] touch-manipulation select-none active:scale-[0.98] ${
               aspectRatio === "original"
                 ? "bg-[#13141B] border-cyan-400 text-white shadow-md shadow-cyan-500/25 ring-1 ring-cyan-400"
                 : "bg-[#070709] border-[#1E202E] text-slate-400 hover:text-slate-200"
             }`}
-            style={{ minHeight: "50px" }}
             title="Preserva o tamanho e proporção exatos da foto enviada"
           >
             <div
-              className={`border border-current rounded-sm w-4 h-4 flex items-center justify-center text-[9px] ${
+              className={`border border-current rounded-sm w-4 h-4 flex items-center justify-center text-[10px] ${
                 aspectRatio === "original"
-                  ? "border-cyan-400 bg-cyan-500/20 text-cyan-300"
-                  : "border-slate-500 text-slate-500"
+                  ? "border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold"
+                  : "border-slate-500 text-slate-400"
               }`}
             >
               📷
             </div>
-            <span className="text-[10px] font-bold font-mono">Original</span>
-            <span className="text-[8px] text-cyan-400 font-sans truncate">
+            <span className="text-[11px] font-bold font-mono text-cyan-300">Original</span>
+            <span className="text-[9px] text-cyan-400 font-sans truncate max-w-full px-0.5">
               {originalDimensions ? `${originalDimensions.width}x${originalDimensions.height}` : "Nativo"}
             </span>
           </button>
@@ -83,20 +88,19 @@ export function ImageRatioSelector({
               key={ratio.id}
               type="button"
               onClick={() => onSelectRatio(ratio.id)}
-              className={`py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
+              className={`p-2 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer min-h-[52px] touch-manipulation select-none active:scale-[0.98] ${
                 isSelected
-                  ? "bg-[#13141B] border-violet-500 text-white shadow-md shadow-violet-500/25"
+                  ? "bg-[#13141B] border-violet-500 text-white shadow-md shadow-violet-500/25 ring-1 ring-violet-500/50"
                   : "bg-[#070709] border-[#1E202E] text-slate-400 hover:text-slate-200"
               }`}
-              style={{ minHeight: "50px" }}
             >
               <div
                 className={`border border-current rounded-sm ${ratio.width} ${
                   isSelected ? "border-violet-400 bg-violet-500/20" : "border-slate-500"
                 }`}
               />
-              <span className="text-[10px] font-bold font-mono">{ratio.label}</span>
-              <span className="text-[8px] text-slate-500 font-sans truncate">{ratio.name}</span>
+              <span className="text-[11px] font-bold font-mono">{ratio.label}</span>
+              <span className="text-[9px] text-slate-500 font-sans truncate max-w-full px-0.5">{ratio.name}</span>
             </button>
           );
         })}

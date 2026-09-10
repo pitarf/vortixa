@@ -55,7 +55,7 @@ export function VideoModelSection({
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#13141B] hover:bg-[#1a1b24] border border-[#1E202E] hover:border-slate-700 text-xs font-semibold text-slate-300 hover:text-white transition-all cursor-pointer whitespace-nowrap self-stretch sm:self-auto"
+            className="min-h-[44px] inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#13141B] hover:bg-[#1a1b24] border border-[#1E202E] hover:border-slate-700 text-xs font-semibold text-slate-300 hover:text-white transition-all cursor-pointer whitespace-nowrap self-stretch sm:self-auto"
           >
             <span>Alterar modelo</span>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -80,7 +80,8 @@ export function VideoModelSection({
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="p-1.5 rounded-xl bg-[#13141B] hover:bg-[#1a1b24] border border-[#1E202E] text-slate-400 hover:text-white cursor-pointer"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-[#13141B] hover:bg-[#1a1b24] border border-[#1E202E] text-slate-400 hover:text-white cursor-pointer"
+                aria-label="Fechar modal"
               >
                 <X className="w-4 h-4" />
               </button>

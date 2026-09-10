@@ -70,9 +70,9 @@ export default function UpscaleToolPage() {
             onClear={() => setInputVal("video_url", "")}
           />
 
-          <div>
+          <div className="w-full">
             <label className="block text-sm font-medium text-slate-300 mb-2">Escala de Upscale</label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
               {[
                 { name: "2x Resolução", value: "2" },
                 { name: "4x Resolução", value: "4" },
@@ -81,12 +81,11 @@ export default function UpscaleToolPage() {
                   key={scale.value}
                   type="button"
                   onClick={() => setInputVal("scale_factor", scale.value)}
-                  className={`py-3 px-4 text-xs font-bold rounded-xl border transition-all duration-300 ${
+                  className={`min-h-[44px] py-3 px-4 text-xs font-bold rounded-xl border transition-all duration-300 cursor-pointer flex items-center justify-center ${
                     inputs.scale_factor === scale.value
-                      ? "bg-violet-600/10 border-violet-500 text-violet-400"
-                      : "bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700"
+                      ? "bg-violet-600/15 border-violet-500 text-violet-300 ring-1 ring-violet-500/30"
+                      : "bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200"
                   }`}
-                  style={{ minHeight: "44px" }}
                 >
                   {scale.name}
                 </button>

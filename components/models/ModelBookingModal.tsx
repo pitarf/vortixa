@@ -89,9 +89,9 @@ export function ModelBookingModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in-50 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in-50 duration-200 overscroll-contain">
       <div
-        className="relative w-full max-w-lg rounded-3xl bg-[#0D0E12] border border-[#1E202E] shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200"
+        className="relative w-full sm:max-w-lg h-full sm:h-auto max-h-screen sm:max-h-[90vh] rounded-none sm:rounded-3xl bg-[#0D0E12] border-0 sm:border border-[#1E202E] shadow-2xl overflow-y-auto flex flex-col animate-in zoom-in-95 duration-200 overscroll-contain"
         role="dialog"
         aria-modal="true"
         aria-labelledby="booking-modal-title"
@@ -99,11 +99,11 @@ export function ModelBookingModal({
         {/* Glow Superior */}
         <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-500/10 blur-3xl pointer-events-none" />
 
-        {/* Botão Fechar */}
+        {/* Botão Fechar com touch target de 44px */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 p-2 rounded-xl bg-[#070709]/90 border border-[#1E202E] hover:border-slate-600 text-slate-400 hover:text-white transition-all cursor-pointer shadow-md"
+          className="absolute top-4 right-4 z-20 p-2.5 rounded-xl bg-[#070709]/90 border border-[#1E202E] hover:border-slate-600 text-slate-400 hover:text-white transition-all cursor-pointer shadow-md min-h-[44px] min-w-[44px] flex items-center justify-center"
           aria-label="Fechar modal de contratação"
         >
           <X className="w-4 h-4" />

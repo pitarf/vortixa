@@ -106,11 +106,11 @@ export function AudioSourceSelector({
       </div>
 
       {/* Tabs de Seleção: Gerar com IA vs Upload Próprio */}
-      <div className="flex bg-[#070709] border border-[#1E202E] p-1 rounded-xl">
+      <div className="flex flex-col sm:flex-row bg-[#070709] border border-[#1E202E] p-1 rounded-xl gap-1 w-full">
         <button
           type="button"
           onClick={() => setActiveTab("tts")}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+          className={`flex-1 min-h-[44px] flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-bold rounded-lg transition-all cursor-pointer ${
             activeTab === "tts"
               ? "bg-gradient-to-r from-violet-600/30 to-fuchsia-600/30 text-white border border-violet-500/40 shadow-sm"
               : "text-slate-400 hover:text-slate-200"
@@ -118,13 +118,13 @@ export function AudioSourceSelector({
         >
           <Sparkles className="w-3.5 h-3.5 text-violet-400" />
           <span>Gerar Voz com IA</span>
-          <span className="text-[9px] px-1 py-0.2 rounded bg-violet-500/20 text-violet-300 font-mono">1 cr</span>
+          <span className="text-[9px] px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 font-mono">1 cr</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("upload")}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+          className={`flex-1 min-h-[44px] flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-bold rounded-lg transition-all cursor-pointer ${
             activeTab === "upload"
               ? "bg-[#13141B] text-white border border-slate-700 shadow-sm"
               : "text-slate-400 hover:text-slate-200"
@@ -151,7 +151,7 @@ export function AudioSourceSelector({
                 <button
                   type="button"
                   onClick={() => setSelectedGender("all")}
-                  className={`py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                  className={`min-h-[44px] py-1.5 px-2 text-[11px] font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center ${
                     selectedGender === "all" ? "bg-violet-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
                   }`}
                 >
@@ -163,7 +163,7 @@ export function AudioSourceSelector({
                     setSelectedGender("female");
                     setSelectedVoice("Rachel");
                   }}
-                  className={`py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                  className={`min-h-[44px] py-1.5 px-2 text-[11px] font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center ${
                     selectedGender === "female" ? "bg-fuchsia-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
                   }`}
                 >
@@ -175,7 +175,7 @@ export function AudioSourceSelector({
                     setSelectedGender("male");
                     setSelectedVoice("Brian");
                   }}
-                  className={`py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                  className={`min-h-[44px] py-1.5 px-2 text-[11px] font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center ${
                     selectedGender === "male" ? "bg-blue-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
                   }`}
                 >
@@ -193,7 +193,7 @@ export function AudioSourceSelector({
               <select
                 value={selectedVoice}
                 onChange={(e) => setSelectedVoice(e.target.value)}
-                className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-violet-500 cursor-pointer"
+                className="w-full min-h-[44px] bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-violet-500 cursor-pointer"
               >
                 {filteredVoices.map((voice) => (
                   <option key={voice.id} value={voice.id}>
@@ -222,12 +222,12 @@ export function AudioSourceSelector({
             </div>
           </div>
 
-          <div className="pt-2 flex flex-col sm:flex-row gap-2 items-center">
+          <div className="pt-2 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center w-full">
             <button
               type="button"
               onClick={handleGenerateVoice}
               disabled={isGeneratingVoice || !ttsText.trim()}
-              className="w-full flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90 disabled:opacity-40 text-white font-bold text-xs shadow-md shadow-violet-600/20 transition-all cursor-pointer"
+              className="w-full flex-1 min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90 disabled:opacity-40 text-white font-bold text-xs shadow-md shadow-violet-600/20 transition-all cursor-pointer"
             >
               {isGeneratingVoice ? (
                 <>
@@ -246,7 +246,7 @@ export function AudioSourceSelector({
               <button
                 type="button"
                 onClick={handleTogglePlay}
-                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] border border-emerald-500/40 text-emerald-400 hover:text-emerald-300 font-mono text-xs cursor-pointer whitespace-nowrap"
+                className="min-h-[44px] flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] border border-emerald-500/40 text-emerald-400 hover:text-emerald-300 font-mono text-xs cursor-pointer whitespace-nowrap"
                 title="Ouvir áudio gerado"
               >
                 {isPlaying ? <Square className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}

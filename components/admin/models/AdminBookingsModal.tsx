@@ -139,8 +139,8 @@ export function AdminBookingsModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto animate-in fade-in duration-200">
-      <div className="relative w-full max-w-5xl bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-6 bg-black/85 backdrop-blur-md overscroll-contain animate-in fade-in duration-200">
+      <div className="relative w-full sm:max-w-5xl bg-neutral-900 border-0 sm:border border-neutral-800 rounded-none sm:rounded-2xl shadow-2xl overflow-hidden h-full sm:h-auto max-h-screen sm:max-h-[92vh] flex flex-col overscroll-contain">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-900/90 backdrop-blur sticky top-0 z-10">
           <div className="flex items-center gap-3">

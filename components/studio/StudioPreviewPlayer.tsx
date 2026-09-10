@@ -102,12 +102,12 @@ export function StudioPreviewPlayer({
       {/* Container Principal do Player */}
       <div className="bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-4 sm:p-5 space-y-4">
         {/* Header do Player: Abas Resultado / Comparar + Fullscreen */}
-        <div className="flex items-center justify-between border-b border-[#1E202E] pb-3">
+        <div className="flex items-center justify-between border-b border-[#1E202E] pb-3 gap-2">
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => onPreviewTabChange("result")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer min-h-[44px] flex items-center justify-center ${
                 previewTab === "result"
                   ? "bg-violet-600/20 text-violet-300 border border-violet-500/40"
                   : "text-slate-400 hover:text-white"
@@ -118,7 +118,7 @@ export function StudioPreviewPlayer({
             <button
               type="button"
               onClick={() => onPreviewTabChange("compare")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer min-h-[44px] flex items-center justify-center ${
                 previewTab === "compare"
                   ? "bg-violet-600/20 text-violet-300 border border-violet-500/40"
                   : "text-slate-400 hover:text-white"
@@ -131,16 +131,16 @@ export function StudioPreviewPlayer({
           <button
             type="button"
             onClick={() => setIsFullscreen(true)}
-            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
+            className="flex items-center justify-center gap-1.5 px-2.5 py-2 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer min-h-[44px] min-w-[44px] rounded-xl hover:bg-[#13141B]"
             title="Visualizar em Tela Cheia"
           >
-            <Maximize2 className="h-3.5 w-3.5" />
+            <Maximize2 className="h-4 w-4" />
             <span className="hidden sm:inline">Tela Cheia</span>
           </button>
         </div>
 
         {/* Visualizador / Player Central */}
-        <div className="relative rounded-2xl overflow-hidden bg-black border border-[#1E202E] aspect-video flex items-center justify-center group">
+        <div className="relative rounded-2xl overflow-hidden bg-black border border-[#1E202E] aspect-video w-full flex items-center justify-center group">
           {isGenerating ? (
             <div className="p-6 text-center space-y-4 max-w-sm">
               <div className="relative h-20 w-20 mx-auto">
@@ -154,7 +154,7 @@ export function StudioPreviewPlayer({
               </div>
             </div>
           ) : previewTab === "compare" && referenceImageUrl ? (
-            <div className="grid grid-cols-2 w-full h-full">
+            <div className="grid grid-cols-2 w-full h-full aspect-video">
               <div className="relative h-full border-r border-[#1E202E]">
                 <img src={referenceImageUrl} alt="Original" className="w-full h-full object-cover" />
                 <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-slate-300">
@@ -190,7 +190,8 @@ export function StudioPreviewPlayer({
                     <button
                       type="button"
                       onClick={handleTogglePlay}
-                      className="absolute inset-0 m-auto h-16 w-16 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-2xl hover:scale-110 active:scale-95 transition-all cursor-pointer z-20"
+                      className="absolute inset-0 m-auto h-16 w-16 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-2xl hover:scale-110 active:scale-95 transition-all cursor-pointer z-20 min-h-[44px] min-w-[44px]"
+                      aria-label="Reproduzir vídeo"
                     >
                       <Play className="h-7 w-7 fill-white ml-1" />
                     </button>
@@ -214,7 +215,8 @@ export function StudioPreviewPlayer({
                         <button
                           type="button"
                           onClick={handleTogglePlay}
-                          className="hover:text-white cursor-pointer"
+                          className="hover:text-white cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
+                          aria-label={isPlaying ? "Pausar" : "Reproduzir"}
                         >
                           {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 fill-current" />}
                         </button>
@@ -223,7 +225,7 @@ export function StudioPreviewPlayer({
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         <button
                           type="button"
                           onClick={() => {
@@ -232,14 +234,16 @@ export function StudioPreviewPlayer({
                               setIsMuted(!isMuted);
                             }
                           }}
-                          className="hover:text-white cursor-pointer"
+                          className="hover:text-white cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
+                          aria-label={isMuted ? "Ativar som" : "Desativar som"}
                         >
                           {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                         </button>
                         <button
                           type="button"
                           onClick={() => setIsFullscreen(true)}
-                          className="hover:text-white cursor-pointer"
+                          className="hover:text-white cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
+                          aria-label="Tela cheia"
                         >
                           <Maximize2 className="h-4 w-4" />
                         </button>
@@ -266,16 +270,15 @@ export function StudioPreviewPlayer({
         </div>
 
         {/* Barra de Ações Rápidas Abaixo do Player */}
-        <div className="flex items-center gap-2 flex-wrap pt-1">
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2 pt-1">
           <a
             href={resultMediaUrl || "#"}
             download="vorixa-studio-render"
             target="_blank"
             rel="noreferrer"
-            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-slate-200 transition-all cursor-pointer"
-            style={{ minHeight: "44px" }}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-slate-200 transition-all cursor-pointer min-h-[44px]"
           >
-            <Download className="h-3.5 w-3.5" />
+            <Download className="h-4 w-4 shrink-0" />
             <span>Baixar</span>
           </a>
 
@@ -283,20 +286,18 @@ export function StudioPreviewPlayer({
             type="button"
             onClick={onVary}
             disabled={isGenerating}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-slate-200 transition-all cursor-pointer disabled:opacity-50"
-            style={{ minHeight: "44px" }}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-slate-200 transition-all cursor-pointer disabled:opacity-50 min-h-[44px]"
           >
-            <RotateCcw className="h-3.5 w-3.5 text-cyan-400" />
+            <RotateCcw className="h-4 w-4 text-cyan-400 shrink-0" />
             <span>Variar</span>
           </button>
 
           <button
             type="button"
             onClick={onSelectUpscale}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-amber-300 transition-all cursor-pointer"
-            style={{ minHeight: "44px" }}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-amber-300 transition-all cursor-pointer min-h-[44px]"
           >
-            <Layers className="h-3.5 w-3.5 text-amber-400" />
+            <Layers className="h-4 w-4 text-amber-400 shrink-0" />
             <span>Upscale 4K</span>
           </button>
 
@@ -304,19 +305,18 @@ export function StudioPreviewPlayer({
             type="button"
             onClick={onOpenInFlow}
             disabled={isOpeningInFlow}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/40 text-xs font-bold text-violet-300 transition-all cursor-pointer disabled:opacity-50"
-            style={{ minHeight: "44px" }}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/40 text-xs font-bold text-violet-300 transition-all cursor-pointer disabled:opacity-50 min-h-[44px]"
           >
-            <Boxes className="h-3.5 w-3.5 text-violet-400" />
+            <Boxes className="h-4 w-4 text-violet-400 shrink-0" />
             <span>Flow</span>
           </button>
 
           <button
             type="button"
             onClick={onSetResultAsReference}
-            className="p-2.5 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-slate-400 hover:text-white transition-all cursor-pointer"
+            className="col-span-2 sm:col-span-1 p-2.5 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-slate-400 hover:text-white transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
             title="Usar como referência"
-            style={{ minHeight: "44px", minWidth: "44px" }}
+            aria-label="Usar como imagem de referência"
           >
             <ImageIcon className="h-4 w-4" />
           </button>
@@ -333,7 +333,7 @@ export function StudioPreviewPlayer({
             </span>
           </div>
 
-          <div className="grid grid-cols-5 gap-2">
+          <div className="flex sm:grid sm:grid-cols-5 gap-2 overflow-x-auto no-scrollbar touch-pan-x pb-1">
             {recentCreations.slice(0, 5).map((item, idx) => {
               const isActive = resultMediaUrl === item.url;
               return (
@@ -341,7 +341,7 @@ export function StudioPreviewPlayer({
                   key={item.id || idx}
                   type="button"
                   onClick={() => onSelectRecentCreation?.(item.url, item.mediaType || "image")}
-                  className={`relative rounded-xl overflow-hidden border aspect-video cursor-pointer transition-all ${
+                  className={`relative rounded-xl overflow-hidden border aspect-video cursor-pointer transition-all shrink-0 w-28 sm:w-auto min-h-[44px] ${
                     isActive
                       ? "border-cyan-400 shadow-md shadow-cyan-400/30 ring-1 ring-cyan-400 scale-[1.02]"
                       : "border-[#1E202E] hover:border-slate-600 opacity-70 hover:opacity-100"
@@ -378,13 +378,13 @@ export function StudioPreviewPlayer({
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
           {INSPIRATIONS.map((insp) => (
             <button
               key={insp.id}
               type="button"
               onClick={() => onSelectInspiration(insp)}
-              className="group relative rounded-2xl overflow-hidden border border-[#1E202E] hover:border-violet-500/70 transition-all duration-300 text-left aspect-[4/5] bg-black cursor-pointer"
+              className="group relative rounded-2xl overflow-hidden border border-[#1E202E] hover:border-violet-500/70 transition-all duration-300 text-left aspect-[4/5] bg-black cursor-pointer min-h-[44px]"
             >
               <img
                 src={insp.thumb}
@@ -399,13 +399,13 @@ export function StudioPreviewPlayer({
               </div>
 
               {/* Botão Play Sobreposto */}
-              <div className="absolute inset-0 m-auto h-9 w-9 rounded-full bg-violet-600/80 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all shadow-lg">
+              <div className="absolute inset-0 m-auto h-10 w-10 rounded-full bg-violet-600/80 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all shadow-lg">
                 <Play className="h-4 w-4 fill-white ml-0.5" />
               </div>
 
               {/* Título e Modelo */}
               <div className="absolute bottom-2 inset-x-2">
-                <div className="text-[11px] font-bold text-white leading-snug line-clamp-1">
+                <div className="text-[11px] font-bold text-white leading-snug line-clamp-1 break-words">
                   {insp.title}
                 </div>
                 <div className="text-[9px] font-mono text-cyan-400">{insp.model}</div>
@@ -420,33 +420,34 @@ export function StudioPreviewPlayer({
         <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-bold text-white">{projectName}</span>
+              <span className="text-sm font-bold text-white truncate max-w-[200px] sm:max-w-md">{projectName}</span>
               <span className="text-xs font-mono text-slate-400">({resultMediaType})</span>
             </div>
             <button
               type="button"
               onClick={() => setIsFullscreen(false)}
-              className="p-2.5 rounded-2xl bg-[#13141B] hover:bg-[#1E202E] text-white cursor-pointer"
+              className="p-2.5 rounded-2xl bg-[#13141B] hover:bg-[#1E202E] text-white cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-label="Fechar tela cheia"
             >
               <X className="h-5 w-5" />
             </button>
           </div>
 
-          <div className="flex-1 flex items-center justify-center p-4 max-h-[85vh]">
+          <div className="flex-1 flex items-center justify-center p-2 sm:p-4 max-h-[80vh] w-full">
             {resultMediaType === "video" && resultMediaUrl ? (
-              <video src={resultMediaUrl} controls autoPlay loop className="max-w-full max-h-full rounded-2xl" />
+              <video src={resultMediaUrl} controls autoPlay loop className="max-w-full max-h-full rounded-2xl aspect-video object-contain" />
             ) : (
               <img src={resultMediaUrl || ""} alt="Full render" className="max-w-full max-h-full object-contain rounded-2xl" />
             )}
           </div>
 
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-3 pt-2">
             <a
               href={resultMediaUrl || "#"}
               download="vorixa-asset"
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold cursor-pointer"
+              className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold cursor-pointer min-h-[44px]"
             >
               <Download className="h-4 w-4" />
               <span>Baixar em Alta Resolução</span>
@@ -457,3 +458,4 @@ export function StudioPreviewPlayer({
     </div>
   );
 }
+

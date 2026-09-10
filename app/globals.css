@@ -283,3 +283,21 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Ocultar barra de rolagem mas permitir scroll (Touch / Mousewheel) */
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+

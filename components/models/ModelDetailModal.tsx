@@ -90,9 +90,9 @@ export function ModelDetailModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md animate-in fade-in-50 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md animate-in fade-in-50 duration-200 overscroll-contain">
       <div
-        className="relative w-full max-w-4xl max-h-[92vh] rounded-3xl bg-[#0D0E12] border border-[#1E202E] shadow-2xl overflow-hidden flex flex-col lg:flex-row animate-in zoom-in-95 duration-200"
+        className="relative w-full sm:max-w-4xl h-full sm:h-auto max-h-screen sm:max-h-[92vh] rounded-none sm:rounded-3xl bg-[#0D0E12] border-0 sm:border border-[#1E202E] shadow-2xl overflow-y-auto lg:overflow-hidden flex flex-col lg:flex-row animate-in zoom-in-95 duration-200 overscroll-contain"
         role="dialog"
         aria-modal="true"
         aria-labelledby="model-detail-title"
@@ -100,18 +100,18 @@ export function ModelDetailModal({
         {/* Glow Superior */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-violet-600/10 blur-3xl pointer-events-none" />
 
-        {/* Botão Fechar Fixo */}
+        {/* Botão Fechar Fixo com Touch Target de 44px */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-30 p-2 rounded-xl bg-[#070709]/90 border border-[#1E202E] hover:border-slate-600 text-slate-400 hover:text-white transition-all cursor-pointer shadow-md"
+          className="absolute top-4 right-4 z-30 p-2.5 rounded-xl bg-[#070709]/90 border border-[#1E202E] hover:border-slate-600 text-slate-400 hover:text-white transition-all cursor-pointer shadow-md min-h-[44px] min-w-[44px] flex items-center justify-center"
           aria-label="Fechar detalhes do modelo"
         >
           <X className="w-4 h-4" />
         </button>
 
         {/* COLUNA ESQUERDA: Carrossel de Mídia em Alta Definição */}
-        <div className="w-full lg:w-1/2 bg-black/50 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#1E202E] p-4">
+        <div className="w-full lg:w-1/2 bg-black/50 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#1E202E] p-4 flex-shrink-0">
           <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden bg-black flex items-center justify-center border border-[#1E202E]">
             {images.length > 0 ? (
               <img
@@ -181,7 +181,7 @@ export function ModelDetailModal({
         </div>
 
         {/* COLUNA DIREITA: Informações Detalhadas, Especificações e Ações */}
-        <div className="w-full lg:w-1/2 p-5 sm:p-7 flex flex-col justify-between overflow-y-auto max-h-[500px] lg:max-h-[92vh] space-y-6">
+        <div className="w-full lg:w-1/2 p-5 sm:p-7 flex flex-col justify-between overflow-y-auto flex-1 lg:max-h-[92vh] space-y-6 overscroll-contain">
           <div className="space-y-4">
             {/* Header de Título & Badges */}
             <div className="space-y-2">

@@ -61,17 +61,16 @@ export function StudioAspectRatioSelector({
         )}
       </div>
 
-      <div className={`grid gap-1.5 ${showOriginal ? "grid-cols-6" : "grid-cols-5"}`}>
+      <div className={`grid gap-1.5 ${showOriginal ? "grid-cols-3 sm:grid-cols-6" : "grid-cols-3 sm:grid-cols-5"}`}>
         {showOriginal && (
           <button
             type="button"
             onClick={() => handleRatioClick("original")}
-            className={`py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
+            className={`py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer min-h-[52px] ${
               imageSize === "original"
                 ? "bg-[#13141B] border-cyan-400 text-white shadow-md shadow-cyan-500/25 ring-1 ring-cyan-400"
                 : "bg-[#070709] border-[#1E202E] text-slate-400 hover:text-slate-200"
             }`}
-            style={{ minHeight: "52px" }}
             title="Preserva o tamanho e proporção exatos da foto anexada"
           >
             <div
@@ -84,7 +83,7 @@ export function StudioAspectRatioSelector({
               📷
             </div>
             <div className="text-[10px] font-bold font-mono">Original</div>
-            <span className="text-[8px] text-cyan-400 font-sans truncate">
+            <span className="text-[8px] text-cyan-400 font-sans truncate max-w-full">
               {originalDimensions
                 ? `${originalDimensions.width}x${originalDimensions.height}`
                 : "Nativo"}
@@ -99,12 +98,11 @@ export function StudioAspectRatioSelector({
               key={ratio.id}
               type="button"
               onClick={() => handleRatioClick(ratio.id)}
-              className={`py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
+              className={`py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer min-h-[52px] ${
                 isSelected
                   ? "bg-[#13141B] border-violet-500 text-white shadow-md shadow-violet-500/20"
                   : "bg-[#070709] border-[#1E202E] text-slate-400 hover:text-slate-200"
               }`}
-              style={{ minHeight: "52px" }}
             >
               <div
                 className={`border border-current rounded-sm ${ratio.iconWidth} ${
@@ -112,7 +110,7 @@ export function StudioAspectRatioSelector({
                 }`}
               />
               <div className="text-[10px] font-bold font-mono">{ratio.label}</div>
-              <span className="text-[8px] text-slate-500 font-sans truncate">{ratio.name}</span>
+              <span className="text-[8px] text-slate-500 font-sans truncate max-w-full">{ratio.name}</span>
             </button>
           );
         })}

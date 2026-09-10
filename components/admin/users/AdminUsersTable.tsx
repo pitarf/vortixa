@@ -306,9 +306,164 @@ export function AdminUsersTable() {
         </div>
       </div>
 
-      {/* Tabela de Usuários */}
-      <div className="bg-slate-950/60 border border-slate-900 rounded-2xl overflow-hidden shadow-xl">
-        <div className="overflow-x-auto">
+      {/* Visualização Mobile em Cards Empilháveis (Oculto em telas sm e maiores) */}
+      <div className="space-y-3 sm:hidden">
+        {loading && users.length === 0 ? (
+          <div className="py-12 text-center text-slate-500 bg-slate-950/60 border border-slate-900 rounded-2xl p-6">
+            <RefreshCw className="h-6 w-6 animate-spin mx-auto text-violet-500 mb-2" />
+            <span className="text-xs">Carregando usuários do sistema...</span>
+          </div>
+        ) : users.length === 0 ? (
+          <div className="py-12 text-center text-slate-500 bg-slate-950/60 border border-slate-900 rounded-2xl p-6 text-xs">
+            Nenhum usuário encontrado com os filtros aplicados.
+          </div>
+        ) : (
+          users.map((user) => {
+            const isSelected = selectedUserIds.includes(user.id);
+            return (
+              <div
+                key={user.id}
+                onClick={() => setDrawerUserId(user.id)}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer space-y-3 ${
+                  isSelected
+                    ? "bg-violet-950/30 border-violet-500/50 shadow-lg shadow-violet-950/30"
+                    : "bg-slate-950/80 border-slate-900 hover:border-slate-800"
+                }`}
+              >
+                {/* Cabeçalho do Card Mobile */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div
+                      className="p-1"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => handleToggleSelectUser(user.id)}
+                        aria-label={`Selecionar usuário ${user.name}`}
+                        className="rounded border-slate-700 bg-slate-900 text-violet-600 focus:ring-violet-500 h-5 w-5 cursor-pointer"
+                      />
+                    </div>
+                    <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0 shadow-md">
+                      {user.image ? (
+                        <img
+                          src={user.image}
+                          alt={user.name}
+                          className="h-full w-full object-cover rounded-xl"
+                        />
+                      ) : (
+                        <span>{(user.name || "U")[0]?.toUpperCase()}</span>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="font-bold text-white text-sm truncate">
+                        {user.name}
+                      </div>
+                      <div className="text-[11px] font-mono text-slate-400 truncate">
+                        {user.email}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <span
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+                        user.role === "ADMIN"
+                          ? "bg-violet-500/20 text-violet-300 border border-violet-500/30"
+                          : "bg-slate-800 text-slate-400"
+                      }`}
+                    >
+                      {user.role}
+                    </span>
+                    <span
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+                        user.isBlocked
+                          ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                          : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                      }`}
+                    >
+                      {user.isBlocked ? "Bloqueado" : "Ativo"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Métricas do Usuário no Mobile */}
+                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-900 text-center">
+                  <div className="bg-slate-900/60 p-2 rounded-xl border border-slate-800/60">
+                    <span className="text-[10px] text-slate-500 font-medium block">Saldo</span>
+                    <span className="text-xs font-mono font-black text-amber-300">
+                      {user.isUnlimited ? "ILIMITADO" : `${user.balance.toLocaleString("pt-BR")} cr`}
+                    </span>
+                  </div>
+
+                  <div className="bg-slate-900/60 p-2 rounded-xl border border-slate-800/60">
+                    <span className="text-[10px] text-slate-500 font-medium block">Recargas</span>
+                    <span className="text-xs font-mono font-bold text-emerald-400">
+                      R$ {user.totalRechargesBrl.toFixed(2).replace(".", ",")}
+                    </span>
+                  </div>
+
+                  <div className="bg-slate-900/60 p-2 rounded-xl border border-slate-800/60">
+                    <span className="text-[10px] text-slate-500 font-medium block">Gerações</span>
+                    <span className="text-xs font-mono font-bold text-cyan-400">
+                      {user.totalJobsCount}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Ações Rápidas Mobile com Touch Targets >= 44px */}
+                <div
+                  className="flex items-center justify-between gap-2 pt-2 border-t border-slate-900"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <span className="text-[10px] font-mono text-slate-500">
+                    {new Date(user.createdAt).toLocaleDateString("pt-BR")}
+                  </span>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={(e) => handleQuickToggleBlock(user, e)}
+                      className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-bold transition-all min-h-[44px] cursor-pointer ${
+                        user.isBlocked
+                          ? "text-emerald-400 border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20"
+                          : "text-amber-400 border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20"
+                      }`}
+                      title={user.isBlocked ? "Desbloquear" : "Bloquear"}
+                    >
+                      {user.isBlocked ? <Shield className="h-4 w-4" /> : <ShieldOff className="h-4 w-4" />}
+                      <span>{user.isBlocked ? "Desbloquear" : "Bloquear"}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={(e) => handleQuickToggleRole(user, e)}
+                      className="p-2.5 rounded-xl text-cyan-400 border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 transition-all min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+                      title={user.role === "ADMIN" ? "Rebaixar para USER" : "Promover a ADMIN"}
+                    >
+                      {user.role === "ADMIN" ? <UserX className="h-4 w-4" /> : <UserCheck className="h-4 w-4" />}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setDrawerUserId(user.id)}
+                      className="p-2.5 rounded-xl text-violet-400 border border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 transition-all min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+                      title="Ver detalhes completos"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Tabela de Usuários (Desktop & Tablet: sm em diante) */}
+      <div className="hidden sm:block bg-slate-950/60 border border-slate-900 rounded-2xl overflow-hidden shadow-xl">
+        <div className="overflow-x-auto overscroll-x-contain">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-slate-900 bg-slate-900/40 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
@@ -491,38 +646,38 @@ export function AdminUsersTable() {
             </tbody>
           </table>
         </div>
+      </div>
 
-        {/* Rodapé com Paginação */}
-        <div className="p-4 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-900/30 text-xs text-slate-400">
-          <span>
-            Exibindo <strong>{users.length}</strong> de <strong>{totalCount}</strong> usuário(s)
+      {/* Rodapé de Paginação Adaptativo (Mobile e Desktop) */}
+      <div className="p-4 rounded-2xl border border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-950/60 text-xs text-slate-400">
+        <span>
+          Exibindo <strong>{users.length}</strong> de <strong>{totalCount}</strong> usuário(s)
+        </span>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page <= 1 || loading}
+            className="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white disabled:opacity-40 transition-colors flex items-center gap-1 cursor-pointer min-h-[44px]"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            <span>Anterior</span>
+          </button>
+
+          <span className="font-mono text-xs px-2 font-bold text-white">
+            {page} / {totalPages}
           </span>
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1 || loading}
-              className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white disabled:opacity-40 transition-colors flex items-center gap-1 cursor-pointer"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              <span>Anterior</span>
-            </button>
-
-            <span className="font-mono text-xs px-2 font-bold text-white">
-              {page} / {totalPages}
-            </span>
-
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page >= totalPages || loading}
-              className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white disabled:opacity-40 transition-colors flex items-center gap-1 cursor-pointer"
-            >
-              <span>Próxima</span>
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page >= totalPages || loading}
+            className="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white disabled:opacity-40 transition-colors flex items-center gap-1 cursor-pointer min-h-[44px]"
+          >
+            <span>Próxima</span>
+            <ChevronRight className="h-4 w-4" />
+          </button>
         </div>
       </div>
 

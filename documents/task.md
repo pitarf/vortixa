@@ -8,6 +8,12 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Refatoração Geral Adaptativa: Mobile-First, Ergonomia Touch e Acessibilidade Total**:
+  - Studio CREATE e componentes do Studio: eliminação de larguras fixas, stepper adaptativo horizontal com `no-scrollbar` e touch targets >= 44x44px.
+  - Ferramenta de Imagem: abas deslizantes tipo pill, seletor de proporção ergonômico com botão "Original 📷" e modal fullscreen no celular.
+  - Ferramentas de Mídia (Vídeo, LipSync, Motion, Upscale): formulários em pilha vertical fluida no mobile, players com aspect-ratio contido e controles acessíveis.
+  - Painel Admin & Vitrine de Modelos: tabelas em cards empilháveis e modais de booking em tela cheia com scroll interno.
+  - 100% de conformidade estática (`tsc --noEmit`) e 163 testes Vitest aprovados.
 - [x] **Correção de Preservação de Cenário, Auto-Otimização de Prompt e Auditoria Integral**:
   - Correção das diretivas de enriquecimento no `PromptEngine`: preservação estrita do fundo e composição quando há imagem de referência, proibição de inventar cafeterias ou pessoas aleatórias e respeito prioritário a ordens negativas ("não muda o cenário").
   - Auto-otimização transparente de prompt diretamente no botão "Gerar" em `/dashboard/tools/image` e `/dashboard/create`, com feedback visual e timeout com `AbortController` (3.5s).

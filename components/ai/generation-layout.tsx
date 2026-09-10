@@ -191,21 +191,21 @@ export function GenerationLayout({
   const hasCredits = creditMode === "UNLIMITED" || balance >= cost;
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-16">
+    <div className="w-full space-y-8 max-w-7xl mx-auto pb-16 overflow-x-hidden">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
           <Wand2 className="h-6 w-6 text-violet-400" />
           <span>{title}</span>
         </h1>
-        <p className="text-sm text-slate-400 mt-1">{description}</p>
+        <p className="text-xs sm:text-sm text-slate-400 mt-1">{description}</p>
       </div>
 
-      {/* Grid Principal */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Grid Principal: 1 Coluna no Mobile e 3 Colunas no Desktop (lg:grid-cols-3) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
         {/* Lado Esquerdo: Configurações */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
+        <div className="w-full lg:col-span-2 space-y-6">
+          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 space-y-6">
             <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
               Parâmetros da Geração
             </h2>
@@ -316,12 +316,12 @@ export function GenerationLayout({
 
                     <div 
                       onClick={() => setFullscreenMedia({ url: outputUrl, isVideo })}
-                      className="group relative mt-4 rounded-xl overflow-hidden border border-border bg-black max-h-[400px] cursor-pointer"
+                      className="group relative mt-4 rounded-xl overflow-hidden border border-border bg-black w-full aspect-video max-h-[400px] flex items-center justify-center cursor-pointer"
                     >
                       {isVideo ? (
-                        <video src={outputUrl} controls className="w-full h-auto max-h-[360px]" />
+                        <video src={outputUrl} controls className="w-full h-full object-contain" />
                       ) : (
-                        <img src={outputUrl} alt="Resultado Gerado" className="w-full h-auto object-cover max-h-[360px] transition-transform duration-300 group-hover:scale-[1.02]" />
+                        <img src={outputUrl} alt="Resultado Gerado" className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]" />
                       )}
 
                       {/* Hover Overlay com Dica de Clique para Expandir */}
@@ -333,11 +333,11 @@ export function GenerationLayout({
                       </div>
                     </div>
 
-                    <div className="pt-2 flex items-center justify-center gap-3">
+                    <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full">
                       <button
                         type="button"
                         onClick={() => setFullscreenMedia({ url: outputUrl, isVideo })}
-                        className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all cursor-pointer"
+                        className="min-h-[44px] flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all cursor-pointer"
                       >
                         <Eye className="w-3.5 h-3.5 text-violet-400" />
                         <span>Visualizar em Tela Cheia</span>
@@ -348,7 +348,7 @@ export function GenerationLayout({
                         target="_blank"
                         rel="noopener noreferrer"
                         download
-                        className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-violet-600 hover:bg-violet-500 text-white transition-all shadow-md shadow-violet-600/20"
+                        className="min-h-[44px] flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold bg-violet-600 hover:bg-violet-500 text-white transition-all shadow-md shadow-violet-600/20"
                       >
                         <Download className="w-3.5 h-3.5" />
                         <span>Baixar Arquivo</span>

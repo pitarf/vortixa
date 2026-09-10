@@ -299,14 +299,14 @@ export default function VideoGenerationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070709] text-slate-100 p-3 sm:p-5 lg:p-6 space-y-6 max-w-[1700px] mx-auto font-sans">
+    <div className="w-full min-h-screen bg-[#070709] text-slate-100 p-3 sm:p-5 lg:p-6 space-y-6 max-w-[1700px] mx-auto font-sans overflow-x-hidden">
       {/* 1. Header com Título, Subtítulo e Citação VORIXA */}
       <VideoHeader />
 
-      {/* 2. Grid Principal em 2 Colunas: Controles à Esquerda e Preview/Player à Direita */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      {/* 2. Grid Principal: 1 Coluna no Mobile e 2 Colunas no Desktop (lg:grid-cols-12) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
         {/* Coluna da Esquerda: Blocos 1, 2, 3 e Barra de Ação */}
-        <div className="lg:col-span-6 space-y-4">
+        <div className="w-full lg:col-span-6 space-y-4">
           {/* Card 1: Entrada */}
           <VideoInputSection
             creationMode={creationMode}
@@ -359,7 +359,7 @@ export default function VideoGenerationPage() {
         </div>
 
         {/* Coluna da Direita: Preview Player com Variações Recentes */}
-        <div className="lg:col-span-6 sticky top-6">
+        <div className="w-full lg:col-span-6 lg:sticky lg:top-6">
           <VideoPreviewPlayer
             isGenerating={isGenerating}
             activeStepText={activeStepText}

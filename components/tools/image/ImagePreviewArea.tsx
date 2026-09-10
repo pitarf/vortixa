@@ -57,38 +57,36 @@ export function ImagePreviewArea({
         {/* Header do Preview */}
         <div className="flex items-center justify-between border-b border-[#1E202E] pb-3">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-xs font-bold uppercase tracking-wider text-slate-200">
               Preview
             </span>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <button
               type="button"
               onClick={onToggleFullscreen}
-              className="p-1.5 rounded-lg bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 hover:text-white transition-colors text-xs flex items-center gap-1.5 cursor-pointer"
+              className="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 hover:text-white transition-colors text-xs flex items-center gap-1.5 cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
               title="Tela Cheia"
-              style={{ minHeight: "32px" }}
             >
-              <Maximize2 className="w-3.5 h-3.5" />
-              <span className="text-[11px] font-semibold">Tela Cheia</span>
+              <Maximize2 className="w-4 h-4" />
+              <span className="text-xs font-semibold hidden sm:inline">Tela Cheia</span>
             </button>
 
             <button
               type="button"
               onClick={onCopyPrompt}
-              className="p-1.5 rounded-lg bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
+              className="p-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation active:scale-[0.98]"
               title="Copiar Prompt"
-              style={{ minHeight: "32px", minWidth: "32px" }}
             >
-              <Copy className="w-3.5 h-3.5" />
+              <Copy className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Canvas Principal com Imagem Ativa */}
-        <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-[#1E202E] bg-slate-100/90 dark:bg-black/80 flex items-center justify-center min-h-[380px] max-h-[480px] shadow-sm dark:shadow-2xl">
+        <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-[#1E202E] bg-slate-100/90 dark:bg-black/80 flex items-center justify-center min-h-[300px] sm:min-h-[380px] max-h-[520px] aspect-square sm:aspect-auto shadow-sm dark:shadow-2xl">
           {isGenerating ? (
             <div className="flex flex-col items-center justify-center gap-3 p-6 text-center">
               <div className="relative h-14 w-14 rounded-2xl bg-gradient-to-tr from-violet-600 to-cyan-500 p-0.5 animate-spin">
@@ -109,7 +107,7 @@ export function ImagePreviewArea({
             <img
               src={activeResultUrl}
               alt="Preview Gerado"
-              className="w-full h-full object-contain max-h-[460px] rounded-xl transition-all duration-300 hover:scale-[1.01]"
+              className="w-full h-full object-contain max-h-[480px] rounded-xl transition-all duration-300 hover:scale-[1.01]"
             />
           ) : (
             <div className="flex flex-col items-center justify-center gap-3 p-8 text-center text-slate-400 dark:text-slate-500">
@@ -131,25 +129,27 @@ export function ImagePreviewArea({
           <div className="space-y-2 pt-1">
             <div className="flex items-center justify-between text-xs text-slate-400">
               <span className="font-semibold">Gerações Recentes</span>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1.5">
                 <button
                   type="button"
                   onClick={onPrevVariation}
-                  className="p-1 rounded bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 cursor-pointer"
+                  className="p-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center touch-manipulation"
+                  title="Anterior"
                 >
-                  <ChevronLeft className="w-3.5 h-3.5" />
+                  <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   type="button"
                   onClick={onNextVariation}
-                  className="p-1 rounded bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 cursor-pointer"
+                  className="p-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center touch-manipulation"
+                  title="Próxima"
                 >
-                  <ChevronRight className="w-3.5 h-3.5" />
+                  <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-5 gap-2">
+            <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 overflow-x-auto pb-1">
               {variations.map((url, idx) => {
                 const isActive = activeResultUrl === url;
                 return (
@@ -157,7 +157,7 @@ export function ImagePreviewArea({
                     key={idx}
                     type="button"
                     onClick={() => onSelectVariation(url, idx)}
-                    className={`relative rounded-xl overflow-hidden border aspect-square cursor-pointer transition-all ${
+                    className={`relative rounded-xl overflow-hidden border aspect-square cursor-pointer transition-all min-h-[48px] touch-manipulation active:scale-[0.98] ${
                       isActive
                         ? "border-cyan-400 shadow-md shadow-cyan-400/30 ring-1 ring-cyan-400 scale-[1.02]"
                         : "border-[#1E202E] hover:border-slate-600 opacity-70 hover:opacity-100"
@@ -173,79 +173,86 @@ export function ImagePreviewArea({
 
         {/* Barra de Ações Rápidas abaixo do Preview */}
         {Boolean(activeResultUrl) && (
-          <div className="grid grid-cols-4 gap-2 pt-2 border-t border-[#1E202E]">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-[#1E202E]">
             <button
               type="button"
               onClick={onDownload}
-              className="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer"
+              className="flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
               title="Download em alta resolução"
-              style={{ minHeight: "38px" }}
             >
-              <Download className="w-3.5 h-3.5 text-cyan-400" />
+              <Download className="w-4 h-4 text-cyan-400 shrink-0" />
               <span>Baixar</span>
             </button>
 
             <button
               type="button"
               onClick={onVary}
-              className="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer"
+              className="flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
               title="Gerar variação com mesma seed"
-              style={{ minHeight: "38px" }}
             >
-              <RefreshCw className="w-3.5 h-3.5 text-violet-400" />
+              <RefreshCw className="w-4 h-4 text-violet-400 shrink-0" />
               <span>Variar</span>
             </button>
 
             <button
               type="button"
               onClick={onUpscale}
-              className="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer"
+              className="flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
               title="Restauração neural em 4K"
-              style={{ minHeight: "38px" }}
             >
-              <Zap className="w-3.5 h-3.5 text-amber-400" />
+              <Zap className="w-4 h-4 text-amber-400 shrink-0" />
               <span>Upscale 4K</span>
             </button>
 
             <button
               type="button"
               onClick={onSendToFlow}
-              className="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer"
+              className="flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
               title="Enviar para o VORIXA FLOW"
-              style={{ minHeight: "38px" }}
             >
-              <Boxes className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="truncate">Usar no Canvas</span>
+              <Boxes className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span className="truncate">No Canvas</span>
             </button>
           </div>
         )}
       </div>
 
-      {/* Modal de Tela Cheia */}
+      {/* Modal de Tela Cheia com overscroll-contain e trava de scroll de fundo */}
       {isFullscreen && (
-        <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4 backdrop-blur-md">
-          <div className="absolute top-4 right-4 flex items-center gap-2">
-            <button
-              type="button"
-              onClick={onDownload}
-              className="px-3 py-1.5 rounded-xl bg-[#13141B] border border-[#1E202E] hover:border-slate-700 text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
-            >
-              <Download className="w-4 h-4 text-cyan-400" />
-              <span>Baixar</span>
-            </button>
-            <button
-              type="button"
-              onClick={onToggleFullscreen}
-              className="p-2 rounded-xl bg-[#13141B] border border-[#1E202E] hover:border-slate-700 text-white cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
+        <div
+          className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-3 sm:p-6 backdrop-blur-md overscroll-contain touch-none"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="w-full flex items-center justify-between pb-3 max-w-6xl">
+            <span className="text-xs font-mono text-slate-400">Visualização Completa</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={onDownload}
+                className="px-4 py-2 rounded-xl bg-[#13141B] border border-[#1E202E] hover:border-slate-700 text-white text-xs font-semibold flex items-center gap-2 cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
+              >
+                <Download className="w-4 h-4 text-cyan-400" />
+                <span>Baixar Imagem</span>
+              </button>
+              <button
+                type="button"
+                onClick={onToggleFullscreen}
+                className="p-2.5 rounded-xl bg-[#13141B] border border-[#1E202E] hover:border-slate-700 text-white cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation active:scale-[0.98]"
+                aria-label="Fechar tela cheia"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
           </div>
-          <img
-            src={activeResultUrl}
-            alt="Tela Cheia"
-            className="max-h-[85vh] max-w-[90vw] object-contain rounded-2xl shadow-2xl"
-          />
+
+          <div className="flex-1 w-full flex items-center justify-center overflow-auto p-2">
+            <img
+              src={activeResultUrl}
+              alt="Tela Cheia"
+              className="max-h-[80vh] sm:max-h-[85vh] max-w-full object-contain rounded-2xl shadow-2xl"
+            />
+          </div>
         </div>
       )}
     </>

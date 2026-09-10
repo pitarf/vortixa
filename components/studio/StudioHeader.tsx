@@ -80,9 +80,9 @@ export function StudioHeader({
         {/* Controles de Projeto e Ações Rápidas */}
         <div className="flex items-center gap-2.5 flex-wrap">
           {/* Nome do Projeto Editável */}
-          <div className="flex items-center bg-[#0D0E12] border border-[#1E202E] rounded-xl px-3 py-1.5 focus-within:border-violet-500 transition-all">
+          <div className="flex items-center bg-[#0D0E12] border border-[#1E202E] rounded-xl px-3 py-1.5 focus-within:border-violet-500 transition-all min-h-[44px]">
             {isEditingName ? (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 w-full">
                 <input
                   type="text"
                   value={tempProjectName}
@@ -93,25 +93,25 @@ export function StudioHeader({
                     }
                   }}
                   autoFocus
-                  className="bg-transparent text-xs text-white outline-none w-36 font-semibold"
+                  className="bg-transparent text-xs text-white outline-none w-32 sm:w-40 font-semibold"
                 />
                 <button
                   type="button"
                   onClick={onConfirmProjectName}
-                  className="text-emerald-400 hover:text-emerald-300 cursor-pointer"
+                  className="p-1 text-emerald-400 hover:text-emerald-300 cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg hover:bg-[#13141B]"
                   aria-label="Confirmar nome"
                 >
-                  <Check className="h-3.5 w-3.5" />
+                  <Check className="h-4 w-4" />
                 </button>
               </div>
             ) : (
               <button
                 type="button"
                 onClick={onStartEditingName}
-                className="flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-white cursor-pointer group"
+                className="flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-white cursor-pointer group w-full h-full"
               >
-                <span className="truncate max-w-[140px]">{projectName}</span>
-                <Pencil className="h-3 w-3 text-slate-500 group-hover:text-violet-400 transition-colors" />
+                <span className="truncate max-w-[120px] sm:max-w-[160px] md:max-w-[200px]">{projectName}</span>
+                <Pencil className="h-3.5 w-3.5 text-slate-500 group-hover:text-violet-400 transition-colors shrink-0" />
               </button>
             )}
           </div>
@@ -120,8 +120,7 @@ export function StudioHeader({
           <button
             type="button"
             onClick={onSaveProject}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0D0E12] hover:bg-[#13141B] border border-[#1E202E] text-xs font-bold text-slate-300 hover:text-white transition-all cursor-pointer"
-            style={{ minHeight: "44px" }}
+            className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#0D0E12] hover:bg-[#13141B] border border-[#1E202E] text-xs font-bold text-slate-300 hover:text-white transition-all cursor-pointer min-h-[44px] min-w-[44px]"
           >
             <span>Salvar</span>
           </button>
@@ -131,33 +130,32 @@ export function StudioHeader({
             <button
               type="button"
               onClick={onToggleMenu}
-              className="p-2.5 rounded-xl bg-[#0D0E12] hover:bg-[#13141B] border border-[#1E202E] text-slate-400 hover:text-white transition-all cursor-pointer"
-              style={{ minHeight: "44px", minWidth: "44px" }}
+              className="p-2.5 rounded-xl bg-[#0D0E12] hover:bg-[#13141B] border border-[#1E202E] text-slate-400 hover:text-white transition-all cursor-pointer flex items-center justify-center min-h-[44px] min-w-[44px]"
               aria-label="Mais opções"
             >
               <MoreHorizontal className="h-4 w-4" />
             </button>
 
             {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-[#0D0E12] border border-[#1E202E] shadow-2xl p-1.5 z-50 text-xs space-y-1">
+              <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-[#0D0E12] border border-[#1E202E] shadow-2xl p-1.5 z-50 text-xs space-y-1">
                 <button
                   type="button"
                   onClick={onClearFields}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#13141B] text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  className="w-full text-left px-3.5 py-2.5 rounded-lg hover:bg-[#13141B] text-slate-300 hover:text-white transition-colors cursor-pointer min-h-[44px] flex items-center"
                 >
                   Limpar todos os campos
                 </button>
                 <button
                   type="button"
                   onClick={onCopyPrompt}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#13141B] text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  className="w-full text-left px-3.5 py-2.5 rounded-lg hover:bg-[#13141B] text-slate-300 hover:text-white transition-colors cursor-pointer min-h-[44px] flex items-center"
                 >
                   Copiar prompt atual
                 </button>
                 <button
                   type="button"
                   onClick={onOpenLibrary}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#13141B] text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  className="w-full text-left px-3.5 py-2.5 rounded-lg hover:bg-[#13141B] text-slate-300 hover:text-white transition-colors cursor-pointer min-h-[44px] flex items-center"
                 >
                   Abrir Galeria & Histórico
                 </button>
@@ -170,8 +168,7 @@ export function StudioHeader({
             type="button"
             onClick={onOpenInFlow}
             disabled={isOpeningInFlow}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-90 active:scale-95 text-white text-xs font-bold shadow-lg shadow-violet-600/25 transition-all cursor-pointer disabled:opacity-50"
-            style={{ minHeight: "44px" }}
+            className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-90 active:scale-95 text-white text-xs font-bold shadow-lg shadow-violet-600/25 transition-all cursor-pointer disabled:opacity-50 min-h-[44px]"
           >
             <Boxes className="h-4 w-4" />
             <span>{isOpeningInFlow ? "Criando Flow..." : "Enviar para o Flow"}</span>
@@ -179,9 +176,9 @@ export function StudioHeader({
         </div>
       </div>
 
-      {/* Workflow Stepper Horizontal */}
-      <div className="overflow-x-auto pb-1">
-        <div className="flex items-center justify-between min-w-[700px] gap-2 p-1.5 bg-[#0D0E12] border border-[#1E202E] rounded-2xl">
+      {/* Workflow Stepper Horizontal adaptável com touch scroll suave */}
+      <div className="w-full overflow-x-auto no-scrollbar touch-pan-x pb-1 -mx-1 px-1 sm:mx-0 sm:px-0">
+        <div className="flex items-center justify-between min-w-[620px] md:min-w-full gap-2 p-1.5 bg-[#0D0E12] border border-[#1E202E] rounded-2xl">
           {WORKFLOW_STEPS.map((item, idx) => {
             const isActive = activeStep === item.step;
             return (
@@ -189,14 +186,14 @@ export function StudioHeader({
                 <button
                   type="button"
                   onClick={() => onStepChange(item.step)}
-                  className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-left transition-all cursor-pointer flex-1 ${
+                  className={`flex items-center gap-2.5 sm:gap-3 px-3 sm:px-4 py-2.5 rounded-xl text-left transition-all cursor-pointer flex-1 min-h-[44px] ${
                     isActive
                       ? "bg-cyan-950/30 border border-cyan-500/80 shadow-[0_0_15px_rgba(6,182,212,0.15)]"
                       : "hover:bg-[#13141B] opacity-75 hover:opacity-100"
                   }`}
                 >
                   <div
-                    className={`h-7 w-7 rounded-lg flex items-center justify-center text-xs font-black font-mono transition-all ${
+                    className={`h-7 w-7 rounded-lg flex items-center justify-center text-xs font-black font-mono shrink-0 transition-all ${
                       isActive
                         ? "bg-gradient-to-tr from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-500/30"
                         : "bg-[#13141B] border border-[#1E202E] text-slate-400"
@@ -204,11 +201,11 @@ export function StudioHeader({
                   >
                     {item.step}
                   </div>
-                  <div>
-                    <div className={`text-xs font-bold leading-tight ${isActive ? "text-cyan-300" : "text-slate-200"}`}>
+                  <div className="min-w-0">
+                    <div className={`text-xs font-bold leading-tight truncate ${isActive ? "text-cyan-300" : "text-slate-200"}`}>
                       {item.title}
                     </div>
-                    <div className="text-[10px] text-slate-500 font-medium">{item.subtitle}</div>
+                    <div className="text-[10px] text-slate-500 font-medium truncate">{item.subtitle}</div>
                   </div>
                 </button>
 

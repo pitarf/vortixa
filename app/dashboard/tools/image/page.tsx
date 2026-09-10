@@ -441,14 +441,14 @@ export default function ImageGenerationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070709] text-slate-100 p-3 sm:p-5 lg:p-6 space-y-6 max-w-[1700px] mx-auto font-sans">
+    <div className="min-h-screen bg-[#070709] text-slate-100 p-3 sm:p-5 lg:p-6 space-y-4 sm:space-y-6 max-w-[1700px] mx-auto font-sans">
       {/* 1. Header Oficial: "Crie imagens incríveis com IA" + Citação artística */}
       <ImageHeader />
 
-      {/* 2. Grid Principal em 2 Colunas: Controles à Esquerda e Preview à Direita */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Coluna da Esquerda: Entrada, Proporção & Qualidade (SEM Estilo), Barra de Ação */}
-        <div className="lg:col-span-6 space-y-4">
+      {/* 2. Grid Principal Adaptativo: 1 Coluna em Mobile (< 1024px) / 2 Colunas em Desktop */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+        {/* Coluna da Esquerda: Entrada, Proporção & Qualidade, Barra de Ação */}
+        <div className="lg:col-span-6 space-y-4 sm:space-y-5">
           {/* Card 1: Entrada (Abas de Fluxo, Prompt, Inspirar/Aleatório/Limpar, Upload) */}
           <ImageInputSection
             creationMode={creationMode}
@@ -470,7 +470,7 @@ export default function ImageGenerationPage() {
             activeModelName={activeShowcaseModel?.name || null}
           />
 
-          {/* Card 2: Proporção da Imagem e Qualidade (SEM Estilo) + Avançado */}
+          {/* Card 2: Proporção da Imagem e Qualidade + Avançado */}
           <ImageSettingsSection
             aspectRatio={aspectRatio}
             onChangeAspectRatio={setAspectRatio}
@@ -498,7 +498,7 @@ export default function ImageGenerationPage() {
         </div>
 
         {/* Coluna da Direita: Preview Player com Gerações Recentes do Usuário */}
-        <div className="lg:col-span-6 sticky top-6">
+        <div className="lg:col-span-6 lg:sticky lg:top-6 space-y-4">
           <ImagePreviewArea
             isGenerating={isGenerating}
             activeStepText={activeStepText}

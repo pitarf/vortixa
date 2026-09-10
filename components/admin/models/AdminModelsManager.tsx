@@ -364,8 +364,154 @@ export function AdminModelsManager() {
         </div>
       </div>
 
-      {/* Tabela Administrativa Mobile-first */}
-      <div className="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden shadow-xl">
+      {/* Visualização Mobile em Cards Empilháveis (Oculto em telas sm e maiores) */}
+      <div className="space-y-3 sm:hidden">
+        {loading && models.length === 0 ? (
+          <div className="py-20 text-center text-neutral-400 bg-neutral-900 border border-neutral-800 rounded-2xl p-6">
+            <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-3 text-violet-500 opacity-60" />
+            <p className="text-sm">Carregando catálogo de modelos...</p>
+          </div>
+        ) : models.length === 0 ? (
+          <div className="py-16 text-center text-neutral-400 bg-neutral-900 border border-neutral-800 rounded-2xl p-6">
+            <Layers className="w-10 h-10 mx-auto mb-3 text-neutral-600" />
+            <p className="text-base font-semibold text-neutral-300">Nenhum modelo encontrado</p>
+            <p className="text-xs text-neutral-500 mt-1 max-w-sm mx-auto">
+              Nenhum modelo corresponde aos critérios de busca ou filtros selecionados.
+            </p>
+            <button
+              onClick={handleOpenCreate}
+              className="mt-4 px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold rounded-xl transition min-h-[44px]"
+            >
+              Cadastrar Primeiro Modelo
+            </button>
+          </div>
+        ) : (
+          models.map((model) => {
+            const isUpdating = updatingStatusId === model.id;
+
+            return (
+              <div
+                key={model.id}
+                className="p-4 rounded-2xl bg-neutral-900 border border-neutral-800 space-y-3"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-neutral-800 border border-neutral-700/80 flex-shrink-0">
+                      <img
+                        src={model.avatarUrl || "/placeholder-avatar.png"}
+                        alt={model.name}
+                        className="w-full h-full object-cover"
+                      />
+                      {model.isHot18 && (
+                        <div className="absolute top-0 right-0 p-0.5 bg-rose-600 text-white rounded-bl-lg">
+                          <Flame className="w-2.5 h-2.5" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-bold text-white text-sm truncate">
+                          {model.name}
+                        </span>
+                        {model.isFeatured && (
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                            Destaque
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs text-neutral-500 font-mono block truncate">
+                        /{model.slug}
+                      </span>
+                    </div>
+                  </div>
+
+                  <span
+                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold flex-shrink-0 ${
+                      model.type === "AI"
+                        ? "bg-violet-500/10 text-violet-400 border border-violet-500/20"
+                        : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                    }`}
+                  >
+                    {model.type === "AI" ? (
+                      <>
+                        <Sparkles className="w-3 h-3" /> IA
+                      </>
+                    ) : (
+                      <>
+                        <User className="w-3 h-3" /> Real
+                      </>
+                    )}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-neutral-800/80">
+                  <div className="bg-neutral-950/60 p-2.5 rounded-xl border border-neutral-800/60">
+                    <span className="text-[10px] text-neutral-400 font-medium block">Categoria</span>
+                    <span className="text-xs text-white font-medium">{model.category}</span>
+                  </div>
+
+                  <div className="bg-neutral-950/60 p-2.5 rounded-xl border border-neutral-800/60">
+                    <span className="text-[10px] text-neutral-400 font-medium block">Preço</span>
+                    {model.type === "AI" ? (
+                      <span className="text-xs text-violet-300 font-bold">{model.creditsPricePerGen || 5} cr/gen</span>
+                    ) : (
+                      <span className="text-xs text-emerald-400 font-bold">
+                        {model.bookingPriceCents ? `R$ ${(model.bookingPriceCents / 100).toFixed(2)}` : "A combinar"}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 gap-2">
+                  <button
+                    disabled={isUpdating}
+                    onClick={() => handleToggleStatus(model)}
+                    className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition min-h-[44px] cursor-pointer ${
+                      model.status
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20"
+                        : "bg-neutral-800 text-neutral-400 border border-neutral-700 hover:bg-neutral-700"
+                    }`}
+                  >
+                    <span className={`w-2 h-2 rounded-full ${model.status ? "bg-emerald-400" : "bg-neutral-500"}`} />
+                    <span>{model.status ? "Ativo" : "Pausado"}</span>
+                  </button>
+
+                  <div className="flex items-center gap-1">
+                    {model.type === "REAL" && (
+                      <button
+                        onClick={() => handleOpenBookings(model.id)}
+                        className="p-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-amber-400 transition min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+                        title="Ver Reservas"
+                      >
+                        <Calendar className="w-4 h-4" />
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => handleOpenEdit(model)}
+                      className="p-2.5 rounded-xl text-neutral-300 hover:text-white bg-neutral-800 hover:bg-neutral-700 transition min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+                      title="Editar Modelo"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      onClick={() => setModelToDelete(model)}
+                      className="p-2.5 rounded-xl text-rose-400 hover:bg-rose-500/20 bg-rose-500/10 border border-rose-500/20 transition min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+                      title="Excluir Modelo"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Tabela Administrativa (Desktop & Tablet: sm em diante) */}
+      <div className="hidden sm:block bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden shadow-xl">
         {loading && models.length === 0 ? (
           <div className="py-20 text-center text-neutral-400">
             <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-3 text-violet-500 opacity-60" />
@@ -386,7 +532,7 @@ export function AdminModelsManager() {
             </button>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto overscroll-x-contain">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-neutral-800 bg-neutral-950/60 text-neutral-400 text-[11px] uppercase tracking-wider font-semibold">
