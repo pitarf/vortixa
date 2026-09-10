@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { Check, ArrowRight, Zap, Activity } from "lucide-react";
