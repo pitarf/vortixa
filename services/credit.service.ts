@@ -137,9 +137,15 @@ export class CreditService {
       const currentBalance = balanceRecord?.balance || 0;
       const newBalance = currentBalance + amount;
 
-      await tx.creditBalance.update({
+      await tx.creditBalance.upsert({
         where: { userId },
-        data: { balance: newBalance },
+        create: {
+          userId,
+          balance: amount,
+        },
+        update: {
+          balance: { increment: amount },
+        },
       });
 
       await tx.creditTransaction.create({

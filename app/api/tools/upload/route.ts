@@ -46,7 +46,10 @@ export async function POST(req: Request) {
       if (process.env.FAL_KEY) {
         fal.config({ credentials: process.env.FAL_KEY });
       }
-      const url = await fal.storage.upload(file);
+      // Cria uma File com nome limpo sem espaços, acentos ou caracteres especiais (ex: foto T&A-125.jpg -> safe-uuid.jpg)
+      // para garantir que a GPU da fal.ai e Kling baixe sem erro de encoding na URL
+      const cleanFile = new File([buffer], uniqueName, { type: file.type || "image/jpeg" });
+      const url = await fal.storage.upload(cleanFile);
       return NextResponse.json({ url, localUrl });
     }
 
