@@ -30,19 +30,23 @@ export class AIService {
       throw new Error("Esta ferramenta está temporariamente desativada.");
     }
 
-    // Se o cliente especificou um modelId alternativo ativo, resolvemos dinamicamente
+    // Se o cliente especificou um modelId alternativo, resolvemos dinamicamente com validação estrita
     let targetModel = tool.model;
     if (request.modelId && request.modelId !== tool.model.id) {
       const customModel = await prisma.aIModel.findUnique({
         where: { id: request.modelId },
       });
-      if (customModel && customModel.status) {
-        targetModel = customModel;
+      if (!customModel) {
+        throw new Error(`O modelo solicitado (${request.modelId}) não foi encontrado no sistema.`);
       }
+      if (!customModel.status) {
+        throw new Error(`O modelo ${customModel.name} está temporariamente desativado.`);
+      }
+      targetModel = customModel;
     }
 
     if (!targetModel.status) {
-      throw new Error("Este modelo de IA está temporariamente desativado.");
+      throw new Error(`O modelo ${targetModel.name} está temporariamente desativado.`);
     }
 
     // 2. Validação de Idempotência
