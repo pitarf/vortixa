@@ -1,40 +1,51 @@
 ﻿"use client";
 
-import { useLayoutEffect, useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+import { useEffect, useRef } from "react";
 
 /**
- * Hook customizado para encapsular animacoes GSAP no React 19 / Next.js.
- * Utiliza gsap.context() para gerenciar escopo atomico de seletores e cleanup automatico ao desmontar.
+ * Hook seguro para GSAP em Next.js / Turbopack (Client-Side Dynamic Import).
+ * Carrega o GSAP e o ScrollTrigger assincronamente apenas no navegador,
+ * evitando quebra de execucao no bundle SSR do Next.js.
  */
 export function useGsapContext(
-  animationCallback: (context: gsap.Context) => void,
+  animationCallback: (gsapInstance: any, scrollTriggerInstance: any, context: any) => void,
   dependencies: any[] = []
 ) {
   const scopeRef = useRef<HTMLDivElement>(null);
 
-  useIsomorphicLayoutEffect(() => {
-    if (typeof window === "undefined") return;
+  useEffect(() => {
+    let ctx: any = null;
 
-    gsap.registerPlugin(ScrollTrigger);
+    const initGsap = async () => {
+      try {
+        if (typeof window === "undefined") return;
 
-    // Respeita preferencias de acessibilidade de movimento reduzido
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (prefersReducedMotion) return;
 
-    const ctx = gsap.context(() => {
-      animationCallback(ctx);
-    }, scopeRef);
+        const { gsap } = await import("gsap");
+        const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        if (scopeRef.current) {
+          ctx = gsap.context(() => {
+            animationCallback(gsap, ScrollTrigger, ctx);
+          }, scopeRef);
+        }
+      } catch (err) {
+        console.warn("GSAP animation skipped:", err);
+      }
+    };
+
+    initGsap();
 
     return () => {
-      ctx.revert(); // Reverte todas as propriedades CSS e remove ScrollTriggers criados
+      if (ctx && typeof ctx.revert === "function") {
+        ctx.revert();
+      }
     };
   }, dependencies);
 
   return scopeRef;
 }
-
-export { gsap, ScrollTrigger };

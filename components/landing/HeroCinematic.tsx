@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Zap, Volume2, VolumeX } from "lucide-react";
-import { useGsapContext, gsap } from "@/hooks/useGsapContext";
+import { useGsapContext } from "@/hooks/useGsapContext";
 
 /**
  * Hero Section Oficial no padrão exato Octuz AI / Higgsfield animada com GSAP.
@@ -12,7 +12,7 @@ import { useGsapContext, gsap } from "@/hooks/useGsapContext";
 export function HeroCinematic() {
   const [isMuted, setIsMuted] = useState<boolean>(true);
 
-  const containerRef = useGsapContext(() => {
+  const containerRef = useGsapContext((gsap) => {
     // Timeline de entrada orquestrada
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 

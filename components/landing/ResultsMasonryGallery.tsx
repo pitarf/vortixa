@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Copy, Check } from "lucide-react";
-import { useGsapContext, gsap } from "@/hooks/useGsapContext";
+import { useGsapContext } from "@/hooks/useGsapContext";
 
 /**
  * Galeria Editorial Estática e Limpa com Revelação Suave via GSAP ScrollTrigger:
@@ -14,7 +14,7 @@ export function ResultsMasonryGallery() {
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [copiedId, setCopiedId] = useState<number | null>(null);
 
-  const containerRef = useGsapContext(() => {
+  const containerRef = useGsapContext((gsap) => {
     gsap.from(".gallery-header-block", {
       scrollTrigger: {
         trigger: ".gallery-header-block",

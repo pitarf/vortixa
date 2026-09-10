@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Check, Zap, ArrowRight, ShieldCheck, XCircle } from "lucide-react";
-import { useGsapContext, gsap } from "@/hooks/useGsapContext";
+import { useGsapContext } from "@/hooks/useGsapContext";
 
 /**
  * Seção de Preços, Economia e Garantia com Quebra de Ritmo (Fundo Claro / Off-White) animada com GSAP.
@@ -11,7 +11,7 @@ import { useGsapContext, gsap } from "@/hooks/useGsapContext";
 export function PricingSection() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
 
-  const containerRef = useGsapContext(() => {
+  const containerRef = useGsapContext((gsap) => {
     gsap.from(".pricing-header-block", {
       scrollTrigger: {
         trigger: ".pricing-header-block",

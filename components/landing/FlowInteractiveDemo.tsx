@@ -12,12 +12,12 @@ import {
   CheckCircle2,
   Cpu,
 } from "lucide-react";
-import { useGsapContext, gsap } from "@/hooks/useGsapContext";
+import { useGsapContext } from "@/hooks/useGsapContext";
 
 export function FlowInteractiveDemo() {
   const [activeStep, setActiveStep] = useState<number>(1);
 
-  const containerRef = useGsapContext(() => {
+  const containerRef = useGsapContext((gsap) => {
     gsap.from(".flow-header-block", {
       scrollTrigger: {
         trigger: ".flow-header-block",

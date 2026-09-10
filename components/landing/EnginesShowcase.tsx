@@ -3,7 +3,7 @@
 import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { Check, ArrowRight, Zap, Activity } from "lucide-react";
-import { useGsapContext, gsap } from "@/hooks/useGsapContext";
+import { useGsapContext } from "@/hooks/useGsapContext";
 
 /**
  * Seção de Recursos e Workflows com Animações GSAP ScrollTrigger e Comportamentos Diferenciados.
@@ -12,7 +12,7 @@ export function EnginesShowcase() {
   const [sliderPosition, setSliderPosition] = useState<number>(50);
   const sliderRef = useRef<HTMLDivElement>(null);
 
-  const sectionRef = useGsapContext(() => {
+  const sectionRef = useGsapContext((gsap) => {
     // 1. Entrada do Cabeçalho da Seção
     gsap.from(".showcase-header", {
       scrollTrigger: {
