@@ -118,16 +118,38 @@ export class AIService {
 
       // 7. Processar e enriquecer prompt (se presente) com a IA da fal.ai (LLM) e fallback
       const processedInputs = { ...request.inputs };
-      const hasReferenceImage = Boolean(processedInputs.image_url || processedInputs.image || processedInputs.reference_image_url);
+      const hasReferenceImage = Boolean(
+        processedInputs.image_url ||
+        processedInputs.image ||
+        processedInputs.reference_image_url ||
+        processedInputs.prompt_image_url ||
+        (Array.isArray(processedInputs.image_urls) && processedInputs.image_urls.length > 0) ||
+        (typeof processedInputs.image_urls === "string" && processedInputs.image_urls.trim().length > 0)
+      );
 
       if (processedInputs.prompt && typeof processedInputs.prompt === "string") {
-        const optimized = await PromptEngine.optimizeAsync(processedInputs.prompt, {
-          enhanceQuality: true,
-          toolType: request.toolSlug.includes("video") ? "video" : "image",
-          style: processedInputs.style,
-          hasReferenceImage,
-        });
-        processedInputs.prompt = optimized.optimizedPrompt;
+        const shouldOptimize = !processedInputs.is_prompt_optimized && !processedInputs.skip_prompt_optimization;
+
+        if (shouldOptimize) {
+          const optimized = await PromptEngine.optimizeAsync(processedInputs.prompt, {
+            enhanceQuality: true,
+            toolType: request.toolSlug.includes("video") ? "video" : "image",
+            style: processedInputs.style,
+            hasReferenceImage,
+          });
+          processedInputs.prompt = optimized.optimizedPrompt;
+
+          // Registra o prompt otimizado no Ledger/JobInputs para auditoria
+          if (optimized.optimizedPrompt !== request.inputs.prompt) {
+            await prisma.aIJobInput.create({
+              data: {
+                jobId: job.id,
+                key: "optimized_prompt",
+                value: optimized.optimizedPrompt,
+              },
+            }).catch(() => {});
+          }
+        }
       }
 
       // 8. Submeter ao Provedor (Factory escolhe Live Fal.ai, WaveSpeed ou Mock)

@@ -5,6 +5,19 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.8.2] - 2026-09-09
+### Correção de Preservação de Cenário, Auto-Otimização de Prompt e Auditoria Integral
+- **Correção da Diretiva de Preservação de Cenário (`services/ai/prompt-engine.service.ts`)**:
+  - Removidas as regras fixas que forçavam cenários de cafeteria/escritório contemporâneo e pessoas de fundo aleatórias quando uma imagem de referência é enviada.
+  - Implementada a diretiva estrita `CRITICAL REFERENCE IMAGE & SCENE PRESERVATION DIRECTIVE`: ordens negativas de usuário como "não muda o cenário" têm prioridade máxima; efeitos mágicos solicitados (feitiço verde) são gerados como partículas volumétricas e iluminação mística sobre os personagens já presentes, sem alterar pose, figurino ou local.
+- **Auto-Otimização Transparente ao Clicar em Gerar**:
+  - Implementado em `/dashboard/tools/image` e no Studio `/dashboard/create`. O botão "Gerar" executa automaticamente o enriquecimento por IA com feedback visual de progresso e timeout resiliente com `AbortController` (3.5s) sem travar o fluxo caso a API externa oscile.
+- **Correções Cirúrgicas de Backend & Provedores**:
+  - `fal-ai.provider.ts`: correção do bug de proporção original onde `16:9` era forçado indevidamente; sanitização de schema no Google Imagen 3 Edit (`fal-ai/nano-banana-pro/edit`) eliminando campos redundantes e suportando todos os aliases de imagem.
+  - `ai.service.ts`: auditoria atômica registrando `optimized_prompt` na tabela `AIJobInput` para rastreabilidade de custos e prompts enviados às GPUs.
+  - `prompt-engine.service.ts`: blindagem com `process.env.VITEST === "true"` impedindo chamadas pagas acidentais em testes locais; mecanismo de idempotência prevenindo duplicação de sufixos ópticos.
+  - `route.ts`: tratamento robusto de mensagens de erro específicas em PT-BR (créditos, saldo, serviços pausados ou ferramentas inativas).
+
 ## [1.8.1] - 2026-09-09
 ### Blindagem de Segurança Adversária: Proteção Contra Fraude de Créditos, Saldos Negativos e Bypass Financeiro
 - **Suíte de Testes Adversários Maliciosos (`__tests__/malicious-credits-bypass.test.ts`)**:

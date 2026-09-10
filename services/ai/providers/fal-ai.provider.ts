@@ -34,54 +34,66 @@ export class FalAIProvider implements IAIProvider {
         delete modelInputs.guidance_scale;
       }
 
-      // Roteamento Automático de Imagem de Entrada / Base (Image-to-Image & Preservação Física)
-      // Se o usuário forneceu uma imagem de entrada (image_url ou image) para um modelo de geração de imagem (FLUX ou Google Imagen 3),
-      // roteia de forma transparente para o motor dedicado de Image-to-Image com preservação de características físicas.
-      const hasImageInput = Boolean(modelInputs.image_url || modelInputs.image);
+      // Extração robusta de URLs de imagem de referência (todos os aliases suportados)
+      const rawImageUrls: string[] = Array.isArray(modelInputs.image_urls)
+        ? modelInputs.image_urls.filter((u: any) => typeof u === "string" && u.trim().length > 0)
+        : (typeof modelInputs.image_urls === "string" && modelInputs.image_urls.trim().length > 0 ? [modelInputs.image_urls.trim()] : []);
+
+      const baseImg: string | null = (typeof modelInputs.image_url === "string" && modelInputs.image_url.trim()) ||
+                                     (typeof modelInputs.image === "string" && modelInputs.image.trim()) ||
+                                     (typeof modelInputs.reference_image_url === "string" && modelInputs.reference_image_url.trim()) ||
+                                     (typeof modelInputs.prompt_image_url === "string" && modelInputs.prompt_image_url.trim()) ||
+                                     rawImageUrls[0] ||
+                                     null;
+
+      const hasImageInput = Boolean(baseImg || rawImageUrls.length > 0);
       const isImageTool = !payload.modelTechnicalName.includes("video") && 
                           !payload.modelTechnicalName.includes("sync") && 
                           !payload.modelTechnicalName.includes("upscale") && 
                           !payload.modelTechnicalName.includes("omnihuman");
 
+      const isOriginalRatio = modelInputs.image_size === "original" || modelInputs.aspect_ratio === "original";
+
       if (hasImageInput && isImageTool) {
-        const baseImg = modelInputs.image_url || modelInputs.image;
-        modelInputs.image_url = baseImg;
+        if (baseImg) {
+          modelInputs.image_url = baseImg;
+        }
 
         // Roteamento fiel ao motor escolhido pelo usuário:
         if (payload.modelTechnicalName.includes("nano-banana")) {
           // Google Imagen 3 (Gemini 3 Pro Image Edit Oficial da fal.ai)
           payload.modelTechnicalName = "fal-ai/nano-banana-pro/edit";
-          modelInputs.image_urls = [baseImg];
-          console.log(`[FalAIProvider] Google Imagen 3 Edit ativado com a foto de referência!`);
+          const allUrls = rawImageUrls.length > 0 ? rawImageUrls : (baseImg ? [baseImg] : []);
+          modelInputs.image_urls = allUrls;
+
+          // Schema estrito da fal.ai: remove chaves conflitantes
+          delete modelInputs.image_url;
+          delete modelInputs.image;
+          delete modelInputs.reference_image_url;
+          delete modelInputs.prompt_image_url;
         } else if (
           payload.modelTechnicalName.includes("flux") || 
           payload.modelTechnicalName.includes("recraft") ||
           modelInputs.mode === "character"
         ) {
-          // Família FLUX: usa PuLID para preservação absoluta de traços faciais e identidade física
+          // Família FLUX: usa PuLID para preservação anatômica facial
           payload.modelTechnicalName = "fal-ai/flux-pulid";
-          modelInputs.reference_image_url = baseImg;
-          console.log(`[FalAIProvider] FLUX PuLID ativado para preservação anatômica facial!`);
+          modelInputs.reference_image_url = baseImg || rawImageUrls[0];
         }
 
-        // Se o usuário selecionou tamanho ou proporção Original da imagem enviada
-        if (
-          modelInputs.image_size === "original" ||
-          modelInputs.aspect_ratio === "original"
-        ) {
+        if (isOriginalRatio) {
           delete modelInputs.image_size;
           delete modelInputs.aspect_ratio;
-          console.log(`[FalAIProvider] Img2Img no tamanho/proporção original da imagem base ativado!`);
         }
       }
 
-      // Modelos de Imagem que exigem aspect_ratio no lugar de image_size (ou aceitam aspect_ratio nativo)
+      // Modelos de Imagem que exigem aspect_ratio no lugar de image_size
       const requiresAspectRatio = payload.modelTechnicalName.includes("ideogram") || 
                                   payload.modelTechnicalName.includes("ultra") || 
                                   payload.modelTechnicalName.includes("nano-banana") ||
                                   payload.modelTechnicalName.includes("flux-pro");
 
-      if (requiresAspectRatio) {
+      if (requiresAspectRatio && !isOriginalRatio) {
         const ratioMap: Record<string, string> = {
           "1:1": "1:1",
           "16:9": "16:9",
@@ -105,6 +117,9 @@ export class FalAIProvider implements IAIProvider {
         const rawRatio = modelInputs.aspect_ratio || modelInputs.image_size || "16:9";
         modelInputs.aspect_ratio = ratioMap[rawRatio] || "16:9";
         delete modelInputs.image_size;
+      } else if (isOriginalRatio) {
+        delete modelInputs.image_size;
+        delete modelInputs.aspect_ratio;
       }
 
       // Remover metadados internos da VORIXA que não fazem parte do schema da fal.ai

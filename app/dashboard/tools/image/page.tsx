@@ -333,27 +333,40 @@ export default function ImageGenerationPage() {
       setIsGenerating(true);
       setActiveStepText("Otimizando prompt com Inteligência Artificial...");
 
-      // Auto-otimização inteligente de prompt antes de disparar para as GPUs
+      // Auto-otimização inteligente de prompt antes de disparar para as GPUs (com timeout resiliente de 3.5s)
       let finalPrompt = prompt.trim();
-      try {
-        const optRes = await fetch("/api/tools/optimize-prompt", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            prompt: finalPrompt,
-            enhanceQuality: true,
-            toolType: "image",
-          }),
-        });
-        if (optRes.ok) {
-          const optData = await optRes.json();
-          if (optData.optimizedPrompt) {
-            finalPrompt = optData.optimizedPrompt;
-            setPrompt(finalPrompt); // Atualiza o textarea em tempo real para o usuário ver
+      if (finalPrompt) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+          const optRes = await fetch("/api/tools/optimize-prompt", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            signal: controller.signal,
+            body: JSON.stringify({
+              prompt: finalPrompt,
+              enhanceQuality: true,
+              toolType: "image",
+              hasReferenceImage: Boolean(referenceImageUrl),
+              image_url: referenceImageUrl || undefined,
+            }),
+          });
+          clearTimeout(timeoutId);
+
+          if (optRes.ok) {
+            const optData = await optRes.json();
+            if (optData.optimizedPrompt) {
+              finalPrompt = optData.optimizedPrompt;
+              setPrompt(finalPrompt); // Atualiza o textarea em tempo real para o usuário ver
+            }
           }
+        } catch {
+          // Fallback resiliente mantém prompt original sem travar a geração
         }
-      } catch (optErr) {
-        console.warn("Auto-otimização de prompt utilizou fallback:", optErr);
+      } else if (referenceImageUrl) {
+        // Fallback para quando o usuário envia foto de referência sem texto
+        finalPrompt = "A high quality detailed photograph faithfully preserving the subject in the reference image, natural lighting";
       }
 
       setActiveStepText("Conectando ao cluster de GPUs");

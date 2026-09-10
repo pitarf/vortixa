@@ -56,7 +56,11 @@ export async function POST(req: Request) {
         userId: session.user.id,
         videoModelId: parsed.data.modelId,
         prompt: parsed.data.inputs.prompt || "",
-        imageUrl: parsed.data.inputs.image_url || parsed.data.inputs.prompt_image_url,
+        imageUrl: parsed.data.inputs.image_url ||
+                  parsed.data.inputs.prompt_image_url ||
+                  parsed.data.inputs.image ||
+                  parsed.data.inputs.reference_image_url ||
+                  (Array.isArray(parsed.data.inputs.image_urls) ? parsed.data.inputs.image_urls[0] : parsed.data.inputs.image_urls),
         speechText: parsed.data.inputs.speech_text,
         audioUrl: parsed.data.inputs.audio_url,
         voice: parsed.data.inputs.voice,
@@ -73,8 +77,6 @@ export async function POST(req: Request) {
       });
     }
 
-    console.log(`\n🚀 [POST /api/tools/generate SUCESSO] Job ID: ${job.id} | Status: ${job.status} | Talking: ${isTalkingVideo}`);
-
     return NextResponse.json(job);
   } catch (err: any) {
     console.error("Erro no endpoint POST /api/tools/generate:", err);
@@ -82,9 +84,14 @@ export async function POST(req: Request) {
     const isBusinessError = err.message && (
       err.message.includes("crédito") ||
       err.message.includes("saldo") ||
-      err.message.includes("desativada") ||
+      err.message.includes("desativad") ||
+      err.message.includes("inativ") ||
+      err.message.includes("indisponível") ||
+      err.message.includes("não configurad") ||
       err.message.includes("Não autorizado") ||
-      err.message.includes("excede")
+      err.message.includes("excede") ||
+      err.message.includes("insuficiente") ||
+      err.message.includes("suspensa")
     );
     const msg = isBusinessError ? err.message : "Ocorreu um erro de processamento da geração de IA.";
     return NextResponse.json({ error: msg }, { status: 400 });

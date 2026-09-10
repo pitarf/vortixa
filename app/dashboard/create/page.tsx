@@ -417,20 +417,29 @@ export default function StudioCreatePage() {
       setActiveStep(4);
       setStepText("Otimizando prompt com Inteligência Artificial...");
 
-      // Auto-otimização de prompt transparente antes do disparo
+      // Auto-otimização de prompt transparente antes do disparo (com timeout resiliente de 3.5s)
       let finalPrompt = prompt.trim();
+      const hasRefImg = Boolean(referenceImageUrl || characterImageUrl);
       if (finalPrompt && (activeTool === "image" || activeTool === "video")) {
         try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 3500);
+
           const optRes = await fetch("/api/tools/optimize-prompt", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            signal: controller.signal,
             body: JSON.stringify({
               prompt: finalPrompt,
               enhanceQuality: true,
               toolType: activeTool,
               style: selectedStyle || undefined,
+              hasReferenceImage: hasRefImg,
+              image_url: referenceImageUrl || characterImageUrl || undefined,
             }),
           });
+          clearTimeout(timeoutId);
+
           if (optRes.ok) {
             const optData = await optRes.json();
             if (optData.optimizedPrompt) {
@@ -438,9 +447,11 @@ export default function StudioCreatePage() {
               setPrompt(finalPrompt);
             }
           }
-        } catch (optErr) {
-          console.warn("Auto-otimização no Studio Create utilizou fallback:", optErr);
+        } catch {
+          // Fallback resiliente mantém prompt original sem travar a geração
         }
+      } else if (!finalPrompt && hasRefImg && activeTool === "image") {
+        finalPrompt = "A high quality detailed photograph faithfully preserving the subject in the reference image, natural lighting";
       }
 
       setStepText("Conectando ao cluster de IA");

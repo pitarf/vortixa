@@ -8,6 +8,12 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Correção de Preservação de Cenário, Auto-Otimização de Prompt e Auditoria Integral**:
+  - Correção das diretivas de enriquecimento no `PromptEngine`: preservação estrita do fundo e composição quando há imagem de referência, proibição de inventar cafeterias ou pessoas aleatórias e respeito prioritário a ordens negativas ("não muda o cenário").
+  - Auto-otimização transparente de prompt diretamente no botão "Gerar" em `/dashboard/tools/image` e `/dashboard/create`, com feedback visual e timeout com `AbortController` (3.5s).
+  - Correção de proporção original e limpeza de schema em `fal-ai.provider.ts`.
+  - Auditoria atômica de prompts otimizados em `ai.service.ts` e blindagem com `process.env.VITEST === "true"` em `prompt-engine.service.ts`.
+  - Validação estática completa (`npx tsc --noEmit`) e suítes de testes Vitest aprovadas com 100% de sucesso.
 - [x] **Blindagem Adversária Contra Fraudes de Créditos, Saldos e Bypass Financeiro**:
   - Implementação de suíte de testes de estresse adversário (`__tests__/malicious-credits-bypass.test.ts`) com 11 vetores de ataque cobertos (100% de aprovação).
   - Bloqueio de injeção de créditos por usuários sem privilégios (`Role.USER`) ou administradores suspensos (`isBlocked: true`).

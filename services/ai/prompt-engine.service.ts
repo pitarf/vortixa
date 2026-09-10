@@ -286,16 +286,14 @@ export class PromptEngine {
     const localResult = this.optimize(prompt, options);
     const falKey = process.env.FAL_KEY;
 
-    // Se não tiver chave real configurada ou for mock, retorna o motor local instantâneo
-    if (!falKey || falKey === "sua-chave-api-da-fal-ai" || falKey.startsWith("mock-")) {
+    // Se estiver em ambiente de teste automatizado (Vitest), ou sem chave real configurada, ou mock, retorna o motor local instantâneo
+    if (process.env.VITEST === "true" || process.env.AI_PROVIDER_MODE === "mock" || !falKey || falKey === "sua-chave-api-da-fal-ai" || falKey.startsWith("mock-")) {
       return { ...localResult, provider: "local-engine" };
     }
 
     try {
       const { fal } = await import("@fal-ai/client");
       fal.config({ credentials: falKey });
-
-      const isVideo = options.toolType === "video";
       
       /* REGRAS COMPLEXAS COMENTADAS A PEDIDO DO USUÁRIO PARA TESTE PURO:
       const systemPrompt = `You are an expert photographic and cinematic prompt translator for Recraft V3 and FLUX.
@@ -505,8 +503,12 @@ MANDATORY DIRECTIVES:
 
     // 3. Enriquecimento de Óptica Fotográfica e Textura
     const isVideo = options.toolType === "video";
+    const alreadyEnriched = translated.includes("highest quality") ||
+                            translated.includes("Sony A7") ||
+                            translated.includes("masterpiece") ||
+                            translated.includes("authentic skin texture");
 
-    if (options.enhanceQuality !== false) {
+    if (options.enhanceQuality !== false && !alreadyEnriched) {
       switch (intent) {
         case "ARTISTIC":
           translated += ", highest quality, masterpiece, award winning artistic detail, vibrant clean lines";

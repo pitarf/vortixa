@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { PromptEngine } from "@/services/ai/prompt-engine.service";
 import { z } from "zod";
@@ -8,6 +8,11 @@ const optimizeSchema = z.object({
   enhanceQuality: z.boolean().default(true),
   toolType: z.enum(["image", "video", "lipsync", "motion", "upscale"]).default("image"),
   style: z.enum(["cinematic", "photorealistic", "realist", "photographic", "anime", "octane3d", "cyberpunk", "digital-art"]).optional(),
+  hasReferenceImage: z.boolean().optional(),
+  image_url: z.string().optional(),
+  image: z.string().optional(),
+  reference_image_url: z.string().optional(),
+  image_urls: z.union([z.array(z.string()), z.string()]).optional(),
 });
 
 export async function POST(req: Request) {
@@ -30,10 +35,18 @@ export async function POST(req: Request) {
       );
     }
 
+    const hasReferenceImage = parsed.data.hasReferenceImage ?? Boolean(
+      parsed.data.image_url ||
+      parsed.data.image ||
+      parsed.data.reference_image_url ||
+      (Array.isArray(parsed.data.image_urls) ? parsed.data.image_urls.length > 0 : parsed.data.image_urls)
+    );
+
     const result = await PromptEngine.optimizeAsync(parsed.data.prompt, {
       enhanceQuality: parsed.data.enhanceQuality,
       toolType: parsed.data.toolType,
       style: parsed.data.style,
+      hasReferenceImage,
     });
 
     return NextResponse.json({
