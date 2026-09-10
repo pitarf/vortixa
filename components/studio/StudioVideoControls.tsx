@@ -111,22 +111,6 @@ export function StudioVideoControls({
         </div>
       </div>
 
-      {/* Movimento de Câmera */}
-      <div className="space-y-1">
-        <span className="text-slate-300 font-bold block">Movimento de Câmera</span>
-        <select
-          value={cameraMotion}
-          onChange={(e) => onCameraMotionChange(e.target.value)}
-          className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-cyan-500 cursor-pointer min-h-[44px]"
-        >
-          <option value="static">Estático / Suave e Natural</option>
-          <option value="zoom_in">Aproximação (Zoom In)</option>
-          <option value="pan_left">Panorâmica para a Esquerda</option>
-          <option value="pan_right">Panorâmica para a Direita</option>
-          <option value="orbital">Giro Orbital 360</option>
-        </select>
-      </div>
-
       {/* One-Shot Talking Video Toggle (Exibido apenas em modelos sem áudio nativo) */}
       {!modelHasNativeAudio && (
         <div className="pt-3 border-t border-[#1E202E] space-y-2.5">

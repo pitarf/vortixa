@@ -11,8 +11,8 @@ interface VideoSettingsSectionProps {
   onChangeAspectRatio: (ratio: string) => void;
   quality: VideoQuality;
   onChangeQuality: (quality: VideoQuality) => void;
-  cameraMovement: string;
-  onChangeCameraMovement: (movement: string) => void;
+  cameraMovement?: string;
+  onChangeCameraMovement?: (movement: string) => void;
   seed: string;
   onChangeSeed: (seed: string) => void;
   negativePrompt: string;
@@ -26,8 +26,6 @@ export function VideoSettingsSection({
   onChangeAspectRatio,
   quality,
   onChangeQuality,
-  cameraMovement,
-  onChangeCameraMovement,
   seed,
   onChangeSeed,
   negativePrompt,
@@ -159,7 +157,7 @@ export function VideoSettingsSection({
         >
           <div className="flex items-center gap-2">
             <Settings2 className="w-4 h-4 text-slate-400" />
-            <span className="font-semibold text-xs sm:text-sm">Configurações avançadas (câmera, seed)</span>
+            <span className="font-semibold text-xs sm:text-sm">Configurações avançadas (seed, prompt negativo)</span>
           </div>
           <ChevronDown
             className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
@@ -170,26 +168,6 @@ export function VideoSettingsSection({
 
         {showAdvanced && (
           <div className="space-y-3 pt-3 pb-1 animate-in fade-in-50 duration-200">
-            {/* Movimento de Câmera */}
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-medium text-slate-400 block">
-                Movimento de Câmera
-              </label>
-              <select
-                value={cameraMovement}
-                onChange={(e) => onChangeCameraMovement(e.target.value)}
-                className="w-full min-h-[44px] bg-[#070709] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-violet-500 cursor-pointer"
-              >
-                <option value="none">Automático / Dinâmico pelo Prompt</option>
-                <option value="zoom_in">Zoom In (Aproximação Lenta)</option>
-                <option value="zoom_out">Zoom Out (Afastamento)</option>
-                <option value="pan_left">Panorâmica Esquerda (Pan Left)</option>
-                <option value="pan_right">Panorâmica Direita (Pan Right)</option>
-                <option value="orbit_360">Orbital 360 Graus</option>
-                <option value="crane_down">Grua Descendente (Crane Down)</option>
-              </select>
-            </div>
-
             {/* Seed Numérica */}
             <div className="space-y-1.5">
               <label className="text-[11px] font-medium text-slate-400 block">

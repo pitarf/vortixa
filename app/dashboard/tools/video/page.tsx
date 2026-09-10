@@ -337,8 +337,6 @@ export default function VideoGenerationPage() {
             onChangeAspectRatio={setAspectRatio}
             quality={quality}
             onChangeQuality={setQuality}
-            cameraMovement={cameraMovement}
-            onChangeCameraMovement={setCameraMovement}
             seed={seed}
             onChangeSeed={setSeed}
             negativePrompt={negativePrompt}
