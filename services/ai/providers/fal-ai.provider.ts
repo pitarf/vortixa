@@ -169,9 +169,9 @@ export class FalAIProvider implements IAIProvider {
           delete modelInputs.start_image_url;
           
           if (payload.modelTechnicalName.includes("seedance-2.5")) {
-            payload.modelTechnicalName = "fal-ai/bytedance/seedance-2.5/image-to-video";
+            payload.modelTechnicalName = "bytedance/seedance-2.5/image-to-video";
           } else {
-            payload.modelTechnicalName = "fal-ai/bytedance/seedance-2.0/image-to-video";
+            payload.modelTechnicalName = "bytedance/seedance-2.0/image-to-video";
           }
         } else {
           delete modelInputs.image_url;
@@ -179,9 +179,9 @@ export class FalAIProvider implements IAIProvider {
           delete modelInputs.image;
           
           if (payload.modelTechnicalName.includes("seedance-2.5")) {
-            payload.modelTechnicalName = "fal-ai/bytedance/seedance-2.5/text-to-video";
+            payload.modelTechnicalName = "bytedance/seedance-2.5/text-to-video";
           } else {
-            payload.modelTechnicalName = "fal-ai/bytedance/seedance-2.0/text-to-video";
+            payload.modelTechnicalName = "bytedance/seedance-2.0/text-to-video";
           }
         }
         

@@ -11,9 +11,8 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
   - Implementado o método `ensureValidPublicFalUrl` que intercepta qualquer caminho local relativo (`/uploads/...`) ou URL inacessível antes do envio para a fal.ai.
   - O sistema lê diretamente o arquivo físico correspondente em disco e realiza o upload imediato para o cluster CDN seguro da `fal.storage` (`https://v3b.fal.media/...`).
   - Fallback garantido com o domínio público canônico `https://vortixia.com.br/uploads/...` caso o arquivo já esteja servido pelo Nginx.
-- **Ativação e Resolução Estrita de Modelos (`services/ai/ai.service.ts` & Banco de Dados)**:
-  - Ativado `fal-ai/bytedance/seedance-2.5` com status ativo no banco de dados.
-  - Substituído o fallback silencioso para o modelo padrão da ferramenta por validação estrita com exceção explícita quando um modelo específico for solicitado, garantindo que o Seedance 2.5 (com som nativo e física cinematográfica) seja despachado exatamente como selecionado pelo usuário.
+- **Correção de Endpoint do ByteDance Seedance (`services/ai/providers/fal-ai.provider.ts`)**:
+  - Corrigido o caminho técnico da API da ByteDance na fal.ai para `bytedance/seedance-2.5/image-to-video` (sem o prefixo redundante `fal-ai/`), eliminando o erro de rota `Path /seedance-2.5/image-to-video not found`.
 
 ## [1.9.0] - 2026-09-10
 ### Refatoração Geral Adaptativa: Mobile-First, Ergonomia Touch e Acessibilidade Total
