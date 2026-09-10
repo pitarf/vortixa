@@ -112,9 +112,14 @@ export function StudioModelSelector({
                 <p className="text-[11px] text-slate-300 leading-tight my-1 break-words">
                   {model.description}
                 </p>
-                <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono pt-1 border-t border-[#1E202E]/60">
-                  <span className="text-cyan-400 font-semibold">{model.badge}</span>
-                  <span className="text-slate-500">{model.speed}</span>
+                <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono pt-1 border-t border-[#1E202E]/60 gap-1 flex-wrap">
+                  <span className="text-cyan-400 font-semibold truncate">{model.badge}</span>
+                  {model.requiresReferenceImage && (
+                    <span className="px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 font-bold border border-amber-500/30 text-[9px]">
+                      📷 Exige Foto
+                    </span>
+                  )}
+                  <span className="text-slate-500 shrink-0">{model.speed}</span>
                 </div>
               </button>
             );

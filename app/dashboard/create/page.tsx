@@ -376,6 +376,13 @@ export default function StudioCreatePage() {
       return;
     }
 
+    if (activeTool === "image" && selectedModel.requiresReferenceImage && !referenceImageUrl) {
+      const msg = `O modelo ${selectedModel.name} exige uma foto de referência de rosto. Anexe uma imagem ou selecione um modelo como Nano Banana Pro ou FLUX Turbo para criar do zero.`;
+      toast.error(msg, { duration: 6000 });
+      setErrorMsg(msg);
+      return;
+    }
+
     const inputs: Record<string, any> = {
       prompt,
       image_size: imageSize,
@@ -868,6 +875,39 @@ export default function StudioCreatePage() {
                 audioUrl={sourceAudioUrl}
                 onAudioChange={(url) => setSourceAudioUrl(url)}
               />
+            </div>
+          )}
+
+          {/* Alerta de Imagem Obrigatória para o Modelo */}
+          {activeTool === "image" && currentModelDef.requiresReferenceImage && !referenceImageUrl && (
+            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs flex items-start gap-2.5">
+              <span className="text-base shrink-0 mt-0.5">⚠️</span>
+              <div className="space-y-1">
+                <p className="font-bold text-amber-300">
+                  O modelo {currentModelDef.name} exige uma foto de referência
+                </p>
+                <p className="text-[11px] text-amber-200/80 leading-relaxed">
+                  Para clonar ou fixar o rosto, clique no ícone de upload (abaixo do prompt) e anexe uma foto facial, ou selecione <strong>Nano Banana Pro</strong> ou <strong>FLUX Turbo</strong> para criar do zero.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Mensagem de Erro Específica */}
+          {errorMsg && (
+            <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-200 text-xs flex items-start gap-2.5 animate-in fade-in duration-200">
+              <span className="text-base shrink-0 mt-0.5">❌</span>
+              <div className="space-y-1 flex-1">
+                <p className="font-bold text-rose-300">Não foi possível concluir a geração</p>
+                <p className="text-[11px] text-rose-200/90 leading-relaxed break-words">{errorMsg}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setErrorMsg(null)}
+                className="text-rose-400 hover:text-white text-xs px-1.5 py-0.5 rounded cursor-pointer"
+              >
+                ✕
+              </button>
             </div>
           )}
 

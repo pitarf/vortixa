@@ -16,6 +16,7 @@ export interface ModelOption {
   cost: number;
   description: string;
   speed: string;
+  requiresReferenceImage?: boolean;
 }
 
 export interface ToolDefinition {
@@ -42,7 +43,7 @@ export const TOOLS: Record<StudioTool, ToolDefinition> = {
     color: "from-violet-600 via-indigo-600 to-cyan-500",
     models: [
       { id: "fal-ai/nano-banana-pro", name: "Nano Banana Pro (Google)", badge: "Fotorrealismo Humano 👑", cost: 3, description: "Modelo oficial Google Imagen 3 / Gemini 3 Pro. Anatomia humana e edição com foto", speed: "~ 12s" },
-      { id: "fal-ai/flux-pulid", name: "FLUX PuLID (Mesmo Rosto)", badge: "Rosto Idêntico 👤", cost: 4, description: "Fixação absoluta de identidade. Preserva o mesmo rosto e barba da foto enviada", speed: "~ 15s" },
+      { id: "fal-ai/flux-pulid", name: "FLUX PuLID (Mesmo Rosto)", badge: "Rosto Idêntico 👤", cost: 4, description: "Fixação absoluta de identidade. Preserva o mesmo rosto e barba da foto enviada", speed: "~ 15s", requiresReferenceImage: true },
       { id: "fal-ai/flux/schnell", name: "FLUX.1 Turbo", badge: "Super Rápido", cost: 1, description: "Geração ultra-rápida em 4 segundos da Black Forest Labs para testar conceitos", speed: "~ 4s" },
       { id: "fal-ai/recraft-v3", name: "Recraft V3 Design", badge: "Design & Logos", cost: 2, description: "Perfeito para tipografia legível, ilustrações vetoriais e marcas", speed: "~ 10s" },
       { id: "fal-ai/flux-pro/v1.1-ultra", name: "FLUX Pro Ultra", badge: "Máxima Resolução", cost: 4, description: "Qualidade cinematográfica de estúdio da Black Forest Labs em altíssima definição", speed: "~ 20s" },

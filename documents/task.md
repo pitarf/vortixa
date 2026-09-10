@@ -8,6 +8,10 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Transparência de Requisitos de Modelos e Diagnóstico de Erros (FLUX PuLID / Provedores)**:
+  - Badge explícita `📷 Exige Foto` nos modelos que preservam identidade facial e alerta visual dinâmico.
+  - Bloqueio preventivo no botão "Gerar" com mensagem instrutiva e card de erro na interface.
+  - Tradução amigável de erros de API (`missing`, `content_policy_violation`) para Português em `fal-ai.provider.ts`.
 - [x] **Correção na Resolução de Imagens para Geração de Vídeo na Nuvem (fal.ai / Kling)**:
   - Implementação de sanitização e garantia de URLs públicas HTTPS (`ensureValidPublicFalUrl`) em `FalAIProvider`.
   - Conversão e upload automático de arquivos locais em `fal.storage` ou fallback para `https://vortixia.com.br/uploads/...`.

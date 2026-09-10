@@ -5,6 +5,18 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.9.2] - 2026-09-10
+### Transparência de Requisitos de Modelos e Diagnóstico de Erros
+- **Aviso Visual de Modelos com Imagem Obrigatória (`components/studio/StudioModelSelector.tsx` & `components/studio/types.ts`)**:
+  - Adicionada a propriedade `requiresReferenceImage: true` nos modelos que preservam identidade facial (ex: `FLUX PuLID`).
+  - Badge explícita `📷 Exige Foto` exibida nos cards dos modelos no seletor do Studio.
+  - Alerta visual âmbar exibido dinamicamente no painel do Studio quando um modelo que exige foto estiver selecionado sem anexo facial.
+- **Validação Preventiva e Diagnóstico Imediato (`app/dashboard/create/page.tsx`)**:
+  - Bloqueio preventivo no botão "Gerar" com mensagem instrutiva e toast amigável evitando disparos vazios para a API.
+  - Card de diagnóstico de erro específico na tela com descrição detalhada em caso de falha.
+- **Tradução Amigável de Erros de IA (`services/ai/providers/fal-ai.provider.ts`)**:
+  - Tratamento aprimorado de erros retornados por provedores (`missing` / `Field required`, `content_policy_violation`, etc.) convertendo-os em explicações claras em Português (PT-BR).
+
 ## [1.9.1] - 2026-09-10
 ### Correção na Resolução de Imagens para Geração de Vídeo na Nuvem (fal.ai / Kling)
 - **Normalização Automática de URLs de Mídia (`services/ai/providers/fal-ai.provider.ts`)**:

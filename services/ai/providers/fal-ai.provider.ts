@@ -441,10 +441,23 @@ export class FalAIProvider implements IAIProvider {
             });
           } catch (resErr: any) {
             console.error(`❌ [AI ERROR RETRIEVING RESULT]:`, resErr.body || resErr.message);
-            const errDetail = resErr.body?.detail?.[0]?.msg || resErr.message || "Parâmetros de entrada inválidos para este modelo.";
-            const userFriendlyMsg = errDetail.includes("less than or equal") 
-              ? "O número de passos de inferência excede o limite suportado pelo modelo."
-              : `Não foi possível processar a mídia: ${errDetail}`;
+            const rawDetail = resErr.body?.detail?.[0];
+            const errMsg = rawDetail?.msg || resErr.message || "Parâmetros de entrada inválidos para este modelo.";
+            const errField = rawDetail?.loc?.[1] || rawDetail?.loc?.[0] || "";
+
+            let userFriendlyMsg = `Não foi possível processar a mídia: ${errMsg}`;
+
+            if (rawDetail?.type === "missing" || errMsg.includes("Field required")) {
+              if (String(errField).includes("reference_image") || String(errField).includes("image")) {
+                userFriendlyMsg = "Este modelo exige obrigatoriamente uma imagem de referência facial para preservação de identidade. Por favor, anexe uma foto ou selecione outro modelo.";
+              } else {
+                userFriendlyMsg = `Parâmetro obrigatório ausente: ${errField || "imagem/campo necessário"}.`;
+              }
+            } else if (rawDetail?.type === "content_policy_violation" || errMsg.includes("likenesses of real people")) {
+              userFriendlyMsg = "A imagem foi bloqueada pela moderação de privacidade/deepfake do provedor por se assemelhar a uma pessoa real. Utilize o LipSync ou um modelo alternativo.";
+            } else if (errMsg.includes("less than or equal")) {
+              userFriendlyMsg = "O número de passos de inferência excede o limite suportado pelo modelo.";
+            }
 
             const job = await prisma.aIJob.findUnique({ where: { id: jobId } });
             
@@ -464,7 +477,7 @@ export class FalAIProvider implements IAIProvider {
                 data: {
                   userId: job.userId,
                   action: "AI_GENERATION_FAILED",
-                  details: `Falha na geração (Job ${jobId}, Modelo ${model}): ${errDetail}`,
+                  details: `Falha na geração (Job ${jobId}, Modelo ${model}): ${userFriendlyMsg}`,
                 },
               });
             }
