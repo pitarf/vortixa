@@ -3,58 +3,21 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Check, Zap, ArrowRight, ShieldCheck, XCircle } from "lucide-react";
-import { useGsapContext } from "@/hooks/useGsapContext";
 
 /**
- * Seção de Preços, Economia e Garantia com Quebra de Ritmo (Fundo Claro / Off-White) animada com GSAP.
+ * Seção de Preços, Economia e Garantia com Quebra de Ritmo (Fundo Claro / Off-White).
+ * Layout editorial com comparativo de economia e 3 opções claras de adesão.
  */
 export function PricingSection() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
 
-  const containerRef = useGsapContext((gsap) => {
-    gsap.from(".pricing-header-block", {
-      scrollTrigger: {
-        trigger: ".pricing-header-block",
-        start: "top 85%",
-      },
-      opacity: 0,
-      y: 35,
-      duration: 0.8,
-      ease: "power3.out",
-    });
-
-    gsap.from(".pricing-compare-banner", {
-      scrollTrigger: {
-        trigger: ".pricing-compare-banner",
-        start: "top 80%",
-      },
-      opacity: 0,
-      y: 30,
-      scale: 0.98,
-      duration: 0.9,
-      ease: "power3.out",
-    });
-
-    gsap.from(".pricing-plan-card", {
-      scrollTrigger: {
-        trigger: ".pricing-plans-grid",
-        start: "top 80%",
-      },
-      opacity: 0,
-      y: 40,
-      duration: 0.9,
-      stagger: 0.15,
-      ease: "power3.out",
-    });
-  });
-
   return (
-    <section ref={containerRef} id="pricing" className="py-20 px-3 sm:px-6 max-w-7xl mx-auto space-y-12">
+    <section id="pricing" className="py-20 px-3 sm:px-6 max-w-7xl mx-auto space-y-12">
       {/* Container Amplo Off-White de Preços com Quebra Visual */}
       <div className="bg-[#F4F4F6] text-slate-900 border border-slate-200/80 rounded-[32px] sm:rounded-[44px] p-6 sm:p-10 md:p-14 shadow-[0_20px_80px_rgba(0,0,0,0.3)] space-y-12">
         
         {/* Cabeçalho */}
-        <div className="pricing-header-block text-center space-y-3 max-w-3xl mx-auto">
+        <div className="text-center space-y-3 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-slate-700 text-xs font-medium">
             <span className="w-2 h-2 rounded-full bg-violet-600 animate-pulse" />
             <span>Planos & Investimento</span>
@@ -68,7 +31,7 @@ export function PricingSection() {
         </div>
 
         {/* Banner Visual de Economia Comparativa */}
-        <div className="pricing-compare-banner bg-white border border-slate-200/90 rounded-3xl p-6 md:p-8 max-w-4xl mx-auto shadow-md">
+        <div className="bg-white border border-slate-200/90 rounded-3xl p-6 md:p-8 max-w-4xl mx-auto shadow-md">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
             {/* Gastando Separado */}
             <div className="space-y-2.5 p-4 rounded-2xl bg-rose-50 border border-rose-200/60 text-xs text-slate-700">
@@ -110,9 +73,9 @@ export function PricingSection() {
         </div>
 
         {/* Grid com os 3 Planos */}
-        <div className="pricing-plans-grid grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
           {/* Starter Pack */}
-          <div className="pricing-plan-card bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="space-y-4">
               <div className="text-xs font-mono text-slate-500 uppercase font-bold">Pacote Inicial</div>
               <div className="flex items-baseline gap-1">
@@ -150,7 +113,7 @@ export function PricingSection() {
           </div>
 
           {/* Creator Pro (Destaque Protagonista Preto) */}
-          <div className="pricing-plan-card bg-[#09090B] text-white border-2 border-violet-500/80 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-2xl relative">
+          <div className="bg-[#09090B] text-white border-2 border-violet-500/80 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-2xl relative">
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-[10px] font-mono font-bold px-4 py-1 rounded-full uppercase tracking-wider shadow-lg">
               ✦ Mais Popular
             </div>
@@ -196,7 +159,7 @@ export function PricingSection() {
           </div>
 
           {/* Studio Agency */}
-          <div className="pricing-plan-card bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="space-y-4">
               <div className="text-xs font-mono text-cyan-600 uppercase font-bold">Studio & Produtoras</div>
               <div className="flex items-baseline gap-1">

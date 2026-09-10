@@ -3,79 +3,31 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Zap, Volume2, VolumeX } from "lucide-react";
-import { useGsapContext } from "@/hooks/useGsapContext";
 
 /**
- * Hero Section Oficial no padrão exato Octuz AI / Higgsfield animada com GSAP.
- * Container amplo off-white com glow lateral dinâmico, tipografia editorial e vídeo protagonista revelado em cascata suave.
+ * Hero Section Oficial no padrão exato Octuz AI / Higgsfield.
+ * Container amplo off-white com glow lateral sutil, tipografia editorial (Sans + Serif Italic),
+ * vídeo protagonista centralizado e CTA preto estilizado abaixo do vídeo.
  */
 export function HeroCinematic() {
   const [isMuted, setIsMuted] = useState<boolean>(true);
 
-  const containerRef = useGsapContext((gsap) => {
-    // Timeline de entrada orquestrada
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-    // 1. Entrada suave do Card Principal
-    tl.from(".hero-card", {
-      opacity: 0,
-      y: 40,
-      duration: 1.1,
-      scale: 0.98,
-    })
-    // 2. Revelação da Pílula Superior e Título
-    .from(".hero-pill", {
-      opacity: 0,
-      y: -15,
-      duration: 0.6,
-    }, "-=0.7")
-    .from(".hero-title", {
-      opacity: 0,
-      y: 25,
-      duration: 0.9,
-    }, "-=0.5")
-    // 3. Expansão elegante do Vídeo Protagonista
-    .from(".hero-video-box", {
-      opacity: 0,
-      scale: 0.94,
-      y: 30,
-      duration: 1.2,
-      ease: "power4.out",
-    }, "-=0.6")
-    // 4. Fade do Subtítulo e CTA
-    .from(".hero-cta-block", {
-      opacity: 0,
-      y: 20,
-      duration: 0.8,
-    }, "-=0.7");
-
-    // Pulsação suave e contínua do Glow de fundo
-    gsap.to(".hero-glow", {
-      scale: 1.15,
-      opacity: 0.85,
-      duration: 4.5,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
-  });
-
   return (
-    <section ref={containerRef} className="pt-24 pb-8 md:pt-28 md:pb-12 px-3 sm:px-6 max-w-7xl mx-auto relative">
+    <section className="pt-24 pb-8 md:pt-28 md:pb-12 px-3 sm:px-6 max-w-7xl mx-auto relative">
       {/* Glow Difuso Azul / Violeta nas Bordas Externas */}
-      <div className="hero-glow absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[80%] bg-gradient-to-r from-indigo-500/20 via-sky-400/15 to-violet-500/20 blur-[130px] pointer-events-none -z-10" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[80%] bg-gradient-to-r from-indigo-500/20 via-sky-400/15 to-violet-500/20 blur-[130px] pointer-events-none -z-10" />
 
       {/* Card Grande Off-White do Hero */}
-      <div className="hero-card bg-[#F4F4F6] text-slate-900 border border-slate-200/80 rounded-[32px] sm:rounded-[44px] p-6 sm:p-10 md:p-16 shadow-[0_20px_80px_rgba(0,0,0,0.4)] flex flex-col items-center text-center space-y-8 relative overflow-hidden">
+      <div className="bg-[#F4F4F6] text-slate-900 border border-slate-200/80 rounded-[32px] sm:rounded-[44px] p-6 sm:p-10 md:p-16 shadow-[0_20px_80px_rgba(0,0,0,0.4)] flex flex-col items-center text-center space-y-8 relative overflow-hidden">
         
         {/* Pílula Superior */}
-        <div className="hero-pill inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-slate-200 shadow-sm text-slate-700 text-xs font-medium backdrop-blur-md">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-slate-200 shadow-sm text-slate-700 text-xs font-medium backdrop-blur-md">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span>Reinvente sua forma de criar</span>
         </div>
 
         {/* Headline com Tipografia Editorial (Sans + Serif Italic) */}
-        <div className="hero-title max-w-4xl mx-auto space-y-2">
+        <div className="max-w-4xl mx-auto space-y-2">
           <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-[68px] font-bold text-slate-950 tracking-tight leading-[1.12] font-sans">
             Gere seu <span className="font-serif italic font-normal text-slate-800 text-[1.08em]">Influencer IA</span> ultra realista em{" "}
             <span className="font-serif italic font-normal text-slate-800 text-[1.08em]">1 minuto</span> e faça vendas{" "}
@@ -84,7 +36,7 @@ export function HeroCinematic() {
         </div>
 
         {/* Video Player Protagonista (Logo Abaixo do Headline) */}
-        <div className="hero-video-box w-full max-w-4xl mx-auto rounded-2xl sm:rounded-3xl overflow-hidden bg-black border border-slate-300/80 shadow-2xl relative aspect-video group transition-all duration-700 hover:shadow-[0_25px_60px_rgba(99,102,241,0.25)]">
+        <div className="w-full max-w-4xl mx-auto rounded-2xl sm:rounded-3xl overflow-hidden bg-black border border-slate-300/80 shadow-2xl relative aspect-video group transition-all duration-700 hover:shadow-[0_25px_60px_rgba(99,102,241,0.25)]">
           <video
             src="/media/landing/hero/hero_main.mp4"
             autoPlay
@@ -115,7 +67,7 @@ export function HeroCinematic() {
         </div>
 
         {/* Subheadline e Botão CTA (Abaixo do Vídeo, Dentro da Caixa Clara) */}
-        <div className="hero-cta-block max-w-2xl mx-auto space-y-6 pt-2">
+        <div className="max-w-2xl mx-auto space-y-6 pt-2">
           <p className="text-xs sm:text-sm md:text-base text-slate-600 leading-relaxed font-sans font-normal">
             Copie workflows que funcionam como máquina de conteúdos 24h por dia, 7d por semana, gerando vídeos virais infinitos para TikTok, Reels, Anúncios... sem mostrar o seu rosto!
           </p>

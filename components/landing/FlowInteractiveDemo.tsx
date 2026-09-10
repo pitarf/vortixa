@@ -12,35 +12,9 @@ import {
   CheckCircle2,
   Cpu,
 } from "lucide-react";
-import { useGsapContext } from "@/hooks/useGsapContext";
 
 export function FlowInteractiveDemo() {
   const [activeStep, setActiveStep] = useState<number>(1);
-
-  const containerRef = useGsapContext((gsap) => {
-    gsap.from(".flow-header-block", {
-      scrollTrigger: {
-        trigger: ".flow-header-block",
-        start: "top 85%",
-      },
-      opacity: 0,
-      y: 35,
-      duration: 0.8,
-      ease: "power3.out",
-    });
-
-    gsap.from(".flow-workspace-box", {
-      scrollTrigger: {
-        trigger: ".flow-workspace-box",
-        start: "top 80%",
-      },
-      opacity: 0,
-      y: 45,
-      scale: 0.98,
-      duration: 1.0,
-      ease: "power3.out",
-    });
-  });
 
   const steps = [
     {
@@ -108,8 +82,8 @@ export function FlowInteractiveDemo() {
   const current = steps[activeStep];
 
   return (
-    <section ref={containerRef} id="flow-demo" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto space-y-12">
-      <div className="flow-header-block text-center space-y-3 max-w-2xl mx-auto">
+    <section id="flow-demo" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto space-y-12">
+      <div className="text-center space-y-3 max-w-2xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono font-bold uppercase">
           ✦ VORIXA FLOW • Visual Graph Engine
         </div>
@@ -122,7 +96,7 @@ export function FlowInteractiveDemo() {
       </div>
 
       {/* Simulator Workspace */}
-      <div className="flow-workspace-box bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-6 md:p-8 space-y-8 shadow-2xl relative overflow-hidden">
+      <div className="bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-6 md:p-8 space-y-8 shadow-2xl relative overflow-hidden">
         {/* Node Pipeline Steps Bar */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {steps.map((s, idx) => (

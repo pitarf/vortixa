@@ -2,42 +2,17 @@
 
 import React, { useState } from "react";
 import { Copy, Check } from "lucide-react";
-import { useGsapContext } from "@/hooks/useGsapContext";
 
 /**
- * Galeria Editorial Estática e Limpa com Revelação Suave via GSAP ScrollTrigger:
+ * Galeria Editorial Estática e Limpa:
+ * - ZERO zoom
+ * - ZERO escala
  * - ZERO distorção ou efeito estranho
  * - Reprodução suave e estável dos vídeos originais em alta definição.
- * - Efeito stagger elegante ao rolar a página.
  */
 export function ResultsMasonryGallery() {
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [copiedId, setCopiedId] = useState<number | null>(null);
-
-  const containerRef = useGsapContext((gsap) => {
-    gsap.from(".gallery-header-block", {
-      scrollTrigger: {
-        trigger: ".gallery-header-block",
-        start: "top 85%",
-      },
-      opacity: 0,
-      y: 30,
-      duration: 0.8,
-      ease: "power3.out",
-    });
-
-    gsap.from(".gallery-item-card", {
-      scrollTrigger: {
-        trigger: ".gallery-items-grid",
-        start: "top 80%",
-      },
-      opacity: 0,
-      y: 40,
-      duration: 0.9,
-      stagger: 0.12,
-      ease: "power3.out",
-    });
-  }, [activeFilter]);
 
   const galleryItems = [
     {
@@ -47,7 +22,7 @@ export function ResultsMasonryGallery() {
       modelTag: "FLUX.1 + Upscale 4K",
       prompt: "Golden luxury perfume bottle floating with suspended water droplets and gold dust particles in 8k cinematic lighting",
       videoUrl: "/media/landing/videos/commercial_perfume.mp4",
-      aspectRatio: "col-span-1 md:col-span-2 aspect-video",
+      aspectRatio: "aspect-video",
       badge: "Comercial 4K",
       accentColor: "border-amber-500/40 text-amber-300 bg-amber-950/60",
     },
@@ -58,7 +33,7 @@ export function ResultsMasonryGallery() {
       modelTag: "LivePortrait LipSync",
       prompt: "Ultra-realistic female creator presenting tech news with natural facial micro-expressions and perfect lip synchronization",
       videoUrl: "/media/landing/videos/lipsync_avatar.mp4",
-      aspectRatio: "col-span-1 aspect-square",
+      aspectRatio: "aspect-video",
       badge: "Influencer IA",
       accentColor: "border-violet-500/40 text-violet-300 bg-violet-950/60",
     },
@@ -69,7 +44,7 @@ export function ResultsMasonryGallery() {
       modelTag: "Kling Motion Control",
       prompt: "Street dancer performing complex acrobatic freeze with glowing volumetric trail energy effects in 60 FPS",
       videoUrl: "/media/landing/videos/motion_dancer.mp4",
-      aspectRatio: "col-span-1 aspect-square",
+      aspectRatio: "aspect-video",
       badge: "Motion 60 FPS",
       accentColor: "border-emerald-500/40 text-emerald-300 bg-emerald-950/60",
     },
@@ -80,7 +55,7 @@ export function ResultsMasonryGallery() {
       modelTag: "Kling AI 1.5",
       prompt: "Sleek flying hypercar accelerating between neo-tokyo skyscrapers with plasma trail at sunset, cinematic camera movement",
       videoUrl: "/media/landing/videos/cinematic_hypercar.mp4",
-      aspectRatio: "col-span-1 md:col-span-2 aspect-video",
+      aspectRatio: "aspect-video",
       badge: "Cinema Sci-Fi",
       accentColor: "border-cyan-500/40 text-cyan-300 bg-cyan-950/60",
     },
@@ -91,7 +66,7 @@ export function ResultsMasonryGallery() {
       modelTag: "FLUX.1 Schnell",
       prompt: "High-fashion model wearing iridescent chrome liquid dress standing in minimalist dark runway studio, 8k resolution",
       videoUrl: "/media/landing/motion/micro_loop_fashion.mp4",
-      aspectRatio: "col-span-1 md:col-span-2 aspect-video",
+      aspectRatio: "aspect-video",
       badge: "Fashion Loop",
       accentColor: "border-pink-500/40 text-pink-300 bg-pink-950/60",
     },
@@ -102,7 +77,7 @@ export function ResultsMasonryGallery() {
       modelTag: "Creative Upscale 4K",
       prompt: "Extreme macro shot of human eye iris transforming into swirling cosmic galaxy nebula in extreme 8k detail",
       videoUrl: "/media/landing/motion/micro_loop_cosmic.mp4",
-      aspectRatio: "col-span-1 aspect-square",
+      aspectRatio: "aspect-video",
       badge: "Micro Loop",
       accentColor: "border-indigo-500/40 text-indigo-300 bg-indigo-950/60",
     },
@@ -120,9 +95,9 @@ export function ResultsMasonryGallery() {
   };
 
   return (
-    <section ref={containerRef} className="py-20 px-4 sm:px-6 max-w-7xl mx-auto space-y-12">
+    <section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto space-y-12">
       {/* Cabeçalho */}
-      <div className="gallery-header-block flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
           <span className="text-[11px] font-mono tracking-widest text-slate-500 uppercase font-semibold block">
             GALERIA & PRODUÇÕES REAIS
@@ -160,11 +135,11 @@ export function ResultsMasonryGallery() {
       </div>
 
       {/* Grid Mosaico Limpo — Sem Zoom e Sem Distorções */}
-      <div className="gallery-items-grid grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
         {filteredItems.map((item) => (
           <div
             key={item.id}
-            className={`gallery-item-card relative rounded-3xl overflow-hidden bg-[#0D0E12] border border-[#1E202E] hover:border-slate-600 shadow-2xl group flex flex-col justify-between ${item.aspectRatio}`}
+            className={`relative rounded-3xl overflow-hidden bg-[#0D0E12] border border-[#1E202E] hover:border-slate-600 shadow-2xl group flex flex-col justify-between ${item.aspectRatio}`}
           >
             {/* Vídeo Estável e Estático — Sem Transform / Scale */}
             <video
