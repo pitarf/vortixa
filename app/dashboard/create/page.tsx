@@ -9,6 +9,8 @@ import {
   Upload,
   X,
   ArrowRight,
+  Volume2,
+  MessageSquareQuote,
 } from "lucide-react";
 import { AudioSourceSelector } from "@/components/ai/audio-source-selector";
 import { FileUploader } from "@/components/ai/file-uploader";
@@ -748,12 +750,26 @@ export default function StudioCreatePage() {
               </button>
             </div>
 
+            {/* Dica para Vídeo com Fala Nativa */}
+            {activeTool === "video" && (
+              <div className="flex items-start gap-2 p-2.5 rounded-xl bg-violet-950/30 border border-violet-500/30 text-violet-200 text-[11px] leading-relaxed">
+                <MessageSquareQuote className="h-4 w-4 text-violet-400 shrink-0 mt-0.5" />
+                <span>
+                  <strong className="text-violet-300 font-semibold">Dica de Fala em Português:</strong> Para a modelo falar em português, coloque o diálogo obrigatoriamente <strong className="text-amber-300 underline underline-offset-2 font-bold">entre aspas</strong> (ex: <em className="text-white">"Gostou do look? Garanta o seu no link!"</em>). Falas sem aspas serão traduzidas para o inglês na cena.
+                </span>
+              </div>
+            )}
+
             <div className="relative rounded-2xl border border-[#1E202E] bg-[#070709] focus-within:border-violet-500/80 transition-all">
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 rows={4}
-                placeholder="Ex: Close cinematográfico de um samurai futurista com armadura cibernética de titânio e luzes néon azuis sob chuva, iluminação volumétrica, fotorrealista..."
+                placeholder={
+                  activeTool === "video"
+                    ? 'Ex: A modelo olha para a câmera sorrindo e diz: "Oi pessoal, confira essa novidade exclusiva!", movimento suave de câmera, 4k ultra realista...'
+                    : "Ex: Close cinematográfico de um samurai futurista com armadura cibernética de titânio e luzes néon azuis sob chuva, iluminação volumétrica, fotorrealista..."
+                }
                 className="w-full bg-transparent p-3.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 outline-none resize-none leading-relaxed break-words"
                 maxLength={1500}
               />

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { Sparkles, Dices, Trash2, Upload, X, RefreshCw } from "lucide-react";
+import { Sparkles, Dices, Trash2, Upload, X, RefreshCw, MessageSquareQuote } from "lucide-react";
 import { VideoCreationMode } from "./types";
 
 interface VideoInputSectionProps {
@@ -80,6 +80,14 @@ export function VideoInputSection({
         </button>
       </div>
 
+      {/* Dica para Vídeo com Fala Nativa */}
+      <div className="flex items-start gap-2 p-2.5 rounded-xl bg-violet-950/30 border border-violet-500/30 text-violet-200 text-[11px] leading-relaxed">
+        <MessageSquareQuote className="h-4 w-4 text-violet-400 shrink-0 mt-0.5" />
+        <span>
+          <strong className="text-violet-300 font-semibold">Dica de Fala em Português:</strong> Para a modelo falar em português, coloque o diálogo obrigatoriamente <strong className="text-amber-300 underline underline-offset-2 font-bold">entre aspas</strong> (ex: <em className="text-white">"Gostou? Compre no link oficial!"</em>). Sem aspas, a instrução será interpretada como ação de cena e traduzida para o inglês.
+        </span>
+      </div>
+
       {/* Caixa de Texto do Prompt com Borda Arredondada e Contador */}
       <div className="space-y-2">
         <div className="relative">
@@ -90,8 +98,8 @@ export function VideoInputSection({
             maxLength={1500}
             placeholder={
               creationMode === "image-to-video"
-                ? "Descreva a movimentação ou a ação desejada no vídeo a partir da imagem... Ex: A câmera faz zoom lento enquanto o cabelo da moça voa ao vento"
-                : "Uma mulher futurista em uma cidade cyberpunk, chuva neon, olhando para a câmera, movimento de câmera suave, ambiente cinematográfico, ultra realista, 8k."
+                ? 'Descreva a movimentação ou fala... Ex: A moça sorri para a câmera e diz "Essa coleção está incrível!", zoom cinematográfico suave'
+                : 'Uma mulher elegante em estúdio, olhando para a câmera e dizendo "Sejam todos muito bem-vindos ao Vorixa!", iluminação suave 8k.'
             }
             className="w-full bg-[#070709] border border-[#1E202E] rounded-xl p-3 text-xs text-white placeholder-slate-500 outline-none focus:border-violet-500/80 transition-colors resize-none leading-relaxed"
           />
