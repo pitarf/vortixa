@@ -465,8 +465,9 @@ export default function StudioCreatePage() {
 
       setStepText("Conectando ao cluster de IA");
 
-      // Atualiza prompt final nos inputs
+      // Atualiza prompt final nos inputs e marca como já otimizado para evitar dupla execução
       inputs.prompt = finalPrompt;
+      inputs.is_prompt_optimized = true;
 
       const idempotencyKey = `studio-${activeTool}-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
 

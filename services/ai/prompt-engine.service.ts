@@ -385,17 +385,22 @@ ${styleDirective}
 ${referenceImageDirective}
 
 MANDATORY DIRECTIVES:
-1. Full Body Shot (BALANCED CATALOG PROPORTIONS): If the user mentions "corpo todo", "corpo inteiro", "de corpo todo", "de corpo inteiro", "full body" or a standing model:
+1. STRICT SPEECH & DIALOGUE PRESERVATION (PORTUGUESE PT-BR):
+   - Whenever the prompt contains speech, dialogue, words to say, or text enclosed in quotes (e.g. "Gostou? Compre no carrinho laranja", falando '...', dizendo "..."):
+   - You MUST PRESERVE THE EXACT SPOKEN WORDS IN PORTUGUESE (PT-BR) WITHOUT TRANSLATING THEM!
+   - Format the speech explicitly as: speaking in Portuguese: "EXACT WORDS IN PORTUGUESE".
+   - NEVER translate Portuguese dialogue/spoken sentences to English! The video voice model needs the exact Portuguese words to generate the spoken audio!
+2. Full Body Shot (BALANCED CATALOG PROPORTIONS): If the user mentions "corpo todo", "corpo inteiro", "de corpo todo", "de corpo inteiro", "full body" or a standing model:
    - Use high-end fashion catalog / lookbook framing: "full-length photograph, subject standing, complete figure framed from head to toe with visible shoes and floor, well-proportioned vertical composition with clean headroom above and floor space below, captured with a 28mm or 35mm prime lens at f/8, sharp focus across the entire body, no cropped feet, model prominently filling the frame without the camera being placed excessively far away".
    - Do NOT use "shallow depth of field", "macro" or "close up" so legs and feet stay in complete focus.
-2. Background Fidelity & Quality:
+3. Background Fidelity & Quality:
    - If generating from scratch (no reference image): Present a clean, aesthetically pleasing, well-lit, contemporary setting suited to the prompt.
    - If modifying an existing photo: Preserve the existing background scenery (trees, ground, walls, props) faithfully and ONLY introduce the requested action or magical/visual effect. NEVER add unrequested people or furniture.
-3. Magical & Visual Effects: When the user asks for magical spells, energy effects, lightning, or auras (e.g. "feitiço na cor verde"):
+4. Magical & Visual Effects: When the user asks for magical spells, energy effects, lightning, or auras (e.g. "feitiço na cor verde"):
    - Describe it with breathtaking visual realism: "intense luminous emerald green magical energy swirling between the characters, radiant green spell particles, volumetric glow illuminating the subjects' clothing and faces with realistic green light bounce, hyper-detailed particle dynamics".
-4. Character & Costume Fidelity: Faithfully retain all characters mentioned, including costumes, masks, wigs, or specific clothes (e.g. green alligator/cuca costume in red dress, pink hair, sandals) exactly as described or shown in the reference photo.
-5. Lighting & Atmosphere: Enforce clear, natural, luminous ambient lighting matching the environment.
-6. Output Format: Output ONLY the translated, enriched prompt text directly without any conversational preamble or quotes.`;
+5. Character & Costume Fidelity: Faithfully retain all characters mentioned, including costumes, masks, wigs, or specific clothes (e.g. green alligator/cuca costume in red dress, pink hair, sandals) exactly as described or shown in the reference photo.
+6. Lighting & Atmosphere: Enforce clear, natural, luminous ambient lighting matching the environment.
+7. Output Format: Output ONLY the translated, enriched prompt text directly without any conversational preamble or extra commentary.`;
 
       const result: any = await fal.subscribe("fal-ai/any-llm", {
         input: {
@@ -406,10 +411,22 @@ MANDATORY DIRECTIVES:
 
       const llmOutput = result?.data?.output || result?.output || "";
       if (llmOutput && typeof llmOutput === "string" && llmOutput.trim().length > 10) {
-        console.log(`\n🧠 [IA REAL FAL.AI LLM ENRIQUECIMENTO]:\n${llmOutput.trim()}\n`);
+        let finalLlmText = llmOutput.trim();
+
+        // Safety-net: se o usuário colocou fala entre aspas no prompt original e o LLM não preservou em português,
+        // reinjeta a fala original em português garantindo integridade absoluta
+        if (localResult.preservedSpeech) {
+          const hasOriginalSpeech = finalLlmText.includes(localResult.preservedSpeech);
+          if (!hasOriginalSpeech) {
+            // Remove qualquer fala traduzida equivocadamente e anexa a original em português
+            finalLlmText = `${finalLlmText.replace(/speaking in (?:english|portuguese):?\s*"[^"]*"/gi, "").trim()}, speaking in Portuguese: "${localResult.preservedSpeech}"`;
+          }
+        }
+
+        console.log(`\n🧠 [IA REAL FAL.AI LLM ENRIQUECIMENTO]:\n${finalLlmText}\n`);
         return {
           originalPrompt: prompt,
-          optimizedPrompt: llmOutput.trim(),
+          optimizedPrompt: finalLlmText,
           preservedSpeech: localResult.preservedSpeech,
           inferredContext: localResult.inferredContext,
           isBasic: localResult.isBasic,
