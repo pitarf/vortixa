@@ -39,9 +39,10 @@ export function StudioVideoControls({
   selectedGender,
   onGenderChange,
 }: StudioVideoControlsProps) {
-  // Modelos como Seedance 2.0 já geram vídeo com áudio sincronizado nativamente pelo prompt,
-  // portanto a opção de LipSync só deve aparecer para modelos que NÃO possuem áudio nativo (Kling, Wan, Luma, Minimax).
-  const modelHasNativeAudio = selectedModelId.includes("seedance");
+  // Modelos como VORIXA IA e Seedance já geram vídeo com fala/áudio sincronizado nativamente pelo prompt,
+  // portanto a opção de LipSync manual só deve aparecer para modelos de vídeo puro que NÃO possuem áudio/fala nativa (Kling, Wan, Luma, Minimax).
+  const isVorixaIA = selectedModelId === "vorixa-ia" || selectedModelId.includes("vorixa");
+  const modelHasNativeAudio = isVorixaIA || selectedModelId.includes("seedance");
   return (
     <div className="border border-[#1E202E] rounded-2xl p-4 bg-[#070709] space-y-3 text-xs">
       {/* Duração e Resolução do Vídeo */}
