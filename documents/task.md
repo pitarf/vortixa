@@ -8,6 +8,12 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Kling 2.6 Pro com Áudio & Fala Nativa (All-in-One) e Descontinuação do VORIXA IA**:
+  - Integração do endpoint oficial `fal-ai/kling-video/v2.6/pro/image-to-video` com suporte unificado a `generate_audio: true`.
+  - Geração de vídeo e fala orgânica no mesmo espaço latente a partir de prompt com diálogos entre aspas.
+  - Eliminação de pipelines manuais encadeados e desalinhamentos de corte abrupto no áudio.
+  - Custo de API ultra-econômico (\$0,14/s com áudio nativo) e 18 créditos calibrados por geração de 5s.
+  - Remoção limpa do motor experimental VORIXA IA do Studio CREATE e restauração de regras de cálculo de créditos unificadas.
 - [x] **Motor Proprietário VORIXA IA (Vídeo & Fala 1-Clique - One-Prompt Magic)**:
   - Desenvolvimento do orquestrador `VorixaIAService` para geração de vídeo com fala a partir de foto ou prompt de texto em linguagem natural.
   - Script & Tone Engine com roteirização comercial em PT-BR para moda, produtos e institucional.

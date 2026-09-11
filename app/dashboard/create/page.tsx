@@ -353,31 +353,19 @@ export default function StudioCreatePage() {
 
     const toolDef = TOOLS[activeTool];
     const selectedModel = toolDef.models.find((m) => m.id === selectedModelId) || toolDef.models[0];
-    const isVorixaIA = activeTool === "video" && selectedModel.id === "vorixa-ia";
     const hasTalkingVideo = activeTool === "video" && enableTalkingVideo && Boolean(speechText.trim());
+    
     let cost = 0;
-    if (isVorixaIA) {
-      const is4K = videoQuality === "ultra4k";
-      const is1080p = videoQuality === "high";
-      if (duration === "30") {
-        cost = is4K ? 150 : is1080p ? 120 : 65;
-      } else if (duration === "10") {
-        cost = is4K ? 60 : is1080p ? 45 : 25;
-      } else {
-        cost = is4K ? 35 : is1080p ? 25 : 15;
-      }
-    } else {
-      const durationMultiplier = (activeTool === "video" && duration === "10") ? 2 : (activeTool === "video" && duration === "30") ? 3 : 1;
-      const isKling = activeTool === "video" && selectedModel.id.includes("kling");
-      const qualityMultiplier = isKling
-        ? videoQuality === "ultra4k"
-          ? 2.0
-          : videoQuality === "high"
-          ? 1.5
-          : 1.0
-        : 1.0;
-      cost = Math.round((selectedModel.cost * durationMultiplier * qualityMultiplier)) + (hasTalkingVideo ? 9 : 0);
-    }
+    const durationMultiplier = (activeTool === "video" && duration === "10") ? 2 : (activeTool === "video" && duration === "30") ? 3 : 1;
+    const isKling = activeTool === "video" && selectedModel.id.includes("kling");
+    const qualityMultiplier = isKling
+      ? videoQuality === "ultra4k"
+        ? 2.0
+        : videoQuality === "high"
+        ? 1.5
+        : 1.0
+      : 1.0;
+    cost = Math.round((selectedModel.cost * durationMultiplier * qualityMultiplier)) + (hasTalkingVideo ? 9 : 0);
 
     if (creditMode !== "UNLIMITED" && balance < cost) {
       toast.error(`Saldo insuficiente (${balance} créditos disponíveis. Custo: ${cost}).`);

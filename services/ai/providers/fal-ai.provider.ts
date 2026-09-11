@@ -128,7 +128,7 @@ export class FalAIProvider implements IAIProvider {
       delete modelInputs.style;
       delete modelInputs.resolution;
 
-      // Kling AI (v1.5, v2.1 Pro/Master, v3 Pro, etc.): mapeia variações de imagem e duração
+      // Kling AI (v1.5, v2.1 Pro, v2.6 Pro com Áudio/Fala Nativa, v3 Pro, etc.)
       if (payload.modelTechnicalName.includes("kling")) {
         const inputImg = modelInputs.image_url || modelInputs.prompt_image_url || modelInputs.image || modelInputs.start_image_url;
         if (inputImg) {
@@ -137,7 +137,9 @@ export class FalAIProvider implements IAIProvider {
           modelInputs.start_image_url = inputImg;
         } else if (payload.modelTechnicalName.includes("image-to-video")) {
           // Se o usuário selecionou Kling em modo texto (sem imagem), roteia para o endpoint correspondente de Text-to-Video
-          if (payload.modelTechnicalName.includes("v3")) {
+          if (payload.modelTechnicalName.includes("v2.6")) {
+            payload.modelTechnicalName = "fal-ai/kling-video/v2.6/pro/text-to-video";
+          } else if (payload.modelTechnicalName.includes("v3")) {
             if (payload.modelTechnicalName.includes("standard")) {
               payload.modelTechnicalName = "fal-ai/kling-video/v3/standard/text-to-video";
             } else {
@@ -147,6 +149,14 @@ export class FalAIProvider implements IAIProvider {
             payload.modelTechnicalName = "fal-ai/kling-video/v1.5/pro/text-to-video";
           }
         }
+
+        // Habilita áudio nativo sincronizado se for Kling 2.6 Pro
+        if (payload.modelTechnicalName.includes("v2.6")) {
+          if (modelInputs.generate_audio === undefined) {
+            modelInputs.generate_audio = true;
+          }
+        }
+
         if (modelInputs.duration) {
           modelInputs.duration = String(modelInputs.duration); // "5" ou "10"
         }

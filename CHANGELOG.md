@@ -5,6 +5,19 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.9.5] - 2026-09-11
+### Kling 2.6 Pro com Áudio & Fala Nativa (All-in-One) e Descontinuação do VORIXA IA
+- **Kling 2.6 Pro com Fala Nativa Integrada (`fal-ai/kling-video/v2.6/pro/image-to-video`)**:
+  - Geração cinematográfica unificada de vídeo com atuação corporal, som ambiente e locução falada sincronizados no mesmo espaço latente com o parâmetro oficial `generate_audio: true`.
+  - Eliminação de pipelines manuais encadeados e desalinhamentos de corte abrupto no final da fala.
+  - O modelo compreende instruções de atuação e diálogos diretamente no prompt com respiração e gesticulação natural.
+- **Transparência e Custo-Benefício no Studio CREATE (`components/studio/*`)**:
+  - Promovido a motor padrão líder de vídeo no Studio com badge `Áudio & Fala 🗣️`.
+  - Custo de API ultra-competitivo: \$0,14/segundo com áudio nativo (50% mais econômico que o Veo 3).
+  - Precificação calibrada em 18 créditos por geração padrão de 5s, mantendo margem de lucro saudável.
+- **Desativação do Pipeline Legado do VORIXA IA**:
+  - Removido do catálogo de seleção para evitar sobreposições e falsos positivos de sincronismo.
+
 ## [1.9.4] - 2026-09-10
 ### Lançamento do Motor Proprietário VORIXA IA (Vídeo & Fala 1-Clique)
 - **Motor End-to-End VORIXA IA (`services/ai/vorixa-ia.service.ts`)**:

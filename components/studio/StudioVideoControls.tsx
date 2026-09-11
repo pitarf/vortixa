@@ -39,10 +39,12 @@ export function StudioVideoControls({
   selectedGender,
   onGenderChange,
 }: StudioVideoControlsProps) {
-  // Modelos como VORIXA IA e Seedance já geram vídeo com fala/áudio sincronizado nativamente pelo prompt,
-  // portanto a opção de LipSync manual só deve aparecer para modelos de vídeo puro que NÃO possuem áudio/fala nativa (Kling, Wan, Luma, Minimax).
-  const isVorixaIA = selectedModelId === "vorixa-ia" || selectedModelId.includes("vorixa");
-  const modelHasNativeAudio = isVorixaIA || selectedModelId.includes("seedance");
+  // Modelos como Kling 2.6 Pro e Seedance já geram vídeo com fala/áudio sincronizado nativamente pelo prompt,
+  // portanto a opção de LipSync manual só deve aparecer para modelos de vídeo puro que NÃO possuem áudio/fala nativa (Kling 2.1, Wan, Luma, Minimax).
+  const modelHasNativeAudio =
+    selectedModelId.includes("v2.6") ||
+    selectedModelId.includes("seedance") ||
+    selectedModelId === "vorixa-ia";
   return (
     <div className="border border-[#1E202E] rounded-2xl p-4 bg-[#070709] space-y-3 text-xs">
       {/* Duração e Resolução do Vídeo */}
