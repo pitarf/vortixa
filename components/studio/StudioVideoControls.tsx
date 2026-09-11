@@ -50,12 +50,12 @@ export function StudioVideoControls({
         <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#13141B]/60 border border-[#1E202E]">
           <span className="text-slate-300 font-bold">Duração</span>
           <div className="flex gap-1.5">
-            {["5", "10"].map((d) => (
+            {["5", "10", "30"].map((d) => (
               <button
                 key={d}
                 type="button"
                 onClick={() => onDurationChange(d)}
-                className={`px-3.5 py-2 rounded-lg font-mono font-bold transition-all cursor-pointer min-h-[40px] min-w-[44px] flex items-center justify-center ${
+                className={`px-3 py-2 rounded-lg font-mono font-bold transition-all cursor-pointer min-h-[40px] min-w-[40px] flex items-center justify-center ${
                   duration === d
                     ? "bg-cyan-600/30 border border-cyan-500 text-cyan-300"
                     : "bg-[#070709] text-slate-400 hover:text-white"

@@ -22,6 +22,15 @@ async function main() {
   // 2. Modelos e Ferramentas
   const models = [
     {
+      name: 'VORIXA IA (Vídeo & Fala 1-Clique)',
+      technicalName: 'vorixa-ia',
+      creditCost: 15,
+      apiUnitCost: 0.28,
+      toolSlug: 'vorixa-ia-video',
+      toolName: 'VORIXA IA (Vídeo & Fala 1-Clique)',
+      toolDesc: 'Motor proprietário: crie vídeos falantes de fotos ou texto em 1 único prompt com voz neural em português e sincronia labial automática.',
+    },
+    {
       name: 'FLUX Schnell',
       technicalName: 'fal-ai/flux/schnell',
       creditCost: 1,

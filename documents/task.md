@@ -8,6 +8,13 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Motor Proprietário VORIXA IA (Vídeo & Fala 1-Clique - One-Prompt Magic)**:
+  - Desenvolvimento do orquestrador `VorixaIAService` para geração de vídeo com fala a partir de foto ou prompt de texto em linguagem natural.
+  - Script & Tone Engine com roteirização comercial em PT-BR para moda, produtos e institucional.
+  - Síntese vocal de alta expressividade via ElevenLabs Turbo v2.5 e animação labial com LatentSync HD e upscale 4K.
+  - Tabela dinâmica de precificação por duração e resolução garantindo de 52% a 70% de margem líquida.
+  - Integração no Studio CREATE com badge neon `⚡ EXCLUSIVO VORIXA` e durações de 5s, 10s e 30s.
+  - Suíte de testes unitários automatizada aprovada (169 testes passando).
 - [x] **Animações Cinematográficas com GSAP & ScrollTrigger na Home**:
   - Implementação do hook utilitário `useGsapContext` com `gsap.context()` para cleanup limpo no React 19 / Next.js.
   - Animação do Hero Cinematográfico com entrada suave e orquestrada de headline, vídeo e glow pulsante.

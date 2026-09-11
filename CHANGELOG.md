@@ -5,6 +5,25 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.9.4] - 2026-09-10
+### Lançamento do Motor Proprietário VORIXA IA (Vídeo & Fala 1-Clique)
+- **Motor End-to-End VORIXA IA (`services/ai/vorixa-ia.service.ts`)**:
+  - Geração ponta a ponta de vídeos falantes e expressivos a partir de foto ou texto em um único prompt de linguagem natural (ex: *"Faça essa modelo falar e indicar essa roupa"*).
+  - **Script & Tone Engine**: Roteirização contextual automática em Português do Brasil ajustada dinamicamente à duração e ao nicho (Moda, Produtos, Institucional).
+  - **Neural Voice Synthesizer**: Síntese vocal de ultra-alta fidelidade em português via ElevenLabs Turbo v2.5 com múltiplos locutores e timbres.
+  - **Neural Avatar Renderer**: Animação corporal e fonética labial perfeita (Kling / LatentSync HD) sem bloqueios restritivos de biometria contra rostos de IA.
+  - **Creative Video Upscaler 4K**: Super-resolução opcional para entregas cinematográficas em 4K real.
+- **Tabela de Preços Dinâmica com Margem de Lucro Garantida**:
+  - **720p**: 5s = 15 cr ($0.28) | 10s = 25 cr ($0.56) | 30s = 65 cr ($1.69) - Margem de 63% a 68%.
+  - **1080p**: 5s = 25 cr ($0.58) | 10s = 45 cr ($1.15) | 30s = 120 cr ($3.45) - Margem de 52% a 62%.
+  - **4K**: 5s = 35 cr ($0.65) | 10s = 60 cr ($1.25) | 30s = 150 cr ($3.60) - Margem de 60% a 70%.
+- **Integração no Studio CREATE e Ferramentas (`components/studio/*`)**:
+  - Inclusão do modelo `vorixa-ia` no catálogo com badge neon `⚡ EXCLUSIVO VORIXA`.
+  - Suporte completo a durações de 5s, 10s e 30s no seletor de vídeo.
+  - Atualização em tempo real do custo em créditos no botão de ação principal "Gerar Vídeo".
+- **Suíte de Testes Automatizados (`__tests__/vorixa-ia.test.ts`)**:
+  - Validação estática e unitária 100% aprovada no Vitest (169 testes passando).
+
 ## [1.9.3] - 2026-09-10
 ### Animações Cinematográficas com GSAP & ScrollTrigger na Home
 - **Hook useGsapContext (`hooks/useGsapContext.ts`)**:

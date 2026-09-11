@@ -59,6 +59,7 @@ export const TOOLS: Record<StudioTool, ToolDefinition> = {
     description: "Dê vida e movimento a fotos ou crie cenas de vídeo cinematográficas.",
     color: "from-cyan-500 to-blue-600",
     models: [
+      { id: "vorixa-ia", name: "VORIXA IA (Vídeo & Fala 1-Clique)", badge: "⚡ EXCLUSIVO VORIXA", cost: 15, description: "Crie vídeos falantes de fotos ou texto em 1 único prompt com voz neural em português e sincronia labial automática", speed: "~ 30s" },
       { id: "fal-ai/bytedance/seedance-2.5", name: "ByteDance Seedance 2.5", badge: "Cinema Master 👑", cost: 25, description: "Topo de linha mundial: até 30s de vídeo contínuo, som nativo e física hiper-realista", speed: "~ 55s" },
       { id: "fal-ai/bytedance/seedance-2.0", name: "ByteDance Seedance 2.0", badge: "Áudio & Física ⚡", cost: 20, description: "Motor líder da ByteDance com física real e áudio sincronizado nativo", speed: "~ 45s" },
       { id: "fal-ai/wan-i2v", name: "Wan 2.1 High-Motion", badge: "Super Econômico ⚡", cost: 10, description: "Movimentos corporais fluidos e alta estabilidade em 720p com menor custo", speed: "~ 35s" },

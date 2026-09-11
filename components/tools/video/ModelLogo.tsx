@@ -21,6 +21,31 @@ export function ModelLogo({ modelId, className = "", size = "md" }: ModelLogoPro
     lg: "w-14 h-14 min-w-[56px] min-h-[56px] max-w-[56px] max-h-[56px] rounded-2xl",
   }[size];
 
+  // VORIXA IA (Motor Proprietário)
+  if (modelId === "vorixa-ia" || modelId.includes("vorixa")) {
+    return (
+      <div
+        className={`relative ${sizeClasses} bg-gradient-to-br from-[#120826] via-[#2E1065] to-[#06B6D4] border border-cyan-400/50 flex flex-col items-center justify-center p-0.5 shadow-lg shadow-cyan-950/40 overflow-hidden flex-shrink-0 select-none ${className}`}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(6,182,212,0.4),transparent_70%)] pointer-events-none" />
+        <span
+          className={`font-black text-white tracking-tighter leading-none font-sans ${
+            isSm ? "text-[8px]" : "text-[11px]"
+          }`}
+        >
+          VORIXA
+        </span>
+        <span
+          className={`font-mono font-extrabold text-cyan-200 leading-none px-1 py-0.2 rounded bg-cyan-950/70 border border-cyan-400/40 ${
+            isSm ? "text-[6px] mt-0.5" : "text-[8px] mt-0.5"
+          }`}
+        >
+          IA ⚡
+        </span>
+      </div>
+    );
+  }
+
   // Kling 2.1 Pro
   if (modelId.includes("kling-video/v2.1")) {
     return (
@@ -172,6 +197,106 @@ export function ModelLogo({ modelId, className = "", size = "md" }: ModelLogoPro
           }`}
         >
           MiniMax
+        </span>
+      </div>
+    );
+  }
+
+  // Google Nano Banana Pro
+  if (modelId.includes("nano-banana")) {
+    return (
+      <div
+        className={`relative ${sizeClasses} bg-gradient-to-br from-[#1F1300] via-[#593E00] to-[#EAB308] border border-yellow-500/50 flex flex-col items-center justify-center p-0.5 shadow-md shadow-yellow-950/40 overflow-hidden flex-shrink-0 select-none ${className}`}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(234,179,8,0.4),transparent_70%)] pointer-events-none" />
+        <span
+          className={`font-black text-white tracking-tight leading-none font-sans ${
+            isSm ? "text-[8px]" : "text-[11px]"
+          }`}
+        >
+          GOOGLE
+        </span>
+        <span
+          className={`font-mono font-extrabold text-yellow-200 leading-none px-1 rounded bg-yellow-950/70 border border-yellow-500/30 ${
+            isSm ? "text-[6px] mt-0.5" : "text-[8px] mt-0.5"
+          }`}
+        >
+          BANANA 🍌
+        </span>
+      </div>
+    );
+  }
+
+  // FLUX (PuLID, Schnell, Pro Ultra)
+  if (modelId.includes("flux")) {
+    return (
+      <div
+        className={`relative ${sizeClasses} bg-gradient-to-br from-[#0F172A] via-[#1E1B4B] to-[#6366F1] border border-indigo-400/50 flex flex-col items-center justify-center p-0.5 shadow-md shadow-indigo-950/40 overflow-hidden flex-shrink-0 select-none ${className}`}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.4),transparent_70%)] pointer-events-none" />
+        <span
+          className={`font-black text-white tracking-tighter leading-none font-sans ${
+            isSm ? "text-[9px]" : "text-[12px]"
+          }`}
+        >
+          FLUX
+        </span>
+        <span
+          className={`font-mono font-extrabold text-indigo-200 leading-none px-1 rounded bg-indigo-950/70 border border-indigo-400/30 ${
+            isSm ? "text-[6px] mt-0.5" : "text-[7.5px] mt-0.5"
+          }`}
+        >
+          {modelId.includes("pulid") ? "PuLID 👤" : modelId.includes("ultra") ? "ULTRA 👑" : "1.0 ⚡"}
+        </span>
+      </div>
+    );
+  }
+
+  // Recraft V3
+  if (modelId.includes("recraft")) {
+    return (
+      <div
+        className={`relative ${sizeClasses} bg-gradient-to-br from-[#1C051D] via-[#4A0E4E] to-[#EC4899] border border-pink-500/50 flex flex-col items-center justify-center p-0.5 shadow-md shadow-pink-950/40 overflow-hidden flex-shrink-0 select-none ${className}`}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(236,72,153,0.4),transparent_70%)] pointer-events-none" />
+        <span
+          className={`font-black text-white tracking-tight leading-none font-sans ${
+            isSm ? "text-[8px]" : "text-[11px]"
+          }`}
+        >
+          RECRAFT
+        </span>
+        <span
+          className={`font-mono font-extrabold text-pink-200 leading-none px-1 rounded bg-pink-950/70 border border-pink-500/30 ${
+            isSm ? "text-[6px] mt-0.5" : "text-[8px] mt-0.5"
+          }`}
+        >
+          V3 🎨
+        </span>
+      </div>
+    );
+  }
+
+  // LatentSync / LipSync
+  if (modelId.includes("latentsync") || modelId.includes("lipsync")) {
+    return (
+      <div
+        className={`relative ${sizeClasses} bg-gradient-to-br from-[#061C18] via-[#0D4D43] to-[#10B981] border border-emerald-400/50 flex flex-col items-center justify-center p-0.5 shadow-md shadow-emerald-950/40 overflow-hidden flex-shrink-0 select-none ${className}`}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.4),transparent_70%)] pointer-events-none" />
+        <span
+          className={`font-black text-white tracking-tight leading-none font-sans ${
+            isSm ? "text-[8px]" : "text-[11px]"
+          }`}
+        >
+          LIPSYNC
+        </span>
+        <span
+          className={`font-mono font-extrabold text-emerald-200 leading-none px-1 rounded bg-emerald-950/70 border border-emerald-400/30 ${
+            isSm ? "text-[6px] mt-0.5" : "text-[8px] mt-0.5"
+          }`}
+        >
+          PRO 👄
         </span>
       </div>
     );

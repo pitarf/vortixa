@@ -44,13 +44,36 @@ export async function POST(req: Request) {
       }
     }
 
+    // Se for uma requisição do motor proprietário VORIXA IA (One-Prompt Magic Video)
+    const isVorixaIA =
+      parsed.data.modelId === "vorixa-ia" ||
+      parsed.data.inputs?.engine === "vorixa-ia" ||
+      parsed.data.inputs?.engine === "VORIXA_IA_ONE_PROMPT";
+
     // Se for uma requisição de vídeo com fala/áudio (One-Shot Talking Video)
     const isTalkingVideo =
       parsed.data.inputs?.is_talking_video === true ||
       Boolean(parsed.data.inputs?.speech_text && parsed.data.inputs.speech_text.trim());
 
     let job;
-    if (isTalkingVideo) {
+    if (isVorixaIA) {
+      const { VorixaIAService } = await import("@/services/ai/vorixa-ia.service");
+      job = await VorixaIAService.submitVorixaIAJob({
+        userId: session.user.id,
+        prompt: parsed.data.inputs.prompt || "",
+        imageUrl:
+          parsed.data.inputs.image_url ||
+          parsed.data.inputs.prompt_image_url ||
+          parsed.data.inputs.image ||
+          parsed.data.inputs.reference_image_url ||
+          (Array.isArray(parsed.data.inputs.image_urls) ? parsed.data.inputs.image_urls[0] : parsed.data.inputs.image_urls),
+        duration: parsed.data.inputs.duration || "5",
+        resolution: parsed.data.inputs.resolution || parsed.data.inputs.quality || "720p",
+        voice: parsed.data.inputs.voice || "Rachel",
+        speechText: parsed.data.inputs.speech_text,
+        idempotencyKey: parsed.data.idempotencyKey,
+      });
+    } else if (isTalkingVideo) {
       const { TalkingVideoService } = await import("@/services/talking-video.service");
       job = await TalkingVideoService.createTalkingVideoJob({
         userId: session.user.id,
