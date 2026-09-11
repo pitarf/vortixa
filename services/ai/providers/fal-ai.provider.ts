@@ -150,10 +150,21 @@ export class FalAIProvider implements IAIProvider {
           }
         }
 
-        // Habilita áudio nativo sincronizado se for Kling 2.6 Pro
+        // Habilita áudio nativo sincronizado se for Kling 2.6 Pro e reforça sotaque brasileiro autêntico
         if (payload.modelTechnicalName.includes("v2.6")) {
           if (modelInputs.generate_audio === undefined) {
             modelInputs.generate_audio = true;
+          }
+
+          // Se o prompt possui diálogo ou fala em português, reforça diretiva de sotaque brasileiro nativo (pt-BR)
+          if (modelInputs.prompt && typeof modelInputs.prompt === "string") {
+            const hasQuote = /["“'`]([^"”'`]+)["”'`]/.test(modelInputs.prompt);
+            const mentionsPt = /portuguese|português/i.test(modelInputs.prompt);
+            if (hasQuote || mentionsPt) {
+              if (!/native Brazilian accent|Brazilian Portuguese/i.test(modelInputs.prompt)) {
+                modelInputs.prompt = `${modelInputs.prompt.trim()}, audio in fluent Brazilian Portuguese with a natural native Brazilian accent, authentic clear Brazilian voice`;
+              }
+            }
           }
         }
 

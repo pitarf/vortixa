@@ -114,28 +114,29 @@ export function StudioVideoControls({
         </div>
       </div>
 
-      {/* One-Shot Talking Video Toggle (Exibido apenas em modelos sem áudio nativo) */}
-      {!modelHasNativeAudio && (
-        <div className="pt-3 border-t border-[#1E202E] space-y-2.5">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <Sparkles className="w-4 h-4 text-violet-400 shrink-0" />
-              <span className="text-xs font-bold text-white truncate">Voz & Fala do Personagem (LipSync)</span>
-            </div>
-            <label className="relative inline-flex items-center justify-center cursor-pointer min-h-[44px] min-w-[44px] p-2 -mr-2">
-              <input
-                type="checkbox"
-                checked={enableTalkingVideo}
-                onChange={(e) => onToggleTalkingVideo(e.target.checked)}
-                className="sr-only peer"
-                aria-label="Ativar Voz e Fala do Personagem"
-              />
-              <div className="w-10 h-5 bg-[#1E202E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[14px] after:left-[10px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-violet-600 peer-checked:to-cyan-500"></div>
-            </label>
+      {/* One-Shot Talking Video / LipSync com Voz de Estúdio ElevenLabs (PT-BR) */}
+      <div className="pt-3 border-t border-[#1E202E] space-y-2.5">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <Sparkles className="w-4 h-4 text-violet-400 shrink-0" />
+            <span className="text-xs font-bold text-white truncate">Voz de Estúdio BR & LipSync (ElevenLabs)</span>
           </div>
-          <p className="text-[10px] text-slate-400 leading-tight">
-            Gera a fala neural e sincroniza os lábios automaticamente (+9 cr).
-          </p>
+          <label className="relative inline-flex items-center justify-center cursor-pointer min-h-[44px] min-w-[44px] p-2 -mr-2">
+            <input
+              type="checkbox"
+              checked={enableTalkingVideo}
+              onChange={(e) => onToggleTalkingVideo(e.target.checked)}
+              className="sr-only peer"
+              aria-label="Ativar Voz e Fala do Personagem"
+            />
+            <div className="w-10 h-5 bg-[#1E202E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[14px] after:left-[10px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-violet-600 peer-checked:to-cyan-500"></div>
+          </label>
+        </div>
+        <p className="text-[10px] text-slate-400 leading-tight">
+          {modelHasNativeAudio
+            ? "Opcional: Substitui o áudio sintetizado pelo realismo de atores brasileiros reais com ElevenLabs (+9 cr)."
+            : "Gera a fala neural e sincroniza os lábios automaticamente (+9 cr)."}
+        </p>
 
           {enableTalkingVideo && (
             <div className="space-y-2 pt-1 animate-in fade-in-50 duration-200">
@@ -202,10 +203,9 @@ export function StudioVideoControls({
                   className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl p-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-violet-500 resize-none leading-tight"
                 />
               </div>
-            </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

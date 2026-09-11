@@ -385,11 +385,11 @@ ${styleDirective}
 ${referenceImageDirective}
 
 MANDATORY DIRECTIVES:
-1. STRICT SPEECH & DIALOGUE PRESERVATION (PORTUGUESE PT-BR):
+1. STRICT SPEECH & DIALOGUE PRESERVATION (NATURAL BRAZILIAN PORTUGUESE PT-BR):
    - Whenever the prompt contains speech, dialogue, words to say, or text enclosed in quotes (e.g. "Gostou? Compre no carrinho laranja", falando '...', dizendo "..."):
-   - You MUST PRESERVE THE EXACT SPOKEN WORDS IN PORTUGUESE (PT-BR) WITHOUT TRANSLATING THEM!
-   - Format the speech explicitly as: speaking in Portuguese: "EXACT WORDS IN PORTUGUESE".
-   - NEVER translate Portuguese dialogue/spoken sentences to English! The video voice model needs the exact Portuguese words to generate the spoken audio!
+   - You MUST PRESERVE THE EXACT SPOKEN WORDS IN BRAZILIAN PORTUGUESE (PT-BR) WITHOUT TRANSLATING THEM!
+   - Format the speech explicitly as: speaking naturally in fluent Brazilian Portuguese with a native Brazilian accent: "EXACT WORDS IN PORTUGUESE".
+   - NEVER translate Portuguese dialogue/spoken sentences to English! The video voice model needs the exact Portuguese words and native Brazilian accent guidance to generate authentic spoken audio!
 2. Full Body Shot (BALANCED CATALOG PROPORTIONS): If the user mentions "corpo todo", "corpo inteiro", "de corpo todo", "de corpo inteiro", "full body" or a standing model:
    - Use high-end fashion catalog / lookbook framing: "full-length photograph, subject standing, complete figure framed from head to toe with visible shoes and floor, well-proportioned vertical composition with clean headroom above and floor space below, captured with a 28mm or 35mm prime lens at f/8, sharp focus across the entire body, no cropped feet, model prominently filling the frame without the camera being placed excessively far away".
    - Do NOT use "shallow depth of field", "macro" or "close up" so legs and feet stay in complete focus.
@@ -414,12 +414,12 @@ MANDATORY DIRECTIVES:
         let finalLlmText = llmOutput.trim();
 
         // Safety-net: se o usuário colocou fala entre aspas no prompt original e o LLM não preservou em português,
-        // reinjeta a fala original em português garantindo integridade absoluta
+        // reinjeta a fala original em português garantindo integridade absoluta e sotaque brasileiro autêntico
         if (localResult.preservedSpeech) {
           const hasOriginalSpeech = finalLlmText.includes(localResult.preservedSpeech);
           if (!hasOriginalSpeech) {
-            // Remove qualquer fala traduzida equivocadamente e anexa a original em português
-            finalLlmText = `${finalLlmText.replace(/speaking in (?:english|portuguese):?\s*"[^"]*"/gi, "").trim()}, speaking in Portuguese: "${localResult.preservedSpeech}"`;
+            // Remove qualquer fala traduzida equivocadamente e anexa a original em português brasileiro
+            finalLlmText = `${finalLlmText.replace(/speaking (?:naturally )?in (?:english|portuguese|brazilian portuguese)[^:]*:?\s*"[^"]*"/gi, "").trim()}, speaking naturally in fluent Brazilian Portuguese with a native Brazilian accent: "${localResult.preservedSpeech}"`;
           }
         }
 
@@ -647,7 +647,7 @@ MANDATORY DIRECTIVES:
 
     // 5. Reanexar fala original
     if (speechContent) {
-      translated = `${translated.trim()} [Dialogue/Speech Script: "${speechContent}"]`;
+      translated = `${translated.trim()}, speaking naturally in fluent Brazilian Portuguese with a native Brazilian accent: "${speechContent}"`;
     }
 
     return {
