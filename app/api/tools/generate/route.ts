@@ -111,12 +111,13 @@ export async function POST(req: Request) {
       err.message.includes("inativ") ||
       err.message.includes("indisponível") ||
       err.message.includes("não configurad") ||
+      err.message.includes("não foi encontrado") ||
       err.message.includes("Não autorizado") ||
       err.message.includes("excede") ||
       err.message.includes("insuficiente") ||
       err.message.includes("suspensa")
     );
-    const msg = isBusinessError ? err.message : "Ocorreu um erro de processamento da geração de IA.";
+    const msg = isBusinessError ? err.message : (err.message || "Ocorreu um erro de processamento da geração de IA.");
     return NextResponse.json({ error: msg }, { status: 400 });
   }
 }
