@@ -11,8 +11,38 @@ import { Zap, Volume2, VolumeX } from "lucide-react";
  */
 export function HeroCinematic() {
   const [isMuted, setIsMuted] = useState<boolean>(true);
-  const [activeHeroVideo, setActiveHeroVideo] = useState<string>("/uploads/f80d19de-085b-4378-98ea-b7733c8ffdd8.mp4");
-  const [activeHeroTag, setActiveHeroTag] = useState<string>("Kling 2.6 Pro + Áudio");
+  const heroVideos = [
+    {
+      id: "hero_carnaval",
+      label: "🎉 Atuação em Português (Seedance)",
+      src: "/uploads/87cf520d-8277-4f00-9644-26f4584735a6.mp4",
+      poster: "/uploads/867192da-b5f6-4d67-b4b5-8191723e46fe.jpg",
+      tag: "ByteDance Seedance 2.0 Native",
+    },
+    {
+      id: "hero_speech",
+      label: "🗣️ Modelo Falando (Kling 2.6)",
+      src: "/uploads/f80d19de-085b-4378-98ea-b7733c8ffdd8.mp4",
+      poster: "/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg",
+      tag: "Kling 2.6 Pro + Áudio",
+    },
+    {
+      id: "hero_seedance",
+      label: "⚡ Seedance 2.0 (Vídeo & Fala)",
+      src: "/uploads/cacdb6d2-4c8a-4f7e-8f14-8e7d7a21f287.mp4",
+      poster: "/uploads/867192da-b5f6-4d67-b4b5-8191723e46fe.jpg",
+      tag: "ByteDance Seedance 2.0",
+    },
+    {
+      id: "hero_kling21",
+      label: "👗 Moda & Movimento (Kling 2.1)",
+      src: "/uploads/bdc1b96b-d7d2-4f55-8f2b-a90631629c00.mp4",
+      poster: "/uploads/bc3c42a6-32d9-4f53-bbc8-a27accc1800e.jpg",
+      tag: "Kling 2.1 Pro",
+    },
+  ];
+
+  const [activeHero, setActiveHero] = useState(heroVideos[0]);
 
   return (
     <section className="pt-24 pb-8 md:pt-28 md:pb-12 px-3 sm:px-6 max-w-7xl mx-auto relative">
@@ -39,41 +69,13 @@ export function HeroCinematic() {
 
         {/* Seletor de Vídeos Reais Gerados */}
         <div className="flex flex-wrap items-center justify-center gap-2 max-w-3xl animate-hero-fade-3">
-          {[
-            {
-              id: "hero_speech",
-              label: "🗣️ Modelo Falando (Kling 2.6)",
-              src: "/uploads/f80d19de-085b-4378-98ea-b7733c8ffdd8.mp4",
-              tag: "Kling 2.6 Pro + Áudio",
-            },
-            {
-              id: "hero_seedance",
-              label: "⚡ Seedance 2.0 (Vídeo & Fala)",
-              src: "/uploads/cacdb6d2-4c8a-4f7e-8f14-8e7d7a21f287.mp4",
-              tag: "ByteDance Seedance 2.0",
-            },
-            {
-              id: "hero_kling21",
-              label: "👗 Moda & Movimento (Kling 2.1)",
-              src: "/uploads/bdc1b96b-d7d2-4f55-8f2b-a90631629c00.mp4",
-              tag: "Kling 2.1 Pro",
-            },
-            {
-              id: "hero_carnaval",
-              label: "🎉 Atuação em Português",
-              src: "/uploads/87cf520d-8277-4f00-9644-26f4584735a6.mp4",
-              tag: "Seedance 2.0 Native",
-            },
-          ].map((item) => (
+          {heroVideos.map((item) => (
             <button
               key={item.id}
               type="button"
-              onClick={() => {
-                setActiveHeroVideo(item.src);
-                setActiveHeroTag(item.tag);
-              }}
+              onClick={() => setActiveHero(item)}
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
-                activeHeroVideo === item.src
+                activeHero.id === item.id
                   ? "bg-slate-900 text-white border-slate-900 shadow-md scale-105"
                   : "bg-white/80 hover:bg-white text-slate-700 border-slate-300"
               }`}
@@ -86,9 +88,9 @@ export function HeroCinematic() {
         {/* Video Player Protagonista com Mídia Real */}
         <div className="w-full max-w-4xl mx-auto rounded-2xl sm:rounded-3xl overflow-hidden bg-black border border-slate-300/80 shadow-2xl relative aspect-video group transition-all duration-700 hover:shadow-[0_25px_60px_rgba(99,102,241,0.25)] animate-hero-fade-3">
           <video
-            key={activeHeroVideo}
-            src={activeHeroVideo}
-            poster="/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg"
+            key={activeHero.src}
+            src={activeHero.src}
+            poster={activeHero.poster}
             autoPlay
             loop
             muted={isMuted}
@@ -99,7 +101,7 @@ export function HeroCinematic() {
 
           {/* Badge do Motor Utilizado */}
           <div className="absolute top-4 left-4 bg-black/70 border border-white/20 px-3 py-1 rounded-xl text-[11px] font-mono text-cyan-300 font-bold backdrop-blur-md">
-            Gerado com: {activeHeroTag}
+            Gerado com: {activeHero.tag}
           </div>
 
           {/* Controle de Áudio Flutuante */}
