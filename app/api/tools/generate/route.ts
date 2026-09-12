@@ -117,7 +117,8 @@ export async function POST(req: Request) {
       err.message.includes("insuficiente") ||
       err.message.includes("suspensa")
     );
-    const msg = isBusinessError ? err.message : (err.message || "Ocorreu um erro de processamento da geração de IA.");
+    const isSyntaxOrInternal = err instanceof SyntaxError || (err.message && (err.message.includes("JSON") || err.message.includes("token")));
+    const msg = isBusinessError && !isSyntaxOrInternal ? err.message : "Ocorreu um erro de processamento da geração de IA.";
     return NextResponse.json({ error: msg }, { status: 400 });
   }
 }
