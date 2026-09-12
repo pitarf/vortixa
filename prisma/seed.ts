@@ -212,6 +212,46 @@ async function main() {
     },
   ];
 
+  // Provedor WaveSpeed AI
+  const wavespeedProvider = await prisma.aIProvider.upsert({
+    where: { name: 'wavespeed' },
+    update: {},
+    create: {
+      name: 'wavespeed',
+      status: true,
+    },
+  });
+
+  const wavespeedModels = [
+    {
+      name: 'Pony Diffusion V6 XL (Sem Censura)',
+      technicalName: 'wavespeed/pony-diffusion-v6-xl',
+      creditCost: 3,
+      apiUnitCost: 0.02,
+      toolSlug: 'pony-diffusion-v6',
+      toolName: 'Pony Diffusion V6 XL',
+      toolDesc: 'Modelo referência para poses sensuais, lingerie, boudoir e anatomia precisa sem censura.',
+    },
+    {
+      name: 'FLUX.1 Uncensored (Fotorrealismo)',
+      technicalName: 'wavespeed/flux-uncensored-dev',
+      creditCost: 4,
+      apiUnitCost: 0.03,
+      toolSlug: 'flux-uncensored',
+      toolName: 'FLUX.1 Uncensored',
+      toolDesc: 'Fotorrealismo extremo no estilo criadora com textura de pele real sem censura.',
+    },
+    {
+      name: 'Wan 2.1 Motion Hot (Vídeo Sem Censura)',
+      technicalName: 'wavespeed/wan-2.1-uncensored-i2v',
+      creditCost: 15,
+      apiUnitCost: 0.12,
+      toolSlug: 'wan-motion-hot',
+      toolName: 'Wan 2.1 Motion Hot',
+      toolDesc: 'Movimento fluido a fotos sensuais sem travas ou filtros de censura.',
+    },
+  ];
+
   for (const m of models) {
     const model = await prisma.aIModel.upsert({
       where: { id: m.technicalName },
@@ -227,6 +267,43 @@ async function main() {
       update: {
         creditCost: m.creditCost,
         apiUnitCost: m.apiUnitCost,
+      },
+    });
+
+    await prisma.aITool.upsert({
+      where: { slug: m.toolSlug },
+      create: {
+        modelId: model.id,
+        name: m.toolName,
+        description: m.toolDesc,
+        slug: m.toolSlug,
+        status: true,
+      },
+      update: {
+        modelId: model.id,
+        name: m.toolName,
+      },
+    });
+  }
+
+  for (const m of wavespeedModels) {
+    const model = await prisma.aIModel.upsert({
+      where: { id: m.technicalName },
+      create: {
+        id: m.technicalName,
+        providerId: wavespeedProvider.id,
+        name: m.name,
+        technicalName: m.technicalName,
+        creditCost: m.creditCost,
+        apiUnitCost: m.apiUnitCost,
+        status: true,
+      },
+      update: {
+        name: m.name,
+        providerId: wavespeedProvider.id,
+        creditCost: m.creditCost,
+        apiUnitCost: m.apiUnitCost,
+        status: true,
       },
     });
 

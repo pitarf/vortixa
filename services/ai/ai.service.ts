@@ -33,9 +33,14 @@ export class AIService {
     // Se o cliente especificou um modelId alternativo, resolvemos dinamicamente com validação estrita
     let targetModel = tool.model;
     if (request.modelId && request.modelId !== tool.model.id) {
-      const customModel = await prisma.aIModel.findUnique({
+      let customModel = await prisma.aIModel.findUnique({
         where: { id: request.modelId },
       });
+      if (!customModel) {
+        customModel = await prisma.aIModel.findFirst({
+          where: { technicalName: request.modelId },
+        });
+      }
       if (!customModel) {
         throw new Error(`O modelo solicitado (${request.modelId}) não foi encontrado no sistema.`);
       }
