@@ -192,12 +192,20 @@ export class WaveSpeedAIProvider implements IAIProvider {
 
         if (!res.ok) return;
 
-        const data = await res.json();
-        const status = (data.status || data.state || "").toLowerCase();
+        const json = await res.json();
+        // A WaveSpeed pode retornar status e outputs tanto na raiz quanto encapsulado em json.data
+        const data = json.data || json;
+        const status = (data.status || data.state || json.status || "").toLowerCase();
 
         if (status === "completed" || status === "succeeded") {
           clearInterval(interval);
-          const outputUrl = data.outputs?.[0] || data.output?.url || data.result_url || data.url;
+          const outputs = data.outputs || json.outputs || [];
+          const outputUrl =
+            outputs[0] ||
+            data.output?.url ||
+            data.result_url ||
+            data.url ||
+            json.url;
 
           if (outputUrl) {
             const isVideo = outputUrl.endsWith(".mp4") || outputUrl.includes("video");
