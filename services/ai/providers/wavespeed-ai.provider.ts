@@ -71,10 +71,14 @@ export class WaveSpeedAIProvider implements IAIProvider {
       
       // Mapeamento de compatibilidade para modelos oficiais da WaveSpeed
       const endpointMap: Record<string, string> = {
-        "flux-uncensored-dev": "wavespeed-ai/flux-kontext-dev",
-        "wavespeed-ai/flux-uncensored-dev": "wavespeed-ai/flux-kontext-dev",
-        "pony-diffusion-v6-xl": "wavespeed-ai/flux-2-dev/text-to-image",
-        "wavespeed-ai/pony-diffusion-v6-xl": "wavespeed-ai/flux-2-dev/text-to-image",
+        // Modelo de imagem 100% sem censura (Uncensored / NSFW)
+        "flux-uncensored-dev": "wavespeed-ai/chroma",
+        "wavespeed-ai/flux-uncensored-dev": "wavespeed-ai/chroma",
+        "pony-diffusion-v6-xl": "wavespeed-ai/chroma",
+        "wavespeed-ai/pony-diffusion-v6-xl": "wavespeed-ai/chroma",
+        "chroma": "wavespeed-ai/chroma",
+        "wavespeed-ai/chroma": "wavespeed-ai/chroma",
+        // Vídeo Spicy
         "wan-2.1-uncensored-i2v": "bytedance/seedance-2.5/image-to-video-spicy",
         "wavespeed-ai/wan-2.1-uncensored-i2v": "bytedance/seedance-2.5/image-to-video-spicy",
         "minimax-spicy": "wavespeed-ai/minimax-h3/image-to-video-spicy",
@@ -94,8 +98,11 @@ export class WaveSpeedAIProvider implements IAIProvider {
         prompt: payload.inputs.prompt || "",
       };
 
+      // Para modelos de vídeo (ex: seedance spicy, wan spicy), o campo costuma ser "image" e não "image_url"
       if (payload.inputs.image_url || payload.inputs.image) {
-        bodyPayload.image_url = payload.inputs.image_url || payload.inputs.image;
+        const imgUrl = payload.inputs.image_url || payload.inputs.image;
+        bodyPayload.image_url = imgUrl;
+        bodyPayload.image = imgUrl; // Seedance Spicy exige "image"
       }
 
       // Mapeamento e adaptação de dimensões (aspect ratio -> size em pixels "LARGURA*ALTURA")
@@ -112,18 +119,25 @@ export class WaveSpeedAIProvider implements IAIProvider {
         resolvedSize = ratio.replace("x", "*");
       }
 
-      bodyPayload.size = resolvedSize;
+      // Se for modelo de imagem (ex: chroma), passar size
+      if (!modelPath.includes("video")) {
+        bodyPayload.size = resolvedSize;
+      } else {
+        // Se for modelo de vídeo, passar resolution e duration como número inteiro
+        bodyPayload.resolution = "720p";
+      }
 
       if (payload.inputs.negative_prompt) {
         bodyPayload.negative_prompt = payload.inputs.negative_prompt;
       }
 
-      if (payload.inputs.seed) {
-        bodyPayload.seed = payload.inputs.seed;
+      if (payload.inputs.seed !== undefined) {
+        bodyPayload.seed = Number(payload.inputs.seed);
       }
 
-      if (payload.inputs.duration) {
-        bodyPayload.duration = payload.inputs.duration;
+      if (payload.inputs.duration !== undefined) {
+        // WaveSpeed exige número inteiro para duration (ex: 5 em vez de "5")
+        bodyPayload.duration = parseInt(String(payload.inputs.duration), 10) || 5;
       }
 
       const res = await fetch(endpoint, {
