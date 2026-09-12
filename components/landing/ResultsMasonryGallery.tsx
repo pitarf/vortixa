@@ -17,68 +17,74 @@ export function ResultsMasonryGallery() {
   const galleryItems = [
     {
       id: 1,
-      category: "commercial",
-      title: "Comercial de Perfume de Luxo",
-      modelTag: "FLUX.1 + Upscale 4K",
-      prompt: "Golden luxury perfume bottle floating with suspended water droplets and gold dust particles in 8k cinematic lighting",
-      videoUrl: "/media/landing/videos/commercial_perfume.mp4",
-      aspectRatio: "aspect-video",
-      badge: "Comercial 4K",
-      accentColor: "border-amber-500/40 text-amber-300 bg-amber-950/60",
+      category: "ugc",
+      mediaType: "video",
+      title: "Modelo Fashion Falando (Comercial)",
+      modelTag: "Kling 2.6 Pro + Áudio",
+      prompt: 'Uma fotografia de moda em corpo inteiro, a modelo em pé, apresentando a roupa com um sorriso radiante para a câmera, falando em português: "Gostou? Compre no carrinho laranja, agora mesmo!"',
+      mediaUrl: "/uploads/f80d19de-085b-4378-98ea-b7733c8ffdd8.mp4",
+      aspectRatio: "aspect-[9/16]",
+      badge: "Vídeo & Fala 🗣️",
+      accentColor: "border-violet-500/40 text-violet-300 bg-violet-950/60",
     },
     {
       id: 2,
       category: "ugc",
-      title: "Apresentadora Virtual UGC",
-      modelTag: "LivePortrait LipSync",
-      prompt: "Ultra-realistic female creator presenting tech news with natural facial micro-expressions and perfect lip synchronization",
-      videoUrl: "/media/landing/videos/lipsync_avatar.mp4",
-      aspectRatio: "aspect-video",
-      badge: "Influencer IA",
-      accentColor: "border-violet-500/40 text-violet-300 bg-violet-950/60",
-    },
-    {
-      id: 3,
-      category: "motion",
-      title: "Dançarino de Rua & Rastro Néon",
-      modelTag: "Kling Motion Control",
-      prompt: "Street dancer performing complex acrobatic freeze with glowing volumetric trail energy effects in 60 FPS",
-      videoUrl: "/media/landing/videos/motion_dancer.mp4",
-      aspectRatio: "aspect-video",
-      badge: "Motion 60 FPS",
+      mediaType: "video",
+      title: "Atuação Interativa em Português",
+      modelTag: "Seedance 2.0",
+      prompt: 'faça ela ir andando ate a camera e dizer em portugues brasil: "Estou pronta pro churrasco, vai me convidar?"',
+      mediaUrl: "/uploads/cacdb6d2-4c8a-4f7e-8f14-8e7d7a21f287.mp4",
+      aspectRatio: "aspect-[9/16]",
+      badge: "Seedance 2.0 ⚡",
       accentColor: "border-emerald-500/40 text-emerald-300 bg-emerald-950/60",
     },
     {
+      id: 3,
+      category: "fashion",
+      mediaType: "image",
+      title: "Modelo Brasileira Editorial 8K",
+      modelTag: "Nano Banana Pro (Google)",
+      prompt: "Full-length photograph, a beautiful Brazilian model with tanned, natural blonde skin showcasing realistic skin texture and visible pores. Symmetrical face, confident gaze, voluminous curly hair, elegant fashion pose, 85mm lens 8K.",
+      mediaUrl: "/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg",
+      aspectRatio: "aspect-[9/16]",
+      badge: "Foto Estúdio 8K 📸",
+      accentColor: "border-amber-500/40 text-amber-300 bg-amber-950/60",
+    },
+    {
       id: 4,
-      category: "cinema",
-      title: "Hypercarro Cyberpunk em Tóquio",
-      modelTag: "Kling AI 1.5",
-      prompt: "Sleek flying hypercar accelerating between neo-tokyo skyscrapers with plasma trail at sunset, cinematic camera movement",
-      videoUrl: "/media/landing/videos/cinematic_hypercar.mp4",
-      aspectRatio: "aspect-video",
-      badge: "Cinema Sci-Fi",
+      category: "fashion",
+      mediaType: "video",
+      title: "Lookbook Editorial em Estúdio",
+      modelTag: "Kling 2.1 Pro",
+      prompt: "Full-length fashion lookbook photograph, a young woman with a gentle smile stepping forward in a bright, modern studio, looking directly at the camera, fluid natural movement in 4K.",
+      mediaUrl: "/uploads/bdc1b96b-d7d2-4f55-8f2b-a90631629c00.mp4",
+      aspectRatio: "aspect-[9/16]",
+      badge: "Kling 2.1 Pro 👑",
       accentColor: "border-cyan-500/40 text-cyan-300 bg-cyan-950/60",
     },
     {
       id: 5,
-      category: "fashion",
-      title: "Moda Editorial Avant-Garde",
-      modelTag: "FLUX.1 Schnell",
-      prompt: "High-fashion model wearing iridescent chrome liquid dress standing in minimalist dark runway studio, 8k resolution",
-      videoUrl: "/media/landing/motion/micro_loop_fashion.mp4",
-      aspectRatio: "aspect-video",
-      badge: "Fashion Loop",
+      category: "commercial",
+      mediaType: "image",
+      title: "Ensaio Fotográfico Fotorrealista",
+      modelTag: "Nano Banana Pro (Google)",
+      prompt: "Ultra-wide full-length shot of an athletic woman with natural curly brown hair and authentic skin texture in a clean minimalist studio with neutral white background, 28mm f/8 sharp focus head to toe.",
+      mediaUrl: "/uploads/ff6bb395-d216-467d-aa57-c3878b973993.jpg",
+      aspectRatio: "aspect-[9/16]",
+      badge: "Corpo Inteiro 8K",
       accentColor: "border-pink-500/40 text-pink-300 bg-pink-950/60",
     },
     {
       id: 6,
-      category: "commercial",
-      title: "Macro Íris Cósmica",
-      modelTag: "Creative Upscale 4K",
-      prompt: "Extreme macro shot of human eye iris transforming into swirling cosmic galaxy nebula in extreme 8k detail",
-      videoUrl: "/media/landing/motion/micro_loop_cosmic.mp4",
-      aspectRatio: "aspect-video",
-      badge: "Micro Loop",
+      category: "ugc",
+      mediaType: "video",
+      title: "Atuação Carnaval & Eventos",
+      modelTag: "Seedance 2.0 Native",
+      prompt: 'faça ela ir andando ate a camera e dizer em portugues brasil: "Estou pronta para a Festa de Carnaval"',
+      mediaUrl: "/uploads/87cf520d-8277-4f00-9644-26f4584735a6.mp4",
+      aspectRatio: "aspect-[9/16]",
+      badge: "Fala Nativa PT-BR",
       accentColor: "border-indigo-500/40 text-indigo-300 bg-indigo-950/60",
     },
   ];
@@ -106,7 +112,7 @@ export function ResultsMasonryGallery() {
             Criado com <span className="font-serif italic font-normal text-slate-300">VORIXA</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 max-w-lg leading-relaxed">
-            Peças audiovisuais geradas por criadores e estúdios com qualidade cinematográfica original.
+            Peças audiovisuais e fotografias geradas na plataforma com qualidade cinematográfica original.
           </p>
         </div>
 
@@ -114,10 +120,9 @@ export function ResultsMasonryGallery() {
         <div className="flex flex-wrap items-center gap-2">
           {[
             { key: "all", label: "Todas as Criações" },
-            { key: "commercial", label: "Comerciais & Ads" },
-            { key: "ugc", label: "Influencers & UGC" },
-            { key: "motion", label: "Motion & Dança" },
-            { key: "cinema", label: "Cinema & Sci-Fi" },
+            { key: "ugc", label: "Influencers & Fala" },
+            { key: "fashion", label: "Moda & Modelos" },
+            { key: "commercial", label: "Comercial & Ads" },
           ].map((f) => (
             <button
               key={f.key}
@@ -134,22 +139,30 @@ export function ResultsMasonryGallery() {
         </div>
       </div>
 
-      {/* Grid Mosaico Limpo — Sem Zoom e Sem Distorções */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+      {/* Grid Mosaico Limpo com Conteúdo Real */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-stretch">
         {filteredItems.map((item) => (
           <div
             key={item.id}
             className={`relative rounded-3xl overflow-hidden bg-[#0D0E12] border border-[#1E202E] hover:border-slate-600 shadow-2xl group flex flex-col justify-between ${item.aspectRatio}`}
           >
-            {/* Vídeo Estável e Estático — Sem Transform / Scale */}
-            <video
-              src={item.videoUrl}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-full object-cover"
-            />
+            {/* Renderização condicional: Vídeo ou Foto Real */}
+            {item.mediaType === "video" ? (
+              <video
+                src={item.mediaUrl}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <img
+                src={item.mediaUrl}
+                alt={item.title}
+                className="w-full h-full object-cover"
+              />
+            )}
 
             {/* Gradient Overlay Suave */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/20 pointer-events-none" />

@@ -102,11 +102,11 @@ export function EnginesShowcase() {
       {/* Grid Inferior: 3 Cards com Animações Distintas */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
         
-        {/* Card 1: Influencer IA (Animação de Foco e Glow com Respiração) */}
+        {/* Card 1: Influencer IA com Vídeo e Fala Real */}
         <div className="bg-[#0D0E12] border border-[#1E202E] hover:border-violet-500/50 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between group transition-all duration-500">
           <div className="relative aspect-[4/5] overflow-hidden bg-black">
             <video
-              src="/media/landing/videos/lipsync_avatar.mp4"
+              src="/uploads/f80d19de-085b-4378-98ea-b7733c8ffdd8.mp4"
               autoPlay
               loop
               muted
@@ -118,15 +118,15 @@ export function EnginesShowcase() {
             {/* Badge com Pulso Violeta */}
             <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-violet-950/80 border border-violet-500/40 px-3 py-1 rounded-lg text-[10px] font-mono text-violet-300 font-bold uppercase backdrop-blur-md">
               <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-ping" />
-              <span>Influencers IA</span>
+              <span>Kling 2.6 Pro • Áudio Nativo</span>
             </div>
           </div>
           <div className="p-6 space-y-2">
             <h4 className="text-base font-bold text-white group-hover:text-violet-300 transition-colors">
-              Avatares Consistentes
+              Vídeos com Fala & Atuação
             </h4>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Crie personagens com traços faciais humanos perfeitos para veicular campanhas 24h sem você aparecer.
+              Crie comerciais de produtos e moda com modelos apresentando e falando em português sem você aparecer.
             </p>
           </div>
         </div>
@@ -135,7 +135,7 @@ export function EnginesShowcase() {
         <div className="bg-[#0D0E12] border border-[#1E202E] hover:border-emerald-500/50 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between group transition-all duration-500">
           <div className="relative aspect-[4/5] overflow-hidden bg-black">
             <video
-              src="/media/landing/videos/motion_dancer.mp4"
+              src="/uploads/cacdb6d2-4c8a-4f7e-8f14-8e7d7a21f287.mp4"
               autoPlay
               loop
               muted
@@ -147,20 +147,20 @@ export function EnginesShowcase() {
             {/* Badge com Indicador de 60 FPS */}
             <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-emerald-950/80 border border-emerald-500/40 px-3 py-1 rounded-lg text-[10px] font-mono text-emerald-300 font-bold uppercase backdrop-blur-md">
               <Activity className="w-3 h-3 text-emerald-400" />
-              <span>Motion 60 FPS</span>
+              <span>Seedance 2.0 • Movimento Real</span>
             </div>
           </div>
           <div className="p-6 space-y-2">
             <h4 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
-              Transferência de Movimento
+              Física & Caminhada Fluida
             </h4>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Transfira coreografias, gestos e danças virais diretamente para fotos e avatares estáticos em 60 FPS.
+              Animação corporal completa, passos naturais em direção à câmera e sincronia dinâmica de cena.
             </p>
           </div>
         </div>
 
-        {/* Card 3: Slider Antes & Depois Integrado (Skin Enhancer & Upscale 8K com Scanline) */}
+        {/* Card 3: Slider Antes & Depois Integrado (Skin Enhancer & Foto de Estúdio Real em 8K) */}
         <div className="bg-[#0D0E12] border border-[#1E202E] hover:border-cyan-500/50 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between transition-all duration-500">
           <div
             ref={sliderRef}
@@ -168,28 +168,28 @@ export function EnginesShowcase() {
             onTouchMove={handleTouchMove}
             className="relative aspect-[4/5] overflow-hidden bg-black cursor-ew-resize select-none group"
           >
-            {/* Lado Direito (Depois / Com Skin Enhancer Master) */}
+            {/* Lado Direito (Depois / Com Nano Banana Pro 8K Real) */}
             <img
-              src="/media/landing/gallery/avatar_presenter.jpg"
-              alt="Depois do Skin Enhancer"
+              src="/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg"
+              alt="Depois do Render 8K"
               className="w-full h-full object-cover brightness-105 contrast-105"
             />
             <div className="absolute top-3 right-3 bg-[#0D0E12]/90 border border-cyan-500/40 text-cyan-300 text-[10px] font-mono font-bold px-2.5 py-1 rounded-md shadow-md backdrop-blur-md">
-              DEPOIS (8K)
+              8K ESTÚDIO
             </div>
 
-            {/* Lado Esquerdo (Antes / Raw IA com aspecto artificial) */}
+            {/* Lado Esquerdo (Antes / Referência) */}
             <div
               className="absolute inset-0 w-full h-full overflow-hidden"
               style={{ clipPath: `polygon(0 0, ${sliderPosition}% 0, ${sliderPosition}% 100%, 0 100%)` }}
             >
               <img
-                src="/media/landing/gallery/avatar_presenter.jpg"
-                alt="Antes do Skin Enhancer"
+                src="/uploads/ff6bb395-d216-467d-aa57-c3878b973993.jpg"
+                alt="Ensaio Fotográfico Base"
                 className="w-full h-full object-cover filter blur-[1.5px] saturate-75 brightness-90"
               />
               <div className="absolute top-3 left-3 bg-[#0D0E12]/90 border border-slate-700 text-slate-400 text-[10px] font-mono font-bold px-2.5 py-1 rounded-md shadow-md backdrop-blur-md">
-                ANTES (RAW)
+                REFERÊNCIA
               </div>
             </div>
 
