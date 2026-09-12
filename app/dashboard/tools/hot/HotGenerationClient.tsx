@@ -17,6 +17,12 @@ import {
   Crown,
   Eye,
   Lock,
+  Download,
+  ChevronLeft,
+  ChevronRight,
+  Zap,
+  Boxes,
+  Maximize2,
 } from "lucide-react";
 import { AgeVerificationModal } from "@/components/tools/hot/AgeVerificationModal";
 
@@ -88,6 +94,33 @@ export default function HotGenerationClient() {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [activeStepText, setActiveStepText] = useState<string>("");
   const [resultMediaUrl, setResultMediaUrl] = useState<string>("");
+  const [historyItems, setHistoryItems] = useState<Array<{ id: string; url: string; mimeType?: string; name?: string }>>([]);
+  const [activeHistoryIndex, setActiveHistoryIndex] = useState<number>(0);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+
+  // Carrega histórico de gerações recentes do usuário
+  const loadRecentHistory = async () => {
+    try {
+      const res = await fetch("/api/library?limit=24");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.items && data.items.length > 0) {
+          const list = data.items
+            .filter((it: any) => Boolean(it.url))
+            .map((it: any) => ({
+              id: it.id,
+              url: it.url,
+              mimeType: it.mimeType,
+              name: it.name,
+            }));
+          setHistoryItems(list);
+          if (list[0] && !resultMediaUrl) {
+            setResultMediaUrl(list[0].url);
+          }
+        }
+      }
+    } catch {}
+  };
 
   useEffect(() => {
     const verified = localStorage.getItem("vorixa_age_verified_18");
@@ -104,7 +137,46 @@ export default function HotGenerationClient() {
         if (data.creditMode) setCreditMode(data.creditMode);
       })
       .catch(() => {});
+
+    loadRecentHistory();
   }, []);
+
+  const handleDownload = async () => {
+    if (!resultMediaUrl) return;
+    try {
+      toast.info("Iniciando download...");
+      const res = await fetch(resultMediaUrl);
+      const blob = await res.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      const ext = resultMediaUrl.endsWith(".mp4") ? "mp4" : "jpg";
+      a.download = `vorixa-hot-${Date.now()}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(blobUrl);
+      toast.success("Download concluído com sucesso!");
+    } catch {
+      window.open(resultMediaUrl, "_blank");
+    }
+  };
+
+  const handleVary = () => {
+    if (!resultMediaUrl) return;
+    setReferenceImageUrl(resultMediaUrl);
+    toast.success("Imagem definida como referência para variação!");
+  };
+
+  const handleUpscale = () => {
+    if (!resultMediaUrl) return;
+    router.push(`/dashboard/tools/upscale?sourceUrl=${encodeURIComponent(resultMediaUrl)}`);
+  };
+
+  const handleSendToFlow = () => {
+    if (!resultMediaUrl) return;
+    router.push(`/dashboard/flow?assetUrl=${encodeURIComponent(resultMediaUrl)}`);
+  };
 
   const handleConfirmAge = () => {
     localStorage.setItem("vorixa_age_verified_18", "true");
@@ -204,6 +276,7 @@ export default function HotGenerationClient() {
               setActiveStepText("");
               const url = data.outputs?.[0]?.fileUrl || "";
               setResultMediaUrl(url);
+              loadRecentHistory();
               toast.success("Conteúdo renderizado com sucesso!");
             } else if (data.status === "FAILED") {
               clearInterval(interval);
@@ -501,16 +574,31 @@ export default function HotGenerationClient() {
             </div>
           </div>
 
-          {/* Coluna Direita (Player / Preview) */}
+          {/* Coluna Direita (Player / Preview + Gerações Recentes) */}
           <div className="lg:col-span-5 space-y-4">
             <div className="bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-5 shadow-2xl space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white tracking-wide">Área de Exibição</span>
-                <span className="text-[10px] font-mono text-slate-400">Privado & Criptografado</span>
+              <div className="flex items-center justify-between border-b border-[#1E202E] pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-rose-500 animate-pulse" />
+                  <span className="text-xs font-bold text-white tracking-wide">Área de Exibição</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono text-slate-400 hidden sm:inline">Privado & Criptografado</span>
+                  {resultMediaUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setIsFullscreen(true)}
+                      className="p-1.5 rounded-lg bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
+                      title="Tela Cheia"
+                    >
+                      <Maximize2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Viewport Principal */}
-              <div className="relative aspect-[9/16] w-full max-h-[580px] bg-[#070709] border border-[#1E202E] rounded-2xl overflow-hidden flex items-center justify-center">
+              <div className="relative aspect-[9/16] w-full max-h-[540px] bg-[#070709] border border-[#1E202E] rounded-2xl overflow-hidden flex items-center justify-center shadow-inner">
                 {isGenerating ? (
                   <div className="text-center p-6 space-y-3 animate-in fade-in">
                     <div className="w-12 h-12 rounded-full border-2 border-rose-500/20 border-t-rose-500 animate-spin mx-auto" />
@@ -541,10 +629,181 @@ export default function HotGenerationClient() {
                   </div>
                 )}
               </div>
+
+              {/* Barra de Ações Rápidas da Mídia Ativa (Baixar, Variar, Upscale 4K, No Canvas) */}
+              {Boolean(resultMediaUrl) && (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-[#1E202E]">
+                  <button
+                    type="button"
+                    onClick={handleDownload}
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
+                    title="Baixar em alta resolução"
+                  >
+                    <Download className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                    <span>Baixar</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleVary}
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
+                    title="Usar como referência para nova variação"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                    <span>Variar</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleUpscale}
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
+                    title="Melhorar qualidade em 4K"
+                  >
+                    <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <span>Upscale 4K</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleSendToFlow}
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
+                    title="Abrir no Canvas VORIXA FLOW"
+                  >
+                    <Boxes className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span className="truncate">No Canvas</span>
+                  </button>
+                </div>
+              )}
+
+              {/* Seção de Gerações Recentes do Usuário */}
+              {historyItems.length > 0 && (
+                <div className="space-y-2.5 pt-3 border-t border-[#1E202E]">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-bold text-slate-300 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-rose-400" />
+                      Gerações Recentes
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const prev = activeHistoryIndex > 0 ? activeHistoryIndex - 1 : historyItems.length - 1;
+                          setActiveHistoryIndex(prev);
+                          setResultMediaUrl(historyItems[prev].url);
+                        }}
+                        className="p-1.5 rounded-lg bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-300 hover:text-white cursor-pointer min-h-[32px] min-w-[32px] flex items-center justify-center"
+                        title="Anterior"
+                      >
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const next = activeHistoryIndex < historyItems.length - 1 ? activeHistoryIndex + 1 : 0;
+                          setActiveHistoryIndex(next);
+                          setResultMediaUrl(historyItems[next].url);
+                        }}
+                        className="p-1.5 rounded-lg bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-300 hover:text-white cursor-pointer min-h-[32px] min-w-[32px] flex items-center justify-center"
+                        title="Próxima"
+                      >
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Grid de Miniaturas Clicáveis */}
+                  <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 max-h-[260px] overflow-y-auto pr-1 no-scrollbar">
+                    {historyItems.map((item, idx) => {
+                      const isActive = resultMediaUrl === item.url;
+                      const isVid = item.mimeType?.includes("video") || item.url.endsWith(".mp4");
+                      return (
+                        <button
+                          key={item.id || idx}
+                          type="button"
+                          onClick={() => {
+                            setActiveHistoryIndex(idx);
+                            setResultMediaUrl(item.url);
+                          }}
+                          className={`relative rounded-xl overflow-hidden border aspect-square cursor-pointer transition-all group min-h-[52px] touch-manipulation active:scale-[0.98] ${
+                            isActive
+                              ? "border-rose-500 shadow-md shadow-rose-500/30 ring-2 ring-rose-500 scale-[1.02]"
+                              : "border-[#1E202E] hover:border-slate-600 opacity-75 hover:opacity-100"
+                          }`}
+                        >
+                          {isVid ? (
+                            <div className="w-full h-full bg-slate-900 flex items-center justify-center relative">
+                              <video src={item.url} className="w-full h-full object-cover" muted />
+                              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                <Play className="w-3.5 h-3.5 fill-white text-white" />
+                              </div>
+                            </div>
+                          ) : (
+                            <img
+                              src={item.url}
+                              alt={item.name || `Geração ${idx + 1}`}
+                              className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                              loading="lazy"
+                            />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Modal de Tela Cheia */}
+      {isFullscreen && Boolean(resultMediaUrl) && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-3 sm:p-6 backdrop-blur-md overscroll-contain"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="w-full flex items-center justify-between pb-3 max-w-6xl">
+            <span className="text-xs font-mono text-slate-400">Visualização Completa (Sem Censura)</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleDownload}
+                className="px-3 py-1.5 rounded-xl bg-[#0D0E12] border border-[#1E202E] hover:border-slate-700 text-slate-300 hover:text-white transition-colors text-xs flex items-center gap-1.5 cursor-pointer"
+              >
+                <Download className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Baixar</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsFullscreen(false)}
+                className="p-2 rounded-xl bg-[#0D0E12] border border-[#1E202E] hover:border-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                title="Fechar"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          <div className="relative flex items-center justify-center max-w-6xl max-h-[85vh] w-full overflow-hidden rounded-2xl bg-black">
+            {resultMediaUrl.endsWith(".mp4") || selectedModel.type === "video" ? (
+              <video
+                src={resultMediaUrl}
+                controls
+                autoPlay
+                loop
+                className="max-w-full max-h-[85vh] object-contain rounded-xl"
+              />
+            ) : (
+              <img
+                src={resultMediaUrl}
+                alt="Fullscreen Preview"
+                className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl"
+              />
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }

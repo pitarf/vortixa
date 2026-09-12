@@ -5,6 +5,19 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.9.6] - 2026-09-12
+### Seção de Gerações Recentes e Ações Rápidas no Gerador Hot (+18)
+- **Histórico Dinâmico de Gerações Recentes no Hot (`app/dashboard/tools/hot/HotGenerationClient.tsx`)**:
+  - Carrossel e grid de miniaturas com as últimas 24 mídias geradas pelo usuário diretamente da biblioteca.
+  - Alternância instantânea de mídia ativa ao clicar nas miniaturas com indicadores de destaque e suporte nativo a vídeo e fotos.
+- **Barra de Ações Rápidas da Mídia Ativa**:
+  - Botão de download direto em alta resolução (`Baixar`).
+  - Botão de variação com carregamento imediato do prompt no editor (`Variar`).
+  - Redirecionamento rápido para ampliação em super-resolução (`Upscale 4K`).
+  - Abertura no Canvas modular (`No Canvas`) com redirecionamento para o VORIXA FLOW.
+- **Visualizador em Tela Cheia (Fullscreen)**:
+  - Modal imersivo de alta definição com backdrop escurecido, sem compressão e sem censura para conferência de detalhes anatômicos.
+
 ## [1.9.5] - 2026-09-11
 ### Kling 2.6 Pro com Áudio & Fala Nativa (All-in-One) e Descontinuação do VORIXA IA
 - **Kling 2.6 Pro com Fala Nativa Integrada (`fal-ai/kling-video/v2.6/pro/image-to-video`)**:

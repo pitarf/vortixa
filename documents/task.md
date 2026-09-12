@@ -8,6 +8,11 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Seção de Gerações Recentes e Ações Rápidas no Gerador Hot (+18)**:
+  - Carrossel e grid de miniaturas dinâmico integrado à biblioteca de criações recentes do usuário.
+  - Ações rápidas abaixo da visualização: Baixar, Variar (com reinjeção de prompt), Upscale 4K e No Canvas (VORIXA FLOW).
+  - Modal de Tela Cheia (Fullscreen) de alta resolução sem compressão.
+  - Suporte completo a fotos e vídeos sem censura com WaveSpeed AI.
 - [x] **Kling 2.6 Pro com Áudio & Fala Nativa (All-in-One) e Descontinuação do VORIXA IA**:
   - Integração do endpoint oficial `fal-ai/kling-video/v2.6/pro/image-to-video` com suporte unificado a `generate_audio: true`.
   - Geração de vídeo e fala orgânica no mesmo espaço latente a partir de prompt com diálogos entre aspas.
