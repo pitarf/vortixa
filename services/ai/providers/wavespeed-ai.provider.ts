@@ -98,9 +98,21 @@ export class WaveSpeedAIProvider implements IAIProvider {
         bodyPayload.image_url = payload.inputs.image_url || payload.inputs.image;
       }
 
-      if (payload.inputs.aspect_ratio || payload.inputs.size) {
-        bodyPayload.size = payload.inputs.size || payload.inputs.aspect_ratio;
+      // Mapeamento e adaptação de dimensões (aspect ratio -> size em pixels "LARGURA*ALTURA")
+      // A WaveSpeed exige o formato de pixels (ex: 768*1344 para 9:16, 1344*768 para 16:9, 1024*1024 para 1:1)
+      const ratio = String(payload.inputs.aspect_ratio || payload.inputs.size || "9:16").trim();
+      let resolvedSize = "768*1344"; // Padrão 9:16 Vertical
+      if (ratio === "16:9") {
+        resolvedSize = "1344*768";
+      } else if (ratio === "1:1") {
+        resolvedSize = "1024*1024";
+      } else if (ratio === "9:16") {
+        resolvedSize = "768*1344";
+      } else if (ratio.includes("*") || ratio.includes("x")) {
+        resolvedSize = ratio.replace("x", "*");
       }
+
+      bodyPayload.size = resolvedSize;
 
       if (payload.inputs.negative_prompt) {
         bodyPayload.negative_prompt = payload.inputs.negative_prompt;
@@ -223,13 +235,24 @@ export class WaveSpeedAIProvider implements IAIProvider {
           }
         } else if (status === "failed" || status === "cancelled" || status === "timeout") {
           clearInterval(interval);
+          const failedJob = await prisma.aIJob.findUnique({
+            where: { id: jobId },
+            select: { userId: true, creditCost: true },
+          });
+
           await prisma.aIJob.update({
             where: { id: jobId },
             data: {
               status: "FAILED",
-              error: data.error || "Geração rejeitada ou falha de inferência no cluster WaveSpeed.",
+              error: data.error || data.message || "Geração rejeitada ou falha de inferência no cluster WaveSpeed.",
             },
           });
+
+          // Reembolsa os créditos do usuário
+          if (failedJob && failedJob.creditCost > 0) {
+            const { CreditService } = await import("@/services/credit.service");
+            await CreditService.refundCredits(failedJob.userId, failedJob.creditCost, jobId).catch(() => {});
+          }
         }
       } catch (pollErr) {
         console.warn(`[WaveSpeedAIProvider] Erro ao consultar status da task ${taskId}:`, pollErr);
@@ -237,6 +260,11 @@ export class WaveSpeedAIProvider implements IAIProvider {
 
       if (attempts >= maxAttempts) {
         clearInterval(interval);
+        const timeoutJob = await prisma.aIJob.findUnique({
+          where: { id: jobId },
+          select: { userId: true, creditCost: true },
+        });
+
         await prisma.aIJob.update({
           where: { id: jobId },
           data: {
@@ -244,6 +272,11 @@ export class WaveSpeedAIProvider implements IAIProvider {
             error: "Tempo limite de resposta excedido no cluster WaveSpeed.",
           },
         });
+
+        if (timeoutJob && timeoutJob.creditCost > 0) {
+          const { CreditService } = await import("@/services/credit.service");
+          await CreditService.refundCredits(timeoutJob.userId, timeoutJob.creditCost, jobId).catch(() => {});
+        }
       }
     }, 4000);
   }
