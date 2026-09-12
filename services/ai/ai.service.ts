@@ -132,6 +132,8 @@ export class AIService {
       );
 
       if (processedInputs.prompt && typeof processedInputs.prompt === "string") {
+        // [TESTE TEMPORÁRIO]: Desativada otimização/tradução para envio 100% puro do prompt original
+        /*
         const shouldOptimize = !processedInputs.is_prompt_optimized && !processedInputs.skip_prompt_optimization;
 
         if (shouldOptimize) {
@@ -154,6 +156,7 @@ export class AIService {
             }).catch(() => {});
           }
         }
+        */
       }
 
       // 8. Submeter ao Provedor (Factory escolhe Live Fal.ai, WaveSpeed ou Mock)

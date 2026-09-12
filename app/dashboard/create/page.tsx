@@ -431,6 +431,8 @@ export default function StudioCreatePage() {
       // Auto-otimização de prompt transparente antes do disparo (com timeout resiliente de 3.5s)
       let finalPrompt = prompt.trim();
       const hasRefImg = Boolean(referenceImageUrl || characterImageUrl);
+      // [TESTE TEMPORÁRIO]: Auto-otimização comentada para testar o envio do prompt 100% puro em português
+      /*
       if (finalPrompt && (activeTool === "image" || activeTool === "video")) {
         try {
           const controller = new AbortController();
@@ -464,6 +466,7 @@ export default function StudioCreatePage() {
       } else if (!finalPrompt && hasRefImg && activeTool === "image") {
         finalPrompt = "A high quality detailed photograph faithfully preserving the subject in the reference image, natural lighting";
       }
+      */
 
       setStepText("Conectando ao cluster de IA");
 
