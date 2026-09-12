@@ -107,10 +107,12 @@ export function EnginesShowcase() {
           <div className="relative aspect-[4/5] overflow-hidden bg-black">
             <video
               src="/uploads/f80d19de-085b-4378-98ea-b7733c8ffdd8.mp4"
+              poster="/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg"
               autoPlay
               loop
               muted
               playsInline
+              preload="metadata"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0D0E12] via-transparent to-transparent opacity-85" />
@@ -136,10 +138,12 @@ export function EnginesShowcase() {
           <div className="relative aspect-[4/5] overflow-hidden bg-black">
             <video
               src="/uploads/cacdb6d2-4c8a-4f7e-8f14-8e7d7a21f287.mp4"
+              poster="/uploads/867192da-b5f6-4d67-b4b5-8191723e46fe.jpg"
               autoPlay
               loop
               muted
               playsInline
+              preload="metadata"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0D0E12] via-transparent to-transparent opacity-85" />

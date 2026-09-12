@@ -23,6 +23,7 @@ export function ResultsMasonryGallery() {
       modelTag: "Kling 2.6 Pro + Áudio",
       prompt: 'Uma fotografia de moda em corpo inteiro, a modelo em pé, apresentando a roupa com um sorriso radiante para a câmera, falando em português: "Gostou? Compre no carrinho laranja, agora mesmo!"',
       mediaUrl: "/uploads/f80d19de-085b-4378-98ea-b7733c8ffdd8.mp4",
+      posterUrl: "/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg",
       aspectRatio: "aspect-[9/16]",
       badge: "Vídeo & Fala 🗣️",
       accentColor: "border-violet-500/40 text-violet-300 bg-violet-950/60",
@@ -35,6 +36,7 @@ export function ResultsMasonryGallery() {
       modelTag: "Seedance 2.0",
       prompt: 'faça ela ir andando ate a camera e dizer em portugues brasil: "Estou pronta pro churrasco, vai me convidar?"',
       mediaUrl: "/uploads/cacdb6d2-4c8a-4f7e-8f14-8e7d7a21f287.mp4",
+      posterUrl: "/uploads/867192da-b5f6-4d67-b4b5-8191723e46fe.jpg",
       aspectRatio: "aspect-[9/16]",
       badge: "Seedance 2.0 ⚡",
       accentColor: "border-emerald-500/40 text-emerald-300 bg-emerald-950/60",
@@ -47,6 +49,7 @@ export function ResultsMasonryGallery() {
       modelTag: "Nano Banana Pro (Google)",
       prompt: "Full-length photograph, a beautiful Brazilian model with tanned, natural blonde skin showcasing realistic skin texture and visible pores. Symmetrical face, confident gaze, voluminous curly hair, elegant fashion pose, 85mm lens 8K.",
       mediaUrl: "/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg",
+      posterUrl: "/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg",
       aspectRatio: "aspect-[9/16]",
       badge: "Foto Estúdio 8K 📸",
       accentColor: "border-amber-500/40 text-amber-300 bg-amber-950/60",
@@ -59,6 +62,7 @@ export function ResultsMasonryGallery() {
       modelTag: "Kling 2.1 Pro",
       prompt: "Full-length fashion lookbook photograph, a young woman with a gentle smile stepping forward in a bright, modern studio, looking directly at the camera, fluid natural movement in 4K.",
       mediaUrl: "/uploads/bdc1b96b-d7d2-4f55-8f2b-a90631629c00.mp4",
+      posterUrl: "/uploads/bc3c42a6-32d9-4f53-bbc8-a27accc1800e.jpg",
       aspectRatio: "aspect-[9/16]",
       badge: "Kling 2.1 Pro 👑",
       accentColor: "border-cyan-500/40 text-cyan-300 bg-cyan-950/60",
@@ -71,6 +75,7 @@ export function ResultsMasonryGallery() {
       modelTag: "Nano Banana Pro (Google)",
       prompt: "Ultra-wide full-length shot of an athletic woman with natural curly brown hair and authentic skin texture in a clean minimalist studio with neutral white background, 28mm f/8 sharp focus head to toe.",
       mediaUrl: "/uploads/ff6bb395-d216-467d-aa57-c3878b973993.jpg",
+      posterUrl: "/uploads/ff6bb395-d216-467d-aa57-c3878b973993.jpg",
       aspectRatio: "aspect-[9/16]",
       badge: "Corpo Inteiro 8K",
       accentColor: "border-pink-500/40 text-pink-300 bg-pink-950/60",
@@ -83,6 +88,7 @@ export function ResultsMasonryGallery() {
       modelTag: "Seedance 2.0 Native",
       prompt: 'faça ela ir andando ate a camera e dizer em portugues brasil: "Estou pronta para a Festa de Carnaval"',
       mediaUrl: "/uploads/87cf520d-8277-4f00-9644-26f4584735a6.mp4",
+      posterUrl: "/uploads/867192da-b5f6-4d67-b4b5-8191723e46fe.jpg",
       aspectRatio: "aspect-[9/16]",
       badge: "Fala Nativa PT-BR",
       accentColor: "border-indigo-500/40 text-indigo-300 bg-indigo-950/60",
@@ -150,16 +156,19 @@ export function ResultsMasonryGallery() {
             {item.mediaType === "video" ? (
               <video
                 src={item.mediaUrl}
+                poster={item.posterUrl}
                 autoPlay
                 loop
                 muted
                 playsInline
+                preload="metadata"
                 className="w-full h-full object-cover"
               />
             ) : (
               <img
                 src={item.mediaUrl}
                 alt={item.title}
+                loading="lazy"
                 className="w-full h-full object-cover"
               />
             )}

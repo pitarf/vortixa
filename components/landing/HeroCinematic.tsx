@@ -88,10 +88,12 @@ export function HeroCinematic() {
           <video
             key={activeHeroVideo}
             src={activeHeroVideo}
+            poster="/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg"
             autoPlay
             loop
             muted={isMuted}
             playsInline
+            preload="auto"
             className="w-full h-full object-cover"
           />
 
