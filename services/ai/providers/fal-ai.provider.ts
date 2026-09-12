@@ -150,19 +150,23 @@ export class FalAIProvider implements IAIProvider {
           }
         }
 
-        // Habilita áudio nativo sincronizado se for Kling 2.6 Pro e reforça sotaque brasileiro autêntico
+        // Habilita áudio nativo sincronizado se for Kling 2.6 Pro respeitando a intenção de idioma/sotaque do usuário
         if (payload.modelTechnicalName.includes("v2.6")) {
           if (modelInputs.generate_audio === undefined) {
             modelInputs.generate_audio = true;
           }
 
-          // Se o prompt possui diálogo ou fala em português, reforça diretiva de sotaque brasileiro nativo (pt-BR)
           if (modelInputs.prompt && typeof modelInputs.prompt === "string") {
-            const hasQuote = /["“'`]([^"”'`]+)["”'`]/.test(modelInputs.prompt);
-            const mentionsPt = /portuguese|português/i.test(modelInputs.prompt);
-            if (hasQuote || mentionsPt) {
-              if (!/native Brazilian accent|Brazilian Portuguese/i.test(modelInputs.prompt)) {
-                modelInputs.prompt = `${modelInputs.prompt.trim()}, audio in fluent Brazilian Portuguese with a natural native Brazilian accent, authentic clear Brazilian voice`;
+            const promptText = modelInputs.prompt;
+            const isExplicitPtBr =
+              /portugu[êe]s\s*(?:do\s*)?brasil|brazilian\s*portuguese|pt[-_]?br|sotaque\s*brasileiro/i.test(promptText);
+            const isExplicitPortugal =
+              /portugu[êe]s\s*(?:de\s*)?portugal|european\s*portuguese|pt[-_]?pt/i.test(promptText);
+
+            // Apenas se o usuário pediu explicitamente Português do Brasil (ou se for diálogo coloquial com "em português brasil")
+            if (isExplicitPtBr && !isExplicitPortugal) {
+              if (!/São Paulo|Rio|open vowels|no European/i.test(promptText)) {
+                modelInputs.prompt = `${promptText.trim()}, audio in authentic Brazilian Portuguese (pt-BR natural conversational accent), clear warm open vowels, strictly native Brazilian pronunciation, zero European Portuguese (PT-PT) accent`;
               }
             }
           }
@@ -209,6 +213,20 @@ export class FalAIProvider implements IAIProvider {
         // Habilita áudio sincronizado por padrão conforme documentação oficial
         if (modelInputs.generate_audio === undefined) {
           modelInputs.generate_audio = true;
+        }
+
+        if (modelInputs.prompt && typeof modelInputs.prompt === "string") {
+          const promptText = modelInputs.prompt;
+          const isExplicitPtBr =
+            /portugu[êe]s\s*(?:do\s*)?brasil|brazilian\s*portuguese|pt[-_]?br|sotaque\s*brasileiro/i.test(promptText);
+          const isExplicitPortugal =
+            /portugu[êe]s\s*(?:de\s*)?portugal|european\s*portuguese|pt[-_]?pt/i.test(promptText);
+
+          if (isExplicitPtBr && !isExplicitPortugal) {
+            if (!/São Paulo|Rio|open vowels|no European/i.test(promptText)) {
+              modelInputs.prompt = `${promptText.trim()}, audio in authentic Brazilian Portuguese (pt-BR natural conversational accent), clear warm open vowels, strictly native Brazilian pronunciation, zero European Portuguese (PT-PT) accent`;
+            }
+          }
         }
         console.log(`[FalAIProvider] Seedance configurado: ${payload.modelTechnicalName} (Áudio: ${modelInputs.generate_audio})`);
       }

@@ -385,11 +385,13 @@ ${styleDirective}
 ${referenceImageDirective}
 
 MANDATORY DIRECTIVES:
-1. STRICT SPEECH & DIALOGUE PRESERVATION (NATURAL BRAZILIAN PORTUGUESE PT-BR):
-   - Whenever the prompt contains speech, dialogue, words to say, or text enclosed in quotes (e.g. "Gostou? Compre no carrinho laranja", falando '...', dizendo "..."):
-   - You MUST PRESERVE THE EXACT SPOKEN WORDS IN BRAZILIAN PORTUGUESE (PT-BR) WITHOUT TRANSLATING THEM!
-   - Format the speech explicitly as: speaking naturally in fluent Brazilian Portuguese with a native Brazilian accent: "EXACT WORDS IN PORTUGUESE".
-   - NEVER translate Portuguese dialogue/spoken sentences to English! The video voice model needs the exact Portuguese words and native Brazilian accent guidance to generate authentic spoken audio!
+1. STRICT SPEECH & DIALOGUE PRESERVATION (ANY REQUESTED LANGUAGE / ACCENT):
+   - Whenever the prompt contains speech, dialogue, words to say, or text enclosed in quotes (e.g. "..."):
+   - You MUST PRESERVE THE EXACT SPOKEN WORDS IN THEIR ORIGINAL LANGUAGE WITHOUT TRANSLATING THEM!
+   - Respect the user's requested language and accent (e.g. German, British English, American English, Arabic, European Portuguese, or Brazilian Portuguese).
+   - If the user explicitly asks for Brazilian Portuguese ("português brasil" / "pt-br"), format explicitly as: speaking naturally in authentic Brazilian Portuguese (pt-BR accent, warm open vowels, strictly zero European Portuguese accent): "EXACT WORDS".
+   - If the user asks for another accent or language (e.g. European Portuguese from Portugal, British, American, German, Arabic), format as: speaking naturally in fluent [Requested Language/Accent]: "EXACT WORDS".
+   - If no specific accent is stated, format simply as: speaking naturally: "EXACT WORDS".
 2. Full Body Shot (BALANCED CATALOG PROPORTIONS): If the user mentions "corpo todo", "corpo inteiro", "de corpo todo", "de corpo inteiro", "full body" or a standing model:
    - Use high-end fashion catalog / lookbook framing: "full-length photograph, subject standing, complete figure framed from head to toe with visible shoes and floor, well-proportioned vertical composition with clean headroom above and floor space below, captured with a 28mm or 35mm prime lens at f/8, sharp focus across the entire body, no cropped feet, model prominently filling the frame without the camera being placed excessively far away".
    - Do NOT use "shallow depth of field", "macro" or "close up" so legs and feet stay in complete focus.
@@ -413,13 +415,34 @@ MANDATORY DIRECTIVES:
       if (llmOutput && typeof llmOutput === "string" && llmOutput.trim().length > 10) {
         let finalLlmText = llmOutput.trim();
 
-        // Safety-net: se o usuário colocou fala entre aspas no prompt original e o LLM não preservou em português,
-        // reinjeta a fala original em português garantindo integridade absoluta e sotaque brasileiro autêntico
+        // Safety-net: se o usuário colocou fala entre aspas no prompt original e o LLM não preservou,
+        // reinjeta a fala original preservando exatamente o que o usuário digitou
         if (localResult.preservedSpeech) {
           const hasOriginalSpeech = finalLlmText.includes(localResult.preservedSpeech);
           if (!hasOriginalSpeech) {
-            // Remove qualquer fala traduzida equivocadamente e anexa a original em português brasileiro
-            finalLlmText = `${finalLlmText.replace(/speaking (?:naturally )?in (?:english|portuguese|brazilian portuguese)[^:]*:?\s*"[^"]*"/gi, "").trim()}, speaking naturally in fluent Brazilian Portuguese with a native Brazilian accent: "${localResult.preservedSpeech}"`;
+            const isExplicitPtBr = /portugu[êe]s\s*(?:do\s*)?brasil|brazilian\s*portuguese|pt[-_]?br/i.test(prompt);
+            const isExplicitPortugal = /portugu[êe]s\s*(?:de\s*)?portugal|european\s*portuguese|pt[-_]?pt/i.test(prompt);
+            const isGerman = /alem[ãa]o|german/i.test(prompt);
+            const isBritish = /brit[âa]nico|british/i.test(prompt);
+            const isAmerican = /americano|estadunidense|american/i.test(prompt);
+            const isArabic = /[áa]rabe|arabic/i.test(prompt);
+
+            let speechDirective = `speaking naturally: "${localResult.preservedSpeech}"`;
+            if (isExplicitPtBr && !isExplicitPortugal) {
+              speechDirective = `speaking naturally in authentic Brazilian Portuguese (pt-BR accent, warm open vowels, zero European Portuguese accent): "${localResult.preservedSpeech}"`;
+            } else if (isExplicitPortugal) {
+              speechDirective = `speaking naturally in European Portuguese with an authentic Portugal accent: "${localResult.preservedSpeech}"`;
+            } else if (isGerman) {
+              speechDirective = `speaking naturally in German: "${localResult.preservedSpeech}"`;
+            } else if (isBritish) {
+              speechDirective = `speaking naturally with a British accent: "${localResult.preservedSpeech}"`;
+            } else if (isAmerican) {
+              speechDirective = `speaking naturally with an American accent: "${localResult.preservedSpeech}"`;
+            } else if (isArabic) {
+              speechDirective = `speaking naturally in Arabic: "${localResult.preservedSpeech}"`;
+            }
+
+            finalLlmText = `${finalLlmText.replace(/speaking (?:naturally )?(?:in|with)[^:]*:?\s*"[^"]*"/gi, "").trim()}, ${speechDirective}`;
           }
         }
 
@@ -645,9 +668,31 @@ MANDATORY DIRECTIVES:
       }
     }
 
-    // 5. Reanexar fala original
+    // 5. Reanexar fala original respeitando a especificação de idioma do usuário
     if (speechContent) {
-      translated = `${translated.trim()}, speaking naturally in fluent Brazilian Portuguese with a native Brazilian accent: "${speechContent}"`;
+      const isExplicitPtBr = /portugu[êe]s\s*(?:do\s*)?brasil|brazilian\s*portuguese|pt[-_]?br/i.test(trimmed);
+      const isExplicitPortugal = /portugu[êe]s\s*(?:de\s*)?portugal|european\s*portuguese|pt[-_]?pt/i.test(trimmed);
+      const isGerman = /alem[ãa]o|german/i.test(trimmed);
+      const isBritish = /brit[âa]nico|british/i.test(trimmed);
+      const isAmerican = /americano|estadunidense|american/i.test(trimmed);
+      const isArabic = /[áa]rabe|arabic/i.test(trimmed);
+
+      let speechDirective = `speaking naturally: "${speechContent}"`;
+      if (isExplicitPtBr && !isExplicitPortugal) {
+        speechDirective = `speaking naturally in authentic Brazilian Portuguese (pt-BR accent, warm open vowels, zero European Portuguese accent): "${speechContent}"`;
+      } else if (isExplicitPortugal) {
+        speechDirective = `speaking naturally in European Portuguese with an authentic Portugal accent: "${speechContent}"`;
+      } else if (isGerman) {
+        speechDirective = `speaking naturally in German: "${speechContent}"`;
+      } else if (isBritish) {
+        speechDirective = `speaking naturally with a British accent: "${speechContent}"`;
+      } else if (isAmerican) {
+        speechDirective = `speaking naturally with an American accent: "${speechContent}"`;
+      } else if (isArabic) {
+        speechDirective = `speaking naturally in Arabic: "${speechContent}"`;
+      }
+
+      translated = `${translated.trim()}, ${speechDirective}`;
     }
 
     return {
