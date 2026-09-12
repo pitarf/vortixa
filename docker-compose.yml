@@ -18,6 +18,7 @@ services:
       - NEXTAUTH_URL=${NEXTAUTH_URL:-https://vortixia.com.br}
       - AI_PROVIDER_MODE=${AI_PROVIDER_MODE:-live}
       - FAL_KEY=${FAL_KEY:-b853f917-5e92-4d12-bf3e-a09dba498291:a78de2b18ba9d65b4f8f881df4b5a6c3}
+      - WAVESPEED_API_KEY=${WAVESPEED_API_KEY}
       - PAYMENT_PROVIDER=${PAYMENT_PROVIDER:-mock_gateway}
       - PAYMENT_PROVIDER_MODE=${PAYMENT_PROVIDER_MODE:-mock}
       - SMTP_HOST=${SMTP_HOST:-smtp.hostinger.com}
