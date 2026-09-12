@@ -129,10 +129,21 @@ export class WaveSpeedAIProvider implements IAIProvider {
       }
 
       const data = await res.json();
-      const taskId = data.id || data.task_id || data.prediction_id;
+      console.log("[WaveSpeedAIProvider] Resposta da API:", JSON.stringify(data, null, 2));
+
+      // A WaveSpeed pode retornar { id: "..." } ou encapsulado em { data: { id: "..." } }
+      const taskId =
+        data.data?.id ||
+        data.data?.prediction_id ||
+        data.data?.task_id ||
+        data.id ||
+        data.prediction_id ||
+        data.task_id;
 
       if (!taskId) {
-        throw new Error("A WaveSpeed não retornou um ID de tarefa válido.");
+        throw new Error(
+          `A WaveSpeed não retornou um ID de tarefa válido. Resposta recebida: ${JSON.stringify(data)}`
+        );
       }
 
       // Inicia polling assíncrono para capturar resultado
