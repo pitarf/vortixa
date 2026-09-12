@@ -66,7 +66,28 @@ export class WaveSpeedAIProvider implements IAIProvider {
 
     // Requisição real à API da WaveSpeed
     try {
-      const endpoint = `${this.baseUrl}/${payload.modelTechnicalName.replace(/^wavespeed\//, "")}`;
+      // Mapeamento para os caminhos exatos de endpoint da WaveSpeed AI API v3
+      let modelPath = payload.modelTechnicalName.replace(/^wavespeed\//, "");
+      
+      // Mapeamento de compatibilidade para modelos oficiais da WaveSpeed
+      const endpointMap: Record<string, string> = {
+        "flux-uncensored-dev": "wavespeed-ai/flux-kontext-dev",
+        "wavespeed-ai/flux-uncensored-dev": "wavespeed-ai/flux-kontext-dev",
+        "pony-diffusion-v6-xl": "wavespeed-ai/flux-2-dev/text-to-image",
+        "wavespeed-ai/pony-diffusion-v6-xl": "wavespeed-ai/flux-2-dev/text-to-image",
+        "wan-2.1-uncensored-i2v": "bytedance/seedance-2.5/image-to-video-spicy",
+        "wavespeed-ai/wan-2.1-uncensored-i2v": "bytedance/seedance-2.5/image-to-video-spicy",
+        "minimax-spicy": "wavespeed-ai/minimax-h3/image-to-video-spicy",
+        "vidu-spicy": "vidu/q3/image-to-video-spicy",
+      };
+
+      if (endpointMap[modelPath]) {
+        modelPath = endpointMap[modelPath];
+      } else if (endpointMap[payload.modelTechnicalName]) {
+        modelPath = endpointMap[payload.modelTechnicalName];
+      }
+
+      const endpoint = `${this.baseUrl}/${modelPath}`;
 
       // Mapeamento e adaptação dos inputs para a API da WaveSpeed
       const bodyPayload: Record<string, any> = {

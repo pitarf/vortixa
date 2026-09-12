@@ -103,7 +103,6 @@ export async function POST(req: Request) {
     return NextResponse.json(job);
   } catch (err: any) {
     console.error("Erro no endpoint POST /api/tools/generate:", err);
-    // Preservar erros de negócio limpos que devem ser mostrados ao usuário
     const isBusinessError = err.message && (
       err.message.includes("crédito") ||
       err.message.includes("saldo") ||
@@ -115,7 +114,9 @@ export async function POST(req: Request) {
       err.message.includes("Não autorizado") ||
       err.message.includes("excede") ||
       err.message.includes("insuficiente") ||
-      err.message.includes("suspensa")
+      err.message.includes("suspensa") ||
+      err.message.includes("WaveSpeed") ||
+      err.message.includes("fal.ai")
     );
     const isSyntaxOrInternal = err instanceof SyntaxError || (err.message && (err.message.includes("JSON") || err.message.includes("token")));
     const msg = isBusinessError && !isSyntaxOrInternal ? err.message : "Ocorreu um erro de processamento da geração de IA.";
