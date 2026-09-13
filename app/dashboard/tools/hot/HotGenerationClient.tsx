@@ -38,12 +38,21 @@ interface HotModel {
 
 const HOT_MODELS: HotModel[] = [
   {
+    id: "wavespeed/wan-2.2/text-to-image-realism",
+    name: "VORIXA HyperReal (Foto Realista 8K)",
+    badge: "Máximo Fotorrealismo 👑",
+    type: "image",
+    cost: 4,
+    description: "Motor WAN 2.2 com foco em pele crua, micro-texturas reais, iluminação natural e zero aspecto de plástico ou 3D.",
+    speed: "~ 8s",
+  },
+  {
     id: "wavespeed/chroma",
     name: "VORIXA Chroma (Nudez Total)",
     badge: "100% Sem Censura 🔞",
     type: "image",
     cost: 3,
-    description: "Motor proprietário sem travas ou filtros. Renderiza nudez explícita, poses sensuais e anatomia real.",
+    description: "Motor sem travas com calibração fotográfica para nudez explícita, anatomia natural e detalhes íntimos.",
     speed: "~ 6s",
   },
   {

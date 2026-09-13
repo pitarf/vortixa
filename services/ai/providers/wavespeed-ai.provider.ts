@@ -71,7 +71,9 @@ export class WaveSpeedAIProvider implements IAIProvider {
       
       // Mapeamento de compatibilidade para modelos oficiais da WaveSpeed
       const endpointMap: Record<string, string> = {
-        // Modelo de imagem 100% sem censura (Uncensored / NSFW)
+        // Modelos de imagem 100% sem censura (Uncensored / NSFW)
+        "wan-2.2/text-to-image-realism": "wavespeed-ai/wan-2.2/text-to-image-realism",
+        "wavespeed-ai/wan-2.2/text-to-image-realism": "wavespeed-ai/wan-2.2/text-to-image-realism",
         "flux-uncensored-dev": "wavespeed-ai/chroma",
         "wavespeed-ai/flux-uncensored-dev": "wavespeed-ai/chroma",
         "pony-diffusion-v6-xl": "wavespeed-ai/chroma",
@@ -99,9 +101,18 @@ export class WaveSpeedAIProvider implements IAIProvider {
 
       const endpoint = `${this.baseUrl}/${modelPath}`;
 
-      // Mapeamento e adaptação dos inputs para a API da WaveSpeed
+      // Injeção de realismo fotográfico: remove o aspecto plástico de pele lisa (plastic/doll look)
+      let finalPrompt = payload.inputs.prompt || "";
+      if (!modelPath.includes("video")) {
+        // Enfatiza microtextura, pele crua, poros, iluminação natural e elimina estética plástica/render
+        if (!finalPrompt.includes("pores") && !finalPrompt.includes("raw photo")) {
+          finalPrompt = `${finalPrompt}, authentic raw photograph, natural unairbrushed skin texture, visible fine pores and subtle imperfections, realistic soft ambient lighting, shot on 35mm lens f/1.8, documentary boudoir style, no plastic skin, no CGI render, no doll look, 8k uhd`;
+        }
+      }
+
+      // Mapeamento e adaptação dos inputs para a API
       const bodyPayload: Record<string, any> = {
-        prompt: payload.inputs.prompt || "",
+        prompt: finalPrompt,
       };
 
       // Para modelos de vídeo (ex: seedance spicy, wan spicy), o campo costuma ser "image" e não "image_url"
