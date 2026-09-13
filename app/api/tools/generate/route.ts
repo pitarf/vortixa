@@ -119,7 +119,13 @@ export async function POST(req: Request) {
       err.message.includes("fal.ai")
     );
     const isSyntaxOrInternal = err instanceof SyntaxError || (err.message && (err.message.includes("JSON") || err.message.includes("token")));
-    const msg = isBusinessError && !isSyntaxOrInternal ? err.message : "Ocorreu um erro de processamento da geração de IA.";
+    let msg = isBusinessError && !isSyntaxOrInternal ? err.message : "Ocorreu um erro de processamento da geração de IA.";
+    // Sanitização estrita: jamais expor nomes de provedores externos (fal.ai, WaveSpeed, etc.) para o usuário
+    msg = msg
+      .replace(/fal\.ai/gi, "VORIXA Neural")
+      .replace(/WaveSpeed(\s*AI)?/gi, "VORIXA Neural")
+      .replace(/cluster WaveSpeed/gi, "servidores neurais");
+
     return NextResponse.json({ error: msg }, { status: 400 });
   }
 }

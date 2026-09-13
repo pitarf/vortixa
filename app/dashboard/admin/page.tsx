@@ -459,7 +459,7 @@ export default function AdminDashboardPage() {
         {/* Custo Agregado de API */}
         <div className="bg-slate-950/60 border border-slate-900 rounded-2xl p-5 relative overflow-hidden">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Custo de API (fal / WaveSpeed)</span>
+            <span className="text-xs font-medium text-slate-400">Custo de Infraestrutura de IA</span>
             <div className="h-8 w-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
               <Layers className="h-4 w-4" />
             </div>

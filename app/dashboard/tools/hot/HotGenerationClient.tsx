@@ -39,16 +39,16 @@ interface HotModel {
 const HOT_MODELS: HotModel[] = [
   {
     id: "wavespeed/chroma",
-    name: "Chroma Uncensored (Nudez Total)",
+    name: "VORIXA Chroma (Nudez Total)",
     badge: "100% Sem Censura 🔞",
     type: "image",
     cost: 3,
-    description: "Modelo oficial treinado sem travas ou filtros. Renderiza nudez explícita, poses sensuais e anatomia real.",
+    description: "Motor proprietário sem travas ou filtros. Renderiza nudez explícita, poses sensuais e anatomia real.",
     speed: "~ 6s",
   },
   {
     id: "wavespeed/wan-2.2-spicy",
-    name: "WAN 2.2 Spicy (Vídeo +18 Fluido)",
+    name: "VORIXA Motion Hot (Vídeo +18 Fluido)",
     badge: "Alta Eficiência 🎥",
     type: "video",
     cost: 15,
@@ -57,7 +57,7 @@ const HOT_MODELS: HotModel[] = [
   },
   {
     id: "wavespeed/minimax-h3-spicy",
-    name: "MiniMax H3 Spicy (Vídeo com Áudio)",
+    name: "VORIXA Live Voice Hot (Vídeo com Áudio)",
     badge: "Com Áudio Nativo 🔊",
     type: "video",
     cost: 18,
@@ -66,7 +66,7 @@ const HOT_MODELS: HotModel[] = [
   },
   {
     id: "wavespeed/seedance-2.5-spicy",
-    name: "Seedance 2.5 Spicy (Vídeo Ultra HD)",
+    name: "VORIXA Ultra Cinema Hot (Vídeo 4K)",
     badge: "Qualidade Máxima 👑",
     type: "video",
     cost: 30,
@@ -248,7 +248,7 @@ export default function HotGenerationClient() {
 
     try {
       setIsGenerating(true);
-      setActiveStepText("Conectando ao cluster WaveSpeed AI sem censura");
+      setActiveStepText("Conectando ao cluster neural VORIXA sem censura");
 
       const inputs: Record<string, any> = {
         prompt,
@@ -274,11 +274,11 @@ export default function HotGenerationClient() {
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "Falha ao iniciar geração na WaveSpeed.");
+        throw new Error(err.error || "Falha ao iniciar geração no cluster neural.");
       }
 
       const job = await res.json();
-      toast.info("Processando no cluster da WaveSpeed AI...");
+      toast.info("Processando nos servidores neurais VORIXA...");
 
       // Polling de acompanhamento do Job
       let attempts = 0;
@@ -349,7 +349,7 @@ export default function HotGenerationClient() {
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-mono font-bold">
                 <Flame className="w-3.5 h-3.5 fill-rose-500 text-rose-500 animate-pulse" />
-                <span>WAVESPEED AI • MODO SEM CENSURA (+18)</span>
+                <span>VORIXA NEURAL • MODO SEM CENSURA (+18)</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2">
                 Gerador Hot & Sensual
@@ -413,9 +413,9 @@ export default function HotGenerationClient() {
               </div>
             </div>
 
-            {/* Card 2: Seleção do Modelo da WaveSpeed */}
+            {/* Card 2: Seleção do Modelo Neural */}
             <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl">
-              <label className="text-xs font-bold text-slate-300 block">2. Motor WaveSpeed AI</label>
+              <label className="text-xs font-bold text-slate-300 block">2. Motor VORIXA Neural</label>
               <div className="grid grid-cols-1 gap-2.5">
                 {HOT_MODELS.filter((m) => m.type === mediaType).map((model) => {
                   const isSelected = selectedModel.id === model.id;

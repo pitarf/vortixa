@@ -345,7 +345,7 @@ export function AdminServicesCatalog() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar por nome do modelo, motor fal.ai ou ferramenta..."
+              placeholder="Buscar por nome do modelo, categoria ou ferramenta..."
               className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
               style={{ minHeight: "44px" }}
             />

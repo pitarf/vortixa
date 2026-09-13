@@ -194,7 +194,7 @@ export class WaveSpeedAIProvider implements IAIProvider {
       return { providerJobId: taskId };
     } catch (err: any) {
       console.error("[WaveSpeedAIProvider] Falha ao submeter job:", err);
-      throw new Error(`Falha na conexão com WaveSpeed AI: ${err.message}`);
+      throw new Error(`Falha no cluster neural VORIXA: ${err.message}`);
     }
   }
 
@@ -282,7 +282,7 @@ export class WaveSpeedAIProvider implements IAIProvider {
             where: { id: jobId },
             data: {
               status: "FAILED",
-              error: data.error || data.message || "Geração rejeitada ou falha de inferência no cluster WaveSpeed.",
+              error: data.error || data.message || "Geração rejeitada ou falha de inferência no cluster neural.",
             },
           });
 
