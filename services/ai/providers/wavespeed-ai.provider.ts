@@ -78,9 +78,15 @@ export class WaveSpeedAIProvider implements IAIProvider {
         "wavespeed-ai/pony-diffusion-v6-xl": "wavespeed-ai/chroma",
         "chroma": "wavespeed-ai/chroma",
         "wavespeed-ai/chroma": "wavespeed-ai/chroma",
-        // Vídeo Spicy
-        "wan-2.1-uncensored-i2v": "bytedance/seedance-2.5/image-to-video-spicy",
-        "wavespeed-ai/wan-2.1-uncensored-i2v": "bytedance/seedance-2.5/image-to-video-spicy",
+        // Vídeo Spicy (Sem Censura / Nudez)
+        "wan-2.2-spicy": "wavespeed-ai/wan-2.2-spicy/image-to-video",
+        "wavespeed-ai/wan-2.2-spicy": "wavespeed-ai/wan-2.2-spicy/image-to-video",
+        "minimax-h3-spicy": "wavespeed-ai/minimax-h3/image-to-video-spicy",
+        "wavespeed-ai/minimax-h3-spicy": "wavespeed-ai/minimax-h3/image-to-video-spicy",
+        "seedance-2.5-spicy": "bytedance/seedance-2.5/image-to-video-spicy",
+        "wavespeed-ai/seedance-2.5-spicy": "bytedance/seedance-2.5/image-to-video-spicy",
+        "wan-2.1-uncensored-i2v": "wavespeed-ai/wan-2.2-spicy/image-to-video",
+        "wavespeed-ai/wan-2.1-uncensored-i2v": "wavespeed-ai/wan-2.2-spicy/image-to-video",
         "minimax-spicy": "wavespeed-ai/minimax-h3/image-to-video-spicy",
         "vidu-spicy": "vidu/q3/image-to-video-spicy",
       };
