@@ -8,6 +8,12 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Recurso de Foto de Referência no Gerador Sensual Hot (+18)**:
+  - Card 3 dedicado e destacado para Foto / Imagem de Referência no formulário de geração.
+  - Exibição de preview nítido com badge `Ativa ✅`, identificador `GUIA`, botões `Trocar Foto`, `Ver Foto` e `Remover`.
+  - Dropzone estilizada com upload local e atalho de 1 clique `Usar Última Foto` puxada das gerações recentes.
+  - Botão de ação rápida `Usar como Referência 🖼️` abaixo do player principal e botão hover `Usar Ref` em cada miniatura da galeria.
+  - Validação estrita para modelos de vídeo sem censura (+18), exigindo foto de referência para animação com toast informativo.
 - [x] **Seção de Gerações Recentes e Ações Rápidas no Gerador Hot (+18)**:
   - Carrossel e grid de miniaturas dinâmico integrado à biblioteca de criações recentes do usuário.
   - Ações rápidas abaixo da visualização: Baixar, Variar (com reinjeção de prompt), Upscale 4K e No Canvas (VORIXA FLOW).

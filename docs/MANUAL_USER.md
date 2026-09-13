@@ -358,3 +358,33 @@ A Vitrine de Modelos do VORIXA é um marketplace completo para encontrar, explor
 4. Preencha o formulário de proposta com seu orçamento estimado e notas/briefing da sua campanha.
 5. A solicitação é enviada para a assessoria e equipe administrativa do VORIXA e você poderá acompanhar o status da proposta.
 
+---
+
+## 8. Gerador Sensual & Conteúdo Sem Censura (+18) (`/dashboard/tools/hot`)
+
+A ferramenta Hot do VORIXA é dedicada à geração artística de fotos e vídeos adultos sem travas de censura ou filtros de nudez, utilizando clusters neurais especializados.
+
+### A. Verificação de Maioridade (+18)
+* Ao acessar a ferramenta pela primeira vez, um modal obrigatório de verificação de idade será apresentado.
+* O acesso só é liberado após a confirmação expressa de que você possui 18 anos ou mais.
+
+### B. Motores Neurais Disponíveis
+* **VORIXA HyperReal (Foto Realista 8K)**: Motor com calibração profunda de micro-texturas naturais, poros visíveis, iluminação ambiente suave e eliminação completa do aspecto artificial de plástico/boneca.
+* **VORIXA Chroma (Nudez Total)**: Motor sem travas para nudez explícita, anatomia natural e ensaios boudoir sem censura.
+* **VORIXA Motion Hot (Vídeo +18 Fluido)**: Motor de animação corporal explícita e movimentos sensuais de alta fluidez.
+* **VORIXA Live Voice Hot (Vídeo com Áudio)**: Clipes animados com respiração e áudio estéreo nativo.
+* **VORIXA Ultra Cinema Hot (Vídeo 4K)**: Alta definição cinematográfica para movimentos complexos.
+
+### C. Recurso de Foto de Referência ("Usar como Referência")
+* **Card de Foto de Referência (Card 3)**:
+  * Permite anexar uma foto de modelo, pose ou cenário para guiar a criação.
+  * **Obrigatório para Vídeos (+18)**: Os motores de vídeo necessitam de uma imagem base para animar os movimentos. Caso você selecione vídeo sem foto de referência, o sistema alertará para selecionar uma imagem.
+  * **Atalho "Usar Última Foto"**: Se você já gerou imagens anteriormente, um botão de 1 clique permite utilizar a foto mais recente como referência imediata.
+* **Botão "Usar como Referência" na Mídia Ativa**:
+  * Ao gerar qualquer foto e visualizá-la no painel direito, basta clicar no botão destacado **"Usar como Referência 🖼️"** para fixá-la instantaneamente como guia para o próximo prompt ou animação em vídeo.
+* **Miniaturas de Gerações Recentes**:
+  * No grid de criações recentes à direita, passe o mouse sobre qualquer foto gerada para ver o botão **"Usar Ref"**.
+  * A foto atualmente ativa como referência recebe uma etiqueta destacada `REF` para identificação visual clara.
+* **Visualização em Tela Cheia**:
+  * O modal de tela cheia conta com um botão direto **"Usar como Referência"** para definir a imagem em alta resolução sem precisar fechar a visualização.
+

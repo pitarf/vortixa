@@ -116,8 +116,8 @@ export class WaveSpeedAIProvider implements IAIProvider {
       };
 
       // Para modelos de vídeo (ex: seedance spicy, wan spicy), o campo costuma ser "image" e não "image_url"
-      if (payload.inputs.image_url || payload.inputs.image) {
-        const imgUrl = payload.inputs.image_url || payload.inputs.image;
+      const imgUrl = payload.inputs.image_url || payload.inputs.image || payload.inputs.reference_image_url;
+      if (imgUrl) {
         bodyPayload.image_url = imgUrl;
         bodyPayload.image = imgUrl; // Seedance Spicy exige "image"
       }

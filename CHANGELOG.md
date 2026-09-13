@@ -5,6 +5,21 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.9.7] - 2026-09-13
+### Recurso de Foto de Referência no Gerador Sensual Hot (+18)
+- **Painel Visual e Card de Foto de Referência (`HotGenerationClient.tsx`)**:
+  - Implementado Card 3 dedicado e destacado para Foto / Imagem de Referência no formulário de criação.
+  - Exibição de miniatura em alta resolução com badge `Ativa ✅`, label de identificação visual `GUIA`, opções de `Trocar Foto`, `Ver Foto` e `Remover`.
+  - Área de dropzone/upload e atalho inteligente `Usar Última Foto` integrado às gerações recentes.
+  - Validação estrita para modelos de vídeo sem censura (+18), exigindo foto de referência como primeiro frame para animação com aviso visual e sonner toast instrutivo.
+- **Ação Rápida "Usar como Referência" na Mídia Ativa e no Histórico Recente**:
+  - Substituição do botão genérico "Variar" por botão proeminente com destaque neon `Usar como Referência 🖼️` abaixo do player/preview ativo.
+  - Atalho de 1 clique em cada miniatura do grid de Gerações Recentes com botão hover `Usar Ref` e badge `REF` dinâmico na foto de referência selecionada.
+  - Opção de definir como referência diretamente a partir do visualizador em Tela Cheia (Fullscreen).
+- **Compatibilidade e Blindagem de Payload no Backend (`wavespeed-ai.provider.ts`)**:
+  - Suporte completo aos campos `reference_image_url`, `image_url` e `image` para animações em modelos de vídeo sem censura.
+  - Sanitização de inputs para modelos puros de texto-para-imagem, garantindo ausência de erros 400 de schema.
+
 ## [1.9.6] - 2026-09-12
 ### Seção de Gerações Recentes e Ações Rápidas no Gerador Hot (+18)
 - **Histórico Dinâmico de Gerações Recentes no Hot (`app/dashboard/tools/hot/HotGenerationClient.tsx`)**:

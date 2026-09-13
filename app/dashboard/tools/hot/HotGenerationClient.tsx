@@ -23,6 +23,7 @@ import {
   Zap,
   Boxes,
   Maximize2,
+  Check,
 } from "lucide-react";
 import { AgeVerificationModal } from "@/components/tools/hot/AgeVerificationModal";
 
@@ -181,10 +182,26 @@ export default function HotGenerationClient() {
     }
   };
 
+  const handleSetReference = (urlToUse?: string) => {
+    const targetUrl = urlToUse || resultMediaUrl;
+    if (!targetUrl) {
+      toast.error("Nenhuma foto disponível para definir como referência.");
+      return;
+    }
+    if (targetUrl.endsWith(".mp4")) {
+      toast.error("Apenas fotos/imagens podem ser usadas como referência visual.");
+      return;
+    }
+    setReferenceImageUrl(targetUrl);
+    toast.success("Foto definida como referência para o próximo prompt!");
+    const el = document.getElementById("hot-reference-section");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
   const handleVary = () => {
-    if (!resultMediaUrl) return;
-    setReferenceImageUrl(resultMediaUrl);
-    toast.success("Imagem definida como referência para variação!");
+    handleSetReference();
   };
 
   const handleUpscale = () => {
@@ -224,7 +241,7 @@ export default function HotGenerationClient() {
       if (!res.ok) throw new Error("Falha no upload da foto.");
       const data = await res.json();
       setReferenceImageUrl(data.url);
-      toast.success("Foto de referência anexada!");
+      toast.success("Foto de referência anexada com sucesso!");
     } catch (err: any) {
       toast.error(err.message || "Erro no upload.");
     } finally {
@@ -237,6 +254,14 @@ export default function HotGenerationClient() {
     if (isGenerating) return;
     if (!prompt.trim() && !referenceImageUrl) {
       toast.error("Insira a descrição ou anexe uma foto de referência.");
+      return;
+    }
+
+    // Para modelos de vídeo, uma foto de referência é obrigatória para animar
+    if (selectedModel.type === "video" && !referenceImageUrl) {
+      toast.error("Para gerar vídeos sem censura (+18), selecione ou anexe uma foto de referência para ser animada.");
+      const el = document.getElementById("hot-reference-section");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
 
@@ -268,6 +293,8 @@ export default function HotGenerationClient() {
 
       if (referenceImageUrl) {
         inputs.image_url = referenceImageUrl;
+        inputs.image = referenceImageUrl;
+        inputs.reference_image_url = referenceImageUrl;
       }
 
       const res = await fetch("/api/tools/generate", {
@@ -460,10 +487,175 @@ export default function HotGenerationClient() {
               </div>
             </div>
 
-            {/* Card 3: Descrição e Foto de Referência */}
+            {/* Card 3: Foto de Referência (Usar como Referência) */}
+            <div
+              id="hot-reference-section"
+              className={`bg-[#0D0E12] border rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl transition-all ${
+                referenceImageUrl
+                  ? "border-rose-500/50 bg-gradient-to-b from-rose-950/20 to-[#0D0E12]"
+                  : selectedModel.type === "video"
+                  ? "border-amber-500/50 bg-gradient-to-b from-amber-950/15 to-[#0D0E12]"
+                  : "border-[#1E202E]"
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <label className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-rose-400" />
+                    <span>3. Foto de Referência</span>
+                  </label>
+                  {referenceImageUrl ? (
+                    <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 flex items-center gap-1">
+                      <Check className="w-2.5 h-2.5" /> Referência Ativa
+                    </span>
+                  ) : (
+                    <span
+                      className={`text-[10px] font-mono px-2 py-0.5 rounded ${
+                        selectedModel.type === "video"
+                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold"
+                          : "text-slate-500 bg-[#13141B]"
+                      }`}
+                    >
+                      {selectedModel.type === "video" ? "Obrigatório para Vídeo" : "Opcional"}
+                    </span>
+                  )}
+                </div>
+
+                {referenceImageUrl && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setReferenceImageUrl("");
+                      toast.info("Foto de referência removida.");
+                    }}
+                    className="text-slate-400 hover:text-rose-400 text-xs font-medium cursor-pointer flex items-center gap-1 min-h-[32px] px-2 rounded-lg hover:bg-rose-950/30 transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    <span>Remover</span>
+                  </button>
+                )}
+              </div>
+
+              {/* Se houver foto de referência selecionada */}
+              {referenceImageUrl ? (
+                <div className="p-3 rounded-xl bg-[#070709] border border-rose-500/30 flex items-center gap-3">
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-rose-500/50 shrink-0 bg-black shadow-md shadow-rose-950/40">
+                    <img
+                      src={referenceImageUrl}
+                      alt="Referência Ativa"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end justify-center p-0.5">
+                      <span className="text-[9px] font-mono text-rose-300 font-bold tracking-wider">GUIA</span>
+                    </div>
+                  </div>
+
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-white">Foto Guia Definida</span>
+                      <span className="text-[9px] font-mono text-emerald-400 bg-emerald-950/30 border border-emerald-500/30 px-1.5 py-0.2 rounded">
+                        Pronta
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 leading-tight">
+                      {selectedModel.type === "video"
+                        ? "Esta imagem será animada com movimentos corporais sem censura."
+                        : "Usada como modelo de anatomia, pose e iluminação no próximo prompt."}
+                    </p>
+
+                    <div className="flex items-center gap-2 pt-1">
+                      <label className="px-2.5 py-1.5 rounded-lg bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-[11px] font-bold text-slate-300 hover:text-white flex items-center gap-1.5 cursor-pointer transition-all">
+                        {isUploadingRef ? (
+                          <RefreshCw className="w-3 h-3 animate-spin text-rose-400" />
+                        ) : (
+                          <Upload className="w-3 h-3 text-rose-400" />
+                        )}
+                        <span>Trocar Foto</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleUploadImage}
+                          className="hidden"
+                        />
+                      </label>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setResultMediaUrl(referenceImageUrl);
+                          setIsFullscreen(true);
+                        }}
+                        className="px-2 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#13141B] cursor-pointer text-[11px] font-semibold flex items-center gap-1"
+                        title="Ver foto em tela cheia"
+                      >
+                        <Maximize2 className="w-3 h-3 text-cyan-400" />
+                        <span>Ver Foto</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Estado Vazio: Slot de Upload ou Selecionar Recente */
+                <div className="space-y-2.5">
+                  {selectedModel.type === "video" && (
+                    <div className="p-2.5 rounded-xl bg-amber-950/20 border border-amber-500/30 text-amber-200 text-xs flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>
+                        Vídeos sem censura animam uma foto de base. Carregue uma imagem ou clique em <strong>"Usar como Referência"</strong> em qualquer foto recente ao lado.
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <label className="flex-1 border-2 border-dashed border-[#1E202E] hover:border-rose-500/60 rounded-xl p-3 sm:p-4 flex items-center justify-center gap-2.5 text-slate-400 hover:text-slate-200 transition-all cursor-pointer min-h-[56px] bg-[#070709] group">
+                      {isUploadingRef ? (
+                        <RefreshCw className="w-4 h-4 animate-spin text-rose-400 shrink-0" />
+                      ) : (
+                        <Upload className="w-4 h-4 text-rose-400 group-hover:scale-110 transition-transform shrink-0" />
+                      )}
+                      <div className="text-left">
+                        <span className="text-xs font-bold block text-slate-300 group-hover:text-white">
+                          Carregar Foto do Seu Dispositivo
+                        </span>
+                        <span className="text-[10px] text-slate-500 font-mono">PNG, JPG ou WebP até 50MB</span>
+                      </div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleUploadImage}
+                        className="hidden"
+                      />
+                    </label>
+
+                    {/* Atalho para pegar a última foto gerada se houver */}
+                    {historyItems.some((it) => !it.url.endsWith(".mp4")) && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const lastImg = historyItems.find((it) => !it.url.endsWith(".mp4"));
+                          if (lastImg) {
+                            handleSetReference(lastImg.url);
+                          }
+                        }}
+                        className="px-3 py-2.5 rounded-xl bg-[#13141B] hover:bg-rose-950/30 border border-[#1E202E] hover:border-rose-500/40 text-slate-300 hover:text-rose-200 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 min-h-[56px]"
+                        title="Usar a imagem gerada mais recente como referência"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                        <span className="text-left">
+                          <span className="block text-[11px]">Usar Última Foto</span>
+                          <span className="block text-[9px] font-mono text-slate-500">Geração Recente</span>
+                        </span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Card 4: Descrição e Prompt */}
             <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-slate-300">3. Prompt & Estética Desejada</label>
+                <label className="text-xs font-bold text-slate-300">4. Prompt & Estética Desejada</label>
                 <div className="flex gap-1.5">
                   {HOT_PROMPT_SUGGESTIONS.map((_, i) => (
                     <button
@@ -483,46 +675,11 @@ export default function HotGenerationClient() {
                 onChange={(e) => setPrompt(e.target.value)}
                 rows={4}
                 placeholder="Descreva a modelo, a lingerie, o ambiente, a pose e a iluminação desejada..."
-                className="w-full bg-[#070709] border border-[#1E202E] rounded-xl p-3 text-xs text-white placeholder-slate-600 focus:border-rose-500 outline-none transition-colors resize-none"
+                className="w-full bg-[#070709] border border-[#1E202E] rounded-xl p-3 text-xs text-white placeholder-slate-600 focus:border-rose-500 outline-none transition-colors resize-none leading-relaxed"
               />
-
-              {/* Upload de Referência */}
-              <div className="pt-2 border-t border-[#1E202E]/60 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <label className="px-3 py-1.5 rounded-lg bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-slate-300 flex items-center gap-1.5 cursor-pointer transition-all">
-                    {isUploadingRef ? (
-                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-rose-400" />
-                    ) : (
-                      <Upload className="w-3.5 h-3.5 text-rose-400" />
-                    )}
-                    <span>{referenceImageUrl ? "Trocar Foto Guia" : "Anexar Foto de Modelo Guia"}</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleUploadImage}
-                      className="hidden"
-                    />
-                  </label>
-
-                  {referenceImageUrl && (
-                    <button
-                      type="button"
-                      onClick={() => setReferenceImageUrl("")}
-                      className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 cursor-pointer"
-                      title="Remover foto"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-
-                <span className="text-[11px] text-slate-500 font-mono">
-                  {referenceImageUrl ? "Foto ativa ✅" : "Opcional"}
-                </span>
-              </div>
             </div>
 
-            {/* Card 4: Proporção e Duração */}
+            {/* Card 5: Proporção e Duração */}
             <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
@@ -698,7 +855,7 @@ export default function HotGenerationClient() {
                 )}
               </div>
 
-              {/* Barra de Ações Rápidas da Mídia Ativa (Baixar, Variar, Upscale 4K, No Canvas) */}
+              {/* Barra de Ações Rápidas da Mídia Ativa (Baixar, Usar como Referência, Upscale 4K, No Canvas) */}
               {Boolean(resultMediaUrl) && (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-[#1E202E]">
                   <button
@@ -713,12 +870,12 @@ export default function HotGenerationClient() {
 
                   <button
                     type="button"
-                    onClick={handleVary}
-                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
-                    title="Usar como referência para nova variação"
+                    onClick={() => handleSetReference(resultMediaUrl)}
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-rose-950/40 border border-rose-500/50 hover:border-rose-400 hover:bg-rose-950/60 text-rose-200 hover:text-white text-xs font-bold transition-all cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98] shadow-sm shadow-rose-950/40"
+                    title="Usar esta foto como referência para o próximo prompt ou animação de vídeo"
                   >
-                    <RefreshCw className="w-3.5 h-3.5 text-rose-400 shrink-0" />
-                    <span>Variar</span>
+                    <Sparkles className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                    <span className="truncate">Usar como Referência</span>
                   </button>
 
                   <button
@@ -784,36 +941,67 @@ export default function HotGenerationClient() {
                     {historyItems.map((item, idx) => {
                       const isActive = resultMediaUrl === item.url;
                       const isVid = item.mimeType?.includes("video") || item.url.endsWith(".mp4");
+                      const isCurrentRef = referenceImageUrl === item.url;
                       return (
-                        <button
+                        <div
                           key={item.id || idx}
-                          type="button"
-                          onClick={() => {
-                            setActiveHistoryIndex(idx);
-                            setResultMediaUrl(item.url);
-                          }}
-                          className={`relative rounded-xl overflow-hidden border aspect-square cursor-pointer transition-all group min-h-[52px] touch-manipulation active:scale-[0.98] ${
+                          className={`relative rounded-xl overflow-hidden border aspect-square transition-all group min-h-[52px] ${
                             isActive
                               ? "border-rose-500 shadow-md shadow-rose-500/30 ring-2 ring-rose-500 scale-[1.02]"
-                              : "border-[#1E202E] hover:border-slate-600 opacity-75 hover:opacity-100"
+                              : "border-[#1E202E] hover:border-slate-600 opacity-80 hover:opacity-100"
                           }`}
                         >
-                          {isVid ? (
-                            <div className="w-full h-full bg-slate-900 flex items-center justify-center relative">
-                              <video src={item.url} className="w-full h-full object-cover" muted />
-                              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                                <Play className="w-3.5 h-3.5 fill-white text-white" />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setActiveHistoryIndex(idx);
+                              setResultMediaUrl(item.url);
+                            }}
+                            className="w-full h-full block cursor-pointer"
+                            title="Visualizar mídia"
+                          >
+                            {isVid ? (
+                              <div className="w-full h-full bg-slate-900 flex items-center justify-center relative">
+                                <video src={item.url} className="w-full h-full object-cover" muted />
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                  <Play className="w-3.5 h-3.5 fill-white text-white" />
+                                </div>
                               </div>
+                            ) : (
+                              <img
+                                src={item.url}
+                                alt={item.name || `Geração ${idx + 1}`}
+                                className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                                loading="lazy"
+                              />
+                            )}
+                          </button>
+
+                          {/* Badge de Referência Ativa */}
+                          {isCurrentRef && (
+                            <div className="absolute top-1 left-1 bg-rose-600/90 backdrop-blur-xs text-[9px] font-bold text-white px-1.5 py-0.5 rounded shadow z-10 pointer-events-none">
+                              REF
                             </div>
-                          ) : (
-                            <img
-                              src={item.url}
-                              alt={item.name || `Geração ${idx + 1}`}
-                              className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                              loading="lazy"
-                            />
                           )}
-                        </button>
+
+                          {/* Botão Hover de Usar como Referência (Apenas para Imagens) */}
+                          {!isVid && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSetReference(item.url);
+                              }}
+                              className={`absolute bottom-1 inset-x-1 py-1 rounded bg-black/85 hover:bg-rose-600 text-[9px] font-bold text-white transition-all opacity-0 group-hover:opacity-100 flex items-center justify-center gap-1 z-10 cursor-pointer shadow ${
+                                isCurrentRef ? "!opacity-100 !bg-rose-600" : ""
+                              }`}
+                              title="Definir esta foto como referência"
+                            >
+                              <Sparkles className="w-2.5 h-2.5" />
+                              <span>{isCurrentRef ? "Ref Ativa" : "Usar Ref"}</span>
+                            </button>
+                          )}
+                        </div>
                       );
                     })}
                   </div>
@@ -834,6 +1022,17 @@ export default function HotGenerationClient() {
           <div className="w-full flex items-center justify-between pb-3 max-w-6xl">
             <span className="text-xs font-mono text-slate-400">Visualização Completa (Sem Censura)</span>
             <div className="flex items-center gap-2">
+              {!resultMediaUrl.endsWith(".mp4") && (
+                <button
+                  type="button"
+                  onClick={() => handleSetReference(resultMediaUrl)}
+                  className="px-3 py-1.5 rounded-xl bg-rose-950/50 border border-rose-500/60 hover:border-rose-400 text-rose-200 hover:text-white transition-colors text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-sm"
+                  title="Definir esta foto como referência ativa"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-rose-400" />
+                  <span>Usar como Referência</span>
+                </button>
+              )}
               <button
                 type="button"
                 onClick={handleDownload}
