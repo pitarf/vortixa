@@ -357,6 +357,63 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
   - `PAYMENT_FAILED` $\rightarrow$ Status `FAILED`.
 * **Idempotência no Webhook**: Tabela `PaymentWebhook` com constraint `UNIQUE` em `gatewayEventId` e lock pessimista `SELECT FOR UPDATE` no `PaymentLedgerService`.
 
+---
 
+## 17. Arquitetura Frontend de Elite (Awwwards / Apple Standard)
 
+### 1. Paleta Cromática & Tokenização Dark Obsidian
+* **Background Primário**: `#07080B` (Canvas mestre e bases de layout).
+* **Superfícies de Vidro Translúcido**: `#0D0E14` e `#12141F` combinados com `backdrop-blur-2xl` e bordas com `border-white/[0.08]`.
+* **Gradientes e Halos Volumétricos**:
+  - Halo de Destaque / Ação: `bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500` com iluminação `shadow-xl shadow-violet-600/35`.
+  - Halo Esmeralda de Confirmação: `from-emerald-500/20 to-teal-500/10` para status positivos e indicadores online.
+
+### 2. Princípios de Acessibilidade & Ergonomia Mobile
+* **Touch Targets Calibrados**: Todos os botões, checkboxes, abas, switches e seletores possuem altura/largura mínima de **44px** (`min-h-[44px]`).
+* **Prevenção de Layout Shift (CLS)**: Contêineres de vídeo e imagem utilizam `aspect-ratio` fixo (`aspect-video`, `aspect-[3/4]`, `aspect-square`) para evitar saltos visuais durante o carregamento de mídia.
+* **Feedbacks Visuais e Notificações**: Uso padronizado de toasts não-bloqueantes via **Sonner**, com mensagens específicas em PT-BR (proibido o uso de `alert()` nativo).
+
+### 3. Organização Modular dos Componentes de UI
+* `/components/landing`: Componentes de showroom público (`HeroCinematic`, `EnginesShowcase`, `MotionProofShowcase`, `FlowInteractiveDemo`, `ResultsMasonryGallery`, `PricingSection`, `FinalCtaSection`, `LandingFooter`).
+* `/components/studio`: Controles unificados do estúdio neural (`StudioModelSelector`, `StudioVideoControls`, `ActiveShowcaseModelBanner`, `QuickModelPickerModal`).
+* `/components/models`: Lookbook e booking de casting (`ModelCard`, `ModelsShowcaseHeader`, `ModelFilterPills`, `ModelDetailModal`, `ModelBookingModal`).
+* `/components/credits`: Experiência fintech (`PaymentCheckoutModal`, `PaymentPixModal`, `PaymentSuccessModal`, `PaymentFailureModal`).
+* `/components/ai`: Layout contemporâneo responsivo de 2 colunas para geração neural (`generation-layout.tsx`).
+
+---
+
+## 18. Engenharia de Interfaces Adaptativas, Mobile-First & Touch WCAG AAA (Fase 8.5)
+
+### 1. Diretrizes de Layout Fluido e Dimensionamento Dinâmico
+* **Eliminação de Larguras Rígidas**: Proibido o uso de larguras mínimas fixas arbitrárias (como `min-w-[620px]`) que quebrem em viewports móveis de 320px a 480px.
+* **Sistemas de Grid e Flexbox Híbridos**:
+  - Em smartphones (< 1024px): Layout prioritariamente em coluna única vertical (`grid-cols-1`), garantindo ergonomia e eliminando scroll horizontal.
+  - Em telas amplas ($\ge 1024px$ e ultrawide): Expansão orgânica para 2 colunas (`lg:grid-cols-12` com split 6/6 ou 7/5), mantendo a área de visualização e preview fixada com `lg:sticky lg:top-6`.
+* **Trilhos de Scroll Horizontal Protegidos**:
+  - Para barras de abas, pílulas de filtros e carrosséis de mídia, utilizar o padrão:
+    ```css
+    overflow-x-auto no-scrollbar overscroll-x-contain touch-pan-x
+    ```
+  - Previne que o gesto de rolagem horizontal arraste o histórico do navegador (pull-to-navigate).
+
+### 2. Estabilidade Visual e Zero Cumulative Layout Shift (CLS = 0)
+* **Classes de Aspect-Ratio Explícito**:
+  - Contêineres de mídia gerada (vídeo e imagem) devem declarar proporção reservada (`aspect-video`, `aspect-[3/4]`, `aspect-square`, `aspect-[9/16]`) e altura mínima correspondente (`min-h-[280px]`).
+  - Imagens internas utilizam `object-contain` ou `object-cover` com transição suave, eliminando qualquer salto de layout na tela quando a mídia do webhook for entregue.
+
+### 3. Ergonomia Tátil e Alvos de Toque (Touch Targets $\ge 44\text{px}$)
+* **Conformidade WCAG 2.1 AAA**:
+  - Qualquer elemento tátil (botões, switches, checkboxes, pílulas de aspect ratio, botões de ação secundária e controles de player) DEVE possuir dimensões mínimas de 44x44px (`min-h-[44px] min-w-[44px]`).
+  - Em botões primários de pagamento, recarga de crédito e cópia de Pix, elevar a altura mínima para **48px** ou **52px** para conforto sob o polegar.
+* **Estados Haptic Visuais**:
+  - Todos os botões táteis implementam `:active:scale-[0.98]` ou `:active:scale-95` com transição rápida de 150ms para feedback tátil instantâneo.
+  - Proteção de foco acessível com `:focus-visible:ring-2 :focus-visible:ring-violet-500`.
+
+### 4. Gestão de Modais, Drawers e Teclado Virtual Móvel
+* **Trava de Rolagem de Fundo (Body Scroll Lock)**:
+  - Ao abrir gavetas móveis (`DashboardShell`) ou modais de casting e checkout (`overscroll-contain`), o `body` recebe `document.body.style.overflow = "hidden"`, impedindo que o fundo role involuntariamente.
+* **Altura Dinâmica do Viewport**:
+  - Para formulários de autenticação e modais full-screen, utilizar `min-h-dvh` (Dynamic Viewport Height) em vez de `h-screen`, prevenindo que a abertura do teclado virtual no iOS/Android oculte campos de input ou botões de submissão.
+* **Inputs de Formulário**:
+  - Altura mínima de 48px (`min-h-[48px]`) e tamanho de fonte de pelo menos `16px` (`text-base sm:text-sm`) em campos móveis para evitar o auto-zoom involuntário do Safari iOS.
 

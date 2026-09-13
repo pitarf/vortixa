@@ -3,14 +3,15 @@
 import React from "react";
 import { GenerationLayout } from "@/components/ai/generation-layout";
 import { FileUploader } from "@/components/ai/file-uploader";
+import { Zap } from "lucide-react";
 
 const UPSCALE_MODELS = [
   {
     id: "fal-ai/creative-upscaler",
     name: "Creative Video Upscaler 4K",
-    badge: "Ultra Definição",
+    badge: "Ultra Definição 💎",
     cost: 5,
-    description: "Restauração facial, aumento de nitidez e super-resolução para 2K/4K",
+    description: "Restauração facial, aumento de nitidez, remoção de artefatos de compressão e super-resolução para 2K/4K.",
     speed: "~ 35s",
   },
 ];
@@ -21,8 +22,8 @@ export default function UpscaleToolPage() {
   return (
     <GenerationLayout
       toolSlug="upscale"
-      title="Video Upscale"
-      description="Aumente a definição e melhore a qualidade de seus vídeos gerados com inteligência artificial."
+      title="Video Upscale 4K"
+      description="Aumente a resolução e restaure detalhes anatômicos e faciais de vídeos criados com IA."
       selectedModelId={selectedModel.id}
       customCost={selectedModel.cost}
       initialInputs={{
@@ -31,63 +32,60 @@ export default function UpscaleToolPage() {
       }}
     >
       {({ setInputVal, inputs }) => (
-        <div className="space-y-6">
+        <div className="space-y-6 w-full">
           {/* Card do Motor de IA */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5 font-mono">
               Motor de Super-Resolução e Restauração
             </label>
-            <div className="grid grid-cols-1 gap-3">
-              {UPSCALE_MODELS.map((model) => (
-                <div
-                  key={model.id}
-                  className="p-3.5 rounded-2xl border bg-[#13141B] border-violet-500 shadow-[0_0_20px_rgba(139,92,246,0.25)] ring-1 ring-violet-500/50 flex flex-col justify-between"
-                  style={{ minHeight: "82px" }}
-                >
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-sm font-bold text-white">
-                      {model.name}
-                    </span>
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/20 whitespace-nowrap">
-                      {model.cost} créditos
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-300 leading-tight my-1.5">
-                    {model.description}
-                  </p>
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono pt-1.5 border-t border-[#1E202E]/60">
-                    <span className="text-cyan-400 font-semibold">{model.badge}</span>
-                    <span className="text-slate-500">{model.speed}</span>
-                  </div>
+            <div className="p-4 rounded-2xl border bg-[#13141B] border-violet-500/80 shadow-[0_0_24px_rgba(139,92,246,0.2)] flex flex-col justify-between gap-2">
+              <div className="flex items-center justify-between gap-1">
+                <div className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-amber-400" />
+                  <span className="text-sm font-bold text-white">{selectedModel.name}</span>
                 </div>
-              ))}
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-300 border border-violet-500/20 whitespace-nowrap">
+                  {selectedModel.cost} créditos
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                {selectedModel.description}
+              </p>
+              <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono pt-2 border-t border-[#1E202E]/60">
+                <span className="text-cyan-400 font-semibold">{selectedModel.badge}</span>
+                <span className="text-slate-500">{selectedModel.speed}</span>
+              </div>
             </div>
           </div>
+
           <FileUploader
             accept="video/*"
-            label="Vídeo de Origem"
+            label="Vídeo de Origem (MP4 ou MOV)"
             onUploadSuccess={(url) => setInputVal("video_url", url)}
             onClear={() => setInputVal("video_url", "")}
           />
 
-          <div className="w-full">
-            <label className="block text-sm font-medium text-slate-300 mb-2">Escala de Upscale</label>
+          <div className="w-full space-y-2">
+            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
+              Fator de Escala de Super-Resolução
+            </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
               {[
-                { name: "2x Resolução", value: "2" },
-                { name: "4x Resolução", value: "4" },
+                { name: "2x Resolução (2K QHD)", value: "2", desc: "Equilíbrio ideal entre fidelidade e nitidez ótica" },
+                { name: "4x Resolução (4K Ultra)", value: "4", desc: "Máxima densidade de pixels para telões e cinema" },
               ].map((scale) => (
                 <button
                   key={scale.value}
                   type="button"
                   onClick={() => setInputVal("scale_factor", scale.value)}
-                  className={`min-h-[44px] py-3 px-4 text-xs font-bold rounded-xl border transition-all duration-300 cursor-pointer flex items-center justify-center ${
+                  className={`min-h-[64px] p-3.5 text-xs rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col items-start justify-center select-none active:scale-[0.98] touch-manipulation ${
                     inputs.scale_factor === scale.value
-                      ? "bg-violet-600/15 border-violet-500 text-violet-300 ring-1 ring-violet-500/30"
-                      : "bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200"
+                      ? "bg-[#13141B] border-cyan-400 text-white shadow-md shadow-cyan-500/20 ring-1 ring-cyan-400/40"
+                      : "bg-[#070709] border-[#1E202E] text-slate-400 hover:text-white"
                   }`}
                 >
-                  {scale.name}
+                  <span className="font-bold text-sm font-heading">{scale.name}</span>
+                  <span className="text-[10px] text-slate-500 mt-0.5">{scale.desc}</span>
                 </button>
               ))}
             </div>

@@ -3,6 +3,96 @@
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [2.5.0] - 2026-09-13
+### Arquitetura Adaptativa Mobile-First, Ergonomia Tátil e Performance Multi-Dispositivo
+- **Mobilização de 6 Subagentes Especialistas em Interfaces Adaptativas**:
+  - Landing Adaptive Specialist, Studio Adaptive Specialist, Tools Adaptive Specialist, Models Adaptive Specialist, Fintech Adaptive Specialist e Admin & Shell Adaptive Specialist.
+  - Refatoração completa de **51 arquivos** do frontend garantindo suporte nativo de telas de 320px a monitores ultrawide 4K.
+- **Shell Mestre & Navegação Mobile Ergonomicamente Calibrada (`DashboardShell.tsx`)**:
+  - Introdução de **Bottom Navigation Bar** dedicada para dispositivos móveis com os 5 atalhos principais (Início, Criar, Flow, Galeria, Créditos) posicionados estrategicamente na zona de alcance do polegar.
+  - Gaveta deslizante mobile com backdrop blur, fechamento por clique externo e trava automática de rolagem no `body` (`document.body.style.overflow = "hidden"`).
+  - Header fixo adaptativo com barra de busca retrátil, badges de créditos responsivas e touch targets mínimos de 44x44px.
+- **Studio CREATE & Prevenção de Scroll Infinito (`app/dashboard/create/page.tsx`, `components/studio/*`)**:
+  - Eliminação de larguras rígidas (`min-w-[620px]` removido de `StudioHeader.tsx`), permitindo fluidez em celulares.
+  - Stepper de fluxo com trilho deslizante touch-friendly (`overflow-x-auto no-scrollbar touch-pan-x`).
+  - Containers de mídia com proporções de aspecto reservadas (`aspect-video`, `aspect-square`, `aspect-[9/16]`) eliminando qualquer Cumulative Layout Shift (CLS).
+- **Ferramentas Dedicadas de IA & Shell Unificado (`components/ai/generation-layout.tsx`, `tools/*`)**:
+  - Sistema de abas móveis exclusivas no smartphone: alternância instantânea entre `Configuração` e `Resultado/Preview` com comutação automática ao disparar a renderização para evitar rolagem infinita.
+  - Seletor de aspect ratio com rolagem touch horizontal suave e botões táteis de 48px de altura.
+  - Zonas de upload drag-and-drop no Motion Control com botões explícitos de seleção de arquivo (`min-h-[44px]`) e seletor segmentado de orientação (`min-h-[52px]`).
+- **Vitrine de Modelos & Lookbook Editorial Mobile (`models/page.tsx`, `components/models/*`)**:
+  - Grid responsivo de 1 coluna ampla em celulares pequenos a 4-5 colunas em desktops amplos.
+  - Pílulas de nicho em carrossel deslizante touch com touch targets >= 44px.
+  - Modais em tela cheia (`inset-0 fixed`) em celulares com `overscroll-contain` e botões de fechar e booking generosos.
+- **Fintech, Checkout & Painel de Afiliados (`credits/page.tsx`, `components/credits/*`, `affiliates/page.tsx`)**:
+  - Cartão de saldo digital escalável com unidades relativas fluidas até 320px sem cortes ou quebras de texto.
+  - Grid adaptativo de pacotes (1 col mobile, 2 cols tablet, 4 cols desktop) com botões de compra de altura mínima de 48px.
+  - Modal do Pix com QR Code centralizado que não estrapola o viewport e botão Copia e Cola otimizado para o polegar.
+  - Cards de KPIs de afiliados e tabela de histórico convertida em cards empilháveis modernos em telas compactas.
+- **Painel Administrativo, Gráficos & Autenticação (`admin/page.tsx`, `components/admin/*`, `app/(auth)/*`)**:
+  - Correção de overflow horizontal no gráfico SVG (`AdminAnalyticsCharts.tsx`), tornando-o responsivo com `viewBox` flexível e trilho de rolagem horizontal seguro (`no-scrollbar`).
+  - Tabelas de Serviços e Usuários convertidas em **Cards Bento Empilháveis** no mobile e tabela completa em desktop.
+  - Telas de Login, Registro e Recuperação adaptadas com `min-h-dvh py-8` e inputs de 48px para evitar cortes ao abrir o teclado virtual no iOS/Android.
+- **Garantia de Qualidade e Conformidade**:
+  - 0 erros na verificação estática de tipos (`npx tsc --noEmit`).
+  - 100% de aprovação na suíte de testes com mocks (195/195 testes passando em 27 arquivos no Vitest).
+
+## [2.4.0] - 2026-09-13
+### Redesign de Elite do Frontend (Awwwards / Apple Standard) em Toda a Plataforma
+- **Landing Page Cinematográfica & Floating Island Navigation (`app/page.tsx` e `components/landing/*`)**:
+  - Ilha de navegação flutuante com efeito vidro líquido (`backdrop-blur-2xl bg-[#0D0E14]/85 border border-white/[0.08]`), badge de prontidão do cluster `v2.6 Live` e menu mobile adaptativo com touch targets >= 44px.
+  - Monumento Hero em Dark Obsidian (`#07080B`, `#0D0E14`) com abas táteis estilo Apple (Seedance 2.0, Kling 2.6 Pro + Áudio, Kling v3 Motion Dança, Kling 2.1 Pro), player óptico e HUD técnico em tempo real.
+  - Demonstração interativa de workflows em grafo dinâmico (`FlowInteractiveDemo.tsx`).
+  - Galeria de resultados em mosaico responsivo com filtragem tátil (`ResultsMasonryGallery.tsx`).
+  - Comparativo de economia e tabela de planos (`PricingSection.tsx`) e rodapé corporativo arquitetural (`LandingFooter.tsx`).
+- **Fintech & Checkout de Alta Fidelidade (`app/dashboard/credits/page.tsx`, `components/credits/*`, `app/dashboard/affiliates/page.tsx`)**:
+  - Cartão de crédito de alta fidelidade *Obsidian Metal* com chip EMV dourado, ondas NFC, numeração mascarada e badge de saldo vitalício.
+  - Checkout estilo Stripe/Apple Pay com seleção fluida entre Pix Instantâneo (Vorexpay/Mercado Pago) e Cartão de Crédito.
+  - Modal do Pix em tempo real com QR Code escaneável de alto contraste, código Copia e Cola com feedback de 1 toque, timer regressivo e polling a cada 3s.
+  - Modais de celebração de compra (`PaymentSuccessModal`) e tratamento empático de falhas (`PaymentFailureModal`).
+  - Painel de Afiliados com 4 KPIs financeiros, link de indicação de 1 clique, atalhos para WhatsApp/Telegram, simulador interativo de ganhos e solicitação de saque Pix.
+- **Vitrine de Modelos & Casting de Luxo (`app/dashboard/models/page.tsx` e `components/models/*`)**:
+  - Grid bento com cards fotográficos de proporção editorial (3:4 / 4:5), iluminação gradiente scrim na base para contraste absoluto de tipografia, e badges de identificação refinadas (`🤖 IA` e `👤 REAL`).
+  - Header com busca instantânea e barra deslizante de pílulas de nicho (`ModelFilterPills.tsx`).
+  - Modais lookbook em alta definição (`ModelDetailModal.tsx`) e formulário de contratação de diárias com formatação em R$ (`ModelBookingModal.tsx`).
+- **Studio CREATE de Próxima Geração (`app/dashboard/create/page.tsx` e `components/studio/*`)**:
+  - Painéis de vidro escuro translúcido com iluminação volumétrica direcionada ao botão primário de renderização.
+  - Textarea editorial de prompt com auto-otimização por IA integrada e contagem monospaced de caracteres.
+  - Controles de proporção, duração e resolução em pílulas táteis ergonômicas (touch targets >= 44px).
+  - Insígnia de alto luxo `ActiveShowcaseModelBanner` com anel gradiente de alta fidelidade e pulso esmeralda de consistência facial.
+  - Seletor rápido de modelos `QuickModelPickerModal` com busca instantânea sem sair da tela de criação.
+- **Ferramentas Especializadas de IA (`components/ai/generation-layout.tsx` e `app/dashboard/tools/*`)**:
+  - Shell unificado em 2 colunas no desktop e 1 coluna ergonômica no mobile.
+  - Área de preview e mídia gerada estilo museu digital com reprodução instantânea e download de alta definição.
+  - Ferramenta de Motion Control (`motion/page.tsx`) com upload drag-and-drop limpo e seletor segmentado de orientação do personagem (`Vídeo` / `Imagem`).
+  - Controles modulares de proporção geométrica (`ImageRatioSelector`) e resolução (`ImageResolutionSelector`).
+- **Painel Administrativo, Biblioteca & Autenticação (`app/dashboard/admin/*`, `library/*`, `app/(auth)/*`)**:
+  - Painel executivo com cards de métricas de alta legibilidade, badges de variação com cores de alto contraste e gráficos SVG táteis adaptativos.
+  - Biblioteca de mídias com visualizador modal e metadados detalhados do job.
+  - Telas de Login, Registro e Recuperação de Senha reformuladas em layout cinematográfico sobre fundo obsidian com iluminação volumétrica e inputs de vidro escuro.
+
+## [2.3.5] - 2026-09-13
+### Prova Real do Motion Control na Home & Blindagem de Webhook para Vídeos Longos
+- **Vitrine de Prova Real do Sistema na Home (`MotionProofShowcase`)**:
+  - Implementação de seção de destaque na Landing Page apresentando o pipeline completo:
+    1. Vídeo de referência do TikTok (`/uploads/danca_tiktok_motion.mp4`);
+    2. Imagem estática da personagem IA criada no estúdio (`/uploads/motion_personagem_base.png`);
+    3. Vídeo final sintetizado dançando com coreografia idêntica e áudio nativo (`/uploads/motion_gerado_vorixa.mp4`).
+  - Controles interativos para Play sincronizado e controle de som.
+  - Atualização do Card 2 em `EnginesShowcase.tsx` e inclusão na galeria com filtro "Motion & Dança 💃" (`ResultsMasonryGallery.tsx`).
+- **Suporte aos Status de Sucesso `OK` e `COMPLETED` no Webhook**:
+  - Diagnóstico nos logs de rede da Fal.ai identificando que o retorno do webhook oficial utiliza `status: "OK"` (conforme a tipagem `WebHookResponse` do SDK `@fal-ai/client`), enquanto a rota `/api/webhooks/fal` apenas verificava `status === "COMPLETED"`.
+  - Atualização para aceitar `status === "OK" || status === "COMPLETED"`, além de detecção direta de mídias (`video`, `images`, `output`) no payload.
+  - Implementado fallback automático com consulta à API da Fal.ai (`fal.queue.result`) caso o payload chegue sem as URLs completas.
+- **Expansão do Polling de Background para 15 Minutos**:
+  - Aumentado o limite de tentativas no método `pollFalResultInBackground` em `services/ai/providers/fal-ai.provider.ts` de 120 (4 minutos) para 450 (15 minutos com intervalo de 2s), garantindo que gerações de vídeo demoradas (~5 a 7 minutos) nunca sofram timeout indevido.
+  - Adicionada verificação preventiva do status no banco antes de cada ciclo de polling para encerrar imediatamente assim que o webhook registrar a conclusão.
+- **Resiliência no Armazenamento Local e Foreign Keys**:
+  - Envolvido o download e upload no `StorageService` em tratamento try/catch gracioso com fallback para URL pública direta da Fal.ai.
+  - Sanitizada a geração de `storageKey` para adicionar sufixos únicos temporais e aleatórios, prevenindo colisões de restrição `@unique` na tabela `File`.
+- **Recuperação e Finalização do Job Preso**:
+  - Recuperado o vídeo gerado pela Fal.ai para o Request ID `01a09c1f-3acf-77c3-abb4-9f085989532a` (`https://v3b.fal.media/files/b/0aaa4b79/Ivf4sx1VWgNmTwH-leV6d_output.mp4`), atualizado o job `8f6d01fa-8a66-4884-a7b2-52d1fbe8793d` para `COMPLETED` e vinculado o resultado na tabela `AIJobOutput`.
+
 ## [2.3.4] - 2026-09-13
 ### Correção do Endpoint e Protocolo do Kling Motion Control (Fal.ai v3 Standard)
 - **Diagnóstico do Erro 404 (`Path /motion-control not found`)**:

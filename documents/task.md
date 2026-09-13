@@ -8,6 +8,39 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Arquitetura Adaptativa Mobile-First, Ergonomia Tátil e Performance Multi-Dispositivo**:
+  - Mobilização de 6 subagentes especialistas adaptativos para auditar e refatorar 51 arquivos em todo o frontend (Landing, Studio, Ferramentas, Vitrine de Modelos, Fintech/Afiliados e Admin/Shell).
+  - Implementação de **Bottom Navigation Bar** ergonômica voltada à zona do polegar no mobile em `DashboardShell.tsx`, trava de scroll do body e gaveta deslizante touch-safe.
+  - Eliminação de larguras rígidas (`min-w-[620px]` e fixos), substituídas por CSS Grid, Flexbox e unidades relativas fluidas até 320px sem overflow horizontal.
+  - Prevenção rigorosa de Cumulative Layout Shift (CLS zero) com contêineres e classes de aspect ratio explícito em todos os players, canvases e previews.
+  - Sistema de abas móveis exclusivas nas ferramentas de IA (`Configurar` vs `Resultado`) para eliminar rolagem infinita em smartphones.
+  - Transformação de tabelas administrativas e de afiliados em **Cards Bento Empilháveis** no mobile.
+  - Touch targets >= 44x44px em 100% dos elementos táteis, botões e seletores (WCAG AAA).
+  - 0 erros em `npx tsc --noEmit` e 100% de aprovação (195/195 testes) no Vitest com mocks.
+- [x] **Redesign de Elite do Frontend (Awwwards / Apple Standard) em Toda a Plataforma**:
+  - Mobilização de 6 subagentes especialistas com diretrizes rígidas de design de luxo, 8pt grid, Dark Obsidian (`#07080B`, `#0D0E14`), efeito de vidro chanfrado e micro-interações táteis.
+  - **Landing Page & Hero**: Ilha de navegação flutuante em cápsula de vidro líquido, monumento Hero com abas táteis Apple, HUD técnico em tempo real, showroom de Prova Real do Motion Control com vídeo do TikTok, personagem e resultado Kling, fluxo em grafo interativo (`FlowInteractiveDemo`), galeria mosaico editorial (`ResultsMasonryGallery`), comparativo de preços (`PricingSection`) e rodapé corporativo (`LandingFooter`).
+  - **Fintech & Checkout**: Cartão bancário Obsidian Metal com chip EMV dourado e ondas NFC, modais de checkout Stripe/Apple Pay, Pix em tempo real com QR code contrastante, código Copia e Cola com 1 toque e polling automático a cada 3s, celebração de compra com comprovante digital, e painel de afiliados com 4 KPIs financeiros e simulador de comissões.
+  - **Vitrine de Modelos & Casting**: Cards fotográficos de proporção editorial (3:4) com scrim gradient escurecido, badges holográficas `🤖 IA` e `👤 REAL`, lookbook em alta definição (`ModelDetailModal`) e propostas com orçamento monetário em R$ (`ModelBookingModal`).
+  - **Studio CREATE**: Painéis de vidro escuro translúcido com iluminação direcional, textarea editorial de prompt com auto-otimização por IA, controles de proporção e duração ergonômicos (touch targets >= 44px), insígnia de alto luxo `ActiveShowcaseModelBanner` e modal rápido de casting sem trocar de página (`QuickModelPickerModal`).
+  - **Ferramentas Especializadas de IA**: Shell unificado contemporâneo (`generation-layout.tsx`) com galeria estilo museu digital, upload drag-and-drop ergonômico no Motion Control e pílulas geométricas de proporção.
+  - **Admin & Autenticação**: Painel executivo com cards métricos de alta legibilidade, badges com cores de alto contraste, gráficos SVG táteis adaptativos, biblioteca de mídias com modal e telas de login/registro/recuperação reformuladas com iluminação volumétrica.
+  - Validação estática rigorosa de tipos (`npx tsc --noEmit` com 0 erros) e suíte automatizada com 195 testes passando em 27 arquivos no Vitest.
+- [x] **Vitrine e Prova Real de Motion Control na Home Page (`MotionProofShowcase`)**:
+  - Implementação do componente de alto impacto `MotionProofShowcase.tsx` na Home Page (`app/page.tsx`), posicionado estrategicamente após a seção de ferramentas.
+  - Pipeline visual em 3 etapas com controles interativos de play sincronizado e alternância de áudio:
+    1. Vídeo guia de coreografia do TikTok (`/uploads/danca_tiktok_motion.mp4`);
+    2. Foto estática da influenciadora IA (`/uploads/motion_personagem_base.png`);
+    3. Vídeo final sintetizado dançando com fluidez anatômica e áudio sincronizado (`/uploads/motion_gerado_vorixa.mp4`).
+  - Atualização do Card 2 em `EnginesShowcase.tsx` e inserção de item com badge e filtro exclusivo de "Motion & Dança 💃" na galeria (`ResultsMasonryGallery.tsx`).
+  - Arquivos baixados e servidos diretamente em alta definição pelo Nginx com cache imutável e suporte a range requests.
+- [x] **Blindagem de Webhook e Resiliência de Polling em Background para Vídeos Longos (Fal.ai Motion Control)**:
+  - Resolução definitiva do travamento em "Processando" para vídeos demorados (~5.5 min): suporte nativo no webhook (`app/api/webhooks/fal/route.ts`) aos status de retorno da Fal.ai (`status: "OK"` e `"COMPLETED"`), evitando descarte indevido da resposta de sucesso.
+  - Expansão do polling de segurança em background (`services/ai/providers/fal-ai.provider.ts`) para suportar até 15 minutos (450 tentativas de 2s), garantindo finalização mesmo em caso de latência ou perda de pacotes de webhook.
+  - Recuperação do job de Motion Control anterior (`8f6d01fa-8a66-4884-a7b2-52d1fbe8793d`) diretamente pela API REST da Fal.ai, salvando o vídeo gerado no PostgreSQL (`AIJobOutput`) e liberando a exibição na tela do usuário.
+  - Fallback automático com consulta direta via `fal.queue.result` caso o payload do webhook venha resumido.
+  - Prevenção de concorrência com chave única de armazenamento (`storageKey`) com sufixo aleatório e tratamento gracioso em falhas de storage.
+  - 100% de aprovação na suíte de testes Vitest (195 testes passando em 27 arquivos).
 - [x] **Correção do Endpoint e Protocolo do Kling Motion Control (Fal.ai v3 Standard)**:
   - Diagnóstico e resolução do erro `Unexpected status code: 404` / `Path /motion-control not found` disparado pela fal.ai.
   - Varredura da API do provedor e atualização do endpoint para `fal-ai/kling-video/v3/standard/motion-control`.

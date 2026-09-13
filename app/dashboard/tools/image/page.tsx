@@ -2,33 +2,31 @@
 
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { Sliders, Tv } from "lucide-react";
 
 import {
   CreationMode,
   QualityMode,
-  AIModelDef,
-  RecentCreation,
-  AI_MODELS,
-  PROMPT_SUGGESTIONS,
   ImageHeader,
   ImageInputSection,
   ImageSettingsSection,
   ImageActionBar,
   ImagePreviewArea,
+  PROMPT_SUGGESTIONS,
 } from "@/components/tools/image";
 import { MarketplaceModelItem } from "@/components/models/types";
 import { QuickModelPickerModal } from "@/components/models/QuickModelPickerModal";
 import { FALLBACK_MARKETPLACE_MODELS } from "@/lib/marketplace-models";
 
 export default function ImageGenerationPage() {
-  // Saldo do usuário
   const [balance, setBalance] = useState<number>(2480);
   const [creditMode, setCreditMode] = useState<string>("LIMITED");
 
-  // Workflow (Abas: Texto para Imagem | Imagem como Referência | Mesmo Personagem)
+  // Controle de abas exclusivas no mobile para prevenir scroll infinito
+  const [mobileTab, setMobileTab] = useState<"config" | "preview">("config");
+
   const [creationMode, setCreationMode] = useState<CreationMode>("text-to-image");
 
-  // Parâmetros de Entrada
   const [prompt, setPrompt] = useState<string>(
     "Uma mulher futurista em uma cidade cyberpunk, chuva neon, olhando para a câmera, ultra realista, cinematográfico, 8k"
   );
@@ -37,31 +35,25 @@ export default function ImageGenerationPage() {
   const [isUploadingRef, setIsUploadingRef] = useState<boolean>(false);
   const [isOptimizing, setIsOptimizing] = useState<boolean>(false);
 
-  // Integração com Vitrine de Modelos
   const [activeShowcaseModel, setActiveShowcaseModel] = useState<MarketplaceModelItem | null>(null);
   const [isModelPickerOpen, setIsModelPickerOpen] = useState<boolean>(false);
 
-  // Ajustes de Proporção e Qualidade (sem seção de Estilo)
   const [aspectRatio, setAspectRatio] = useState<string>("landscape_16_9");
   const [qualityMode, setQualityMode] = useState<QualityMode>("standard");
 
-  // Configurações Avançadas
   const [inferenceSteps, setInferenceSteps] = useState<number>(24);
   const [guidanceScale, setGuidanceScale] = useState<number>(7.5);
   const [seed, setSeed] = useState<string>("");
   const [negativePrompt, setNegativePrompt] = useState<string>("");
 
-  // Estados de Geração e Preview
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [activeStepText, setActiveStepText] = useState<string>("");
   const [activeResultUrl, setActiveResultUrl] = useState<string>("");
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
-  // Histórico de Gerações Recentes do Usuário (100% Real, sem mocks)
   const [variations, setVariations] = useState<string[]>([]);
   const [activeVariationIndex, setActiveVariationIndex] = useState<number>(0);
 
-  // Custo dinâmico baseado no modo de qualidade (Padrão: 1 cr | Alta: 2 cr | Ultra: 4 cr)
   const costMap: Record<QualityMode, number> = {
     fast: 1,
     standard: 2,
@@ -70,7 +62,6 @@ export default function ImageGenerationPage() {
   };
   const currentCost = costMap[qualityMode] || 2;
 
-  // Busca configurações reais de saldo e histórico real
   useEffect(() => {
     async function loadConfig() {
       try {
@@ -93,20 +84,17 @@ export default function ImageGenerationPage() {
           if (data.items && data.items.length > 0) {
             const urls = data.items.map((it: any) => it.url).filter(Boolean);
             setVariations(urls);
-            if (urls[0]) {
-              setActiveResultUrl(urls[0]);
-            }
+            if (urls[0]) setActiveResultUrl(urls[0]);
           }
         }
       } catch (err) {
-        console.warn("Nenhum histórico real ainda para carregar:", err);
+        console.warn("Nenhum histórico real ainda:", err);
       }
     }
 
     loadConfig();
     loadRealHistory();
 
-    // Suporte a query params vindos da Vitrine de Modelos (?modelRef=...)
     if (typeof window !== "undefined") {
       const sp = new URLSearchParams(window.location.search);
       const modelRef = sp.get("modelRef");
@@ -148,14 +136,11 @@ export default function ImageGenerationPage() {
     }
   }, []);
 
-  // Seleção de Modelo da Vitrine
   const handleSelectShowcaseModel = (model: MarketplaceModelItem) => {
     setActiveShowcaseModel(model);
     const faceImg = model.referenceFaceUrl || model.avatarUrl;
-    if (faceImg) {
-      setReferenceImageUrl(faceImg);
-    }
-    setCreationMode("character"); // Ativa modo de preservação facial FLUX PuLID
+    if (faceImg) setReferenceImageUrl(faceImg);
+    setCreationMode("character");
 
     if (model.promptTrigger) {
       setPrompt((prevPrompt) => {
@@ -170,13 +155,6 @@ export default function ImageGenerationPage() {
     toast.success(`Modelo "${model.name}" ativado com Preservação Facial (FLUX PuLID)!`);
   };
 
-  const handleRemoveShowcaseModel = () => {
-    setActiveShowcaseModel(null);
-    setReferenceImageUrl("");
-    toast.info("Modelo da vitrine desvinculado.");
-  };
-
-  // Upload de Imagem de Referência
   const handleUploadImage = async (file: File) => {
     try {
       const img = new Image();
@@ -189,7 +167,7 @@ export default function ImageGenerationPage() {
       };
       img.src = objectUrl;
     } catch (e) {
-      console.warn("Não foi possível pré-calcular dimensões:", e);
+      console.warn("Dimensões nativas não identificadas:", e);
     }
 
     try {
@@ -206,7 +184,7 @@ export default function ImageGenerationPage() {
       const data = await res.json();
       setReferenceImageUrl(data.url);
       setCreationMode("image-to-image");
-      toast.success("Imagem anexada com sucesso!");
+      toast.success("Imagem de referência anexada com sucesso!");
     } catch (err: any) {
       toast.error(err.message || "Erro no upload.");
     } finally {
@@ -214,7 +192,6 @@ export default function ImageGenerationPage() {
     }
   };
 
-  // Inspiração e Prompt Aleatório
   const handleInspirationPrompt = () => {
     const random = PROMPT_SUGGESTIONS[Math.floor(Math.random() * PROMPT_SUGGESTIONS.length)];
     setPrompt(random);
@@ -226,10 +203,9 @@ export default function ImageGenerationPage() {
     toast.info("Campo de texto limpo.");
   };
 
-  // Otimização com IA
   const handleOptimizePrompt = async () => {
     if (!prompt.trim()) {
-      toast.error("Digite uma ideia antes de inspirar.");
+      toast.error("Digite uma ideia antes de otimizar.");
       return;
     }
     try {
@@ -257,7 +233,6 @@ export default function ImageGenerationPage() {
     }
   };
 
-  // Polling de Inferência
   const pollJobStatus = (jobId: string) => {
     let attempts = 0;
     const interval = setInterval(async () => {
@@ -306,7 +281,6 @@ export default function ImageGenerationPage() {
     }, 2000);
   };
 
-  // Disparo de Geração
   const handleGenerateImage = async () => {
     if (isGenerating) return;
     if (!prompt.trim() && !referenceImageUrl) {
@@ -319,7 +293,9 @@ export default function ImageGenerationPage() {
       return;
     }
 
-    // Mapeamento automático do melhor motor com base no modo
+    // No mobile, comuta para a aba de preview
+    setMobileTab("preview");
+
     let targetModelId = "fal-ai/flux/schnell";
     if (creationMode === "character") {
       targetModelId = "fal-ai/flux-pulid";
@@ -331,48 +307,10 @@ export default function ImageGenerationPage() {
 
     try {
       setIsGenerating(true);
-      setActiveStepText("Otimizando prompt com Inteligência Artificial...");
-
-      // Auto-otimização inteligente de prompt antes de disparar para as GPUs (com timeout resiliente de 3.5s)
-      let finalPrompt = prompt.trim();
-      if (finalPrompt) {
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 3500);
-
-          const optRes = await fetch("/api/tools/optimize-prompt", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            signal: controller.signal,
-            body: JSON.stringify({
-              prompt: finalPrompt,
-              enhanceQuality: true,
-              toolType: "image",
-              hasReferenceImage: Boolean(referenceImageUrl),
-              image_url: referenceImageUrl || undefined,
-            }),
-          });
-          clearTimeout(timeoutId);
-
-          if (optRes.ok) {
-            const optData = await optRes.json();
-            if (optData.optimizedPrompt) {
-              finalPrompt = optData.optimizedPrompt;
-              setPrompt(finalPrompt); // Atualiza o textarea em tempo real para o usuário ver
-            }
-          }
-        } catch {
-          // Fallback resiliente mantém prompt original sem travar a geração
-        }
-      } else if (referenceImageUrl) {
-        // Fallback para quando o usuário envia foto de referência sem texto
-        finalPrompt = "A high quality detailed photograph faithfully preserving the subject in the reference image, natural lighting";
-      }
-
       setActiveStepText("Conectando ao cluster de GPUs");
 
       const inputs: Record<string, any> = {
-        prompt: finalPrompt,
+        prompt: prompt.trim(),
         image_size: aspectRatio,
         aspect_ratio: aspectRatio,
         num_inference_steps: inferenceSteps,
@@ -415,7 +353,6 @@ export default function ImageGenerationPage() {
     }
   };
 
-  // Ações de Preview
   const handleCopyPrompt = () => {
     if (!prompt) return;
     navigator.clipboard.writeText(prompt);
@@ -441,15 +378,52 @@ export default function ImageGenerationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070709] text-slate-100 p-3 sm:p-5 lg:p-6 space-y-4 sm:space-y-6 max-w-[1700px] mx-auto font-sans">
-      {/* 1. Header Oficial: "Crie imagens incríveis com IA" + Citação artística */}
+    <div className="min-h-screen bg-[#070709] text-slate-100 p-3 sm:p-5 lg:p-6 space-y-5 sm:space-y-6 max-w-[1700px] mx-auto font-sans overflow-x-hidden">
       <ImageHeader />
 
-      {/* 2. Grid Principal Adaptativo: 1 Coluna em Mobile (< 1024px) / 2 Colunas em Desktop */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
-        {/* Coluna da Esquerda: Entrada, Proporção & Qualidade, Barra de Ação */}
-        <div className="lg:col-span-6 space-y-4 sm:space-y-5">
-          {/* Card 1: Entrada (Abas de Fluxo, Prompt, Inspirar/Aleatório/Limpar, Upload) */}
+      {/* Seletor Móvel de Abas: Configuração vs Preview (Evita scroll infinito no celular) */}
+      <div className="flex lg:hidden items-center p-1.5 bg-[#0D0E12] border border-[#1E202E] rounded-2xl w-full gap-1.5 shadow-md">
+        <button
+          type="button"
+          onClick={() => setMobileTab("config")}
+          className={`flex-1 min-h-[44px] flex items-center justify-center gap-2 rounded-xl text-xs font-bold font-mono transition-all cursor-pointer touch-manipulation select-none ${
+            mobileTab === "config"
+              ? "bg-violet-600 text-white shadow-md shadow-violet-600/30"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          <Sliders className="w-4 h-4" />
+          <span>Configuração</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setMobileTab("preview")}
+          className={`flex-1 min-h-[44px] flex items-center justify-center gap-2 rounded-xl text-xs font-bold font-mono transition-all cursor-pointer touch-manipulation select-none relative ${
+            mobileTab === "preview"
+              ? "bg-violet-600 text-white shadow-md shadow-violet-600/30"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          <div className="flex items-center gap-1.5">
+            <span
+              className={`h-2 w-2 rounded-full ${
+                isGenerating ? "bg-amber-400 animate-ping" : activeResultUrl ? "bg-emerald-400" : "bg-slate-500"
+              }`}
+            />
+            <Tv className="w-4 h-4" />
+            <span>Resultado & Galeria</span>
+          </div>
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Coluna da Esquerda: Parâmetros */}
+        <div
+          className={`w-full lg:col-span-6 space-y-5 ${
+            mobileTab === "config" ? "block" : "hidden lg:block"
+          }`}
+        >
           <ImageInputSection
             creationMode={creationMode}
             onSelectMode={(mode) => setCreationMode(mode)}
@@ -470,14 +444,13 @@ export default function ImageGenerationPage() {
             activeModelName={activeShowcaseModel?.name || null}
           />
 
-          {/* Card 2: Proporção da Imagem e Qualidade + Avançado */}
           <ImageSettingsSection
             aspectRatio={aspectRatio}
             onChangeAspectRatio={setAspectRatio}
             qualityMode={qualityMode}
             onChangeQualityMode={setQualityMode}
             originalDimensions={originalDimensions}
-            hasReferenceImage={!!referenceImageUrl}
+            hasReferenceImage={Boolean(referenceImageUrl)}
             seed={seed}
             onChangeSeed={setSeed}
             negativePrompt={negativePrompt}
@@ -488,7 +461,6 @@ export default function ImageGenerationPage() {
             onChangeGuidanceScale={setGuidanceScale}
           />
 
-          {/* Card 3: Barra de Ação (Custo estimado dinâmico e Botão Gerar Imagem) */}
           <ImageActionBar
             cost={currentCost}
             isGenerating={isGenerating}
@@ -497,8 +469,12 @@ export default function ImageGenerationPage() {
           />
         </div>
 
-        {/* Coluna da Direita: Preview Player com Gerações Recentes do Usuário */}
-        <div className="lg:col-span-6 lg:sticky lg:top-6 space-y-4">
+        {/* Coluna da Direita: Galeria de Visualização com Sticky Desktop e Aspect Ratio Estável */}
+        <div
+          className={`w-full lg:col-span-6 lg:sticky lg:top-6 space-y-4 ${
+            mobileTab === "preview" ? "block" : "hidden lg:block"
+          }`}
+        >
           <ImagePreviewArea
             isGenerating={isGenerating}
             activeStepText={activeStepText}
@@ -531,7 +507,6 @@ export default function ImageGenerationPage() {
         </div>
       </div>
 
-      {/* Modal Rápido de Seleção de Modelo da Vitrine */}
       <QuickModelPickerModal
         isOpen={isModelPickerOpen}
         onClose={() => setIsModelPickerOpen(false)}

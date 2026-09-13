@@ -2,91 +2,115 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Zap, Volume2, VolumeX } from "lucide-react";
+import { Zap, Volume2, VolumeX, Sparkles, ArrowRight, Film } from "lucide-react";
 
 /**
- * Hero Section Oficial no padrão exato Octuz AI / Higgsfield.
- * Container amplo off-white com glow lateral sutil, tipografia editorial (Sans + Serif Italic),
- * vídeo protagonista centralizado e CTA preto estilizado abaixo do vídeo.
+ * Hero Section Oficial — Padrão High-End Dark Obsidian (Awwwards / Apple).
+ * Fluid typography de 320px a 4K, abas táteis com rolagem horizontal em telas pequenas,
+ * player cinematográfico protagonista em aspect-video com zero CLS e touch targets >= 44px.
  */
 export function HeroCinematic() {
   const [isMuted, setIsMuted] = useState<boolean>(true);
+
   const heroVideos = [
     {
       id: "hero_carnaval",
-      label: "🎉 Atuação em Português (Seedance)",
+      label: "🎭 Atuação & Fala PT-BR",
       src: "/uploads/87cf520d-8277-4f00-9644-26f4584735a6.mp4",
       poster: "/uploads/867192da-b5f6-4d67-b4b5-8191723e46fe.jpg",
       tag: "ByteDance Seedance 2.0 Native",
+      fps: "60 FPS",
+      res: "4K Master",
     },
     {
       id: "hero_speech",
-      label: "🗣️ Modelo Falando (Kling 2.6)",
+      label: "🗣️ Modelo Falando com Emoção",
       src: "/uploads/f80d19de-085b-4378-98ea-b7733c8ffdd8.mp4",
       poster: "/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg",
       tag: "Kling 2.6 Pro + Áudio",
+      fps: "30 FPS",
+      res: "1080p Studio",
     },
     {
-      id: "hero_seedance",
-      label: "⚡ Seedance 2.0 (Vídeo & Fala)",
-      src: "/uploads/cacdb6d2-4c8a-4f7e-8f14-8e7d7a21f287.mp4",
-      poster: "/uploads/867192da-b5f6-4d67-b4b5-8191723e46fe.jpg",
-      tag: "ByteDance Seedance 2.0",
+      id: "hero_motion",
+      label: "💃 Coreografia & TikTok Motion",
+      src: "/uploads/motion_gerado_vorixa.mp4",
+      poster: "/uploads/motion_personagem_base.png",
+      tag: "Kling v3 Motion Control",
+      fps: "60 FPS",
+      res: "Full HD",
     },
     {
       id: "hero_kling21",
-      label: "👗 Moda & Movimento (Kling 2.1)",
+      label: "👗 Moda & Lookbook Editorial",
       src: "/uploads/bdc1b96b-d7d2-4f55-8f2b-a90631629c00.mp4",
       poster: "/uploads/bc3c42a6-32d9-4f53-bbc8-a27accc1800e.jpg",
       tag: "Kling 2.1 Pro",
+      fps: "60 FPS",
+      res: "4K Cinema",
     },
   ];
 
   const [activeHero, setActiveHero] = useState(heroVideos[0]);
 
   return (
-    <section className="pt-24 pb-8 md:pt-28 md:pb-12 px-3 sm:px-6 max-w-7xl mx-auto relative">
-      {/* Glow Difuso Azul / Violeta nas Bordas Externas com Pulsação Suave */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[80%] bg-gradient-to-r from-indigo-500/20 via-sky-400/15 to-violet-500/20 blur-[130px] pointer-events-none -z-10 animate-hero-glow" />
+    <section className="pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 px-3 sm:px-6 max-w-7xl mx-auto relative w-full">
+      {/* Aura Difusa de Iluminação Traseira */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[94%] max-w-5xl h-[70%] bg-gradient-to-r from-violet-600/20 via-indigo-500/15 to-cyan-500/20 blur-[120px] sm:blur-[140px] pointer-events-none -z-10" />
 
-      {/* Card Grande Off-White do Hero com Entrada Suave */}
-      <div className="bg-[#F4F4F6] text-slate-900 border border-slate-200/80 rounded-[32px] sm:rounded-[44px] p-6 sm:p-10 md:p-16 shadow-[0_20px_80px_rgba(0,0,0,0.4)] flex flex-col items-center text-center space-y-8 relative overflow-hidden animate-hero-fade-1">
+      {/* Card Monumental Dark Obsidian do Hero */}
+      <div className="bg-gradient-to-b from-[#12141F]/90 via-[#0D0E14]/95 to-[#07080B] border border-white/[0.08] rounded-[28px] sm:rounded-[40px] md:rounded-[48px] p-4 sm:p-8 md:p-14 shadow-[0_30px_90px_rgba(0,0,0,0.85)] flex flex-col items-center text-center space-y-6 sm:space-y-8 relative overflow-hidden backdrop-blur-2xl">
         
-        {/* Pílula Superior */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-slate-200 shadow-sm text-slate-700 text-xs font-medium backdrop-blur-md animate-hero-fade-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Reinvente sua forma de criar</span>
+        {/* Glow Superior Linear */}
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
+
+        {/* Pílula de Prestígio Superior */}
+        <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.1] shadow-inner text-slate-200 text-[10px] sm:text-xs font-mono font-medium backdrop-blur-xl">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+          <span className="tracking-wide uppercase">AI CREATIVE SUITE • CLUSTER MULTI-MOTOR V2.6</span>
         </div>
 
-        {/* Headline com Tipografia Editorial (Sans + Serif Italic) */}
-        <div className="max-w-4xl mx-auto space-y-2 animate-hero-fade-2">
-          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-[68px] font-bold text-slate-950 tracking-tight leading-[1.12] font-sans">
-            Gere seu <span className="font-serif italic font-normal text-slate-800 text-[1.08em]">Influencer IA</span> ultra realista em{" "}
-            <span className="font-serif italic font-normal text-slate-800 text-[1.08em]">1 minuto</span> e faça vendas{" "}
-            <span className="font-serif italic font-normal text-slate-800 text-[1.08em]">24/7</span> com vídeos virais
+        {/* Headline de Alto Impacto com Tipografia Fluida */}
+        <div className="max-w-4xl mx-auto space-y-3 sm:space-y-4 px-1">
+          <h1 className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold text-white tracking-tight leading-[1.14] break-words">
+            Gere seu{" "}
+            <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-indigo-200 to-cyan-300">
+              Influencer IA
+            </span>{" "}
+            ultra-realista em{" "}
+            <span className="font-serif italic font-normal text-white">1 minuto</span> e faça vendas{" "}
+            <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-200">
+              24/7
+            </span>{" "}
+            com vídeos virais.
           </h1>
+          <p className="text-xs sm:text-sm md:text-base text-slate-400 max-w-2xl mx-auto leading-relaxed font-normal">
+            Copie workflows que funcionam como uma máquina de conteúdos 24 horas por dia, 7 dias por semana. Crie vídeos para TikTok, Reels, Anúncios e Comerciais em 4K sem mostrar seu rosto e sem equipamentos caros.
+          </p>
         </div>
 
-        {/* Seletor de Vídeos Reais Gerados */}
-        <div className="flex flex-wrap items-center justify-center gap-2 max-w-3xl animate-hero-fade-3">
-          {heroVideos.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => setActiveHero(item)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
-                activeHero.id === item.id
-                  ? "bg-slate-900 text-white border-slate-900 shadow-md scale-105"
-                  : "bg-white/80 hover:bg-white text-slate-700 border-slate-300"
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
+        {/* Seletor de Cenas Táteis (Apple-Style com Rolagem Horizontal Suave no Mobile) */}
+        <div className="w-full max-w-3xl overflow-x-auto no-scrollbar py-1">
+          <div className="flex items-center justify-start sm:justify-center gap-2 px-1 min-w-max mx-auto">
+            {heroVideos.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setActiveHero(item)}
+                className={`px-3.5 sm:px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer border flex items-center gap-1.5 min-h-[44px] shrink-0 active:scale-95 ${
+                  activeHero.id === item.id
+                    ? "bg-white text-slate-950 border-white shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-[1.02] sm:scale-105 font-bold"
+                    : "bg-white/[0.03] hover:bg-white/[0.08] text-slate-300 border-white/[0.08]"
+                }`}
+              >
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Video Player Protagonista com Mídia Real */}
-        <div className="w-full max-w-4xl mx-auto rounded-2xl sm:rounded-3xl overflow-hidden bg-black border border-slate-300/80 shadow-2xl relative aspect-video group transition-all duration-700 hover:shadow-[0_25px_60px_rgba(99,102,241,0.25)] animate-hero-fade-3">
+        {/* Video Player Protagonista com Zero CLS (aspect-video estrito) */}
+        <div className="w-full max-w-4xl mx-auto rounded-2xl sm:rounded-3xl overflow-hidden bg-black border border-white/[0.12] shadow-[0_20px_60px_rgba(0,0,0,0.9)] relative aspect-video group transition-all duration-500 hover:border-violet-500/40">
           <video
             key={activeHero.src}
             src={activeHero.src}
@@ -99,45 +123,89 @@ export function HeroCinematic() {
             className="w-full h-full object-cover"
           />
 
-          {/* Badge do Motor Utilizado */}
-          <div className="absolute top-4 left-4 bg-black/70 border border-white/20 px-3 py-1 rounded-xl text-[11px] font-mono text-cyan-300 font-bold backdrop-blur-md">
-            Gerado com: {activeHero.tag}
+          {/* HUD Superior Esquerdo — Badge do Motor */}
+          <div className="absolute top-3 left-3 sm:top-4 sm:left-4 flex items-center gap-2 pointer-events-none">
+            <span className="bg-[#07080B]/85 border border-white/20 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[10px] sm:text-[11px] font-mono text-cyan-300 font-bold backdrop-blur-md shadow-lg flex items-center gap-1.5 max-w-[200px] sm:max-w-none truncate">
+              <Sparkles className="w-3 h-3 text-cyan-400 shrink-0" />
+              <span className="truncate">Gerado com: {activeHero.tag}</span>
+            </span>
           </div>
 
-          {/* Controle de Áudio Flutuante */}
+          {/* HUD Superior Direito — Telemetria de Render */}
+          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 hidden sm:flex items-center gap-2 pointer-events-none">
+            <span className="bg-[#07080B]/85 border border-white/20 px-2.5 py-1 rounded-lg text-[10px] font-mono text-emerald-400 font-bold backdrop-blur-md">
+              {activeHero.fps}
+            </span>
+            <span className="bg-[#07080B]/85 border border-white/20 px-2.5 py-1 rounded-lg text-[10px] font-mono text-slate-300 backdrop-blur-md">
+              {activeHero.res}
+            </span>
+          </div>
+
+          {/* Controle de Áudio Flutuante (Touch target >= 44x44px) */}
           <button
+            type="button"
             onClick={() => setIsMuted(!isMuted)}
-            className="absolute bottom-4 right-4 bg-black/80 hover:bg-black text-white text-xs font-mono font-medium px-3.5 py-2 rounded-xl flex items-center gap-2 shadow-xl backdrop-blur-md transition-all cursor-pointer hover:scale-105 border border-white/10"
+            className={`absolute bottom-3 right-3 sm:bottom-4 sm:right-4 text-xs font-mono font-medium px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl flex items-center gap-2 shadow-2xl backdrop-blur-md transition-all duration-200 cursor-pointer border min-h-[44px] active:scale-95 ${
+              !isMuted
+                ? "bg-emerald-500/25 border-emerald-500/60 text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.3)] font-bold"
+                : "bg-black/85 hover:bg-black text-white border-white/20"
+            }`}
             aria-label={isMuted ? "Ativar som do vídeo" : "Desativar som"}
           >
             {isMuted ? (
               <>
-                <VolumeX className="h-4 w-4 text-slate-400" />
-                <span>Clique para ouvir som</span>
+                <VolumeX className="h-4 w-4 text-slate-400 shrink-0" />
+                <span className="hidden xs:inline">Clique para ouvir som</span>
+                <span className="xs:hidden">Ouvir</span>
               </>
             ) : (
               <>
-                <Volume2 className="h-4 w-4 text-cyan-400" />
-                <span className="text-cyan-300">Áudio Ativado</span>
+                <Volume2 className="h-4 w-4 text-emerald-400 animate-pulse shrink-0" />
+                <span className="font-bold">Áudio Ativo</span>
               </>
             )}
           </button>
         </div>
 
-        {/* Subheadline e Botão CTA (Abaixo do Vídeo, Dentro da Caixa Clara) */}
-        <div className="max-w-2xl mx-auto space-y-6 pt-2 animate-hero-fade-4">
-          <p className="text-xs sm:text-sm md:text-base text-slate-600 leading-relaxed font-sans font-normal">
-            Copie workflows que funcionam como máquina de conteúdos 24h por dia, 7d por semana, gerando vídeos virais infinitos para TikTok, Reels, Anúncios... sem mostrar o seu rosto!
-          </p>
-
-          <div className="flex justify-center">
+        {/* Bloco de Ações e CTAs Táteis */}
+        <div className="w-full max-w-2xl mx-auto space-y-6 pt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full">
             <Link
               href="/register"
-              className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#09090B] hover:bg-[#18181B] text-white text-sm sm:text-base font-semibold shadow-xl hover:shadow-2xl transition-all hover:scale-105 border border-slate-800 min-h-[50px] cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-600 hover:opacity-95 text-white text-sm sm:text-base font-bold shadow-[0_0_35px_rgba(139,92,246,0.35)] transition-all active:scale-95 min-h-[48px] sm:min-h-[52px] cursor-pointer"
             >
-              <Zap className="w-4 h-4 text-violet-300 fill-current" />
-              <span>Gerar vídeos com IA</span>
+              <Zap className="w-4 h-4 text-white fill-current shrink-0" />
+              <span>Gerar vídeos com IA agora</span>
+              <ArrowRight className="w-4 h-4 shrink-0" />
             </Link>
+
+            <a
+              href="#flow-demo"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 sm:py-4 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 text-xs sm:text-sm font-semibold border border-white/[0.1] transition-all active:scale-95 min-h-[48px] sm:min-h-[52px] cursor-pointer"
+            >
+              <Film className="w-4 h-4 text-slate-400 shrink-0" />
+              <span>Ver demonstração interativa</span>
+            </a>
+          </div>
+
+          {/* Social Proof & Metrics Bar */}
+          <div className="pt-6 border-t border-white/[0.08] grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-center">
+            <div className="space-y-0.5 p-2 rounded-xl bg-white/[0.02]">
+              <div className="text-lg sm:text-2xl font-extrabold text-white font-mono">+1.2M</div>
+              <div className="text-[10px] sm:text-[11px] text-slate-400">Vídeos & Imagens</div>
+            </div>
+            <div className="space-y-0.5 p-2 rounded-xl bg-white/[0.02]">
+              <div className="text-lg sm:text-2xl font-extrabold text-emerald-400 font-mono">99.8%</div>
+              <div className="text-[10px] sm:text-[11px] text-slate-400">Consistência Facial</div>
+            </div>
+            <div className="space-y-0.5 p-2 rounded-xl bg-white/[0.02]">
+              <div className="text-lg sm:text-2xl font-extrabold text-cyan-400 font-mono">+20 IAs</div>
+              <div className="text-[10px] sm:text-[11px] text-slate-400">Motores de Elite</div>
+            </div>
+            <div className="space-y-0.5 p-2 rounded-xl bg-white/[0.02]">
+              <div className="text-lg sm:text-2xl font-extrabold text-amber-400 font-mono">4.9 / 5</div>
+              <div className="text-[10px] sm:text-[11px] text-slate-400">+8.500 Criadores</div>
+            </div>
           </div>
         </div>
       </div>

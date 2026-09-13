@@ -9,3 +9,4 @@ export * from "./StudioAdvancedSettings";
 export * from "./StudioPreviewPlayer";
 export * from "./StudioHistorySidebar";
 export * from "./ActiveShowcaseModelBanner";
+export * from "./QuickModelPickerModal";

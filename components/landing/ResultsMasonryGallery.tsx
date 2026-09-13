@@ -4,11 +4,8 @@ import React, { useState } from "react";
 import { Copy, Check } from "lucide-react";
 
 /**
- * Galeria Editorial Estática e Limpa:
- * - ZERO zoom
- * - ZERO escala
- * - ZERO distorção ou efeito estranho
- * - Reprodução suave e estável dos vídeos originais em alta definição.
+ * Galeria Editorial Mosaico com Conteúdo Real em 9:16 Vertical.
+ * Reprodução fluida, filtros táteis com trilho deslizante no mobile e touch targets >= 44px.
  */
 export function ResultsMasonryGallery() {
   const [activeFilter, setActiveFilter] = useState<string>("all");
@@ -16,12 +13,25 @@ export function ResultsMasonryGallery() {
 
   const galleryItems = [
     {
+      id: 101,
+      category: "motion",
+      mediaType: "video",
+      title: "Clonagem de Dança do TikTok (Motion Control)",
+      modelTag: "Kling v3 Motion Control",
+      prompt: "Transferência de coreografia gravada no TikTok diretamente para personagem fotorrealista de IA, mantendo 100% dos movimentos e áudio musical.",
+      mediaUrl: "/uploads/motion_gerado_vorixa.mp4",
+      posterUrl: "/uploads/motion_personagem_base.png",
+      aspectRatio: "aspect-[9/16]",
+      badge: "Motion Control 💃",
+      accentColor: "border-emerald-500/40 text-emerald-300 bg-emerald-950/60",
+    },
+    {
       id: 1,
       category: "ugc",
       mediaType: "video",
       title: "Modelo Fashion Falando (Comercial)",
       modelTag: "Kling 2.6 Pro + Áudio",
-      prompt: 'Uma fotografia de moda em corpo inteiro, a modelo em pé, apresentando a roupa com um sorriso radiante para a câmera, falando em português: "Gostou? Compre no carrinho laranja, agora mesmo!"',
+      prompt: 'Fotografia de moda em corpo inteiro, modelo apresentando a roupa com sorriso radiante para a câmera, dizendo: "Gostou? Compre no carrinho laranja agora mesmo!"',
       mediaUrl: "/uploads/f80d19de-085b-4378-98ea-b7733c8ffdd8.mp4",
       posterUrl: "/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg",
       aspectRatio: "aspect-[9/16]",
@@ -47,7 +57,7 @@ export function ResultsMasonryGallery() {
       mediaType: "image",
       title: "Modelo Brasileira Editorial 8K",
       modelTag: "Nano Banana Pro (Google)",
-      prompt: "Full-length photograph, a beautiful Brazilian model with tanned, natural blonde skin showcasing realistic skin texture and visible pores. Symmetrical face, confident gaze, voluminous curly hair, elegant fashion pose, 85mm lens 8K.",
+      prompt: "Full-length photograph, beautiful Brazilian model with natural tanned skin, realistic skin texture and visible pores, confident gaze, 85mm lens 8K.",
       mediaUrl: "/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg",
       posterUrl: "/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg",
       aspectRatio: "aspect-[9/16]",
@@ -60,7 +70,7 @@ export function ResultsMasonryGallery() {
       mediaType: "video",
       title: "Lookbook Editorial em Estúdio",
       modelTag: "Kling 2.1 Pro",
-      prompt: "Full-length fashion lookbook photograph, a young woman with a gentle smile stepping forward in a bright, modern studio, looking directly at the camera, fluid natural movement in 4K.",
+      prompt: "Full-length fashion lookbook photograph, young woman stepping forward in a bright modern studio, looking directly at the camera, fluid natural movement in 4K.",
       mediaUrl: "/uploads/bdc1b96b-d7d2-4f55-8f2b-a90631629c00.mp4",
       posterUrl: "/uploads/bc3c42a6-32d9-4f53-bbc8-a27accc1800e.jpg",
       aspectRatio: "aspect-[9/16]",
@@ -73,7 +83,7 @@ export function ResultsMasonryGallery() {
       mediaType: "image",
       title: "Ensaio Fotográfico Fotorrealista",
       modelTag: "Nano Banana Pro (Google)",
-      prompt: "Ultra-wide full-length shot of an athletic woman with natural curly brown hair and authentic skin texture in a clean minimalist studio with neutral white background, 28mm f/8 sharp focus head to toe.",
+      prompt: "Ultra-wide full-length shot of an athletic woman with natural curly hair and authentic skin texture in a minimalist studio with neutral background, 28mm f/8.",
       mediaUrl: "/uploads/ff6bb395-d216-467d-aa57-c3878b973993.jpg",
       posterUrl: "/uploads/ff6bb395-d216-467d-aa57-c3878b973993.jpg",
       aspectRatio: "aspect-[9/16]",
@@ -101,58 +111,64 @@ export function ResultsMasonryGallery() {
       : galleryItems.filter((item) => item.category === activeFilter);
 
   const handleCopyPrompt = (id: number, text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    }
   };
 
   return (
-    <section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto space-y-12">
-      {/* Cabeçalho */}
+    <section className="py-12 sm:py-16 md:py-20 px-3 sm:px-6 max-w-7xl mx-auto space-y-10 sm:space-y-12 w-full">
+      {/* Cabeçalho Editorial */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
-          <span className="text-[11px] font-mono tracking-widest text-slate-500 uppercase font-semibold block">
-            GALERIA & PRODUÇÕES REAIS
+          <span className="text-[11px] font-mono tracking-widest text-cyan-400 uppercase font-bold block">
+            GALERIA & BENCHMARKS REAIS
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
-            Criado com <span className="font-serif italic font-normal text-slate-300">VORIXA</span>
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            Criado com o <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-cyan-200">VORIXA</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 max-w-lg leading-relaxed">
-            Peças audiovisuais e fotografias geradas na plataforma com qualidade cinematográfica original.
+            Peças audiovisuais e ensaios gerados pela nossa comunidade com consistência cinematográfica real.
           </p>
         </div>
 
-        {/* Filtros em Pílulas */}
-        <div className="flex flex-wrap items-center gap-2">
-          {[
-            { key: "all", label: "Todas as Criações" },
-            { key: "ugc", label: "Influencers & Fala" },
-            { key: "fashion", label: "Moda & Modelos" },
-            { key: "commercial", label: "Comercial & Ads" },
-          ].map((f) => (
-            <button
-              key={f.key}
-              onClick={() => setActiveFilter(f.key)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
-                activeFilter === f.key
-                  ? "bg-white text-slate-950 shadow-lg font-bold"
-                  : "bg-[#0D0E12] border border-[#1E202E] text-slate-400 hover:text-white"
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
+        {/* Filtros em Pílulas Táteis com Rolagem Horizontal Suave */}
+        <div className="w-full md:w-auto overflow-x-auto no-scrollbar py-1">
+          <div className="flex items-center gap-2 min-w-max">
+            {[
+              { key: "all", label: "Todas as Criações" },
+              { key: "motion", label: "Motion & Dança 💃" },
+              { key: "ugc", label: "Influencers & Fala" },
+              { key: "fashion", label: "Moda & Modelos" },
+              { key: "commercial", label: "Comercial & Ads" },
+            ].map((f) => (
+              <button
+                key={f.key}
+                type="button"
+                onClick={() => setActiveFilter(f.key)}
+                className={`px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer min-h-[44px] active:scale-95 shrink-0 ${
+                  activeFilter === f.key
+                    ? "bg-white text-slate-950 shadow-lg font-bold scale-[1.02]"
+                    : "bg-[#0D0E14] border border-white/[0.08] text-slate-400 hover:text-white"
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Grid Mosaico Limpo com Conteúdo Real */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-stretch">
+      {/* Grid Mosaico Limpo com Zero CLS (aspect-[9/16] estrito) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6 items-stretch">
         {filteredItems.map((item) => (
           <div
             key={item.id}
-            className={`relative rounded-3xl overflow-hidden bg-[#0D0E12] border border-[#1E202E] hover:border-slate-600 shadow-2xl group flex flex-col justify-between ${item.aspectRatio}`}
+            className={`relative rounded-3xl overflow-hidden bg-[#0D0E14] border border-white/[0.08] hover:border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.6)] group flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 w-full ${item.aspectRatio}`}
           >
-            {/* Renderização condicional: Vídeo ou Foto Real */}
+            {/* Renderização Condicional: Vídeo ou Foto Real */}
             {item.mediaType === "video" ? (
               <video
                 src={item.mediaUrl}
@@ -174,43 +190,45 @@ export function ResultsMasonryGallery() {
             )}
 
             {/* Gradient Overlay Suave */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/20 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-black/20 pointer-events-none" />
 
-            {/* Badge Superior */}
-            <div className="absolute top-4 left-4 flex items-center gap-2 pointer-events-none">
-              <span className={`px-3 py-1 rounded-lg border text-[10px] font-mono font-bold backdrop-blur-md ${item.accentColor}`}>
+            {/* Badges Superiores */}
+            <div className="absolute top-3 left-3 sm:top-4 sm:left-4 flex items-center gap-2 pointer-events-none">
+              <span className={`px-2.5 sm:px-3 py-1 rounded-xl border text-[9px] sm:text-[10px] font-mono font-bold backdrop-blur-md shadow-md ${item.accentColor}`}>
                 {item.badge}
               </span>
-              <span className="px-2.5 py-1 rounded-lg bg-black/60 border border-white/10 text-[10px] font-mono text-slate-300 backdrop-blur-md">
+              <span className="px-2 py-1 rounded-xl bg-black/70 border border-white/10 text-[9px] sm:text-[10px] font-mono text-slate-300 backdrop-blur-md">
                 {item.modelTag}
               </span>
             </div>
 
-            {/* Detalhes e Ação de Copiar Prompt */}
-            <div className="absolute bottom-0 left-0 right-0 p-5 space-y-2">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-bold text-white tracking-wide">
+            {/* Detalhes & Ação de Copiar Prompt (Touch target >= 44px) */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 space-y-2">
+              <div className="flex items-center justify-between gap-2">
+                <h4 className="text-sm font-bold text-white tracking-wide truncate">
                   {item.title}
                 </h4>
                 <button
+                  type="button"
                   onClick={() => handleCopyPrompt(item.id, item.prompt)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-[10px] font-mono border border-white/10 backdrop-blur-md transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-[10px] font-mono border border-white/10 backdrop-blur-md transition-colors cursor-pointer shrink-0 min-h-[44px] active:scale-95"
                   title="Copiar prompt de exemplo"
+                  aria-label="Copiar prompt"
                 >
                   {copiedId === item.id ? (
                     <>
-                      <Check className="w-3 h-3 text-emerald-400" />
-                      <span className="text-emerald-300">Copiado</span>
+                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span className="text-emerald-300 font-bold">Copiado</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3 h-3 text-slate-300" />
-                      <span>Copiar Prompt</span>
+                      <Copy className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+                      <span>Copiar</span>
                     </>
                   )}
                 </button>
               </div>
-              <p className="text-[11px] text-slate-300 line-clamp-2 leading-relaxed font-mono opacity-80">
+              <p className="text-[11px] text-slate-300 line-clamp-2 leading-relaxed font-mono opacity-85">
                 "{item.prompt}"
               </p>
             </div>

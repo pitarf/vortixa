@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Sparkles } from "lucide-react";
+import { Mic } from "lucide-react";
 import { VORIXA_VOICES } from "@/lib/voice-catalog";
 
 interface StudioVideoControlsProps {
@@ -39,89 +39,119 @@ export function StudioVideoControls({
   selectedGender,
   onGenderChange,
 }: StudioVideoControlsProps) {
-  // Modelos como Kling 2.6 Pro e Seedance já geram vídeo com fala/áudio sincronizado nativamente pelo prompt,
-  // portanto a opção de LipSync manual só deve aparecer para modelos de vídeo puro que NÃO possuem áudio/fala nativa (Kling 2.1, Wan, Luma, Minimax).
   const modelHasNativeAudio =
     selectedModelId.includes("v2.6") ||
     selectedModelId.includes("seedance") ||
     selectedModelId === "vorixa-ia";
+
   return (
-    <div className="border border-[#1E202E] rounded-2xl p-4 bg-[#070709] space-y-3 text-xs">
-      {/* Duração e Resolução do Vídeo */}
+    <div className="backdrop-blur-xl bg-[#0E1017]/85 border border-white/[0.08] rounded-2xl p-3.5 sm:p-4.5 space-y-3.5 text-xs shadow-xl">
+      {/* Duração e Resolução em Pílulas Táteis Ergonômicas (min-h-[44px]) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {/* Duração */}
-        <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#13141B]/60 border border-[#1E202E]">
-          <span className="text-slate-300 font-bold">Duração</span>
-          <div className="flex gap-1.5">
-            {["5", "10", "30"].map((d) => (
-              <button
-                key={d}
-                type="button"
-                onClick={() => onDurationChange(d)}
-                className={`px-3 py-2 rounded-lg font-mono font-bold transition-all cursor-pointer min-h-[40px] min-w-[40px] flex items-center justify-center ${
-                  duration === d
-                    ? "bg-cyan-600/30 border border-cyan-500 text-cyan-300"
-                    : "bg-[#070709] text-slate-400 hover:text-white"
-                }`}
-              >
-                {d}s
-              </button>
-            ))}
+        {/* Controle de Duração */}
+        <div className="p-3 rounded-xl bg-[#070709]/80 border border-white/[0.06] flex flex-col justify-between gap-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+              Duração
+            </span>
+            <span className="text-[10px] font-mono text-cyan-400 font-bold">{duration} segundos</span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-1.5 p-1 bg-[#0D0E12] rounded-xl border border-white/[0.04]">
+            {[
+              { val: "5", label: "5s", badge: "Padrão" },
+              { val: "10", label: "10s", badge: "2x cr" },
+              { val: "30", label: "30s", badge: "Cinema" },
+            ].map((d) => {
+              const isSelected = duration === d.val;
+              return (
+                <button
+                  key={d.val}
+                  type="button"
+                  onClick={() => onDurationChange(d.val)}
+                  className={`py-2 px-1 rounded-lg font-mono text-xs font-bold transition-all duration-200 cursor-pointer min-h-[44px] min-w-[44px] flex flex-col items-center justify-center gap-0.5 ${
+                    isSelected
+                      ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-md shadow-cyan-500/20"
+                      : "bg-[#070709] border border-transparent text-slate-400 hover:text-white hover:border-white/[0.08]"
+                  }`}
+                >
+                  <span>{d.label}</span>
+                  <span className={`text-[8px] font-sans ${isSelected ? "text-cyan-300" : "text-slate-500"}`}>
+                    {d.badge}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Resolução (720p HD vs 1080p Pro vs 4K Ultra) */}
-        <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#13141B]/60 border border-[#1E202E]">
-          <span className="text-slate-300 font-bold">Resolução</span>
-          <div className="flex gap-1">
-            <button
-              type="button"
-              onClick={() => onVideoQualityChange?.("standard")}
-              className={`px-2.5 py-2 rounded-lg font-mono text-[10px] font-bold transition-all cursor-pointer min-h-[40px] flex items-center justify-center ${
-                videoQuality === "standard"
-                  ? "bg-violet-600 text-white"
-                  : "bg-[#070709] text-slate-400 hover:text-white"
-              }`}
-              title="720p HD"
-            >
-              720p
-            </button>
-            <button
-              type="button"
-              onClick={() => onVideoQualityChange?.("high")}
-              className={`px-2.5 py-2 rounded-lg font-mono text-[10px] font-bold transition-all cursor-pointer min-h-[40px] flex items-center justify-center ${
-                videoQuality === "high"
-                  ? "bg-violet-600 text-white shadow-sm"
-                  : "bg-[#070709] text-slate-400 hover:text-white"
-              }`}
-              title="1080p Full HD Pro"
-            >
-              1080p 👑
-            </button>
-            <button
-              type="button"
-              onClick={() => onVideoQualityChange?.("ultra4k")}
-              className={`px-2.5 py-2 rounded-lg font-mono text-[10px] font-bold transition-all cursor-pointer min-h-[40px] flex items-center justify-center ${
-                videoQuality === "ultra4k"
-                  ? "bg-gradient-to-r from-violet-600 to-cyan-500 text-white shadow-sm"
-                  : "bg-[#070709] text-slate-400 hover:text-white"
-              }`}
-              title="4K Ultra Cinema"
-            >
-              4K 🚀
-            </button>
+        {/* Controle de Resolução */}
+        <div className="p-3 rounded-xl bg-[#070709]/80 border border-white/[0.06] flex flex-col justify-between gap-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+              Resolução
+            </span>
+            <span className="text-[10px] font-mono text-violet-400 font-bold">
+              {videoQuality === "ultra4k" ? "4K Ultra" : videoQuality === "high" ? "1080p Pro" : "720p HD"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-1.5 p-1 bg-[#0D0E12] rounded-xl border border-white/[0.04]">
+            {[
+              { id: "standard", label: "720p", badge: "HD" },
+              { id: "high", label: "1080p", badge: "Pro 👑" },
+              { id: "ultra4k", label: "4K", badge: "Ultra 🚀" },
+            ].map((q) => {
+              const isSelected = videoQuality === q.id;
+              return (
+                <button
+                  key={q.id}
+                  type="button"
+                  onClick={() => onVideoQualityChange?.(q.id)}
+                  className={`py-2 px-1 rounded-lg font-mono text-xs font-bold transition-all duration-200 cursor-pointer min-h-[44px] min-w-[44px] flex flex-col items-center justify-center gap-0.5 ${
+                    isSelected
+                      ? q.id === "ultra4k"
+                        ? "bg-gradient-to-tr from-violet-600 to-cyan-500 border border-cyan-400/80 text-white shadow-md shadow-violet-600/25"
+                        : "bg-violet-600/30 border border-violet-500 text-violet-200 shadow-md shadow-violet-500/20"
+                      : "bg-[#070709] border border-transparent text-slate-400 hover:text-white hover:border-white/[0.08]"
+                  }`}
+                  title={`${q.label} ${q.badge}`}
+                >
+                  <span>{q.label}</span>
+                  <span className={`text-[8px] font-sans ${isSelected ? "text-white" : "text-slate-500"}`}>
+                    {q.badge}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
 
-      {/* One-Shot Talking Video / LipSync com Voz de Estúdio ElevenLabs (PT-BR) */}
-      <div className="pt-3 border-t border-[#1E202E] space-y-2.5">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <Sparkles className="w-4 h-4 text-violet-400 shrink-0" />
-            <span className="text-xs font-bold text-white truncate">Voz de Estúdio BR & LipSync (ElevenLabs)</span>
+      {/* Módulo de Voz de Estúdio ElevenLabs & LipSync (PT-BR) */}
+      <div className="pt-3 border-t border-white/[0.08] space-y-3">
+        <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-[#070709]/70 border border-white/[0.06]">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-violet-600/30 to-fuchsia-600/30 border border-violet-500/30 flex items-center justify-center text-violet-300 shrink-0">
+              <Mic className="w-4 h-4" />
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-xs font-bold text-white truncate">Voz de Estúdio BR & LipSync</span>
+                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-violet-500/20 text-violet-300 font-bold">
+                  ElevenLabs
+                </span>
+              </div>
+              <p className="text-[10px] text-slate-400 truncate">
+                {modelHasNativeAudio
+                  ? "Substitui áudio por voz humana natural em PT-BR (+9 cr)."
+                  : "Gera fala neural sincronizada aos lábios em PT-BR (+9 cr)."}
+              </p>
+            </div>
           </div>
-          <label className="relative inline-flex items-center justify-center cursor-pointer min-h-[44px] min-w-[44px] p-2 -mr-2">
+
+          {/* Switch estilo Apple com Touch Target >= 44x44px */}
+          <label className="relative inline-flex items-center justify-center cursor-pointer min-h-[44px] min-w-[44px] p-2 shrink-0">
             <input
               type="checkbox"
               checked={enableTalkingVideo}
@@ -129,84 +159,97 @@ export function StudioVideoControls({
               className="sr-only peer"
               aria-label="Ativar Voz e Fala do Personagem"
             />
-            <div className="w-10 h-5 bg-[#1E202E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[14px] after:left-[10px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-violet-600 peer-checked:to-cyan-500"></div>
+            <div className="w-11 h-6 bg-[#1E202E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[14px] after:left-[10px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-violet-600 peer-checked:to-cyan-500 shadow-inner"></div>
           </label>
         </div>
-        <p className="text-[10px] text-slate-400 leading-tight">
-          {modelHasNativeAudio
-            ? "Opcional: Substitui o áudio sintetizado pelo realismo de atores brasileiros reais com ElevenLabs (+9 cr)."
-            : "Gera a fala neural e sincroniza os lábios automaticamente (+9 cr)."}
-        </p>
 
-          {enableTalkingVideo && (
-            <div className="space-y-2 pt-1 animate-in fade-in-50 duration-200">
-              {/* Filtros Rápidos de Gênero e Idade */}
-              <div className="space-y-1.5">
-                <div className="grid grid-cols-3 gap-1 bg-[#13141B] p-1 rounded-xl border border-[#1E202E]">
-                  <button
-                    type="button"
-                    onClick={() => onGenderChange("all")}
-                    className={`py-2 text-[11px] font-bold rounded-lg transition-all cursor-pointer min-h-[40px] flex items-center justify-center ${
-                      selectedGender === "all" ? "bg-violet-600 text-white" : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    Todas
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onGenderChange("female");
-                      onVoiceChange("Rachel");
-                    }}
-                    className={`py-2 text-[11px] font-bold rounded-lg transition-all cursor-pointer min-h-[40px] flex items-center justify-center ${
-                      selectedGender === "female" ? "bg-fuchsia-600 text-white" : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    Feminino 👩
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onGenderChange("male");
-                      onVoiceChange("Brian");
-                    }}
-                    className={`py-2 text-[11px] font-bold rounded-lg transition-all cursor-pointer min-h-[40px] flex items-center justify-center ${
-                      selectedGender === "male" ? "bg-blue-600 text-white" : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    Masculino 👨
-                  </button>
-                </div>
+        {enableTalkingVideo && (
+          <div className="space-y-3 pt-1 animate-in fade-in-50 duration-200">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  Voz do Locutor
+                </span>
+                <span className="text-[10px] text-violet-400 font-mono">Português Brasileiro</span>
+              </div>
 
-                <select
-                  value={selectedVoice}
-                  onChange={(e) => onVoiceChange(e.target.value)}
-                  className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-violet-500 cursor-pointer min-h-[44px]"
+              {/* Touch Target Ajustado para 44px */}
+              <div className="grid grid-cols-3 gap-1 bg-[#070709] p-1 rounded-xl border border-white/[0.06]">
+                <button
+                  type="button"
+                  onClick={() => onGenderChange("all")}
+                  className={`py-2 text-[11px] font-bold rounded-lg transition-all cursor-pointer min-h-[44px] flex items-center justify-center ${
+                    selectedGender === "all"
+                      ? "bg-violet-600 text-white shadow-sm"
+                      : "text-slate-400 hover:text-white"
+                  }`}
                 >
-                  {VORIXA_VOICES.filter((v) => {
-                    if (selectedGender !== "all" && v.gender !== selectedGender) return false;
-                    return true;
-                  }).map((voice) => (
-                    <option key={voice.id} value={voice.id}>
-                      {voice.name}
-                    </option>
-                  ))}
-                </select>
+                  Todas
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onGenderChange("female");
+                    onVoiceChange("Rachel");
+                  }}
+                  className={`py-2 text-[11px] font-bold rounded-lg transition-all cursor-pointer min-h-[44px] flex items-center justify-center gap-1 ${
+                    selectedGender === "female"
+                      ? "bg-fuchsia-600 text-white shadow-sm"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  <span>Feminino</span>
+                  <span>👩</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onGenderChange("male");
+                    onVoiceChange("Brian");
+                  }}
+                  className={`py-2 text-[11px] font-bold rounded-lg transition-all cursor-pointer min-h-[44px] flex items-center justify-center gap-1 ${
+                    selectedGender === "male"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  <span>Masculino</span>
+                  <span>👨</span>
+                </button>
               </div>
-              <div>
-                <span className="text-[10px] text-slate-400 block mb-1">Texto da Fala</span>
-                <textarea
-                  value={speechText}
-                  onChange={(e) => onSpeechTextChange(e.target.value)}
-                  rows={2}
-                  placeholder="O que o personagem de vídeo deve falar em português..."
-                  className="w-full bg-[#13141B] border border-[#1E202E] rounded-xl p-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-violet-500 resize-none leading-tight"
-                />
+
+              <select
+                value={selectedVoice}
+                onChange={(e) => onVoiceChange(e.target.value)}
+                className="w-full bg-[#070709] border border-white/[0.08] rounded-xl px-3.5 py-2.5 text-xs text-white outline-none focus:border-violet-500/80 transition-colors cursor-pointer min-h-[44px]"
+              >
+                {VORIXA_VOICES.filter((v) => {
+                  if (selectedGender !== "all" && v.gender !== selectedGender) return false;
+                  return true;
+                }).map((voice) => (
+                  <option key={voice.id} value={voice.id} className="bg-[#0D0E12] text-white">
+                    {voice.name} ({voice.gender === "female" ? "Feminina" : "Masculina"}) - {voice.description || "Expressiva"}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-[10px] text-slate-400">
+                <span className="font-bold uppercase tracking-wider">Texto da Fala (Diálogo)</span>
+                <span className="font-mono">{speechText.length} caracteres</span>
               </div>
+              <textarea
+                value={speechText}
+                onChange={(e) => onSpeechTextChange(e.target.value)}
+                rows={2}
+                placeholder="Digite o que a modelo ou personagem deve falar em português com naturalidade..."
+                className="w-full bg-[#070709] border border-white/[0.08] rounded-xl p-3 text-xs text-white placeholder-slate-500 outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/40 resize-none leading-relaxed transition-all"
+              />
+            </div>
           </div>
         )}
       </div>
     </div>
   );
 }
-

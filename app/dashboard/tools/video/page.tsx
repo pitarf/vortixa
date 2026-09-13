@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { Sliders, Tv } from "lucide-react";
 import {
   VideoCreationMode,
   VideoDuration,
@@ -22,6 +23,9 @@ export default function VideoGenerationPage() {
   // Saldo e limites
   const [balance, setBalance] = useState<number>(2480);
   const [creditMode, setCreditMode] = useState<string>("LIMITED");
+
+  // Controle de abas exclusivas no mobile para prevenir scroll infinito
+  const [mobileTab, setMobileTab] = useState<"config" | "preview">("config");
 
   // Estado dos Inputs (Passo 1: Entrada)
   const [creationMode, setCreationMode] = useState<VideoCreationMode>("text-to-video");
@@ -48,7 +52,7 @@ export default function VideoGenerationPage() {
   const [activeStepText, setActiveStepText] = useState<string>("");
   const [activeVideoUrl, setActiveVideoUrl] = useState<string>("");
 
-  // Histórico de Vídeos Reais do Usuário (sem fakes)
+  // Histórico de Vídeos Reais do Usuário
   const [recentCreations, setRecentCreations] = useState<VideoRecentCreation[]>([]);
 
   // Carrega configuração de saldo e histórico real
@@ -234,7 +238,6 @@ export default function VideoGenerationPage() {
       return;
     }
 
-    // Cálculo de Duração (10s = 2x) e Qualidade (1080p = 1.5x, 4K Ultra = 2x)
     const durationMultiplier = duration === "10" ? 2 : 1;
     const isKling = selectedModel.id.includes("kling");
     const qualityMultiplier = isKling
@@ -250,6 +253,9 @@ export default function VideoGenerationPage() {
       toast.error(`Saldo insuficiente (${balance} créditos disponíveis. Custo: ${cost}).`);
       return;
     }
+
+    // No mobile, comuta para a aba de preview
+    setMobileTab("preview");
 
     try {
       setIsGenerating(true);
@@ -299,14 +305,54 @@ export default function VideoGenerationPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#070709] text-slate-100 p-3 sm:p-5 lg:p-6 space-y-6 max-w-[1700px] mx-auto font-sans overflow-x-hidden">
+    <div className="w-full min-h-screen bg-[#070709] text-slate-100 p-3 sm:p-5 lg:p-6 space-y-5 sm:space-y-6 max-w-[1700px] mx-auto font-sans overflow-x-hidden">
       {/* 1. Header com Título, Subtítulo e Citação VORIXA */}
       <VideoHeader />
 
-      {/* 2. Grid Principal: 1 Coluna no Mobile e 2 Colunas no Desktop (lg:grid-cols-12) */}
+      {/* Seletor Móvel de Abas: Configuração vs Player (Evita scroll infinito no celular) */}
+      <div className="flex lg:hidden items-center p-1.5 bg-[#0D0E12] border border-[#1E202E] rounded-2xl w-full gap-1.5 shadow-md">
+        <button
+          type="button"
+          onClick={() => setMobileTab("config")}
+          className={`flex-1 min-h-[44px] flex items-center justify-center gap-2 rounded-xl text-xs font-bold font-mono transition-all cursor-pointer touch-manipulation select-none ${
+            mobileTab === "config"
+              ? "bg-violet-600 text-white shadow-md shadow-violet-600/30"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          <Sliders className="w-4 h-4" />
+          <span>Configuração</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setMobileTab("preview")}
+          className={`flex-1 min-h-[44px] flex items-center justify-center gap-2 rounded-xl text-xs font-bold font-mono transition-all cursor-pointer touch-manipulation select-none relative ${
+            mobileTab === "preview"
+              ? "bg-violet-600 text-white shadow-md shadow-violet-600/30"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          <div className="flex items-center gap-1.5">
+            <span
+              className={`h-2 w-2 rounded-full ${
+                isGenerating ? "bg-amber-400 animate-ping" : activeVideoUrl ? "bg-emerald-400" : "bg-slate-500"
+              }`}
+            />
+            <Tv className="w-4 h-4" />
+            <span>Player & Variações</span>
+          </div>
+        </button>
+      </div>
+
+      {/* 2. Grid Principal: Abas no Mobile e 2 Colunas no Desktop (lg:grid-cols-12) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
         {/* Coluna da Esquerda: Blocos 1, 2, 3 e Barra de Ação */}
-        <div className="w-full lg:col-span-6 space-y-4">
+        <div
+          className={`w-full lg:col-span-6 space-y-4 ${
+            mobileTab === "config" ? "block" : "hidden lg:block"
+          }`}
+        >
           {/* Card 1: Entrada */}
           <VideoInputSection
             creationMode={creationMode}
@@ -357,7 +403,11 @@ export default function VideoGenerationPage() {
         </div>
 
         {/* Coluna da Direita: Preview Player com Variações Recentes */}
-        <div className="w-full lg:col-span-6 lg:sticky lg:top-6">
+        <div
+          className={`w-full lg:col-span-6 lg:sticky lg:top-6 ${
+            mobileTab === "preview" ? "block" : "hidden lg:block"
+          }`}
+        >
           <VideoPreviewPlayer
             isGenerating={isGenerating}
             activeStepText={activeStepText}

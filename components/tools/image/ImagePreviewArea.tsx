@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Wand2,
   Maximize2,
@@ -51,23 +51,40 @@ export function ImagePreviewArea({
   onUpscale,
   onSendToFlow,
 }: ImagePreviewAreaProps) {
+  // Trava scroll de fundo quando modal fullscreen estiver ativo
+  useEffect(() => {
+    if (isFullscreen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isFullscreen]);
+
   return (
     <>
-      <div className="space-y-4 bg-[#0D0E12] border border-[#1E202E] p-4 sm:p-5 rounded-2xl shadow-xl">
+      <div className="space-y-4 bg-[#0D0E12] border border-[#1E202E] p-4 sm:p-5 rounded-3xl shadow-xl w-full">
         {/* Header do Preview */}
         <div className="flex items-center justify-between border-b border-[#1E202E] pb-3">
           <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-200">
-              Preview
+            <span
+              className={`h-2.5 w-2.5 rounded-full ${
+                isGenerating ? "bg-amber-400 animate-ping" : activeResultUrl ? "bg-emerald-400" : "bg-slate-500"
+              }`}
+            />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-200 font-mono">
+              Preview em Tempo Real
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={onToggleFullscreen}
-              className="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 hover:text-white transition-colors text-xs flex items-center gap-1.5 cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
+              disabled={!activeResultUrl}
+              className="px-3 py-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 hover:text-white disabled:opacity-40 transition-colors text-xs flex items-center gap-1.5 cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
               title="Tela Cheia"
             >
               <Maximize2 className="w-4 h-4" />
@@ -77,28 +94,29 @@ export function ImagePreviewArea({
             <button
               type="button"
               onClick={onCopyPrompt}
-              className="p-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation active:scale-[0.98]"
+              className="p-2.5 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation active:scale-[0.98]"
               title="Copiar Prompt"
+              aria-label="Copiar prompt"
             >
               <Copy className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Canvas Principal com Imagem Ativa */}
-        <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-[#1E202E] bg-slate-100/90 dark:bg-black/80 flex items-center justify-center min-h-[300px] sm:min-h-[380px] max-h-[520px] aspect-square sm:aspect-auto shadow-sm dark:shadow-2xl">
+        {/* Canvas Principal com Aspect-Ratio Reservado e Zero CLS */}
+        <div className="relative rounded-2xl overflow-hidden border border-[#1E202E] bg-[#070709] flex items-center justify-center w-full aspect-video min-h-[280px] sm:min-h-[380px] max-h-[500px] shadow-2xl">
           {isGenerating ? (
             <div className="flex flex-col items-center justify-center gap-3 p-6 text-center">
-              <div className="relative h-14 w-14 rounded-2xl bg-gradient-to-tr from-violet-600 to-cyan-500 p-0.5 animate-spin">
-                <div className="h-full w-full bg-white dark:bg-[#070709] rounded-2xl flex items-center justify-center">
-                  <Wand2 className="h-6 w-6 text-cyan-600 dark:text-cyan-300 animate-pulse" />
+              <div className="relative h-14 w-14 rounded-2xl bg-gradient-to-tr from-violet-600 via-indigo-600 to-cyan-500 p-0.5 animate-spin">
+                <div className="h-full w-full bg-[#070709] rounded-2xl flex items-center justify-center">
+                  <Wand2 className="h-6 w-6 text-cyan-400 animate-pulse" />
                 </div>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-bold text-slate-800 dark:text-white font-heading">
+                <p className="text-sm font-bold text-white font-heading">
                   {activeStepText || "Renderizando na GPU..."}
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                <p className="text-xs text-slate-400 font-mono">
                   Taxa de amostragem: {inferenceSteps} steps
                 </p>
               </div>
@@ -110,13 +128,13 @@ export function ImagePreviewArea({
               className="w-full h-full object-contain max-h-[480px] rounded-xl transition-all duration-300 hover:scale-[1.01]"
             />
           ) : (
-            <div className="flex flex-col items-center justify-center gap-3 p-8 text-center text-slate-400 dark:text-slate-500">
-              <div className="h-16 w-16 rounded-2xl bg-white dark:bg-[#0D0E12] border border-slate-200 dark:border-[#1E202E] flex items-center justify-center text-slate-400 shadow-sm">
-                <Wand2 className="h-7 w-7 text-violet-500 dark:text-violet-400/60" />
+            <div className="flex flex-col items-center justify-center gap-3 p-8 text-center text-slate-500">
+              <div className="h-16 w-16 rounded-2xl bg-[#0D0E12] border border-[#1E202E] flex items-center justify-center text-slate-400 shadow-sm">
+                <Wand2 className="h-7 w-7 text-violet-400/70" />
               </div>
               <div className="space-y-1 max-w-xs">
-                <p className="text-sm font-bold text-slate-700 dark:text-slate-300">Área de Visualização</p>
-                <p className="text-xs text-slate-500 dark:text-slate-500 leading-relaxed">
+                <p className="text-sm font-bold text-slate-300 font-heading">Área de Visualização</p>
+                <p className="text-xs text-slate-500 leading-relaxed">
                   Digite seu prompt e clique em <strong>Gerar Imagem</strong> para ver o resultado em tempo real.
                 </p>
               </div>
@@ -124,32 +142,34 @@ export function ImagePreviewArea({
           )}
         </div>
 
-        {/* Carrossel Inferior com Gerações Recentes Reais do Usuário */}
+        {/* Carrossel Inferior com Gerações Recentes e Touch Confortável */}
         {variations.length > 0 && (
           <div className="space-y-2 pt-1">
             <div className="flex items-center justify-between text-xs text-slate-400">
-              <span className="font-semibold">Gerações Recentes</span>
-              <div className="flex items-center gap-1.5">
+              <span className="font-semibold font-mono">Gerações Recentes</span>
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={onPrevVariation}
-                  className="p-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center touch-manipulation"
+                  className="p-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
                   title="Anterior"
+                  aria-label="Variação anterior"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   type="button"
                   onClick={onNextVariation}
-                  className="p-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center touch-manipulation"
+                  className="p-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
                   title="Próxima"
+                  aria-label="Próxima variação"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 overflow-x-auto pb-1">
+            <div className="flex overflow-x-auto no-scrollbar overscroll-x-contain touch-pan-x gap-2 pb-1">
               {variations.map((url, idx) => {
                 const isActive = activeResultUrl === url;
                 return (
@@ -157,7 +177,7 @@ export function ImagePreviewArea({
                     key={idx}
                     type="button"
                     onClick={() => onSelectVariation(url, idx)}
-                    className={`relative rounded-xl overflow-hidden border aspect-square cursor-pointer transition-all min-h-[48px] touch-manipulation active:scale-[0.98] ${
+                    className={`relative rounded-xl overflow-hidden border aspect-square cursor-pointer transition-all min-h-[56px] min-w-[56px] shrink-0 touch-manipulation active:scale-[0.98] ${
                       isActive
                         ? "border-cyan-400 shadow-md shadow-cyan-400/30 ring-1 ring-cyan-400 scale-[1.02]"
                         : "border-[#1E202E] hover:border-slate-600 opacity-70 hover:opacity-100"
@@ -211,7 +231,7 @@ export function ImagePreviewArea({
               title="Enviar para o VORIXA FLOW"
             >
               <Boxes className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span className="truncate">No Canvas</span>
+              <span className="truncate">No Flow</span>
             </button>
           </div>
         )}

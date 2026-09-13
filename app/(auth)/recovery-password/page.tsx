@@ -3,26 +3,25 @@
 import React, { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
+import { Mail, Lock, Eye, EyeOff, ArrowRight, ArrowLeft, KeyRound, CheckCircle2 } from "lucide-react";
 
 function RecoveryPasswordContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get("token");
 
-  // Estado para solicitação de e-mail
   const [email, setEmail] = useState("");
-
-  // Estado para redefinição com nova senha
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   const handleRequestRecovery = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) {
-      toast.error("Por favor, preencha o campo de e-mail.");
+    if (!email.trim()) {
+      toast.error("Por favor, preencha o seu e-mail.");
       return;
     }
     setIsLoading(true);
@@ -31,17 +30,18 @@ function RecoveryPasswordContent() {
       const response = await fetch("/api/auth/recovery-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: email.trim() }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        toast.error(data.error || "Ocorreu um erro ao processar a solicitação.");
+        toast.error(data.error || "Ocorreu um erro ao solicitar a recuperação.");
         return;
       }
 
-      toast.success("E-mail com instruções enviado com sucesso! Verifique sua caixa de entrada.");
+      setEmailSent(true);
+      toast.success("E-mail de recuperação enviado com sucesso! Verifique sua caixa de entrada.");
     } catch (err) {
       toast.error("Servidor instável. Tente novamente em alguns instantes.");
     } finally {
@@ -57,7 +57,7 @@ function RecoveryPasswordContent() {
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error("As senhas não coincidem. Digite novamente.");
+      toast.error("As senhas informadas não coincidem.");
       return;
     }
 
@@ -73,11 +73,11 @@ function RecoveryPasswordContent() {
       const data = await response.json();
 
       if (!response.ok) {
-        toast.error(data.error || "Token inválido ou expirado.");
+        toast.error(data.error || "Token de recuperação inválido ou expirado.");
         return;
       }
 
-      toast.success("Senha redefinida com sucesso! Redirecionando para o login...");
+      toast.success("Senha atualizada com sucesso! Redirecionando para o login...");
       setTimeout(() => {
         router.push("/login");
       }, 2000);
@@ -89,50 +89,66 @@ function RecoveryPasswordContent() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[hsl(240,10%,2%)] px-4 font-sans text-[hsl(0,0%,100%)]">
-      <Toaster position="top-right" richColors />
+    <div className="flex min-h-dvh flex-col items-center justify-center bg-[#070709] px-4 py-8 sm:py-12 font-sans text-slate-100 relative overflow-hidden">
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-violet-600/15 via-indigo-600/10 to-cyan-500/5 blur-[120px] pointer-events-none rounded-full" />
 
-      {/* Background Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.08)_0%,rgba(168,85,247,0.03)_50%,transparent_100%)] pointer-events-none" />
-
-      <div className="w-full max-w-md space-y-8 rounded-2xl border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,4%)] p-8 shadow-2xl relative z-10">
-        <div className="text-center">
-          <h2 className="font-heading text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-[linear-gradient(135deg,hsl(262,83%,58%)_0%,hsl(224,100%,54%)_50%,hsl(180,100%,50%)_100%)]">
-            VORTIXIA
-          </h2>
-          <p className="mt-2 text-sm text-[hsl(240,5%,65%)]">
-            {token ? "Cadastre uma nova senha para sua conta." : "Insira seu e-mail para recuperar o acesso à sua conta."}
+      <div className="w-full max-w-md space-y-6 rounded-3xl border border-[#1E202E] bg-[#0D0E12]/85 backdrop-blur-2xl p-6 sm:p-10 shadow-2xl shadow-black/80 relative z-10">
+        <div className="text-center space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#13141B] border border-[#1E202E] text-[11px] font-mono text-violet-300 font-bold mb-1">
+            <KeyRound className="h-3.5 w-3.5 text-violet-400" />
+            <span>RECUPERAÇÃO DE ACESSO</span>
+          </div>
+          <h1 className="font-heading text-3xl font-black tracking-tight text-white">
+            {token ? "Redefinir Senha" : "Esqueceu sua senha?"}
+          </h1>
+          <p className="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
+            {token
+              ? "Crie uma nova credencial segura para voltar a acessar seu estúdio VORIXA."
+              : "Digite o e-mail da sua conta para receber o link seguro de recuperação."}
           </p>
         </div>
 
         {token ? (
-          /* Formulário de Redefinição de Nova Senha com Token */
-          <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="newPassword" className="block text-sm font-medium text-[hsl(240,5%,65%)]">
-                  Nova Senha (mínimo 6 caracteres)
-                </label>
+          <form className="space-y-4" onSubmit={handleResetPassword}>
+            <div>
+              <label htmlFor="newPassword" className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Nova Senha (mínimo 6 caracteres)
+              </label>
+              <div className="relative">
+                <Lock className="h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input
                   id="newPassword"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
-                  className="mt-1 block w-full rounded-lg border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,2%)] px-4 py-3 text-sm text-[hsl(0,0%,100%)] placeholder-[hsl(240,5%,35%)] focus:border-[hsl(224,100%,54%)] focus:outline-none focus:ring-1 focus:ring-[hsl(224,100%,54%)] transition-colors"
+                  autoComplete="new-password"
+                  className="w-full rounded-xl border border-[#1E202E] bg-[#070709] pl-10 pr-12 py-3 text-sm text-white placeholder-slate-500 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 focus:outline-none transition-all min-h-[48px]"
                   placeholder="••••••••"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer touch-manipulation"
+                  aria-label={showPassword ? "Ocultar senha" : "Exibir senha"}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
+            </div>
 
-              <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-[hsl(240,5%,65%)]">
-                  Confirmar Nova Senha
-                </label>
+            <div>
+              <label htmlFor="confirmPassword" className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Confirmar Nova Senha
+              </label>
+              <div className="relative">
+                <Lock className="h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input
                   id="confirmPassword"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
-                  className="mt-1 block w-full rounded-lg border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,2%)] px-4 py-3 text-sm text-[hsl(0,0%,100%)] placeholder-[hsl(240,5%,35%)] focus:border-[hsl(224,100%,54%)] focus:outline-none focus:ring-1 focus:ring-[hsl(224,100%,54%)] transition-colors"
+                  autoComplete="new-password"
+                  className="w-full rounded-xl border border-[#1E202E] bg-[#070709] pl-10 pr-12 py-3 text-sm text-white placeholder-slate-500 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 focus:outline-none transition-all min-h-[48px]"
                   placeholder="••••••••"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -140,52 +156,80 @@ function RecoveryPasswordContent() {
               </div>
             </div>
 
-            <div>
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium bg-[hsl(224,100%,54%)] text-white hover:bg-[hsl(224,100%,48%)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[hsl(224,100%,54%)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02]"
-              >
-                {isLoading ? "Redefinindo..." : "Salvar Nova Senha"}
-              </button>
-            </div>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-xs font-bold bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-xl shadow-violet-600/30 transition-all duration-200 disabled:opacity-50 cursor-pointer touch-manipulation active:scale-[0.98] min-h-[48px]"
+            >
+              {isLoading ? "Atualizando..." : "Salvar Nova Senha"}
+            </button>
           </form>
+        ) : emailSent ? (
+          <div className="text-center space-y-4 py-4">
+            <div className="h-14 w-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
+              <CheckCircle2 className="h-7 w-7" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-sm font-bold text-white">Instruções enviadas!</h3>
+              <p className="text-xs text-slate-400">
+                Verifique sua caixa de entrada no e-mail <strong className="text-slate-200">{email}</strong> e siga as instruções para redefinir sua senha.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setEmailSent(false)}
+              className="text-xs text-violet-400 hover:underline font-semibold py-2"
+            >
+              Enviar para outro e-mail
+            </button>
+          </div>
         ) : (
-          /* Formulário de Solicitação de E-mail de Recuperação */
-          <form className="mt-8 space-y-6" onSubmit={handleRequestRecovery}>
+          <form className="space-y-4" onSubmit={handleRequestRecovery}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[hsl(240,5%,65%)]">
-                Endereço de E-mail
+              <label htmlFor="email" className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Endereço de E-mail Cadastrado
               </label>
-              <input
-                id="email"
-                type="email"
-                required
-                className="mt-1 block w-full rounded-lg border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,2%)] px-4 py-3 text-sm text-[hsl(0,0%,100%)] placeholder-[hsl(240,5%,35%)] focus:border-[hsl(224,100%,54%)] focus:outline-none focus:ring-1 focus:ring-[hsl(224,100%,54%)] transition-colors"
-                placeholder="nome@exemplo.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <div className="relative">
+                <Mail className="h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  className="w-full rounded-xl border border-[#1E202E] bg-[#070709] pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 focus:outline-none transition-all min-h-[48px]"
+                  placeholder="nome@empresa.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
             </div>
 
-            <div>
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium bg-[hsl(224,100%,54%)] text-white hover:bg-[hsl(224,100%,48%)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[hsl(224,100%,54%)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02]"
-              >
-                {isLoading ? "Enviando..." : "Enviar Instruções"}
-              </button>
-            </div>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-xs font-bold bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-xl shadow-violet-600/30 transition-all duration-200 disabled:opacity-50 cursor-pointer touch-manipulation active:scale-[0.98] min-h-[48px]"
+            >
+              {isLoading ? (
+                <span>Enviando link seguro...</span>
+              ) : (
+                <>
+                  <span>Enviar Link de Recuperação</span>
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
           </form>
         )}
 
-        <p className="text-center text-xs text-[hsl(240,5%,65%)] mt-8">
-          Lembrou a senha?{" "}
-          <Link href="/login" className="text-[hsl(180,100%,50%)] hover:underline font-semibold">
-            Voltar para o Login
+        <div className="pt-2 text-center">
+          <Link
+            href="/login"
+            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors py-2"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>Voltar para o Login</span>
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );
@@ -193,7 +237,13 @@ function RecoveryPasswordContent() {
 
 export default function RecoveryPasswordPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[hsl(240,10%,2%)] flex items-center justify-center text-white">Carregando...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#070709] flex items-center justify-center text-white text-xs font-mono">
+          Carregando módulo de segurança...
+        </div>
+      }
+    >
       <RecoveryPasswordContent />
     </Suspense>
   );

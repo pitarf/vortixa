@@ -492,12 +492,23 @@ export class FalAIProvider implements IAIProvider {
   }
 
   private async pollFalResultInBackground(requestId: string, jobId: string, model: string) {
-    const maxAttempts = 120; // 2 minutos máx
+    const maxAttempts = 450; // Até 15 minutos de tolerância para modelos pesados de vídeo
     let attempts = 0;
 
     const interval = setInterval(async () => {
       attempts++;
       try {
+        // Se o webhook da Fal já tiver finalizado o Job, encerra o polling imediatamente
+        const currentJob = await prisma.aIJob.findUnique({
+          where: { id: jobId },
+          select: { status: true },
+        });
+
+        if (currentJob?.status === "COMPLETED" || currentJob?.status === "FAILED" || currentJob?.status === "CANCELLED") {
+          clearInterval(interval);
+          return;
+        }
+
         const statusResult = await fal.queue.status(model, {
           requestId,
           logs: true,
@@ -595,7 +606,7 @@ export class FalAIProvider implements IAIProvider {
               });
 
               for (const realUrl of outputUrls) {
-                const isVideo = realUrl.endsWith(".mp4");
+                const isVideo = realUrl.endsWith(".mp4") || realUrl.includes("output.mp4") || realUrl.includes("video");
                 let finalUrl = realUrl;
                 try {
                   finalUrl = await StorageService.uploadFromUrl(realUrl, isVideo ? "result.mp4" : "result.jpg");
@@ -608,9 +619,9 @@ export class FalAIProvider implements IAIProvider {
                     userId: job.userId,
                     name: `vorixa-render-${job.id.slice(0, 8)}.${isVideo ? "mp4" : "jpg"}`,
                     mimeType: isVideo ? "video/mp4" : "image/jpeg",
-                    sizeBytes: 1024 * 1024 * 2,
+                    sizeBytes: isVideo ? 1024 * 1024 * 8 : 1024 * 1024 * 2,
                     url: finalUrl,
-                    storageKey: `outputs/${job.userId}/vorixa-${job.id}.${isVideo ? "mp4" : "jpg"}`,
+                    storageKey: `outputs/${job.userId}/vorixa-${job.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}.${isVideo ? "mp4" : "jpg"}`,
                   },
                 });
 

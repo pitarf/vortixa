@@ -12,14 +12,15 @@ import {
   RefreshCw,
   Clock,
   CreditCard,
-  Layers,
-  HelpCircle,
-  TrendingUp,
-  AlertCircle,
+  Sparkles,
   Lock,
+  Star,
+  HelpCircle,
+  ChevronDown,
+  CheckCircle2,
+  Wifi,
 } from "lucide-react";
 import { toast } from "sonner";
-import Link from "next/link";
 
 import {
   PaymentCheckoutModal,
@@ -39,16 +40,8 @@ interface CreditPackageData {
   status: boolean;
   displayOrder: number;
   isPopular?: boolean;
-}
-
-interface CreditTransactionData {
-  id: string;
-  amount: number;
-  type: "PURCHASE" | "GENERATION_DEBIT" | "GENERATION_REFUND" | "BONUS" | "ADMIN_ADJUSTMENT";
-  description: string | null;
-  createdAt: string;
-  jobId: string | null;
-  paymentId: string | null;
+  isBestValue?: boolean;
+  badgeText?: string;
 }
 
 interface UserCreditInfo {
@@ -64,8 +57,8 @@ function CreditsContent() {
 
   const [userInfo, setUserInfo] = useState<UserCreditInfo>({ balance: 0, isUnlimited: false });
   const [packages, setPackages] = useState<CreditPackageData[]>([]);
-  const [transactions, setTransactions] = useState<CreditTransactionData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   // Estados dos Modais de Pagamento
   const [selectedPackage, setSelectedPackage] = useState<CreditPackageData | null>(null);
@@ -87,7 +80,7 @@ function CreditsContent() {
     {
       id: "pkg-100",
       name: "Iniciante",
-      description: "Ideal para experimentar os motores e criar seus primeiros conteúdos.",
+      description: "Ideal para experimentar os motores neurais e criar seus primeiros conteúdos sem compromisso.",
       credits: 100,
       priceCents: 1990,
       bonusCredits: 0,
@@ -98,33 +91,47 @@ function CreditsContent() {
     {
       id: "pkg-500",
       name: "Profissional",
-      description: "O pacote mais escolhido por criadores e agências para escala contínua.",
+      description: "O plano mais escolhido por criadores de conteúdo e agências para escala contínua com excelente custo-benefício.",
       credits: 500,
       priceCents: 7990,
       bonusCredits: 50,
       status: true,
       displayOrder: 2,
       isPopular: true,
+      badgeText: "MAIS ESCOLHIDO",
     },
     {
       id: "pkg-1000",
       name: "Criador Pro",
-      description: "Para estúdios e criadores de alta escala com geração em massa.",
+      description: "Para estúdios e criadores de alta escala com geração em massa de vídeos cinemáticos e avatares sincronizados.",
       credits: 1000,
       priceCents: 14990,
       bonusCredits: 150,
       status: true,
       displayOrder: 3,
+      isBestValue: true,
+      badgeText: "MELHOR VALOR",
+    },
+    {
+      id: "pkg-2500",
+      name: "Studio Ultra",
+      description: "Capacidade máxima de renderização prioritária para produções publicitárias, cinema e pipelines automatizados.",
+      credits: 2500,
+      priceCents: 34990,
+      bonusCredits: 500,
+      status: true,
+      displayOrder: 4,
       isPopular: false,
+      badgeText: "MÁXIMA POTÊNCIA",
     },
   ];
 
   const fetchCreditsData = async () => {
     try {
       setLoading(true);
-      const [pkgsRes, statsRes] = await Promise.all([
+      const [pkgsRes, userRes] = await Promise.all([
         fetch("/api/payments/packages").catch(() => null),
-        fetch("/api/admin/stats").catch(() => null),
+        fetch("/api/admin/users?limit=1").catch(() => null),
       ]);
 
       if (pkgsRes && pkgsRes.ok) {
@@ -140,14 +147,13 @@ function CreditsContent() {
         setPackages(defaultPackages);
       }
 
-      // Tenta buscar saldo real do usuário
-      const userRes = await fetch("/api/admin/users?limit=1").catch(() => null);
       if (userRes && userRes.ok) {
         const userData = await userRes.json();
         if (userData?.currentUserBalance !== undefined) {
           setUserInfo({
             balance: userData.currentUserBalance,
             isUnlimited: !!userData.isUnlimited,
+            name: userData.currentUserName || "Criador VORIXA",
           });
         }
       }
@@ -191,19 +197,17 @@ function CreditsContent() {
     }
   }, [searchParams, router]);
 
-  // Abertura do Checkout Modal ao clicar em um pacote
   const handleOpenCheckout = (pkg: CreditPackageData) => {
     setSelectedPackage(pkg);
     setIsCheckoutModalOpen(true);
   };
 
-  // Disparo do Checkout seguro após escolher método
   const handleProceedCheckout = async (selectedMethod: "pix" | "card") => {
-    if (!selectedPackage) return;
+    if (!selectedPackage || isProcessingCheckout) return;
 
     try {
       setIsProcessingCheckout(true);
-      toast.loading("Gerando sessão de pagamento segura...", { id: "checkout-toast" });
+      toast.loading("Iniciando sessão de pagamento segura...", { id: "checkout-toast" });
 
       const res = await fetch("/api/payments/checkout", {
         method: "POST",
@@ -224,16 +228,14 @@ function CreditsContent() {
       setIsCheckoutModalOpen(false);
 
       if (selectedMethod === "pix") {
-        // Abre o modal interativo Pix com polling em tempo real
         setActivePaymentId(data.paymentId);
         setActiveOrderId(data.orderId);
         setActivePixCode(data.pixCode || null);
         setIsPixModalOpen(true);
-        toast.success("Código Pix gerado com sucesso! Conclua no app do banco.", { id: "checkout-toast" });
+        toast.success("Código Pix gerado com sucesso! Conclua o pagamento no seu banco.", { id: "checkout-toast" });
       } else {
-        // Redirecionamento para Cartão de Crédito / Checkout Pro
         if (data.checkoutUrl) {
-          toast.success("Redirecionando para o ambiente de pagamento...", { id: "checkout-toast" });
+          toast.success("Redirecionando para o ambiente seguro...", { id: "checkout-toast" });
           setTimeout(() => {
             window.location.href = data.checkoutUrl;
           }, 600);
@@ -261,8 +263,27 @@ function CreditsContent() {
     });
   };
 
+  const faqItems = [
+    {
+      question: "Os créditos possuem data de validade?",
+      answer: "Não. Todos os créditos adquiridos no VORIXA são vitalícios e nunca expiram. Você pode usá-los hoje, no mês seguinte ou ao longo do ano sem qualquer perda de saldo.",
+    },
+    {
+      question: "Qual a diferença entre o Pix e o Cartão de Crédito?",
+      answer: "O Pix Instantâneo possui liquidação e liberação automatizada em até 3 segundos via Vorexpay. O Cartão de Crédito permite parcelamento em até 12 vezes e conta com proteção antifraude criptografada 3D Secure.",
+    },
+    {
+      question: "O que acontece se uma geração de vídeo ou imagem falhar?",
+      answer: "Nosso sistema opera sobre a arquitetura Ledger Zero Trust com estorno automático. Se um motor de IA falhar ou rejeitar o processamento, os créditos são imediatamente devolvidos ao seu saldo sem necessidade de abrir suporte.",
+    },
+    {
+      question: "Posso utilizar meus créditos em todas as ferramentas?",
+      answer: "Sim! Os mesmos créditos são válidos universalmente para FLUX Imagem, Kling AI Vídeo, Wan 2.1, Luma Ray 2, LatentSync LipSync, Síntese de Voz TTS e no VORIXA FLOW Canvas.",
+    },
+  ];
+
   return (
-    <div className="max-w-6xl mx-auto space-y-10 pb-16">
+    <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10 pb-16 sm:pb-20 px-3 sm:px-4 lg:px-6">
       {/* Modais de Fluxo de Pagamento */}
       <PaymentCheckoutModal
         isOpen={isCheckoutModalOpen}
@@ -304,172 +325,316 @@ function CreditsContent() {
         reason={failureReason}
       />
 
-      {/* 1. Header & Saldo em Destaque */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-[#13141B] to-[#0D0E12] border border-[#1E202E] p-6 md:p-10 shadow-2xl">
+      {/* 1. Header & Hero com Fintech Card Glassmorphism Fluido */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-[#13141B] via-[#0D0E12] to-[#070709] border border-[#1E202E] p-4 xs:p-6 sm:p-8 md:p-10 shadow-2xl">
         {/* Glows de Fundo */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
-        <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-80 sm:w-96 h-80 sm:h-96 bg-violet-600/15 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+        <div className="absolute bottom-0 left-1/3 w-64 sm:w-80 h-64 sm:h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-mono font-medium">
-              <Coins className="h-3.5 w-3.5" />
-              Recarga e Carteira Digital
+        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8">
+          <div className="space-y-3.5 max-w-2xl text-center lg:text-left w-full">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/25 text-violet-400 text-xs font-mono font-semibold">
+              <Sparkles className="h-3.5 w-3.5 shrink-0" />
+              <span>SISTEMA FINANCEIRO VORIXA</span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">
-              Seu Saldo & Pacotes de Crédito
+            <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight font-heading leading-tight">
+              Recarga & Carteira{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-400">
+                Digital
+              </span>
             </h1>
-            <p className="text-slate-400 text-sm max-w-xl leading-relaxed">
-              Adquira créditos pré-pagos sob demanda para gerar imagens, vídeos cinemáticos, sincronização labial e motion control. Sem mensalidades forçadas ou expiração.
+            <p className="text-slate-400 text-xs xs:text-sm md:text-base leading-relaxed">
+              Adquira créditos pré-pagos sob demanda para alimentar seus motores de IA: imagens hiper-realistas, cenas cinemáticas Kling, dublagem labial e motion control. Sem mensalidades forçadas, renovações automáticas ou expiração de saldo.
             </p>
+
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 xs:gap-3 sm:gap-4 pt-2 text-xs text-slate-300">
+              <div className="flex items-center gap-1.5 font-medium">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                <span>Liberação em 3s</span>
+              </div>
+              <div className="flex items-center gap-1.5 font-medium">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                <span>Saldo Sem Expiração</span>
+              </div>
+              <div className="flex items-center gap-1.5 font-medium">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                <span>Estorno em Falhas</span>
+              </div>
+            </div>
           </div>
 
-          {/* Card Flutuante de Saldo */}
-          <div className="flex-shrink-0 bg-[#070709]/80 backdrop-blur-md border border-[#1E202E] rounded-2xl p-6 flex flex-col items-center justify-center min-w-[220px] text-center shadow-xl group hover:border-violet-500/40 transition-all">
-            <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-violet-600 to-cyan-400 flex items-center justify-center text-white mb-3 shadow-lg shadow-violet-600/30 group-hover:scale-110 transition-transform">
-              <Coins className="h-6 w-6" />
+          {/* Fintech Card Revolut / Apple Card Glassmorphism 100% Adaptativo */}
+          <div className="w-full max-w-md mx-auto lg:mx-0 shrink-0">
+            <div className="relative rounded-3xl p-4 xs:p-5 sm:p-6 bg-gradient-to-br from-[#1E202E]/90 via-[#0D0E12] to-[#070709] border border-violet-500/30 shadow-[0_0_50px_rgba(139,92,246,0.15)] backdrop-blur-xl overflow-hidden group hover:border-violet-400/60 transition-all duration-300 min-h-[195px] sm:min-h-[215px] flex flex-col justify-between">
+              {/* Textura Geométrica Holográfica Sutil */}
+              <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#8b5cf6_1px,transparent_1px)] [background-size:16px_16px]" />
+              <div className="absolute -right-12 -bottom-12 w-40 h-40 bg-gradient-to-br from-violet-600/30 to-cyan-500/20 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="relative z-10 flex flex-col justify-between flex-1 gap-4">
+                {/* Linha Superior: Logo VORIXA + Chip EMV + NFC */}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    {/* Chip Metálico EMV com Escalonamento Flexível */}
+                    <div className="w-9 h-6 xs:w-10 xs:h-7 rounded-lg bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 border border-amber-300/60 p-1 flex flex-col justify-between shadow-inner shrink-0">
+                      <div className="w-full h-0.5 bg-amber-700/50 rounded" />
+                      <div className="w-full h-0.5 bg-amber-700/50 rounded" />
+                    </div>
+                    {/* Símbolo Contactless NFC */}
+                    <Wifi className="w-4 h-4 xs:w-5 xs:h-5 text-slate-400 rotate-90 shrink-0" />
+                  </div>
+
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#13141B] border border-violet-500/30 text-violet-300 text-[9px] xs:text-[10px] font-mono font-bold tracking-wider truncate">
+                    VORIXA BLACK TITANIUM
+                  </div>
+                </div>
+
+                {/* Linha Central: Saldo Consolidado */}
+                <div className="my-auto py-1">
+                  <span className="text-[10px] xs:text-[11px] font-mono uppercase tracking-widest text-slate-400 block font-semibold">
+                    SALDO DISPONÍVEL NA CARTEIRA
+                  </span>
+                  <div className="flex items-baseline gap-2 mt-1 flex-wrap">
+                    <span className="text-2xl xs:text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-violet-300 font-mono tracking-tight break-all">
+                      {userInfo.isUnlimited ? "ILIMITADO" : userInfo.balance.toLocaleString("pt-BR")}
+                    </span>
+                    <span className="text-xs xs:text-sm font-bold text-violet-400 font-mono">
+                      créditos
+                    </span>
+                  </div>
+                </div>
+
+                {/* Linha Inferior: Dados do Titular e Status */}
+                <div className="pt-2.5 border-t border-[#1E202E]/80 flex items-center justify-between text-[10px] xs:text-[11px] font-mono text-slate-400 gap-2">
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[9px] uppercase tracking-wider text-slate-500 block truncate">
+                      Titular da Conta
+                    </span>
+                    <span className="text-white font-bold tracking-wide truncate block">
+                      {userInfo.name || "CRIADOR VORIXA"}
+                    </span>
+                  </div>
+
+                  <div className="text-right shrink-0">
+                    <span className="text-[9px] uppercase tracking-wider text-slate-500 block">Validade</span>
+                    <span className="text-emerald-400 font-bold flex items-center gap-1 justify-end">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      VITALÍCIO
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <span className="text-xs font-mono uppercase text-slate-400 tracking-wider">
-              Recarga Rápida
-            </span>
-            <span className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-violet-300 mt-1">
-              {userInfo.isUnlimited ? "ILIMITADO" : `${userInfo.balance.toLocaleString("pt-BR")}`}
-            </span>
-            <span className="text-[11px] text-violet-400 font-mono mt-1 font-semibold">
-              {userInfo.isUnlimited ? "Acesso Pro Ilimitado" : "Créditos Ativos"}
-            </span>
           </div>
         </div>
 
-        {/* Barra de Benefícios Rápidos */}
-        <div className="mt-8 pt-6 border-t border-[#1E202E]/60 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-          <div className="flex items-center gap-2 text-slate-300">
-            <ShieldCheck className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-            <span>Liberação Imediata</span>
+        {/* 4 Pilares Financeiros no Rodapé do Banner (1 col celular, 2 tablet, 4 desktop) */}
+        <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-[#1E202E]/70 grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-xs">
+          <div className="flex items-center gap-2.5 text-slate-300 p-2.5 rounded-2xl bg-[#070709]/50 border border-[#1E202E]/50">
+            <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
+            <div className="flex flex-col min-w-0">
+              <span className="font-bold text-white truncate">Liberação Imediata</span>
+              <span className="text-[11px] text-slate-500 truncate">Pix aprovado em 3 segundos</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-slate-300">
-            <Lock className="h-4 w-4 text-cyan-400 flex-shrink-0" />
-            <span>Pix e Cartão Seguro</span>
+          <div className="flex items-center gap-2.5 text-slate-300 p-2.5 rounded-2xl bg-[#070709]/50 border border-[#1E202E]/50">
+            <Lock className="h-4 w-4 text-cyan-400 shrink-0" />
+            <div className="flex flex-col min-w-0">
+              <span className="font-bold text-white truncate">Criptografia SSL 256</span>
+              <span className="text-[11px] text-slate-500 truncate">Checkout bancário seguro</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-slate-300">
-            <Clock className="h-4 w-4 text-violet-400 flex-shrink-0" />
-            <span>Créditos Sem Expiração</span>
+          <div className="flex items-center gap-2.5 text-slate-300 p-2.5 rounded-2xl bg-[#070709]/50 border border-[#1E202E]/50">
+            <Clock className="h-4 w-4 text-violet-400 shrink-0" />
+            <div className="flex flex-col min-w-0">
+              <span className="font-bold text-white truncate">Créditos Sem Fim</span>
+              <span className="text-[11px] text-slate-500 truncate">Saldo nunca expira</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-slate-300">
-            <RefreshCw className="h-4 w-4 text-amber-400 flex-shrink-0" />
-            <span>Estorno Automático em Falhas</span>
+          <div className="flex items-center gap-2.5 text-slate-300 p-2.5 rounded-2xl bg-[#070709]/50 border border-[#1E202E]/50">
+            <RefreshCw className="h-4 w-4 text-amber-400 shrink-0" />
+            <div className="flex flex-col min-w-0">
+              <span className="font-bold text-white truncate">Estorno Automático</span>
+              <span className="text-[11px] text-slate-500 truncate">Garantia Zero Trust</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 2. Grid de Pacotes de Créditos */}
+      {/* 2. Grid de Pacotes de Créditos (1 Col Mobile, 2 Cols Tablet, 4 Cols Desktop) */}
       <div className="space-y-6">
-        <div className="text-center md:text-left space-y-1">
-          <h2 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-            <Zap className="h-5 w-5 text-amber-400" />
-            Escolha o Pacote Ideal
-          </h2>
-          <p className="text-slate-400 text-xs md:text-sm">
-            Selecione a quantidade desejada. Quanto maior o pacote, maior o volume de bônus gratuitos concedidos.
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-violet-400 text-xs font-mono font-bold uppercase tracking-wider">
+              <Zap className="h-4 w-4 text-amber-400" />
+              Tabela de Pacotes Sob Demanda
+            </div>
+            <h2 className="text-xl xs:text-2xl sm:text-3xl font-black text-white tracking-tight font-heading">
+              Escolha a Quantidade Ideal de Créditos
+            </h2>
+            <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
+              Quanto maior o pacote, menor o custo por crédito e maior o volume de bônus gratuitos liberados instantaneamente.
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* GRID ADAPTATIVO: 1 col celular, 2 cols tablet (md), 4 cols desktop (lg) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
           {packages.map((pkg) => {
             const totalCredits = pkg.credits + pkg.bonusCredits;
             const unitCost = (pkg.priceCents / 100 / totalCredits).toFixed(2);
-            const isPopular = pkg.isPopular || pkg.bonusCredits === 50 || pkg.id === "pkg-500";
+            const isPopular = pkg.isPopular || pkg.id === "pkg-500";
+            const isBestValue = pkg.isBestValue || pkg.id === "pkg-1000";
+            const hasBadge = isPopular || isBestValue;
 
             return (
               <div
                 key={pkg.id}
-                className={`relative flex flex-col justify-between rounded-3xl p-6 md:p-8 transition-all duration-300 group ${
+                className={`relative flex flex-col justify-between rounded-3xl p-5 sm:p-6 transition-all duration-300 group ${
+                  hasBadge ? "pt-8 sm:pt-8" : ""
+                } ${
                   isPopular
-                    ? "bg-gradient-to-b from-[#13141B] via-[#0D0E12] to-[#070709] border-2 border-violet-500/60 shadow-2xl shadow-violet-500/10 hover:border-violet-400"
-                    : "bg-[#0D0E12]/80 border border-[#1E202E] hover:border-slate-700/60 hover:bg-[#13141B]/40"
+                    ? "bg-gradient-to-b from-[#161824] via-[#0E1017] to-[#070709] border-2 border-violet-500 shadow-[0_0_40px_rgba(139,92,246,0.22)] hover:border-violet-400 hover:scale-[1.01]"
+                    : isBestValue
+                    ? "bg-gradient-to-b from-[#101924] via-[#0B1017] to-[#070709] border-2 border-cyan-500/80 shadow-[0_0_35px_rgba(6,182,212,0.18)] hover:border-cyan-400 hover:scale-[1.01]"
+                    : "bg-[#0D0E12] border border-[#1E202E] hover:border-slate-700 hover:bg-[#13141B]"
                 }`}
               >
-                {/* Badge Mais Popular */}
+                {/* Badge Luminosa no Topo (Posicionamento Seguro sem Colisão) */}
                 {isPopular && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-violet-600 to-indigo-500 text-white text-[11px] font-black uppercase tracking-wider shadow-lg shadow-violet-600/30 flex items-center gap-1.5">
-                    <Flame className="h-3.5 w-3.5 fill-current text-amber-300" />
-                    Mais Popular
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 sm:px-4 py-1 rounded-full bg-gradient-to-r from-violet-600 via-indigo-500 to-cyan-500 text-white text-[10px] font-black uppercase tracking-wider shadow-lg shadow-violet-600/40 flex items-center gap-1.5 whitespace-nowrap z-20">
+                    <Flame className="h-3.5 w-3.5 fill-current text-amber-300 shrink-0" />
+                    <span>{pkg.badgeText || "MAIS POPULAR"}</span>
+                  </div>
+                )}
+
+                {isBestValue && !isPopular && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 sm:px-4 py-1 rounded-full bg-gradient-to-r from-cyan-600 to-teal-500 text-white text-[10px] font-black uppercase tracking-wider shadow-lg shadow-cyan-600/40 flex items-center gap-1.5 whitespace-nowrap z-20">
+                    <Star className="h-3.5 w-3.5 fill-current text-amber-300 shrink-0" />
+                    <span>{pkg.badgeText || "MELHOR VALOR"}</span>
                   </div>
                 )}
 
                 <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-xl font-bold text-white group-hover:text-violet-300 transition-colors">
+                  {/* Nome do Pacote & Bônus */}
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-violet-300 transition-colors font-heading">
                       {pkg.name}
                     </h3>
                     {pkg.bonusCredits > 0 && (
-                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-mono font-bold">
+                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-mono font-bold tracking-tight">
                         +{pkg.bonusCredits} BÔNUS
                       </span>
                     )}
                   </div>
 
-                  <p className="text-xs text-slate-400 mt-2 min-h-[36px] leading-relaxed">
-                    {pkg.description || "Gerações em todos os motores criativos."}
+                  <p className="text-xs text-slate-400 mt-2 min-h-[32px] sm:min-h-[36px] leading-relaxed">
+                    {pkg.description || "Gerações liberadas em todos os motores criativos."}
                   </p>
 
-                  {/* Preço e Créditos */}
-                  <div className="mt-6 pt-6 border-t border-[#1E202E]">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl md:text-4xl font-black text-white">
+                  {/* Preço em Destaque */}
+                  <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-[#1E202E]">
+                    <div className="flex items-baseline gap-1.5 flex-wrap">
+                      <span className="text-2xl xs:text-3xl sm:text-4xl font-black text-white font-mono tracking-tight">
                         {formatBRL(pkg.priceCents)}
                       </span>
-                      <span className="text-xs text-slate-400 font-medium">pagamento único</span>
                     </div>
+                    <span className="text-[11px] text-slate-400 font-medium block mt-0.5">
+                      pagamento único sob demanda
+                    </span>
 
-                    <div className="mt-3 flex items-center gap-2">
-                      <div className="px-3 py-1.5 rounded-xl bg-[#13141B] border border-[#1E202E] text-xs font-mono font-bold text-violet-300 flex items-center gap-1.5">
-                        <Coins className="h-3.5 w-3.5 text-amber-400" />
-                        {totalCredits.toLocaleString("pt-BR")} créditos
+                    {/* Créditos Totais e Custo Unitário */}
+                    <div className="mt-3 flex items-center justify-between gap-2 flex-wrap">
+                      <div className="px-3 py-1 rounded-xl bg-[#13141B] border border-[#1E202E] text-xs font-mono font-bold text-violet-300 flex items-center gap-1.5">
+                        <Coins className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+                        <span>{totalCredits.toLocaleString("pt-BR")} créditos</span>
                       </div>
-                      <span className="text-[11px] text-slate-500 font-mono">
-                        ≈ R$ {unitCost}/crédito
+                      <span className="text-[11px] text-slate-400 font-mono font-semibold">
+                        ≈ R$ {unitCost}/cr
                       </span>
                     </div>
                   </div>
 
-                  {/* Lista de Recursos */}
-                  <div className="mt-6 space-y-2.5 text-xs text-slate-300">
+                  {/* Poder de Fogo / Mídias Estimadas */}
+                  <div className="mt-5 sm:mt-6 space-y-2 text-xs text-slate-300">
                     <div className="flex items-center gap-2.5">
-                      <Check className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                      <span>{totalCredits} imagens com FLUX Schnell</span>
+                      <Check className="h-4 w-4 text-emerald-400 shrink-0" />
+                      <span className="truncate">{totalCredits} imagens com FLUX Schnell</span>
                     </div>
                     <div className="flex items-center gap-2.5">
-                      <Check className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                      <span>Até {Math.floor(totalCredits / 10)} vídeos cinemáticos Kling AI</span>
+                      <Check className="h-4 w-4 text-emerald-400 shrink-0" />
+                      <span className="truncate">Até {Math.floor(totalCredits / 10)} vídeos cinemáticos Kling</span>
                     </div>
                     <div className="flex items-center gap-2.5">
-                      <Check className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                      <span>Acesso total ao VORIXA FLOW Canvas</span>
+                      <Check className="h-4 w-4 text-emerald-400 shrink-0" />
+                      <span className="truncate">{Math.floor(totalCredits / 8)} gerações de Lip Sync</span>
                     </div>
                     <div className="flex items-center gap-2.5">
-                      <Check className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                      <span>Fila prioritária com alta velocidade</span>
+                      <Check className="h-4 w-4 text-emerald-400 shrink-0" />
+                      <span className="truncate">Acesso total ao VORIXA FLOW Canvas</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Botão de Compra */}
-                <div className="mt-8">
+                {/* Botão de Compra CTA Touch Target Mínimo de 48px */}
+                <div className="mt-6 sm:mt-7">
                   <button
+                    type="button"
                     onClick={() => handleOpenCheckout(pkg)}
-                    className={`w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-xs font-bold transition-all shadow-lg duration-300 cursor-pointer ${
+                    style={{ minHeight: "48px" }}
+                    className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl text-xs sm:text-sm font-bold transition-all shadow-lg duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-500/50 ${
                       isPopular
-                        ? "bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white shadow-violet-600/25 hover:shadow-violet-600/40 hover:scale-[1.02]"
-                        : "bg-slate-800/80 hover:bg-slate-700 text-slate-100 border border-slate-700/50 hover:scale-[1.02]"
+                        ? "bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white shadow-violet-600/30 hover:shadow-violet-600/50 active:scale-[0.98]"
+                        : isBestValue
+                        ? "bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white shadow-cyan-600/30 hover:shadow-cyan-600/50 active:scale-[0.98]"
+                        : "bg-[#13141B] hover:bg-[#1E202E] text-slate-100 border border-[#1E202E] hover:border-slate-700 active:scale-[0.98]"
                     }`}
-                    style={{ minHeight: "44px" }}
                   >
-                    <CreditCard className="h-4 w-4" />
-                    Comprar {pkg.name}
-                    <ArrowUpRight className="h-4 w-4 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    <CreditCard className="h-4 w-4 shrink-0" />
+                    <span>Adquirir {pkg.name}</span>
+                    <ArrowUpRight className="h-4 w-4 opacity-75 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
                   </button>
                 </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 3. Dúvidas Frequentes sobre Créditos (FAQ Acordeão Acessível) */}
+      <div className="rounded-3xl bg-[#0D0E12] border border-[#1E202E] p-5 sm:p-8 space-y-5">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-violet-400 text-xs font-mono font-bold uppercase tracking-wider">
+            <HelpCircle className="w-4 h-4 text-cyan-400 shrink-0" />
+            Transparência Total
+          </div>
+          <h3 className="text-lg sm:text-2xl font-bold text-white font-heading">
+            Perguntas Frequentes sobre Créditos & Cobrança
+          </h3>
+        </div>
+
+        <div className="divide-y divide-[#1E202E]">
+          {faqItems.map((item, idx) => {
+            const isOpen = openFaqIndex === idx;
+            return (
+              <div key={idx} className="py-2.5 sm:py-3.5">
+                <button
+                  type="button"
+                  onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
+                  style={{ minHeight: "48px" }}
+                  className="w-full flex items-center justify-between text-left gap-4 text-xs sm:text-sm font-semibold text-white hover:text-violet-300 transition-colors cursor-pointer py-1.5 focus:outline-none"
+                >
+                  <span>{item.question}</span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ${
+                      isOpen ? "rotate-180 text-violet-400" : ""
+                    }`}
+                  />
+                </button>
+                {isOpen && (
+                  <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-slate-400 leading-relaxed pr-4 sm:pr-6 animate-in fade-in duration-200">
+                    {item.answer}
+                  </p>
+                )}
               </div>
             );
           })}

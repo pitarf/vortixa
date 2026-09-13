@@ -5,6 +5,7 @@ export * from "./ImageReferenceUploader";
 export * from "./ImagePromptSection";
 export * from "./ImageStyleGrid";
 export * from "./ImageRatioSelector";
+export * from "./ImageResolutionSelector";
 export * from "./ImageModelPicker";
 export * from "./ImagePreviewArea";
 export * from "./ImageHistorySidebar";

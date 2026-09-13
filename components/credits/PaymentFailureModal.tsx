@@ -4,10 +4,7 @@ import React from "react";
 import {
   AlertCircle,
   RefreshCw,
-  X,
-  HelpCircle,
   ShieldAlert,
-  ArrowRight,
 } from "lucide-react";
 
 export interface PaymentFailureModalProps {
@@ -30,16 +27,16 @@ export function PaymentFailureModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="failure-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-xl animate-in fade-in duration-200"
     >
-      <div className="relative w-full max-w-lg rounded-3xl bg-[#0D0E12] border border-rose-500/40 shadow-[0_0_80px_rgba(244,63,94,0.15)] overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="relative w-full h-full sm:h-auto max-w-lg rounded-none sm:rounded-3xl bg-[#0D0E12] border-0 sm:border border-rose-500/40 shadow-[0_0_80px_rgba(244,63,94,0.15)] overflow-hidden flex flex-col max-h-none sm:max-h-[92vh]">
         {/* Glow Superior Suave */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 bg-rose-500/10 rounded-full blur-3xl pointer-events-none -mt-20" />
 
-        <div className="relative z-10 p-6 md:p-8 flex flex-col items-center text-center space-y-6 overflow-y-auto">
+        <div className="relative z-10 p-5 sm:p-8 flex flex-col items-center text-center space-y-5 sm:space-y-6 overflow-y-auto overscroll-contain flex-1">
           {/* Ícone de Alerta */}
-          <div className="w-16 h-16 rounded-3xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 shadow-xl">
-            <AlertCircle className="w-8 h-8" />
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-3xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 shadow-xl">
+            <AlertCircle className="w-7 h-7 sm:w-8 sm:h-8" />
           </div>
 
           {/* Título & Mensagem */}
@@ -50,51 +47,51 @@ export function PaymentFailureModal({
             </div>
             <h3
               id="failure-modal-title"
-              className="text-2xl font-black text-white tracking-tight"
+              className="text-xl sm:text-2xl font-black text-white tracking-tight font-heading"
             >
               Não Foi Possível Concluir a Compra
             </h3>
-            <p className="text-xs md:text-sm text-slate-400 max-w-sm leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed">
               {reason ||
-                "A transação foi cancelada, expirou ou não obteve confirmação da instituição financeira. Nenhuma cobrança foi efetuada."}
+                "A transação foi cancelada, expirou ou não obteve confirmação da instituição financeira. Não se preocupe: nenhuma cobrança foi efetuada."}
             </p>
           </div>
 
           {/* Dicas para Resolução */}
-          <div className="w-full rounded-2xl bg-[#070709] border border-[#1E202E] p-4 text-left space-y-2.5 text-xs text-slate-300">
+          <div className="w-full rounded-2xl bg-[#070709] border border-[#1E202E] p-4 text-left space-y-2 text-xs text-slate-300">
             <span className="font-bold text-slate-200 block text-[11px] font-mono uppercase tracking-wider">
               O que você pode fazer:
             </span>
-            <ul className="space-y-2 text-slate-400 list-disc list-inside">
+            <ul className="space-y-1.5 text-slate-400 list-disc list-inside">
               <li>
-                Para pagamentos via Pix, certifique-se de realizar a transferência dentro dos 15 minutos de validade.
+                Para pagamentos via Pix, realize a transferência dentro dos 15 minutos de validade do QR Code.
               </li>
               <li>
-                Para cartão de crédito, verifique se há limite disponível ou restrições antifraude do seu banco emissor.
+                Para cartão de crédito, verifique o limite disponível ou liberação temporária no app do banco emissor.
               </li>
               <li>
-                Você pode tentar novamente selecionando outra forma de pagamento.
+                Você pode tentar novamente selecionando o <strong>Pix Instantâneo (Vorexpay)</strong> para aprovação em 3 segundos.
               </li>
             </ul>
           </div>
 
-          {/* Botões de Ação */}
-          <div className="w-full space-y-3 pt-2">
+          {/* Botões de Ação com Touch Target >= 48px */}
+          <div className="w-full space-y-2.5 pt-1">
             <button
               type="button"
               onClick={onRetry}
-              style={{ minHeight: "48px" }}
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 shadow-xl shadow-violet-600/30 transition-all active:scale-[0.99] cursor-pointer"
+              style={{ minHeight: "50px" }}
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 shadow-xl shadow-violet-600/30 transition-all active:scale-[0.99] cursor-pointer"
             >
               <RefreshCw className="w-4 h-4" />
-              <span>Tentar Novamente</span>
+              <span>Tentar Novamente Agora</span>
             </button>
 
             <button
               type="button"
               onClick={onClose}
-              style={{ minHeight: "44px" }}
-              className="w-full flex items-center justify-center py-2.5 px-4 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
+              style={{ minHeight: "48px" }}
+              className="w-full flex items-center justify-center py-3 px-4 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
             >
               Voltar aos Pacotes de Créditos
             </button>

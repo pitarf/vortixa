@@ -4,24 +4,26 @@ import React, { useState, startTransition } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleCredentialsLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      toast.error("Por favor, preencha todos os campos.");
+    if (!email.trim() || !password.trim()) {
+      toast.error("Por favor, preencha o seu e-mail e a senha.");
       return;
     }
     setIsLoading(true);
     try {
       const res = await signIn("credentials", {
-        email,
+        email: email.trim(),
         password,
         redirect: false,
       });
@@ -29,13 +31,13 @@ export default function LoginPage() {
       if (res?.error) {
         toast.error("Senha incorreta ou e-mail não cadastrado. Tente novamente.");
       } else {
-        toast.success("Login realizado com sucesso!");
+        toast.success("Login realizado com sucesso! Bem-vindo de volta.");
         startTransition(() => {
           router.push("/dashboard");
         });
       }
     } catch (err) {
-      toast.error("Servidor instável. Tente novamente em alguns instantes.");
+      toast.error("Servidor temporariamente instável. Tente novamente em instantes.");
     } finally {
       setIsLoading(false);
     }
@@ -46,89 +48,118 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[hsl(240,10%,2%)] px-4 font-sans text-[hsl(0,0%,100%)]">
-      <Toaster position="top-right" richColors />
-      
-      {/* Background Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.08)_0%,rgba(168,85,247,0.03)_50%,transparent_100%)] pointer-events-none" />
+    <div className="flex min-h-dvh flex-col items-center justify-center bg-[#070709] px-4 py-8 sm:py-12 font-sans text-slate-100 relative overflow-hidden">
+      {/* Luz Ambiental Volumétrica Cinematográfica */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-violet-600/15 via-indigo-600/10 to-cyan-500/5 blur-[120px] pointer-events-none rounded-full" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/5 blur-[100px] pointer-events-none rounded-full" />
 
-      <div className="w-full max-w-md space-y-8 rounded-2xl border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,4%)] p-8 shadow-2xl relative z-10">
-        <div className="text-center">
-          <h2 className="font-heading text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-[linear-gradient(135deg,hsl(262,83%,58%)_0%,hsl(224,100%,54%)_50%,hsl(180,100%,50%)_100%)]">
-            VORTIXIA
-          </h2>
-          <p className="mt-2 text-sm text-[hsl(240,5%,65%)]">
-            Faça login na sua conta para continuar criando.
+      <div className="w-full max-w-md space-y-6 sm:space-y-8 rounded-3xl border border-[#1E202E] bg-[#0D0E12]/85 backdrop-blur-2xl p-6 sm:p-10 shadow-2xl shadow-black/80 relative z-10">
+        {/* Cabeçalho da Marca */}
+        <div className="text-center space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#13141B] border border-[#1E202E] text-[11px] font-mono text-violet-300 font-bold mb-1">
+            <Sparkles className="h-3.5 w-3.5 text-violet-400" />
+            <span>AI CREATIVE SUITE & FLOW</span>
+          </div>
+          <h1 className="font-heading text-3xl sm:text-4xl font-black tracking-tight text-white">
+            VORIXA
+          </h1>
+          <p className="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
+            Acesse seu estúdio neural de última geração para gerar imagens, vídeos e fluxos criativos.
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleCredentialsLogin}>
+        {/* Formulário de Autenticação */}
+        <form className="mt-6 space-y-5" onSubmit={handleCredentialsLogin}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[hsl(240,5%,65%)]">
+              <label htmlFor="email" className="block text-xs font-semibold text-slate-300 mb-1.5">
                 Endereço de E-mail
               </label>
-              <input
-                id="email"
-                type="email"
-                required
-                className="mt-1 block w-full rounded-lg border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,2%)] px-4 py-3 text-sm text-[hsl(0,0%,100%)] placeholder-[hsl(240,5%,35%)] focus:border-[hsl(224,100%,54%)] focus:outline-none focus:ring-1 focus:ring-[hsl(224,100%,54%)] transition-colors"
-                placeholder="nome@exemplo.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <div className="relative">
+                <Mail className="h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  className="w-full rounded-xl border border-[#1E202E] bg-[#070709] pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 focus:outline-none transition-all min-h-[48px]"
+                  placeholder="nome@empresa.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
             </div>
 
             <div>
-              <div className="flex justify-between items-center">
-                <label htmlFor="password" className="block text-sm font-medium text-[hsl(240,5%,65%)]">
+              <div className="flex justify-between items-center mb-1.5">
+                <label htmlFor="password" className="block text-xs font-semibold text-slate-300">
                   Senha
                 </label>
                 <Link
                   href="/recovery-password"
-                  className="text-xs text-[hsl(180,100%,50%)] hover:underline"
+                  className="text-xs text-violet-400 hover:text-violet-300 hover:underline transition-colors py-1"
                 >
                   Esqueceu a senha?
                 </Link>
               </div>
-              <input
-                id="password"
-                type="password"
-                required
-                className="mt-1 block w-full rounded-lg border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,2%)] px-4 py-3 text-sm text-[hsl(0,0%,100%)] placeholder-[hsl(240,5%,35%)] focus:border-[hsl(224,100%,54%)] focus:outline-none focus:ring-1 focus:ring-[hsl(224,100%,54%)] transition-colors"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative">
+                <Lock className="h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  autoComplete="current-password"
+                  className="w-full rounded-xl border border-[#1E202E] bg-[#070709] pl-10 pr-12 py-3 text-sm text-white placeholder-slate-500 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 focus:outline-none transition-all min-h-[48px]"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer touch-manipulation"
+                  aria-label={showPassword ? "Ocultar senha" : "Exibir senha"}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
           </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium bg-[hsl(224,100%,54%)] text-white hover:bg-[hsl(224,100%,48%)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[hsl(224,100%,54%)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02]"
-            >
-              {isLoading ? "Entrando..." : "Entrar com E-mail"}
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-xs font-bold bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-xl shadow-violet-600/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer touch-manipulation active:scale-[0.98] min-h-[48px]"
+          >
+            {isLoading ? (
+              <span>Autenticando na plataforma...</span>
+            ) : (
+              <>
+                <span>Entrar no Estúdio</span>
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
+          </button>
         </form>
 
+        {/* Separador Visual */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-[hsl(240,6%,12%)]" />
+            <div className="w-full border-t border-[#1E202E]" />
           </div>
-          <div className="relative flex justify-center text-xs">
-            <span className="bg-[hsl(240,10%,4%)] px-2 text-[hsl(240,5%,65%)]">OU</span>
+          <div className="relative flex justify-center text-[10px] font-mono uppercase tracking-wider">
+            <span className="bg-[#0D0E12] px-3 text-slate-500">Ou continue com</span>
           </div>
         </div>
 
+        {/* Login com Google */}
         <div>
           <button
+            type="button"
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-lg border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,2%)] text-sm font-medium hover:bg-[hsl(240,4%,12%)] transition-all duration-300 hover:scale-[1.02]"
+            className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-[#1E202E] bg-[#070709] hover:bg-[#13141B] text-xs font-bold text-slate-200 transition-all duration-200 cursor-pointer touch-manipulation active:scale-[0.98] min-h-[48px]"
           >
-            <svg className="h-5 w-5" viewBox="0 0 24 24">
+            <svg className="h-4 w-4" viewBox="0 0 24 24">
               <path
                 fill="currentColor"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -146,14 +177,14 @@ export default function LoginPage() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
               />
             </svg>
-            Continuar com Google
+            <span>Acessar com o Google</span>
           </button>
         </div>
 
-        <p className="text-center text-xs text-[hsl(240,5%,65%)] mt-8">
-          Não tem uma conta?{" "}
-          <Link href="/register" className="text-[hsl(180,100%,50%)] hover:underline font-semibold">
-            Cadastre-se grátis
+        <p className="text-center text-xs text-slate-400 mt-6">
+          Não tem uma conta no VORIXA?{" "}
+          <Link href="/register" className="text-violet-400 hover:text-violet-300 hover:underline font-bold py-1">
+            Criar conta grátis
           </Link>
         </p>
       </div>

@@ -9,8 +9,8 @@ import {
   Upload,
   X,
   ArrowRight,
-  Volume2,
   MessageSquareQuote,
+  Sparkles,
 } from "lucide-react";
 import { AudioSourceSelector } from "@/components/ai/audio-source-selector";
 import { FileUploader } from "@/components/ai/file-uploader";
@@ -24,16 +24,15 @@ import {
   StudioHeader,
   StudioToolSelector,
   StudioModelSelector,
-  StudioStyleSelector,
   StudioAspectRatioSelector,
   StudioVideoControls,
   StudioAdvancedSettings,
   StudioPreviewPlayer,
   StudioHistorySidebar,
   ActiveShowcaseModelBanner,
+  QuickModelPickerModal,
 } from "@/components/studio";
 import { MarketplaceModelItem } from "@/components/models/types";
-import { QuickModelPickerModal } from "@/components/models/QuickModelPickerModal";
 import { FALLBACK_MARKETPLACE_MODELS } from "@/lib/marketplace-models";
 
 export default function StudioCreatePage() {
@@ -136,7 +135,6 @@ export default function StudioCreatePage() {
           return;
         }
       }
-      // Se não houver itens no banco do usuário, mantém lista limpa
       setHistoryItems([]);
     } catch (e) {
       console.warn("Erro ao buscar histórico:", e);
@@ -199,7 +197,6 @@ export default function StudioCreatePage() {
       const modelNameParam = sp.get("modelName");
 
       if (modelRefParam) {
-        // Busca se existe no catálogo fallback ou se há dados
         const found = FALLBACK_MARKETPLACE_MODELS.find(
           (m) => m.id === modelRefParam || m.slug === modelRefParam
         );
@@ -207,7 +204,6 @@ export default function StudioCreatePage() {
         if (found) {
           handleApplyShowcaseModel(found);
         } else {
-          // Cria objeto de modelo sintetizado a partir dos query params
           const dynamicModel: MarketplaceModelItem = {
             id: modelRefParam,
             name: modelNameParam || "Modelo da Vitrine",
@@ -239,7 +235,7 @@ export default function StudioCreatePage() {
     }
   }, []);
 
-  // Sincroniza modelo padrão ao alternar ferramenta (caso não haja modelo da vitrine ativo)
+  // Sincroniza modelo padrão ao alternar ferramenta
   useEffect(() => {
     if (activeShowcaseModel && activeTool === "image") {
       setSelectedModelId("fal-ai/flux-pulid");
@@ -250,28 +246,6 @@ export default function StudioCreatePage() {
       setSelectedModelId(currentToolDef.models[0].id);
     }
   }, [activeTool, activeShowcaseModel]);
-
-  // Aplica Presets de Estilo com Toggle e Parâmetros Ideais
-  const handleSelectStyle = (styleId: string) => {
-    if (selectedStyle === styleId) {
-      setSelectedStyle("");
-      toast.info("Estilo padrão restaurado.");
-      return;
-    }
-
-    setSelectedStyle(styleId);
-    const preset = STYLE_PRESETS.find((p) => p.id === styleId);
-    if (!preset) return;
-
-    if (preset.recommendedSteps) {
-      setInferenceSteps(preset.recommendedSteps);
-    }
-    if (preset.recommendedCfg) {
-      setGuidanceScale(preset.recommendedCfg);
-    }
-
-    toast.info(`Estilo "${preset.name}" ativado com parâmetros otimizados.`);
-  };
 
   // Otimização de Prompt com IA
   const handleOptimizePrompt = async () => {
@@ -426,51 +400,9 @@ export default function StudioCreatePage() {
     try {
       setIsGenerating(true);
       setActiveStep(4);
-      setStepText("Otimizando prompt com Inteligência Artificial...");
+      setStepText("Conectando ao cluster de IA...");
 
-      // Auto-otimização de prompt transparente antes do disparo (com timeout resiliente de 3.5s)
-      let finalPrompt = prompt.trim();
-      const hasRefImg = Boolean(referenceImageUrl || characterImageUrl);
-      // [TESTE TEMPORÁRIO]: Auto-otimização comentada para testar o envio do prompt 100% puro em português
-      /*
-      if (finalPrompt && (activeTool === "image" || activeTool === "video")) {
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 3500);
-
-          const optRes = await fetch("/api/tools/optimize-prompt", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            signal: controller.signal,
-            body: JSON.stringify({
-              prompt: finalPrompt,
-              enhanceQuality: true,
-              toolType: activeTool,
-              style: selectedStyle || undefined,
-              hasReferenceImage: hasRefImg,
-              image_url: referenceImageUrl || characterImageUrl || undefined,
-            }),
-          });
-          clearTimeout(timeoutId);
-
-          if (optRes.ok) {
-            const optData = await optRes.json();
-            if (optData.optimizedPrompt) {
-              finalPrompt = optData.optimizedPrompt;
-              setPrompt(finalPrompt);
-            }
-          }
-        } catch {
-          // Fallback resiliente mantém prompt original sem travar a geração
-        }
-      } else if (!finalPrompt && hasRefImg && activeTool === "image") {
-        finalPrompt = "A high quality detailed photograph faithfully preserving the subject in the reference image, natural lighting";
-      }
-      */
-
-      setStepText("Conectando ao cluster de IA");
-
-      // Atualiza prompt final nos inputs e marca como já otimizado para evitar dupla execução
+      const finalPrompt = prompt.trim();
       inputs.prompt = finalPrompt;
       inputs.is_prompt_optimized = true;
 
@@ -494,7 +426,7 @@ export default function StudioCreatePage() {
 
       const job = await res.json();
       setActiveJob(job);
-      setStepText("Processando inferência no motor");
+      setStepText("Processando inferência no motor...");
       pollJob(job.id, activeTool === "image" ? "image" : "video");
     } catch (err: any) {
       setIsGenerating(false);
@@ -513,7 +445,7 @@ export default function StudioCreatePage() {
         setActiveJob(currentJob);
 
         if (currentJob.status === "PROCESSING") {
-          setStepText("Renderizando no cluster GPU");
+          setStepText("Renderizando no cluster GPU...");
         } else if (currentJob.status === "COMPLETED") {
           clearInterval(timer);
           setStepText("Concluído!");
@@ -633,9 +565,32 @@ export default function StudioCreatePage() {
   const currentModelDef =
     currentToolDef.models.find((m) => m.id === selectedModelId) || currentToolDef.models[0];
 
+  const calculatedCost =
+    activeTool === "video" && currentModelDef.id === "vorixa-ia"
+      ? duration === "30"
+        ? videoQuality === "ultra4k" ? 150 : videoQuality === "high" ? 120 : 65
+        : duration === "10"
+        ? videoQuality === "ultra4k" ? 60 : videoQuality === "high" ? 45 : 25
+        : videoQuality === "ultra4k" ? 35 : videoQuality === "high" ? 25 : 15
+      : Math.round(
+          currentModelDef.cost *
+          (activeTool === "video" && duration === "10" ? 2 : (activeTool === "video" && duration === "30") ? 3 : 1) *
+          (activeTool === "video" && currentModelDef.id.includes("kling")
+            ? videoQuality === "ultra4k"
+              ? 2.0
+              : videoQuality === "high"
+              ? 1.5
+              : 1.0
+            : 1.0)
+        ) + (activeTool === "video" && enableTalkingVideo && speechText.trim() ? 9 : 0);
+
   return (
-    <div className="w-full max-w-[1700px] mx-auto space-y-6 pb-20 text-slate-100 antialiased font-sans overflow-x-hidden">
-      {/* 1. HEADER DO STUDIO */}
+    <div className="relative w-full max-w-[1700px] mx-auto space-y-6 pb-28 lg:pb-20 text-slate-100 antialiased font-sans overflow-x-hidden min-w-0 px-2 sm:px-4 md:px-6">
+      {/* Luz volumétrica de profundidade e theory of depth */}
+      <div className="absolute -top-32 left-1/4 w-[600px] h-[600px] bg-violet-600/[0.07] rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/3 right-10 w-[500px] h-[500px] bg-cyan-500/[0.05] rounded-full blur-[130px] pointer-events-none" />
+
+      {/* 1. HEADER DO STUDIO FLUIDO E SEM LARGURA FIXA */}
       <StudioHeader
         projectName={projectName}
         isEditingName={isEditingName}
@@ -674,10 +629,10 @@ export default function StudioCreatePage() {
         onStepChange={setActiveStep}
       />
 
-      {/* 2. GRID PRINCIPAL: 3 COLUNAS */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* COLUNA DA ESQUERDA: PARÂMETROS & CONTROLES (lg:col-span-4) */}
-        <div className="lg:col-span-4 space-y-5 bg-[#0D0E12] border border-[#1E202E] rounded-3xl p-3.5 sm:p-5 w-full min-w-0">
+      {/* 2. GRID PRINCIPAL: 2 COLUNAS AMPLAS NO DESKTOP / 1 COLUNA NO MOBILE */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative z-10">
+        {/* COLUNA 1: PARÂMETROS & CONTROLES DE CRIAÇÃO (lg:col-span-5) */}
+        <div className="lg:col-span-5 space-y-5 backdrop-blur-xl bg-[#0E1017]/85 border border-white/[0.08] rounded-3xl p-3.5 sm:p-5 w-full min-w-0 shadow-2xl">
           {/* Banner de Modelo da Vitrine Ativo */}
           {activeShowcaseModel && (
             <ActiveShowcaseModelBanner
@@ -730,22 +685,20 @@ export default function StudioCreatePage() {
             hasActiveShowcaseModel={!!activeShowcaseModel}
           />
 
-          {/* Seção Prompt de Criação */}
-          <div className="space-y-2">
+          {/* Seção Prompt de Criação com Textarea Expansível e Botão de Otimização Tátil */}
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between gap-2 flex-wrap">
-              <div className="flex items-center gap-2">
-                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
-                  Prompt de Criação
-                </label>
-              </div>
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                Prompt de Criação
+              </label>
               <button
                 type="button"
                 onClick={handleOptimizePrompt}
                 disabled={isOptimizing || !prompt.trim()}
-                className="flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 hover:opacity-90 disabled:opacity-40 text-white shadow-md shadow-violet-600/20 transition-all active:scale-95 cursor-pointer min-h-[44px]"
+                className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 hover:opacity-95 disabled:opacity-40 text-white shadow-md shadow-violet-600/25 transition-all active:scale-95 cursor-pointer min-h-[44px]"
               >
                 {isOptimizing ? (
-                  <RefreshCw className="h-4 w-4 animate-spin" />
+                  <RefreshCw className="h-4 w-4 animate-spin text-cyan-200" />
                 ) : (
                   <Wand2 className="h-4 w-4 text-cyan-200" />
                 )}
@@ -755,7 +708,7 @@ export default function StudioCreatePage() {
 
             {/* Dica para Vídeo com Fala Nativa */}
             {activeTool === "video" && (
-              <div className="flex items-start gap-2 p-2.5 rounded-xl bg-violet-950/30 border border-violet-500/30 text-violet-200 text-[11px] leading-relaxed">
+              <div className="flex items-start gap-2.5 p-3 rounded-xl bg-violet-950/30 border border-violet-500/30 text-violet-200 text-xs leading-relaxed">
                 <MessageSquareQuote className="h-4 w-4 text-violet-400 shrink-0 mt-0.5" />
                 <span>
                   <strong className="text-violet-300 font-semibold">Dica de Fala em Português:</strong> Para a modelo falar em português, coloque o diálogo obrigatoriamente <strong className="text-amber-300 underline underline-offset-2 font-bold">entre aspas</strong> (ex: <em className="text-white">"Gostou do look? Garanta o seu no link!"</em>). Falas sem aspas serão traduzidas para o inglês na cena.
@@ -763,7 +716,7 @@ export default function StudioCreatePage() {
               </div>
             )}
 
-            <div className="relative rounded-2xl border border-[#1E202E] bg-[#070709] focus-within:border-violet-500/80 transition-all">
+            <div className="relative rounded-2xl border border-white/[0.08] bg-[#070709]/90 focus-within:border-violet-500/80 focus-within:ring-1 focus-within:ring-violet-500/40 transition-all shadow-inner">
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
@@ -773,30 +726,33 @@ export default function StudioCreatePage() {
                     ? 'Ex: A modelo olha para a câmera sorrindo e diz: "Oi pessoal, confira essa novidade exclusiva!", movimento suave de câmera, 4k ultra realista...'
                     : "Ex: Close cinematográfico de um samurai futurista com armadura cibernética de titânio e luzes néon azuis sob chuva, iluminação volumétrica, fotorrealista..."
                 }
-                className="w-full bg-transparent p-3.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 outline-none resize-none leading-relaxed break-words"
+                className="w-full min-h-[120px] bg-transparent p-4 text-xs sm:text-sm text-slate-100 placeholder-slate-500 outline-none resize-y leading-relaxed break-words"
                 maxLength={1500}
               />
 
-              {/* Preview de imagem de referência, se carregada */}
+              {/* Preview de Imagem de Referência */}
               {referenceImageUrl && (
-                <div className="px-3 pb-2 flex items-center gap-2">
-                  <div className="relative h-11 w-11 rounded-lg overflow-hidden border border-violet-500/50 aspect-square shrink-0">
-                    <img src={referenceImageUrl} alt="Referência" className="h-full w-full object-cover" />
+                <div className="px-4 pb-3 flex items-center gap-2.5">
+                  <div className="relative h-12 w-12 rounded-xl overflow-hidden border border-violet-500/50 aspect-square shrink-0 shadow-md bg-black">
+                    <img src={referenceImageUrl} alt="Referência" className="h-full w-full object-cover aspect-square" />
                     <button
                       type="button"
                       onClick={() => setReferenceImageUrl("")}
-                      className="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 flex items-center justify-center text-white transition-opacity min-h-[44px] min-w-[44px]"
+                      className="absolute inset-0 bg-black/70 opacity-0 hover:opacity-100 flex items-center justify-center text-white transition-opacity min-h-[44px] min-w-[44px]"
                       aria-label="Remover imagem de referência"
                     >
                       <X className="h-4 w-4" />
                     </button>
                   </div>
-                  <span className="text-[11px] text-slate-400 font-mono truncate">Imagem de referência ativa</span>
+                  <div className="min-w-0">
+                    <span className="text-xs text-violet-300 font-semibold block truncate">Imagem de referência ativa</span>
+                    <span className="text-[10px] text-slate-400 font-mono">Consistência preservada</span>
+                  </div>
                 </div>
               )}
 
-              {/* Rodapé da Textarea com Upload de Referência */}
-              <div className="flex items-center justify-between border-t border-[#1E202E] px-3 py-2 text-slate-400 gap-2 flex-wrap">
+              {/* Rodapé da Textarea com Upload e Seletor de Casting */}
+              <div className="flex items-center justify-between border-t border-white/[0.06] px-3.5 py-2 text-slate-400 gap-2 flex-wrap">
                 <div className="flex items-center gap-2">
                   <input
                     ref={refFileInputRef}
@@ -809,7 +765,7 @@ export default function StudioCreatePage() {
                     type="button"
                     onClick={() => refFileInputRef.current?.click()}
                     disabled={isUploadingRef}
-                    className="p-2.5 rounded-lg hover:bg-[#13141B] hover:text-violet-400 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+                    className="p-2.5 rounded-xl hover:bg-[#13141B] hover:text-violet-300 border border-transparent hover:border-white/[0.08] transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
                     title="Anexar imagem de referência local"
                     aria-label="Anexar imagem de referência"
                   >
@@ -823,7 +779,7 @@ export default function StudioCreatePage() {
                   <button
                     type="button"
                     onClick={() => setIsModelPickerOpen(true)}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#13141B] hover:bg-violet-600/20 border border-[#1E202E] hover:border-violet-500/50 text-slate-300 hover:text-violet-300 text-xs font-medium transition-all cursor-pointer min-h-[44px]"
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#13141B] hover:bg-violet-600/20 border border-white/[0.08] hover:border-violet-500/50 text-slate-300 hover:text-violet-300 text-xs font-semibold transition-all cursor-pointer min-h-[44px]"
                     title="Escolher modelo do catálogo da vitrine"
                   >
                     <span>🎭</span>
@@ -851,7 +807,7 @@ export default function StudioCreatePage() {
             </div>
           </div>
 
-          {/* Seção Proporção da Imagem e Resolução */}
+          {/* Proporção e Resolução */}
           <StudioAspectRatioSelector
             activeTool={activeTool}
             imageSize={imageSize}
@@ -900,7 +856,7 @@ export default function StudioCreatePage() {
             </div>
           )}
 
-          {/* Alerta de Imagem Obrigatória para o Modelo */}
+          {/* Alerta de Imagem Obrigatória */}
           {activeTool === "image" && currentModelDef.requiresReferenceImage && !referenceImageUrl && (
             <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs flex items-start gap-2.5">
               <span className="text-base shrink-0 mt-0.5">⚠️</span>
@@ -919,21 +875,21 @@ export default function StudioCreatePage() {
           {errorMsg && (
             <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-200 text-xs flex items-start gap-2.5 animate-in fade-in duration-200">
               <span className="text-base shrink-0 mt-0.5">❌</span>
-              <div className="space-y-1 flex-1">
+              <div className="space-y-1 flex-1 min-w-0">
                 <p className="font-bold text-rose-300">Não foi possível concluir a geração</p>
                 <p className="text-[11px] text-rose-200/90 leading-relaxed break-words">{errorMsg}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setErrorMsg(null)}
-                className="text-rose-400 hover:text-white text-xs px-1.5 py-0.5 rounded cursor-pointer"
+                className="text-rose-400 hover:text-white text-xs px-2 py-1 rounded cursor-pointer min-h-[44px] flex items-center"
               >
                 ✕
               </button>
             </div>
           )}
 
-          {/* Configurações Avançadas (Acordeão) */}
+          {/* Configurações Avançadas */}
           <StudioAdvancedSettings
             isOpen={isAdvancedOpen}
             onToggle={() => setIsAdvancedOpen(!isAdvancedOpen)}
@@ -953,45 +909,26 @@ export default function StudioCreatePage() {
             type="button"
             onClick={handleGenerate}
             disabled={isGenerating}
-            className="w-full flex items-center justify-center gap-2.5 py-4 px-6 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 active:scale-[0.98] disabled:opacity-50 text-white font-black text-sm tracking-wide shadow-xl shadow-violet-600/30 transition-all cursor-pointer"
-            style={{ minHeight: "52px" }}
+            className="w-full flex items-center justify-center gap-2.5 py-4 px-6 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:from-violet-500 hover:via-indigo-500 hover:to-cyan-400 active:scale-[0.98] disabled:opacity-50 text-white font-black text-sm tracking-wide shadow-xl shadow-violet-600/35 hover:shadow-2xl hover:shadow-violet-600/50 transition-all cursor-pointer min-h-[56px]"
           >
             {isGenerating ? (
               <>
-                <RefreshCw className="h-5 w-5 animate-spin" />
-                <span>{stepText || "Renderizando..."}</span>
+                <RefreshCw className="h-5 w-5 animate-spin text-cyan-200" />
+                <span>{stepText || "Renderizando no cluster GPU..."}</span>
               </>
             ) : (
               <>
-                <Play className="h-4 w-4 fill-current" />
+                <Play className="h-4 w-4 fill-current text-white" />
                 <span>
-                  Gerar {currentToolDef.name} ({
-                    activeTool === "video" && currentModelDef.id === "vorixa-ia"
-                      ? duration === "30"
-                        ? videoQuality === "ultra4k" ? 150 : videoQuality === "high" ? 120 : 65
-                        : duration === "10"
-                        ? videoQuality === "ultra4k" ? 60 : videoQuality === "high" ? 45 : 25
-                        : videoQuality === "ultra4k" ? 35 : videoQuality === "high" ? 25 : 15
-                      : Math.round(
-                          currentModelDef.cost *
-                          (activeTool === "video" && duration === "10" ? 2 : (activeTool === "video" && duration === "30") ? 3 : 1) *
-                          (activeTool === "video" && currentModelDef.id.includes("kling")
-                            ? videoQuality === "ultra4k"
-                              ? 2.0
-                              : videoQuality === "high"
-                              ? 1.5
-                              : 1.0
-                            : 1.0)
-                        ) + (activeTool === "video" && enableTalkingVideo && speechText.trim() ? 9 : 0)
-                  } créditos)
+                  Gerar {currentToolDef.name} ({calculatedCost} crédito{calculatedCost > 1 ? "s" : ""})
                 </span>
               </>
             )}
           </button>
         </div>
 
-        {/* COLUNA CENTRAL: PREVIEW PRINCIPAL, CUSTOM PLAYER & INSPIRAÇÕES (lg:col-span-5) */}
-        <div className="lg:col-span-5 space-y-6">
+        {/* COLUNA 2: PREVIEW PRINCIPAL & HISTÓRICO LATERAL INTEGRADO (lg:col-span-7) */}
+        <div className="lg:col-span-7 space-y-6">
           <StudioPreviewPlayer
             isGenerating={isGenerating}
             stepText={stepText}
@@ -1027,10 +964,8 @@ export default function StudioCreatePage() {
               toast.success("Carregado no player!");
             }}
           />
-        </div>
 
-        {/* COLUNA DA DIREITA: HISTÓRICO LATERAL (lg:col-span-3) */}
-        <div className="lg:col-span-3 space-y-4">
+          {/* Histórico Integrado na Coluna de Saída Visual */}
           <StudioHistorySidebar
             historyItems={historyItems}
             isLoading={isLoadingHistory}
@@ -1049,28 +984,26 @@ export default function StudioCreatePage() {
       </div>
 
       {/* 3. BARRA DE RODAPÉ: DICA DE PRO, CRÉDITOS E MÉTRICAS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-5 rounded-3xl bg-[#0D0E12] border border-[#1E202E]">
-        {/* Dica de Pro */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-5 rounded-3xl backdrop-blur-xl bg-[#0E1017]/85 border border-white/[0.08] shadow-xl">
         <div className="space-y-1.5">
           <span className="text-[10px] font-mono text-cyan-400 font-bold uppercase tracking-wider">
             Dica de Pro
           </span>
           <p className="text-xs text-slate-300 leading-relaxed">
-            Use o VORIXA FLOW para encadear múltiplos modelos e criar produções completas.
+            Use o VORIXA FLOW para encadear múltiplos modelos e criar produções completas em pipelines visuais.
           </p>
           <button
             type="button"
             onClick={() => router.push("/dashboard/flow")}
-            className="text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer pt-1"
+            className="text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer pt-1 min-h-[44px]"
           >
             <span>Abrir Flow Canvas</span>
             <ArrowRight className="h-3 w-3" />
           </button>
         </div>
 
-        {/* Seus Créditos com Gráfico Circular */}
         <div className="flex items-center gap-3.5">
-          <div className="relative h-12 w-12 flex-shrink-0">
+          <div className="relative h-12 w-12 shrink-0">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
               <path
                 className="text-[#1E202E]"
@@ -1101,14 +1034,12 @@ export default function StudioCreatePage() {
           </div>
         </div>
 
-        {/* Tempo Médio de Geração */}
         <div className="space-y-1">
           <span className="text-[10px] font-mono text-slate-400 uppercase block">Tempo Médio de Geração</span>
           <div className="text-sm font-black text-white font-mono">{currentModelDef.speed}</div>
           <span className="text-[10px] text-slate-500">Otimizado no cluster GPU do {currentModelDef.name}</span>
         </div>
 
-        {/* Qualidade de Saída */}
         <div className="space-y-1">
           <span className="text-[10px] font-mono text-slate-400 uppercase block">Qualidade de Saída</span>
           <div className="text-sm font-black text-white font-mono">Até 8K Ultra HD</div>
@@ -1123,6 +1054,41 @@ export default function StudioCreatePage() {
         onSelectModel={handleApplyShowcaseModel}
         activeModelId={activeShowcaseModel?.id || null}
       />
+
+      {/* 4. STICKY BOTTOM CTA BAR ERGONÔMICA PARA MOBILE (lg:hidden) */}
+      <div className="fixed bottom-0 inset-x-0 z-40 p-3 sm:p-4 bg-[#070709]/95 backdrop-blur-xl border-t border-white/[0.1] shadow-2xl lg:hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <div className="flex items-center justify-between gap-3 max-w-lg mx-auto">
+          <div className="min-w-0">
+            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider truncate">
+              {currentModelDef.name}
+            </div>
+            <div className="text-xs font-bold text-white flex items-center gap-1.5">
+              <span className="text-violet-400 font-mono font-black">{calculatedCost} cr</span>
+              <span className="text-slate-500">•</span>
+              <span className="text-slate-400 text-[11px] truncate">{currentModelDef.speed}</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleGenerate}
+            disabled={isGenerating}
+            className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:from-violet-500 text-white font-black text-xs shadow-lg shadow-violet-600/30 active:scale-95 disabled:opacity-50 transition-all cursor-pointer min-h-[48px] shrink-0"
+          >
+            {isGenerating ? (
+              <>
+                <RefreshCw className="h-4 w-4 animate-spin text-cyan-200" />
+                <span>Gerando...</span>
+              </>
+            ) : (
+              <>
+                <Play className="h-4 w-4 fill-current text-white" />
+                <span>Gerar Agora</span>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

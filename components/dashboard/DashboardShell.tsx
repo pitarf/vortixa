@@ -22,14 +22,9 @@ import {
   LogOut,
   Search,
   Bell,
-  ChevronRight,
   Menu,
   X,
-  Check,
   ExternalLink,
-  Bot,
-  User as UserIcon,
-  CheckCircle2,
   ArrowRight,
   Flame,
   Users,
@@ -71,6 +66,18 @@ export function DashboardShell({
   const searchInputRef = useRef<HTMLInputElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
+
+  // Bloqueia rolagem do body quando a gaveta mobile estiver aberta
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
 
   // Atalho de teclado global: Cmd + K / Ctrl + K
   useEffect(() => {
@@ -121,14 +128,14 @@ export function DashboardShell({
     {
       id: "1",
       title: "Kling AI 1.5 disponível!",
-      desc: "Agora renderizando vídeos em 1080p a 60fps com estabilização cinemática.",
+      desc: "Renderização de vídeos a 60fps com estabilização cinemática neural.",
       time: "Há 10 min",
       read: false,
     },
     {
       id: "2",
       title: "Renderização 4K Concluída",
-      desc: "Seu workflow 'Cyberpunk Hypercar' finalizou o upscale.",
+      desc: "Seu workflow no Canvas finalizou o upscale facial com sucesso.",
       time: "Há 1 hora",
       read: false,
     },
@@ -221,6 +228,15 @@ export function DashboardShell({
       : []),
   ];
 
+  // Itens para a Bottom Navigation Bar Mobile
+  const mobileNavItems = [
+    { name: "Início", href: "/dashboard", icon: Zap, exact: true },
+    { name: "Criar", href: "/dashboard/create", icon: Wand2, highlight: true },
+    { name: "Flow", href: "/dashboard/flow", icon: Boxes },
+    { name: "Galeria", href: "/dashboard/library", icon: Film },
+    { name: "Créditos", href: "/dashboard/credits", icon: Coins },
+  ];
+
   const renderSidebarContent = () => (
     <div className="flex flex-col h-full justify-between">
       <div className="space-y-6">
@@ -249,10 +265,10 @@ export function DashboardShell({
             </div>
           </Link>
 
-          {/* Botão fechar mobile */}
+          {/* Botão fechar mobile com touch target ergonômico */}
           <button
             onClick={() => setIsMobileMenuOpen(false)}
-            className="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#13141B]"
+            className="lg:hidden p-3 rounded-xl text-slate-400 hover:text-white hover:bg-[#13141B] min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer transition-colors"
             aria-label="Fechar menu lateral"
           >
             <X className="h-5 w-5" />
@@ -264,12 +280,11 @@ export function DashboardShell({
           <Link
             href="/dashboard"
             onClick={() => setIsMobileMenuOpen(false)}
-            className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px] ${
               pathname === "/dashboard"
                 ? "bg-gradient-to-r from-violet-600/20 via-indigo-600/20 to-transparent text-white border-l-2 border-violet-500 shadow-[inset_0_0_12px_rgba(99,102,241,0.15)]"
                 : "text-slate-400 hover:text-white hover:bg-[#13141B]/80"
             }`}
-            style={{ minHeight: "44px" }}
           >
             <div className="h-7 w-7 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-400">
               <Zap className="h-4 w-4" />
@@ -291,12 +306,11 @@ export function DashboardShell({
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all group ${
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all group min-h-[44px] ${
                     isActive
                       ? "bg-violet-600/15 text-white border border-violet-500/30"
                       : "text-slate-400 hover:text-slate-200 hover:bg-[#13141B]/70"
                   }`}
-                  style={{ minHeight: "44px" }}
                 >
                   <div className="flex items-center gap-3">
                     <item.icon className={`h-4 w-4 ${item.color} group-hover:scale-110 transition-transform`} />
@@ -326,12 +340,11 @@ export function DashboardShell({
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-medium transition-all group ${
+                  className={`flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-medium transition-all group min-h-[44px] ${
                     isActive
                       ? "bg-[#13141B] text-white border border-[#1E202E]"
                       : "text-slate-400 hover:text-slate-200 hover:bg-[#13141B]/50"
                   }`}
-                  style={{ minHeight: "44px" }}
                 >
                   <div className="flex items-center gap-3">
                     <item.icon className={`h-4 w-4 ${item.color} group-hover:scale-110 transition-transform`} />
@@ -361,12 +374,11 @@ export function DashboardShell({
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
+                  className={`flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-medium transition-all min-h-[44px] ${
                     isActive
                       ? "bg-[#13141B] text-white border border-[#1E202E]"
                       : "text-slate-400 hover:text-slate-200 hover:bg-[#13141B]/50"
                   }`}
-                  style={{ minHeight: "44px" }}
                 >
                   <item.icon className="h-4 w-4 text-emerald-400" />
                   <span>{item.name}</span>
@@ -389,12 +401,11 @@ export function DashboardShell({
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noopener noreferrer" : undefined}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
+                className={`flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-medium transition-all min-h-[44px] ${
                   item.admin
                     ? "text-cyan-400 hover:bg-cyan-500/10"
                     : "text-slate-400 hover:text-slate-200 hover:bg-[#13141B]/50"
                 }`}
-                style={{ minHeight: "44px" }}
               >
                 <div className="flex items-center gap-3">
                   <item.icon className="h-4 w-4 text-slate-400" />
@@ -421,7 +432,6 @@ export function DashboardShell({
               ) : (
                 <span>{(user?.name || "U")[0]?.toUpperCase()}</span>
               )}
-              {/* Indicador de Status Online */}
               <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-[#070709]" />
             </div>
             <div className="flex flex-col truncate">
@@ -436,7 +446,7 @@ export function DashboardShell({
 
           <Link
             href="/api/auth/signout"
-            className="p-2 rounded-xl text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+            className="p-2.5 rounded-xl text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
             title="Encerrar Sessão"
             aria-label="Encerrar Sessão"
           >
@@ -452,26 +462,26 @@ export function DashboardShell({
       {/* =========================================================================
           TOPBAR / HEADER FIXO ADAPTATIVO
          ========================================================================= */}
-      <header className="h-16 border-b border-[#1E202E] bg-[#070709]/80 backdrop-blur-xl flex items-center justify-between px-4 md:px-6 sticky top-0 z-40">
+      <header className="h-16 border-b border-[#1E202E] bg-[#070709]/85 backdrop-blur-xl flex items-center justify-between px-3 sm:px-4 md:px-6 sticky top-0 z-40">
         {/* Lado Esquerdo: Mobile Trigger & Campo de Busca Global */}
-        <div className="flex items-center gap-3 flex-1 max-w-xl">
+        <div className="flex items-center gap-2 sm:gap-3 flex-1 max-w-xl">
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="lg:hidden p-2.5 rounded-xl bg-[#0D0E12] border border-[#1E202E] text-slate-400 hover:text-white"
+            className="lg:hidden p-2.5 rounded-xl bg-[#0D0E12] border border-[#1E202E] text-slate-400 hover:text-white min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation active:scale-95 transition-all"
             aria-label="Abrir menu de navegação"
-            style={{ minHeight: "44px", minWidth: "44px" }}
+            aria-expanded={isMobileMenuOpen}
           >
             <Menu className="h-5 w-5" />
           </button>
 
           {/* Logo Mobile */}
-          <Link href="/dashboard" className="lg:hidden flex items-center gap-2 mr-2">
-            <div className="h-8 w-8 rounded-xl bg-gradient-to-tr from-violet-600 to-cyan-400 flex items-center justify-center text-white">
+          <Link href="/dashboard" className="lg:hidden flex items-center gap-2 mr-1">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-violet-600/20">
               <Zap className="h-4 w-4 fill-current" />
             </div>
           </Link>
 
-          {/* Campo de Busca Global Elegante e Translúcido */}
+          {/* Campo de Busca Global */}
           <form onSubmit={handleSearchSubmit} className="relative flex-1 hidden sm:block">
             <Search className="h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
@@ -480,8 +490,7 @@ export function DashboardShell({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar seus projetos, prompts ou ativos... [ ⌘ K ]"
-              className="w-full pl-10 pr-12 py-2 rounded-2xl bg-[#0D0E12]/80 border border-[#1E202E] hover:border-violet-500/40 focus:border-violet-500 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all shadow-inner"
-              style={{ minHeight: "44px" }}
+              className="w-full pl-10 pr-12 py-2 rounded-2xl bg-[#0D0E12]/80 border border-[#1E202E] hover:border-violet-500/40 focus:border-violet-500 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all shadow-inner min-h-[44px]"
             />
             <kbd className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#13141B] border border-[#1E202E] text-slate-400 pointer-events-none">
               ⌘ K
@@ -489,8 +498,8 @@ export function DashboardShell({
           </form>
         </div>
 
-        {/* Lado Direito: Status de IA, Créditos Dourados, Notificações, Tema e Avatar */}
-        <div className="flex items-center gap-2.5 md:gap-3.5">
+        {/* Lado Direito: Status de IA, Créditos, Notificações, Tema e Avatar */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5 md:gap-3.5">
           {/* Status dos Motores de IA */}
           <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0D0E12] border border-[#1E202E] text-xs font-mono">
             <span className="relative flex h-2 w-2">
@@ -508,30 +517,32 @@ export function DashboardShell({
           {/* Badge de Créditos Dourado Elegante */}
           <Link
             href="/dashboard/credits"
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-amber-500/15 border border-amber-500/30 hover:border-amber-400/60 shadow-[0_0_15px_rgba(245,158,11,0.12)] transition-all group cursor-pointer"
-            style={{ minHeight: "44px" }}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-amber-500/15 border border-amber-500/30 hover:border-amber-400/60 shadow-[0_0_15px_rgba(245,158,11,0.12)] transition-all group cursor-pointer min-h-[44px] touch-manipulation active:scale-95"
             title="Clique para gerenciar ou adquirir créditos"
           >
             <div className="h-6 w-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Coins className="h-3.5 w-3.5" />
             </div>
-            <div className="text-left">
+            <div className="text-left hidden sm:block">
               <span className="text-[9px] text-amber-300 uppercase font-mono block leading-none font-bold">
                 Saldo
               </span>
               <span className="text-xs font-extrabold text-amber-200 group-hover:text-amber-100 transition-colors">
-                {isUnlimited ? "ILIMITADO" : `${userBalance.toLocaleString("pt-BR")} créditos`}
+                {isUnlimited ? "ILIMITADO" : `${userBalance.toLocaleString("pt-BR")} cr`}
               </span>
             </div>
+            <span className="text-xs font-extrabold text-amber-300 sm:hidden">
+              {isUnlimited ? "∞" : `${userBalance.toLocaleString("pt-BR")} cr`}
+            </span>
           </Link>
 
           {/* Sino de Notificações */}
           <div className="relative" ref={notificationsRef}>
             <button
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-              className="relative p-2.5 rounded-2xl bg-[#0D0E12] border border-[#1E202E] hover:border-violet-500/50 text-slate-400 hover:text-white transition-all cursor-pointer"
-              style={{ minHeight: "44px", minWidth: "44px" }}
+              className="relative p-2.5 rounded-2xl bg-[#0D0E12] border border-[#1E202E] hover:border-violet-500/50 text-slate-400 hover:text-white transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation active:scale-95"
               aria-label="Abrir notificações"
+              aria-expanded={isNotificationsOpen}
             >
               <Bell className="h-4 w-4" />
               <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-violet-500 ring-2 ring-[#070709] animate-pulse" />
@@ -539,14 +550,14 @@ export function DashboardShell({
 
             {/* Popover de Notificações */}
             {isNotificationsOpen && (
-              <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-3xl bg-[#0D0E12] border border-[#1E202E] shadow-2xl p-4 z-50 space-y-3">
+              <div className="absolute right-0 mt-2 w-72 sm:w-96 rounded-3xl bg-[#0D0E12] border border-[#1E202E] shadow-2xl p-4 z-50 space-y-3 animate-in fade-in zoom-in-95 duration-150">
                 <div className="flex items-center justify-between pb-2 border-b border-[#1E202E]">
                   <span className="text-xs font-bold text-white font-heading">Notificações</span>
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-violet-500/20 text-violet-300 font-bold">
                     3 Novas
                   </span>
                 </div>
-                <div className="space-y-2 max-h-72 overflow-y-auto">
+                <div className="space-y-2 max-h-72 overflow-y-auto no-scrollbar">
                   {notifications.map((n) => (
                     <div
                       key={n.id}
@@ -567,16 +578,16 @@ export function DashboardShell({
                 <div className="pt-2 border-t border-[#1E202E] flex items-center justify-between text-[11px] font-mono">
                   <button
                     onClick={() => setIsNotificationsOpen(false)}
-                    className="text-slate-400 hover:text-white cursor-pointer"
+                    className="text-slate-400 hover:text-white cursor-pointer py-1"
                   >
-                    Marcar todas lidas
+                    Marcar lidas
                   </button>
                   <Link
                     href="/dashboard/changelog"
                     onClick={() => setIsNotificationsOpen(false)}
-                    className="text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1"
+                    className="text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1 py-1"
                   >
-                    <span>Ver Changelog</span>
+                    <span>Changelog</span>
                     <ArrowRight className="h-3 w-3" />
                   </Link>
                 </div>
@@ -584,8 +595,10 @@ export function DashboardShell({
             )}
           </div>
 
-          {/* Botão de Dica de Ferramenta / O que dá para fazer nesta página */}
-          <PageTipsButton onClick={() => setIsTipsModalOpen(true)} />
+          {/* Dicas contextuais de página */}
+          <div className="hidden sm:block">
+            <PageTipsButton onClick={() => setIsTipsModalOpen(true)} />
+          </div>
 
           {/* Alternador de Tema */}
           <ThemeToggle />
@@ -594,11 +607,11 @@ export function DashboardShell({
           <div className="relative" ref={userMenuRef}>
             <button
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-              className="relative flex items-center gap-2 p-1 rounded-2xl bg-[#0D0E12] border border-[#1E202E] hover:border-violet-500/50 transition-all cursor-pointer"
-              style={{ minHeight: "44px" }}
+              className="relative flex items-center justify-center p-1 rounded-2xl bg-[#0D0E12] border border-[#1E202E] hover:border-violet-500/50 transition-all cursor-pointer min-h-[44px] min-w-[44px] touch-manipulation active:scale-95"
               aria-label="Menu do usuário"
+              aria-expanded={isUserMenuOpen}
             >
-              <div className="h-8 w-8 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-md">
+              <div className="h-8 w-8 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-md overflow-hidden">
                 {user?.image ? (
                   <img
                     src={user.image}
@@ -614,7 +627,7 @@ export function DashboardShell({
 
             {/* Menu Popover do Usuário */}
             {isUserMenuOpen && (
-              <div className="absolute right-0 mt-2 w-56 rounded-3xl bg-[#0D0E12] border border-[#1E202E] shadow-2xl p-2 z-50 space-y-1">
+              <div className="absolute right-0 mt-2 w-56 rounded-3xl bg-[#0D0E12] border border-[#1E202E] shadow-2xl p-2 z-50 space-y-1 animate-in fade-in zoom-in-95 duration-150">
                 <div className="p-3 border-b border-[#1E202E]">
                   <div className="text-xs font-bold text-white truncate">{user?.name || "Criador"}</div>
                   <div className="text-[11px] text-slate-400 truncate">{user?.email || "usuario@vorixa.com"}</div>
@@ -631,7 +644,7 @@ export function DashboardShell({
                 <Link
                   href="/dashboard/credits"
                   onClick={() => setIsUserMenuOpen(false)}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#13141B]"
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#13141B] min-h-[44px]"
                 >
                   <Coins className="h-4 w-4 text-amber-400" />
                   <span>Comprar Créditos</span>
@@ -639,7 +652,7 @@ export function DashboardShell({
                 <Link
                   href="/dashboard/library"
                   onClick={() => setIsUserMenuOpen(false)}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#13141B]"
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#13141B] min-h-[44px]"
                 >
                   <Film className="h-4 w-4 text-emerald-400" />
                   <span>Meus Ativos</span>
@@ -647,7 +660,7 @@ export function DashboardShell({
                 <div className="border-t border-[#1E202E] my-1" />
                 <Link
                   href="/api/auth/signout"
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-red-400 hover:bg-red-500/10"
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-medium text-red-400 hover:bg-red-500/10 min-h-[44px]"
                 >
                   <LogOut className="h-4 w-4" />
                   <span>Encerrar Sessão</span>
@@ -661,32 +674,77 @@ export function DashboardShell({
       {/* =========================================================================
           CONTAINER PRINCIPAL: SIDEBAR FIXA + CONTEÚDO ROLÁVEL
          ========================================================================= */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
         {/* Sidebar Lateral Desktop */}
-        <aside className="w-64 border-r border-[#1E202E] bg-[#070709] p-4 hidden lg:flex flex-col justify-between overflow-y-auto">
+        <aside className="w-64 border-r border-[#1E202E] bg-[#070709] p-4 hidden lg:flex flex-col justify-between overflow-y-auto no-scrollbar">
           {renderSidebarContent()}
         </aside>
 
-        {/* Drawer Mobile Deslizante */}
-        {isMobileMenuOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden flex">
-            {/* Backdrop escuro com blur */}
-            <div
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
-            />
-            {/* Gaveta */}
-            <div className="relative w-72 max-w-[85%] bg-[#070709] border-r border-[#1E202E] p-4 flex flex-col justify-between z-10 h-full overflow-y-auto">
-              {renderSidebarContent()}
-            </div>
-          </div>
-        )}
+        {/* Drawer Mobile Deslizante com Animação Fluida e Backdrop Touch-Safe */}
+        <div
+          className={`fixed inset-0 z-50 lg:hidden transition-all duration-300 ${
+            isMobileMenuOpen
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
+          }`}
+          aria-hidden={!isMobileMenuOpen}
+        >
+          {/* Backdrop com Blur Escuro */}
+          <div
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm cursor-pointer transition-opacity"
+          />
 
-        {/* Área Central de Conteúdo */}
-        <main className="flex-1 bg-[#070709] p-3 sm:p-5 md:p-8 overflow-y-auto">
+          {/* Gaveta Deslizante com Scroll Suave */}
+          <div
+            className={`absolute top-0 bottom-0 left-0 w-72 max-w-[85%] bg-[#070709] border-r border-[#1E202E] p-4 flex flex-col justify-between z-10 overflow-y-auto transform transition-transform duration-300 ease-out shadow-2xl ${
+              isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+          >
+            {renderSidebarContent()}
+          </div>
+        </div>
+
+        {/* Área Central de Conteúdo com Padding de Segurança para a Bottom Bar no Mobile */}
+        <main className="flex-1 bg-[#070709] p-3 sm:p-5 md:p-8 overflow-y-auto pb-24 lg:pb-8">
           {children}
         </main>
       </div>
+
+      {/* =========================================================================
+          BOTTOM NAVIGATION BAR SUTIL PARA MOBILE (Acesso com uma só mão)
+         ========================================================================= */}
+      <nav
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-[#070709]/90 backdrop-blur-xl border-t border-[#1E202E] px-2 py-1 flex items-center justify-around pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))]"
+        aria-label="Navegação rápida inferior"
+      >
+        {mobileNavItems.map((item) => {
+          const isActive = item.exact
+            ? pathname === item.href
+            : pathname === item.href || pathname.startsWith(item.href + "/");
+
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex flex-col items-center justify-center flex-1 py-1.5 px-2 rounded-xl transition-all min-h-[48px] touch-manipulation active:scale-95 ${
+                isActive
+                  ? "text-violet-400 font-bold"
+                  : "text-slate-400 hover:text-slate-200"
+              }`}
+            >
+              <div
+                className={`p-1 rounded-lg transition-transform ${
+                  isActive ? "bg-violet-500/15 scale-110" : ""
+                }`}
+              >
+                <item.icon className="h-4 w-4" />
+              </div>
+              <span className="text-[10px] tracking-tight mt-0.5">{item.name}</span>
+            </Link>
+          );
+        })}
+      </nav>
 
       {/* Modal de Dicas de Ferramenta Contextual */}
       <PageTipsModal

@@ -8,14 +8,15 @@ import {
   Layers, 
   TrendingUp, 
   RefreshCw, 
-  Zap, 
   Globe, 
   Sliders, 
   CheckCircle2,
-  Video,
-  Image as ImageIcon,
   Clock,
-  Sparkles
+  Sparkles,
+  ScrollText,
+  Layers2,
+  LayoutDashboard,
+  UserCog
 } from "lucide-react";
 import { toast } from "sonner";
 import { TimePeriod, ExecutiveDashboardStats } from "@/services/admin-dashboard.service";
@@ -28,7 +29,6 @@ import { AdminServicesCatalog } from "@/components/admin/services/AdminServicesC
 import { AdminUsersTable } from "@/components/admin/users/AdminUsersTable";
 import { AdminModelsManager } from "@/components/admin/models/AdminModelsManager";
 import { AdminAffiliatesManager } from "@/components/admin/affiliates/AdminAffiliatesManager";
-import { ScrollText, Layers2, LayoutDashboard, UserCog } from "lucide-react";
 
 interface BrandingData {
   siteTitle: string;
@@ -62,10 +62,10 @@ export default function AdminDashboardPage() {
   const [creditsAmount, setCreditsAmount] = useState<number>(100);
   const [reason, setReason] = useState("");
 
-  // Aba principal do Painel Admin ("overview" | "services" | "users" | "logs" | "models" | "affiliates")
+  // Aba principal do Painel Admin
   const [mainTab, setMainTab] = useState<"overview" | "services" | "users" | "logs" | "models" | "affiliates">("overview");
 
-  // Aba móvel ativa para a seção de configurações inferiores ("adjust" | "branding")
+  // Aba móvel ativa para a seção de configurações inferiores
   const [activeConfigTab, setActiveConfigTab] = useState<"adjust" | "branding">("adjust");
   const creditFormRef = React.useRef<HTMLDivElement>(null);
 
@@ -207,18 +207,18 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="space-y-6 sm:space-y-8 max-w-7xl mx-auto pb-12 px-2 sm:px-0">
+    <div className="space-y-6 sm:space-y-8 max-w-7xl mx-auto pb-12 px-1 sm:px-0">
       {/* Header com Status Administrativo e Ação de Atualização */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-900 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#1E202E] pb-6">
         <div>
           <div className="flex items-center gap-2 text-violet-400 font-semibold text-xs uppercase tracking-wider mb-1">
             <ShieldCheck className="h-4 w-4" />
             Módulo Executivo & Controle Financeiro
           </div>
-          <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight font-heading">
             Dashboard Administrativo Geral
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-400 text-xs sm:text-sm mt-1">
             Visão 360º de faturamento, margem de lucro, custos de API, top serviços e auditoria de usuários.
           </p>
         </div>
@@ -226,25 +226,23 @@ export default function AdminDashboardPage() {
         <button
           onClick={() => fetchStats(currentPeriod)}
           disabled={refreshing}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-semibold transition-all border border-slate-800 disabled:opacity-50"
-          style={{ minHeight: "44px" }}
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#0D0E12] hover:bg-[#13141B] text-slate-200 text-xs font-semibold transition-all border border-[#1E202E] disabled:opacity-50 min-h-[44px] touch-manipulation active:scale-95 cursor-pointer"
         >
           <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin text-violet-400" : ""}`} />
           <span>{refreshing ? "Atualizando..." : "Atualizar Métricas"}</span>
         </button>
       </div>
 
-      {/* Abas Principais de Navegação do Painel (Scroll horizontal no mobile com touch targets confortáveis) */}
-      <div className="flex items-center gap-2 border-b border-slate-900 pb-2 overflow-x-auto scrollbar-none">
+      {/* Abas Principais de Navegação do Painel (Scroll horizontal suave com touch targets confortáveis) */}
+      <div className="flex items-center gap-2 border-b border-[#1E202E] pb-2 overflow-x-auto no-scrollbar scrollbar-none snap-x">
         <button
           type="button"
           onClick={() => setMainTab("overview")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap min-h-[44px] touch-manipulation snap-start cursor-pointer ${
             mainTab === "overview"
               ? "bg-violet-600 text-white shadow-lg shadow-violet-600/20"
-              : "bg-slate-900/60 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+              : "bg-[#0D0E12] text-slate-400 hover:text-white hover:bg-[#13141B] border border-[#1E202E]"
           }`}
-          style={{ minHeight: "44px" }}
         >
           <LayoutDashboard className="h-4 w-4" />
           <span>Visão Geral & Métricas</span>
@@ -253,135 +251,82 @@ export default function AdminDashboardPage() {
         <button
           type="button"
           onClick={() => setMainTab("services")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap min-h-[44px] touch-manipulation snap-start cursor-pointer ${
             mainTab === "services"
               ? "bg-violet-600 text-white shadow-lg shadow-violet-600/20"
-              : "bg-slate-900/60 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+              : "bg-[#0D0E12] text-slate-400 hover:text-white hover:bg-[#13141B] border border-[#1E202E]"
           }`}
-          style={{ minHeight: "44px" }}
         >
           <Layers2 className="h-4 w-4 text-cyan-400" />
-          <span>Catálogo de Serviços & Precificação</span>
+          <span>Catálogo de Serviços</span>
         </button>
 
         <button
           type="button"
           onClick={() => setMainTab("users")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap min-h-[44px] touch-manipulation snap-start cursor-pointer ${
             mainTab === "users"
               ? "bg-violet-600 text-white shadow-lg shadow-violet-600/20"
-              : "bg-slate-900/60 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+              : "bg-[#0D0E12] text-slate-400 hover:text-white hover:bg-[#13141B] border border-[#1E202E]"
           }`}
-          style={{ minHeight: "44px" }}
         >
           <UserCog className="h-4 w-4 text-emerald-400" />
-          <span>Gestão de Usuários & Ações em Massa</span>
+          <span>Gestão de Usuários</span>
         </button>
 
         <button
           type="button"
           onClick={() => setMainTab("models")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap min-h-[44px] touch-manipulation snap-start cursor-pointer ${
             mainTab === "models"
               ? "bg-violet-600 text-white shadow-lg shadow-violet-600/20"
-              : "bg-slate-900/60 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+              : "bg-[#0D0E12] text-slate-400 hover:text-white hover:bg-[#13141B] border border-[#1E202E]"
           }`}
-          style={{ minHeight: "44px" }}
         >
           <Sparkles className="h-4 w-4 text-violet-400" />
-          <span>Vitrine de Modelos & Casting</span>
+          <span>Vitrine de Modelos</span>
         </button>
 
         <button
           type="button"
           onClick={() => setMainTab("affiliates")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap min-h-[44px] touch-manipulation snap-start cursor-pointer ${
             mainTab === "affiliates"
               ? "bg-violet-600 text-white shadow-lg shadow-violet-600/20"
-              : "bg-slate-900/60 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+              : "bg-[#0D0E12] text-slate-400 hover:text-white hover:bg-[#13141B] border border-[#1E202E]"
           }`}
-          style={{ minHeight: "44px" }}
         >
           <Users className="h-4 w-4 text-emerald-400" />
-          <span>Programa de Afiliados & Saques</span>
+          <span>Afiliados & Saques</span>
         </button>
 
         <button
           type="button"
           onClick={() => setMainTab("logs")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap min-h-[44px] touch-manipulation snap-start cursor-pointer ${
             mainTab === "logs"
               ? "bg-violet-600 text-white shadow-lg shadow-violet-600/20"
-              : "bg-slate-900/60 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+              : "bg-[#0D0E12] text-slate-400 hover:text-white hover:bg-[#13141B] border border-[#1E202E]"
           }`}
-          style={{ minHeight: "44px" }}
         >
           <ScrollText className="h-4 w-4 text-amber-400" />
-          <span>Logs do Sistema & Auditoria CRM</span>
+          <span>Logs do Sistema</span>
         </button>
       </div>
 
       {mainTab === "affiliates" ? (
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs uppercase tracking-wider mb-1">
-                <Users className="h-4 w-4" />
-                Programa de Afiliados & Comissões
-              </div>
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight font-heading">
-                Gestão de Afiliados & Transferências Pix
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
-                Aprovação de saques Pix solicitados por afiliados, auditoria de comissões e ajuste de taxas VIP.
-              </p>
-            </div>
-          </div>
-          <AdminAffiliatesManager />
-        </div>
+        <AdminAffiliatesManager />
       ) : mainTab === "models" ? (
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <div className="flex items-center gap-2 text-violet-400 font-semibold text-xs uppercase tracking-wider mb-1">
-                <Sparkles className="h-4 w-4" />
-                Vitrine & Casting de Modelos
-              </div>
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                Gestão Administrativa de Modelos (IA & Reais)
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
-                Controle o catálogo de modelos para ensaios gerativos, precificação de créditos e contratações de casting.
-              </p>
-            </div>
-          </div>
-          <AdminModelsManager />
-        </div>
+        <AdminModelsManager />
       ) : mainTab === "users" ? (
         <AdminUsersTable />
       ) : mainTab === "services" ? (
         <AdminServicesCatalog />
       ) : mainTab === "logs" ? (
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <div className="flex items-center gap-2 text-violet-400 font-semibold text-xs uppercase tracking-wider mb-1">
-                <ScrollText className="h-4 w-4" />
-                Monitoramento & Governança
-              </div>
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                Central de Logs do Sistema & Auditoria CRM
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
-                Rastreamento em tempo real de pagamentos, falhas/sucessos de IA e ações administrativas.
-              </p>
-            </div>
-          </div>
-          <AdminLogsViewer />
-        </div>
+        <AdminLogsViewer />
       ) : (
         <>
-          {/* Barra de Filtros Temporais (Hoje, Semanal, Mensal, Anual, Customizado) */}
+          {/* Barra de Filtros Temporais */}
           <AdminDateFilter
             currentPeriod={currentPeriod}
             onPeriodChange={handlePeriodChange}
@@ -392,383 +337,370 @@ export default function AdminDashboardPage() {
             loading={refreshing}
           />
 
-      {/* Destaques do Dia Atual (Hoje em Tempo Real) */}
-      {stats && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-violet-950/40 via-slate-900/60 to-slate-950 border border-violet-900/30">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3 border-b border-slate-800/80 pb-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-violet-300 uppercase tracking-wider">
-              <Clock className="h-4 w-4 text-violet-400" />
-              Desempenho de Hoje (Tempo Real)
-            </div>
-            <span className="text-[11px] font-mono text-slate-400">
-              Atualizado em minutos
-            </span>
-          </div>
+          {/* Destaques do Dia Atual (Hoje em Tempo Real) */}
+          {stats && (
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-violet-950/40 via-[#0D0E12] to-[#070709] border border-violet-900/30">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3 border-b border-[#1E202E] pb-2">
+                <div className="flex items-center gap-2 text-xs font-bold text-violet-300 uppercase tracking-wider">
+                  <Clock className="h-4 w-4 text-violet-400" />
+                  Desempenho de Hoje (Tempo Real)
+                </div>
+                <span className="text-[11px] font-mono text-slate-400">
+                  Atualizado em minutos
+                </span>
+              </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-center">
-            <div className="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
-              <span className="text-[10px] text-slate-400 font-medium">Entrou Hoje</span>
-              <div className="text-sm font-black text-emerald-400 mt-0.5">
-                R$ {stats.todayStats.revenueBrl.toFixed(2)}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 text-center">
+                <div className="bg-[#070709] p-2.5 rounded-xl border border-[#1E202E]">
+                  <span className="text-[10px] text-slate-400 font-medium block">Entrou Hoje</span>
+                  <div className="text-xs sm:text-sm font-black text-emerald-400 mt-0.5 truncate font-mono">
+                    R$ {stats.todayStats.revenueBrl.toFixed(2)}
+                  </div>
+                </div>
+
+                <div className="bg-[#070709] p-2.5 rounded-xl border border-[#1E202E]">
+                  <span className="text-[10px] text-slate-400 font-medium block">Lucro Líquido</span>
+                  <div className="text-xs sm:text-sm font-black text-violet-400 mt-0.5 truncate font-mono">
+                    R$ {stats.todayStats.profitBrl.toFixed(2)}
+                  </div>
+                </div>
+
+                <div className="bg-[#070709] p-2.5 rounded-xl border border-[#1E202E]">
+                  <span className="text-[10px] text-slate-400 font-medium block">Gasto com API</span>
+                  <div className="text-xs sm:text-sm font-black text-amber-400 font-mono mt-0.5 truncate">
+                    ${stats.todayStats.apiCostUsd.toFixed(2)}
+                  </div>
+                </div>
+
+                <div className="bg-[#070709] p-2.5 rounded-xl border border-[#1E202E]">
+                  <span className="text-[10px] text-slate-400 font-medium block">Novos Cadastros</span>
+                  <div className="text-xs sm:text-sm font-black text-cyan-400 mt-0.5 truncate font-mono">
+                    +{stats.todayStats.signups}
+                  </div>
+                </div>
+
+                <div className="bg-[#070709] p-2.5 rounded-xl border border-[#1E202E]">
+                  <span className="text-[10px] text-slate-400 font-medium block">Mídias Geradas</span>
+                  <div className="text-xs sm:text-sm font-black text-fuchsia-400 mt-0.5 truncate font-mono">
+                    {stats.todayStats.generations}
+                  </div>
+                </div>
+
+                <div className="bg-[#070709] p-2.5 rounded-xl border border-[#1E202E]">
+                  <span className="text-[10px] text-slate-400 font-medium block">Créditos Gastos</span>
+                  <div className="text-xs sm:text-sm font-black text-rose-400 mt-0.5 truncate font-mono">
+                    {stats.todayStats.creditsConsumed.toLocaleString("pt-BR")} cr
+                  </div>
+                </div>
               </div>
             </div>
+          )}
 
-            <div className="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
-              <span className="text-[10px] text-slate-400 font-medium">Lucro Líquido Hoje</span>
-              <div className="text-sm font-black text-violet-400 mt-0.5">
-                R$ {stats.todayStats.profitBrl.toFixed(2)}
+          {/* Cards de Métricas e Indicadores Consolidados do Período */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            {/* Receita Faturada */}
+            <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 relative overflow-hidden">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-400">Receita no Período</span>
+                <div className="h-8 w-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                  <DollarSign className="h-4 w-4" />
+                </div>
               </div>
-            </div>
-
-            <div className="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
-              <span className="text-[10px] text-slate-400 font-medium">Gasto com API</span>
-              <div className="text-sm font-black text-amber-400 font-mono mt-0.5">
-                ${stats.todayStats.apiCostUsd.toFixed(2)}
+              <div className="mt-3">
+                <span className="text-xl sm:text-2xl font-black text-white font-mono">
+                  {stats ? `R$ ${stats.revenueBrl.toFixed(2).replace(".", ",")}` : "R$ 0,00"}
+                </span>
               </div>
+              <p className="text-[11px] text-slate-500 mt-1 font-mono">
+                {stats?.creditsSold.toLocaleString("pt-BR") || 0} créditos vendidos
+              </p>
             </div>
 
-            <div className="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
-              <span className="text-[10px] text-slate-400 font-medium">Novos Cadastros</span>
-              <div className="text-sm font-black text-cyan-400 mt-0.5">
-                +{stats.todayStats.signups}
+            {/* Lucro Líquido Estimado */}
+            <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 relative overflow-hidden">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-400">Lucro Líquido Estimado</span>
+                <div className="h-8 w-8 rounded-lg bg-violet-500/10 text-violet-400 flex items-center justify-center">
+                  <TrendingUp className="h-4 w-4" />
+                </div>
               </div>
-            </div>
-
-            <div className="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
-              <span className="text-[10px] text-slate-400 font-medium">Mídias Geradas</span>
-              <div className="text-sm font-black text-fuchsia-400 mt-0.5">
-                {stats.todayStats.generations}
+              <div className="mt-3">
+                <span className="text-xl sm:text-2xl font-black text-white font-mono">
+                  {stats ? `R$ ${stats.profitBrl.toFixed(2).replace(".", ",")}` : "R$ 0,00"}
+                </span>
               </div>
+              <p className="text-[11px] text-slate-500 mt-1 font-mono">
+                Margem estimada de {stats?.marginPercent || 0}%
+              </p>
             </div>
 
-            <div className="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
-              <span className="text-[10px] text-slate-400 font-medium">Créditos Gastos</span>
-              <div className="text-sm font-black text-rose-400 mt-0.5">
-                {stats.todayStats.creditsConsumed.toLocaleString("pt-BR")} cr
+            {/* Custo Agregado de API */}
+            <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 relative overflow-hidden">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-400">Custo de Infraestrutura</span>
+                <div className="h-8 w-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                  <Layers className="h-4 w-4" />
+                </div>
               </div>
+              <div className="mt-3">
+                <span className="text-xl sm:text-2xl font-black text-white font-mono">
+                  ${stats?.apiCostUsd.toFixed(2) || "0.00"}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 mt-1 font-mono">
+                Consumo: {stats?.creditsConsumed.toLocaleString("pt-BR") || 0} créditos
+              </p>
+            </div>
+
+            {/* Novos Cadastros */}
+            <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 relative overflow-hidden">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-400">Cadastros no Período</span>
+                <div className="h-8 w-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+                  <Users className="h-4 w-4" />
+                </div>
+              </div>
+              <div className="mt-3">
+                <span className="text-xl sm:text-2xl font-black text-white font-mono">
+                  +{stats?.newSignups || 0}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 mt-1 font-mono">
+                Base total: {stats?.totalUsersCount || 0} usuários
+              </p>
             </div>
           </div>
-        </div>
-      )}
 
-      {/* Cards de Métricas e Indicadores Consolidados do Período */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Receita Faturada no Período */}
-        <div className="bg-slate-950/60 border border-slate-900 rounded-2xl p-5 relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Receita no Período</span>
-            <div className="h-8 w-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-              <DollarSign className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <span className="text-2xl font-black text-white">
-              {stats ? `R$ ${stats.revenueBrl.toFixed(2).replace(".", ",")}` : "R$ 0,00"}
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            {stats?.creditsSold.toLocaleString("pt-BR") || 0} créditos vendidos
-          </p>
-        </div>
+          {/* Gráficos Interativos Dinâmicos com SVG Responsivo sem corte */}
+          {stats && (
+            <AdminAnalyticsCharts
+              data={stats.timeSeries}
+              xAxisType={stats.xAxisType}
+            />
+          )}
 
-        {/* Lucro Líquido Estimado */}
-        <div className="bg-slate-950/60 border border-slate-900 rounded-2xl p-5 relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Lucro Líquido Estimado</span>
-            <div className="h-8 w-8 rounded-lg bg-violet-500/10 text-violet-400 flex items-center justify-center">
-              <TrendingUp className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <span className="text-2xl font-black text-white">
-              {stats ? `R$ ${stats.profitBrl.toFixed(2).replace(".", ",")}` : "R$ 0,00"}
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            Margem estimada de {stats?.marginPercent || 0}%
-          </p>
-        </div>
-
-        {/* Custo Agregado de API */}
-        <div className="bg-slate-950/60 border border-slate-900 rounded-2xl p-5 relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Custo de Infraestrutura de IA</span>
-            <div className="h-8 w-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
-              <Layers className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <span className="text-2xl font-black text-white">
-              ${stats?.apiCostUsd.toFixed(2) || "0.00"}
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            Consumo: {stats?.creditsConsumed.toLocaleString("pt-BR") || 0} créditos
-          </p>
-        </div>
-
-        {/* Novos Cadastros e Total */}
-        <div className="bg-slate-950/60 border border-slate-900 rounded-2xl p-5 relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Cadastros no Período</span>
-            <div className="h-8 w-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
-              <Users className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <span className="text-2xl font-black text-white">
-              +{stats?.newSignups || 0}
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            Base total: {stats?.totalUsersCount || 0} usuários registrados
-          </p>
-        </div>
-      </div>
-
-      {/* Gráficos Interativos Dinâmicos (Linha / Área com Eixo X adaptável) */}
-      {stats && (
-        <AdminAnalyticsCharts
-          data={stats.timeSeries}
-          xAxisType={stats.xAxisType}
-        />
-      )}
-
-      {/* Grid de Seções: Top Serviços & Ranking de Usuários */}
-      {stats && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <AdminTopServicesTable services={stats.topServices} />
-          <AdminUsersLeaderboard
-            topByBalance={stats.topUsersByBalance}
-            topByConsumption={stats.topUsersByConsumption}
-            onSelectUserForAdjustment={(userId) => {
-              setTargetUserId(userId);
-              setActiveConfigTab("adjust");
-              setTimeout(() => {
-                creditFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }, 50);
-            }}
-          />
-        </div>
-      )}
-
-      {/* Seletor Mobile de Abas para Configurações (Thumb-friendly) */}
-      <div className="lg:hidden flex items-center bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 gap-1.5 shadow-lg">
-        <button
-          type="button"
-          onClick={() => setActiveConfigTab("adjust")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all ${
-            activeConfigTab === "adjust"
-              ? "bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20"
-              : "text-slate-400 hover:text-white"
-          }`}
-          style={{ minHeight: "44px" }}
-        >
-          <Sliders className="h-4 w-4" />
-          Ajustar Créditos
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveConfigTab("branding")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all ${
-            activeConfigTab === "branding"
-              ? "bg-violet-500 text-white shadow-md shadow-violet-500/20"
-              : "text-slate-400 hover:text-white"
-          }`}
-          style={{ minHeight: "44px" }}
-        >
-          <Globe className="h-4 w-4" />
-          Branding & SEO
-        </button>
-      </div>
-
-      {/* Grid Secundário: Branding & SEO + Ajuste de Créditos */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Painel de Branding e SEO Dinâmico */}
-        <div className={`bg-slate-950/40 border border-slate-900 rounded-2xl p-4 sm:p-6 ${
-          activeConfigTab === "branding" ? "block" : "hidden lg:block"
-        }`}>
-          <div className="flex items-center gap-2 text-white font-bold text-base mb-1">
-            <Globe className="h-5 w-5 text-violet-400" />
-            Configuração de Branding & SEO
-          </div>
-          <p className="text-xs text-slate-400 mb-6">
-            Altere dinamicamente o título, favicon e meta tags de compartilhamento indexadas pelo Google.
-          </p>
-
-          <form onSubmit={handleSaveBranding} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
-                Título da Aplicação (siteTitle)
-              </label>
-              <input
-                type="text"
-                value={branding.siteTitle}
-                onChange={(e) => setBranding({ ...branding, siteTitle: e.target.value })}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
-                style={{ minHeight: "44px" }}
-                required
+          {/* Grid de Seções: Top Serviços & Ranking de Usuários com Cards no Mobile */}
+          {stats && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+              <AdminTopServicesTable services={stats.topServices} />
+              <AdminUsersLeaderboard
+                topByBalance={stats.topUsersByBalance}
+                topByConsumption={stats.topUsersByConsumption}
+                onSelectUserForAdjustment={(userId) => {
+                  setTargetUserId(userId);
+                  setActiveConfigTab("adjust");
+                  setTimeout(() => {
+                    creditFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }, 50);
+                }}
               />
             </div>
+          )}
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
-                Descrição de Busca (siteDescription)
-              </label>
-              <textarea
-                value={branding.siteDescription}
-                onChange={(e) => setBranding({ ...branding, siteDescription: e.target.value })}
-                rows={2}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors resize-none"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
-                Palavras-chave (siteKeywords)
-              </label>
-              <input
-                type="text"
-                value={branding.siteKeywords}
-                onChange={(e) => setBranding({ ...branding, siteKeywords: e.target.value })}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
-                style={{ minHeight: "44px" }}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Favicon URL (faviconUrl)
-                </label>
-                <input
-                  type="text"
-                  value={branding.faviconUrl}
-                  onChange={(e) => setBranding({ ...branding, faviconUrl: e.target.value })}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
-                  style={{ minHeight: "44px" }}
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  OG Preview Image URL (ogImageUrl)
-                </label>
-                <input
-                  type="text"
-                  value={branding.ogImageUrl}
-                  onChange={(e) => setBranding({ ...branding, ogImageUrl: e.target.value })}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
-                  style={{ minHeight: "44px" }}
-                />
-              </div>
-            </div>
-
+          {/* Seletor Mobile de Abas para Configurações (Thumb-friendly) */}
+          <div className="lg:hidden flex items-center bg-[#0D0E12] p-1 rounded-2xl border border-[#1E202E] gap-1 shadow-lg">
             <button
-              type="submit"
-              disabled={savingBranding}
-              className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold transition-all shadow-lg shadow-violet-600/20 disabled:opacity-50"
-              style={{ minHeight: "44px" }}
+              type="button"
+              onClick={() => setActiveConfigTab("adjust")}
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all min-h-[44px] touch-manipulation active:scale-95 cursor-pointer ${
+                activeConfigTab === "adjust"
+                  ? "bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20"
+                  : "text-slate-400 hover:text-white"
+              }`}
             >
-              {savingBranding ? (
-                <RefreshCw className="h-4 w-4 animate-spin" />
-              ) : (
-                <CheckCircle2 className="h-4 w-4" />
-              )}
-              {savingBranding ? "Gravando Configurações..." : "Salvar Configurações de Branding"}
+              <Sliders className="h-4 w-4" />
+              <span>Ajustar Créditos</span>
             </button>
-          </form>
-        </div>
-
-        {/* Ajuste Manual de Saldo com Idempotência */}
-        <div 
-          ref={creditFormRef}
-          className={`bg-slate-950/40 border border-slate-900 rounded-2xl p-4 sm:p-6 flex flex-col justify-between ${
-            activeConfigTab === "adjust" ? "block" : "hidden lg:flex"
-          }`}
-        >
-          <div>
-            <div className="flex items-center gap-2 text-white font-bold text-base mb-1">
-              <Sliders className="h-5 w-5 text-cyan-400" />
-              Ajuste Administrativo de Créditos
-            </div>
-            <p className="text-xs text-slate-400 mb-6">
-              Ajuste saldo com auditoria compulsória no Ledger e proteção de chave contra retries.
-            </p>
-
-            <form onSubmit={handleAdjustCredits} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  ID do Usuário Destino (targetUserId)
-                </label>
-                <input
-                  type="text"
-                  value={targetUserId}
-                  onChange={(e) => setTargetUserId(e.target.value)}
-                  placeholder="Ex: cld9482..."
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors font-mono"
-                  style={{ minHeight: "44px" }}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Quantidade de Créditos (Positivo para crédito, Negativo para débito)
-                </label>
-                <input
-                  type="number"
-                  value={creditsAmount}
-                  onChange={(e) => setCreditsAmount(Number(e.target.value))}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors font-bold"
-                  style={{ minHeight: "44px" }}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Motivo Administrativo (AuditLog)
-                </label>
-                <input
-                  type="text"
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                  placeholder="Ex: Bonificação de suporte, compensação de instabilidade"
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
-                  style={{ minHeight: "44px" }}
-                  required
-                />
-              </div>
-
-              <div className="p-3 bg-cyan-950/30 border border-cyan-900/50 rounded-xl">
-                <p className="text-[11px] text-cyan-300 leading-relaxed">
-                  🛡️ <strong>Garantia de Idempotência</strong>: Esta operação registra transação única no banco de dados e gera registro de autoria do administrador logado na sessão.
-                </p>
-              </div>
-
-              <button
-                type="submit"
-                disabled={adjustingCredits}
-                className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition-all shadow-lg shadow-cyan-600/20 disabled:opacity-50"
-                style={{ minHeight: "44px" }}
-              >
-                {adjustingCredits ? (
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                ) : (
-                  <CheckCircle2 className="h-4 w-4" />
-                )}
-                {adjustingCredits ? "Processando Ajuste..." : "Executar Ajuste de Créditos"}
-              </button>
-            </form>
+            <button
+              type="button"
+              onClick={() => setActiveConfigTab("branding")}
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all min-h-[44px] touch-manipulation active:scale-95 cursor-pointer ${
+                activeConfigTab === "branding"
+                  ? "bg-violet-500 text-white shadow-md shadow-violet-500/20"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <Globe className="h-4 w-4" />
+              <span>Branding & SEO</span>
+            </button>
           </div>
-        </div>
-      </div>
 
-      </>
+          {/* Grid Secundário: Branding & SEO + Ajuste de Créditos */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+            {/* Painel de Branding e SEO Dinâmico */}
+            <div className={`bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-6 ${
+              activeConfigTab === "branding" ? "block" : "hidden lg:block"
+            }`}>
+              <div className="flex items-center gap-2 text-white font-bold text-base mb-1 font-heading">
+                <Globe className="h-5 w-5 text-violet-400" />
+                Configuração de Branding & SEO
+              </div>
+              <p className="text-xs text-slate-400 mb-6">
+                Altere dinamicamente o título, favicon e meta tags de compartilhamento indexadas pelo Google.
+              </p>
+
+              <form onSubmit={handleSaveBranding} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    Título da Aplicação (siteTitle)
+                  </label>
+                  <input
+                    type="text"
+                    value={branding.siteTitle}
+                    onChange={(e) => setBranding({ ...branding, siteTitle: e.target.value })}
+                    className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors min-h-[48px]"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    Descrição de Busca (siteDescription)
+                  </label>
+                  <textarea
+                    value={branding.siteDescription}
+                    onChange={(e) => setBranding({ ...branding, siteDescription: e.target.value })}
+                    rows={2}
+                    className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors resize-none min-h-[64px]"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    Palavras-chave (siteKeywords)
+                  </label>
+                  <input
+                    type="text"
+                    value={branding.siteKeywords}
+                    onChange={(e) => setBranding({ ...branding, siteKeywords: e.target.value })}
+                    className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors min-h-[48px]"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                      Favicon URL (faviconUrl)
+                    </label>
+                    <input
+                      type="text"
+                      value={branding.faviconUrl}
+                      onChange={(e) => setBranding({ ...branding, faviconUrl: e.target.value })}
+                      className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors min-h-[48px]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                      OG Preview Image URL (ogImageUrl)
+                    </label>
+                    <input
+                      type="text"
+                      value={branding.ogImageUrl}
+                      onChange={(e) => setBranding({ ...branding, ogImageUrl: e.target.value })}
+                      className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors min-h-[48px]"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={savingBranding}
+                  className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold transition-all shadow-lg shadow-violet-600/20 disabled:opacity-50 min-h-[48px] touch-manipulation active:scale-95 cursor-pointer"
+                >
+                  {savingBranding ? (
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="h-4 w-4" />
+                  )}
+                  {savingBranding ? "Gravando Configurações..." : "Salvar Configurações de Branding"}
+                </button>
+              </form>
+            </div>
+
+            {/* Ajuste Manual de Saldo com Idempotência */}
+            <div 
+              ref={creditFormRef}
+              className={`bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-6 flex flex-col justify-between ${
+                activeConfigTab === "adjust" ? "block" : "hidden lg:flex"
+              }`}
+            >
+              <div>
+                <div className="flex items-center gap-2 text-white font-bold text-base mb-1 font-heading">
+                  <Sliders className="h-5 w-5 text-cyan-400" />
+                  Ajuste Administrativo de Créditos
+                </div>
+                <p className="text-xs text-slate-400 mb-6">
+                  Ajuste saldo com auditoria compulsória no Ledger e proteção de chave contra retries.
+                </p>
+
+                <form onSubmit={handleAdjustCredits} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                      ID do Usuário Destino (targetUserId)
+                    </label>
+                    <input
+                      type="text"
+                      value={targetUserId}
+                      onChange={(e) => setTargetUserId(e.target.value)}
+                      placeholder="Ex: cld9482..."
+                      className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors font-mono min-h-[48px]"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                      Quantidade de Créditos (Positivo para crédito, Negativo para débito)
+                    </label>
+                    <input
+                      type="number"
+                      value={creditsAmount}
+                      onChange={(e) => setCreditsAmount(Number(e.target.value))}
+                      className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors font-bold min-h-[48px]"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                      Motivo Administrativo (AuditLog)
+                    </label>
+                    <input
+                      type="text"
+                      value={reason}
+                      onChange={(e) => setReason(e.target.value)}
+                      placeholder="Ex: Bonificação de suporte, compensação de instabilidade"
+                      className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors min-h-[48px]"
+                      required
+                    />
+                  </div>
+
+                  <div className="p-3 bg-cyan-950/30 border border-cyan-900/50 rounded-xl">
+                    <p className="text-[11px] text-cyan-300 leading-relaxed">
+                      🛡️ <strong>Garantia de Idempotência</strong>: Esta operação registra transação única no banco de dados e gera registro de autoria do administrador logado na sessão.
+                    </p>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={adjustingCredits}
+                    className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition-all shadow-lg shadow-cyan-600/20 disabled:opacity-50 min-h-[48px] touch-manipulation active:scale-95 cursor-pointer"
+                  >
+                    {adjustingCredits ? (
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <CheckCircle2 className="h-4 w-4" />
+                    )}
+                    {adjustingCredits ? "Processando Ajuste..." : "Executar Ajuste de Créditos"}
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
 }
-

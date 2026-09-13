@@ -21,8 +21,12 @@ describe('Malicious Attacks & Financial Bypass Protection Suite', () => {
   let blockedAdminUser: any;
   let sampleTool: any;
   let expensiveKlingTool: any;
+  let originalPaymentMode: string | undefined;
 
   beforeAll(async () => {
+    originalPaymentMode = process.env.PAYMENT_PROVIDER_MODE;
+    process.env.PAYMENT_PROVIDER_MODE = 'test';
+
     // 1. Criar usuários com papéis distintos
     regularUser = await prisma.user.create({
       data: {
@@ -399,5 +403,9 @@ describe('Malicious Attacks & Financial Bypass Protection Suite', () => {
 
     const resInvalido = await handleManualApprove(reqInvalido);
     expect(resInvalido.status).toBe(404);
+  });
+
+  afterAll(() => {
+    process.env.PAYMENT_PROVIDER_MODE = originalPaymentMode;
   });
 });

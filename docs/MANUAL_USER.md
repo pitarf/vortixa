@@ -490,4 +490,117 @@ O VORIXA utiliza o gateway oficial **Vorexpay** ([app.vorexpay.com](https://app.
 3. **Confirmação Automática em Tempo Real**: A tela do VORIXA monitora a confirmação do banco automaticamente a cada 3 segundos. Assim que o banco liquida o pagamento, o modal fecha sozinho e celebra a aprovação com som e confirmação visual.
 4. Seus créditos são disponibilizados imediatamente na sua carteira digital para uso no Studio CREATE, VORIXA FLOW e demais ferramentas neurais!
 
+---
+
+## 11. Guia da Experiência Visual de Elite (Awwwards / Apple Standard)
+
+### A. Navegação em Cápsula Flutuante & Home Cinematográfica
+* **Ilha Flutuante de Navegação**: O cabeçalho foi redesenhado como uma cápsula flutuante em vidro translúcido com cantos arredondados, atalhos rápidos com touch targets generosos (>= 44px) e badge de prontidão do cluster de inferência (`v2.6 Live`).
+* **Monumento Hero Interativo**: Alterne entre os canais de demonstração visual (Seedance 2.0, Kling 2.6 Pro + Áudio, Kling v3 Motion Dança e Kling 2.1 Pro) em abas táteis estilo Apple para ver os resultados cinematográficos em tempo real.
+* **Showroom de Prova Real do Motion Control**: Compare lado a lado o vídeo guia de coreografia do TikTok, a foto da personagem criada por IA e a renderização final dançando com fidelidade corporal e áudio nativo sincronizado.
+
+### B. Studio CREATE & Seleção Rápida de Casting
+* **Textarea Editorial**: Campo de prompt espaçoso com contagem precisa de caracteres e botão integrado de **Otimização por IA** (`PromptEngine`).
+* **Insígnia de Modelo Ativo**: Ao trabalhar com modelos da vitrine, uma insígnia de luxo (`ActiveShowcaseModelBanner`) confirma a consistência facial com o motor FLUX PuLID.
+* **Seletor Rápido de Casting (`QuickModelPickerModal`)**: Permite buscar e alternar modelos fotográficos ou virtuais diretamente na tela de criação sem recarregar a página.
+
+### C. Vitrine de Modelos & Lookbook Editorial
+* **Filtros em Pílulas Deslizantes**: Encontre modelos por nicho (Moda, Comercial, Fitness, Lifestyle, etc.) e tipo (`🤖 IA` ou `👤 REAL`).
+* **Lookbook em Alta Definição**: Visualize a galeria de fotos, biografia artística, parâmetros de prompt trigger e envie propostas de contratação de diária diretamente pelo formulário de reserva em R$.
+
+### D. Cartão Fintech Obsidian Metal & Checkout
+* **Cartão de Saldo Digital**: Exibe o saldo atual em um cartão financeiro escuro texturizado com chip EMV dourado e símbolo Contactless.
+* **Checkout Híbrido**: Escolha instantaneamente entre Pix com liberação em 3s ou Cartão de Crédito com recibo detalhado.
+
+---
+
+## 12. Ferramentas Especializadas de IA Adaptativas & Mobile-First (Fase 8.5)
+
+Este módulo documenta o conjunto de ferramentas dedicadas de IA com layout responsivo fluido, navegação em abas táteis no mobile e preservação de estabilidade visual (Zero CLS).
+
+### A. Shell Unificado de Geração (`GenerationLayout`)
+* **Módulo**: Core de Inferência de IA / Estúdio Dedicado.
+* **Telas**: Base de Motion Control (`/dashboard/tools/motion`), Lip Sync (`/dashboard/tools/lipsync`) e Video Upscale (`/dashboard/tools/upscale`).
+* **Objetivo**: Fornecer uma casca contemporânea com divisão equilibrada de parâmetros à esquerda e visualização/galeria à direita no desktop, com alternância tátil inteligente de abas (`Configurar` e `Resultado`) no mobile para eliminar scroll infinito.
+* **Campos**:
+  * *Parâmetros customizados*: Injetados por cada ferramenta filha (vídeos, fotos, seletores de modelo e áudios).
+  * *Tempo Decorrido*: Indicador ao vivo de segundos durante o processamento no cluster de GPUs.
+* **Botões & Ações**:
+  * *Aba "Configurar"*: Ativa o painel de parâmetros no smartphone (touch target >= 44px).
+  * *Aba "Resultado"*: Ativa o canvas de preview e a galeria com indicador pulsante de status (touch target >= 44px).
+  * *Iniciar Geração*: Dispara o processo na GPU e comuta automaticamente para a aba de Resultado no celular.
+  * *Tela Cheia (Lightbox)*: Abre a mídia em alta fidelidade com fechamento rápido pela tecla `Escape` ou botão fechar.
+  * *Baixar Arquivo*: Download direto da mídia com extensão apropriada (.mp4 ou .jpg).
+* **Passo a Passo**:
+  1. No celular, selecione a aba `Configurar` e preencha os parâmetros obrigatórios.
+  2. Clique em `Iniciar Geração`.
+  3. A interface comuta instantaneamente para a aba `Resultado`, revelando o stepper de 3 fases (Fila GPU, Inferência, Master).
+  4. Ao término da renderização, reproduza o vídeo ou amplie a imagem RAW na galeria de arte digital.
+* **Resultados Esperados**: Mídia cinematográfica carregada em container com aspect ratio estável (`aspect-video`), eliminando qualquer salto visual na tela.
+* **Erros Comuns & Soluções**:
+  * *Saldo Insuficiente*: Toast sonner vermelho informará os créditos necessários; recarregue via Pix Instantâneo no menu de créditos.
+  * *Prompt Muito Básico*: Modal inteligente sugerirá aprimoramento com 1 clique (`Otimizar com IA`).
+
+### B. Ferramenta de Motion Control (`/dashboard/tools/motion`)
+* **Módulo**: Animação Óssea & Transferência de Pose Corporal.
+* **Tela**: Motion Control Studio (`/dashboard/tools/motion`).
+* **Objetivo**: Clonar coreografias, passos de dança e gestos anatômicos de um vídeo de referência para uma imagem estática de personagem com fidelidade óssea.
+* **Campos**:
+  * *1. Personagem (Foto)*: Imagem do personagem de corpo inteiro ou meio corpo (JPG, PNG, WEBP).
+  * *2. Movimento Guia (Vídeo)*: Clipe em vídeo contendo a movimentação física de referência (MP4, MOV).
+  * *Orientação do Personagem*: Botões segmentados de toque generoso: `Seguir Vídeo` (ângulo dinâmico) ou `Seguir Imagem` (enquadramento estático).
+  * *Tratamento de Áudio*: Alternador com feedback visual para preservar a trilha sonora original do vídeo guia.
+  * *Prompt de Apoio*: Descrição opcional de iluminação de contorno e ambientação.
+* **Botões & Ações**:
+  * *Escolher Imagem / Escolher Vídeo*: Botões explícitos com área mínima de toque de 44px dentro das zonas de drop.
+  * *Trocar Foto / Trocar Vídeo*: Ações de substituição rápida com touch target de 44px.
+  * *Remover*: Limpeza do arquivo carregado sem recarregar o formulário.
+* **Passo a Passo**:
+  1. Carregue a foto do seu personagem no Slot 1.
+  2. Carregue o vídeo de referência com a coreografia desejada no Slot 2.
+  3. Escolha a orientação (`Seguir Vídeo` ou `Seguir Imagem`) e se deseja manter o áudio original.
+  4. Clique em `Iniciar Geração`. O motor `Kling Video v3 Motion Control` transferirá as poses e renderizará o vídeo final.
+* **Resultados**: Vídeo cinematográfico de alta fidelidade com o personagem executando os movimentos da referência corporal.
+* **Erros Comuns**:
+  * *Arquivo com formato incompatível*: Certifique-se de usar vídeo em MP4/MOV e foto em JPG/PNG/WEBP.
+  * *Personagem cortado*: Utilize imagens onde o corpo ou membros do personagem estejam visíveis para melhor rastreamento ósseo.
+
+### C. Gerador de Imagens & Subcomponentes (`/dashboard/tools/image`)
+* **Módulo**: Imagem Neural & Preservação Facial.
+* **Tela**: Gerador de Imagens (`/dashboard/tools/image`).
+* **Objetivo**: Renderização fotorrealista e cinematográfica em ultra-HD através dos motores FLUX.1 e nano-banana-pro, com suporte a Preservação Facial (PuLID).
+* **Campos & Subcomponentes**:
+  * *ImageWorkflowTabs*: Abas deslizantes `Texto para Imagem`, `Imagem de Referência`, `Mesmo Rosto (PuLID)` e `Estilo & Paleta`.
+  * *ImagePromptSection*: Textarea com foco suave, botão `Otimizar com IA` (>= 44px) e atalhos rápidos (`Cinemático`, `Foto 35mm`, `Cyberpunk`, `Luz Softbox`).
+  * *ImageRatioSelector*: Pílulas geométricas de aspect ratio com rolagem touch horizontal (`no-scrollbar`) no smartphone e grid no desktop, com área de toque mínima de 48px.
+  * *ImageResolutionSelector*: Opções de matrizes de pixels com touch targets confortáveis.
+  * *ImageReferenceUploader*: Upload tátil com botão explícito de seleção para dispositivos móveis.
+* **Botões**:
+  * *Otimizar com IA*: Enriquece a descrição adicionando lentes, luz e grading.
+  * *Inspirar / Aleatório / Limpar*: Botões ergonômicos na base do prompt.
+  * *Gerar Imagem*: Botão protagonista com gradiente de alta energia.
+  * *Baixar / Variar / Upscale 4K / No Flow*: Ações rápidas abaixo do canvas de preview.
+* **Passo a Passo**:
+  1. Selecione o modo de criação e digite sua ideia no prompt.
+  2. Ajuste a proporção desejada através das pílulas horizontais.
+  3. Clique em `Gerar Imagem`. A tela exibirá a renderização na GPU com taxa de amostragem em tempo real.
+  4. Clique em `Baixar` ou envie diretamente para o Canvas através do botão `No Flow`.
+
+### D. Gerador de Vídeo (`/dashboard/tools/video`)
+* **Módulo**: Vídeo Cinematográfico & Física Neural.
+* **Tela**: Imagem para Vídeo (`/dashboard/tools/video`).
+* **Objetivo**: Síntese de vídeo de alta fidelidade em 720p HD, 1080p Pro e 4K Ultra a partir de texto ou imagem de referência.
+* **Campos**:
+  * *Modo de Criação*: `Texto para Vídeo` ou `Imagem para Vídeo`.
+  * *Seleção de Motor*: Kling 2.1 Pro, Kling 3.0 Pro, Wan 2.1, Luma Ray 2 ou Hailuo Minimax.
+  * *Ajustes de Render*: Duração (5s ou 10s), Proporção (16:9, 9:16, 1:1), Qualidade e Movimento de Câmera.
+* **Player & Controles**:
+  * Player com proporção fixa `aspect-video` para eliminar qualquer pulo de layout.
+  * Barra de transporte de cinema com botões de Play/Pause, Mute, Fullscreen e Slider de timeline com touch targets >= 44px.
+  * Miniaturas de gerações recentes reais com reprodução rápida.
+* **Passo a Passo**:
+  1. Selecione o motor desejado e configure a cena ou envie uma imagem guia.
+  2. Escolha o tempo de duração e a qualidade.
+  3. Clique em `Gerar Vídeo`. Acompanhe a renderização e o polling no player.
+  4. Assista em tela cheia com áudio ou faça o download direto.
 
