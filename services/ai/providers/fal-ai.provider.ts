@@ -431,7 +431,7 @@ export class FalAIProvider implements IAIProvider {
         );
       }
 
-      // Sanitização estrita para Kling Motion Control (espera image_url, video_url e opcionalmente prompt)
+      // Sanitização estrita para Kling Motion Control (espera image_url, video_url, character_orientation e opcionalmente prompt)
       if (payload.modelTechnicalName.includes("motion-control")) {
         const finalImg = modelInputs.image_url || modelInputs.character_image_url || modelInputs.image;
         const finalVid = modelInputs.video_url || modelInputs.reference_video_url || modelInputs.video;
@@ -441,10 +441,23 @@ export class FalAIProvider implements IAIProvider {
         if (finalVid) {
           modelInputs.video_url = finalVid;
         }
+
+        // Kling Video v3 Motion Control exige obrigatoriamente character_orientation ('video' ou 'image')
+        modelInputs.character_orientation = modelInputs.character_orientation === "image" ? "image" : "video";
+        if (modelInputs.keep_original_sound === undefined) {
+          modelInputs.keep_original_sound = true;
+        } else {
+          modelInputs.keep_original_sound = Boolean(modelInputs.keep_original_sound);
+        }
+
         delete modelInputs.character_image_url;
         delete modelInputs.reference_video_url;
         delete modelInputs.image;
         delete modelInputs.video;
+        delete modelInputs.resolution;
+        delete modelInputs.mode;
+        delete modelInputs.duration;
+
         if (typeof modelInputs.prompt === "string" && !modelInputs.prompt.trim()) {
           delete modelInputs.prompt;
         }

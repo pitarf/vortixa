@@ -13,6 +13,10 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
   - Garantia de conformidade com o schema OpenAPI do provedor: mapeamento rigoroso de `image_url` (imagem do personagem) e `video_url` (vídeo guia de movimento/dança).
   - Remoção de chaves conflitantes ou apelidos internos (`character_image_url`, `reference_video_url`, `image`, `video`) antes do despacho para a API.
   - Omissão graciosa do campo `prompt` quando vazio para evitar rejeições de validação.
+- **Resolução do Erro 422 (`character_orientation` obrigatório)**:
+  - Identificado nos logs detalhados da API que o modelo Kling v3 exige estritamente o parâmetro `character_orientation` (`'video'` ou `'image'`).
+  - Mapeado `'video'` por padrão (ideal para danças e movimentos dinâmicos de até 30s) e adicionado controle de seleção visual na interface.
+  - Adicionado suporte a `keep_original_sound` (preservação do áudio original da dança) e limpeza de parâmetros extras (`resolution`, `mode`, `duration`) antes da submissão.
 - **Sincronização no Banco de Dados e Frontend**:
   - Atualização da tabela `AIModel` no PostgreSQL relacional vinculando a ferramenta `motion-control` ao motor `fal-ai/kling-video/v3/standard/motion-control`.
   - Atualização do seletor em `app/dashboard/tools/motion/page.tsx`, `components/studio/types.ts` e `lib/data/changelog-data.ts`.
