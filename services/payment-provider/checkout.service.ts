@@ -3,6 +3,15 @@ import { OrderService } from "../order.service";
 import { PaymentProvider } from "./payment-provider.interface";
 import { PaymentStatus } from "@prisma/client";
 
+export interface CheckoutResult {
+  orderId: string;
+  paymentId: string;
+  checkoutUrl: string;
+  amountCents: number;
+  creditsGranted: number;
+  gateway: string;
+}
+
 export class CheckoutService {
   private provider: PaymentProvider;
 
@@ -15,15 +24,23 @@ export class CheckoutService {
    * Não confia em nenhum parâmetro de preço ou créditos enviados pelo cliente.
    * Valida sessão segura e vincula o usuário correspondente de forma atômica.
    */
-  async handleCheckout(userId: string, packageId: string): Promise<any> {
+  async handleCheckout(
+    userId: string,
+    packageId: string,
+    paymentMethod?: "pix" | "credit_card" | "all" | string
+  ): Promise<CheckoutResult> {
     // 1. Busca usuário para pegar email de contato (usado no gateway)
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { email: true },
+      select: { email: true, isBlocked: true },
     });
 
     if (!user) {
       throw new Error("Usuário não encontrado.");
+    }
+
+    if (user.isBlocked) {
+      throw new Error("Sua conta está suspensa. Entre em contato com o suporte.");
     }
 
     // 2. Cria o Order com os dados oficiais (única fonte de verdade) e preserva o snapshot
@@ -44,6 +61,7 @@ export class CheckoutService {
         email: user.email,
         title: pkg ? `VORIXA - Pacote ${pkg.name}` : "Pacote de Créditos VORIXA",
         description: pkg?.description || "Créditos para geração de IA na plataforma VORIXA",
+        paymentMethod,
       });
 
       // 4. Salva a transação pendente (Payment com status PENDING) no banco
@@ -63,6 +81,9 @@ export class CheckoutService {
         orderId: order.id,
         paymentId: payment.id,
         checkoutUrl: checkoutResponse.checkoutUrl,
+        amountCents: payment.amountCents,
+        creditsGranted: payment.creditsGranted,
+        gateway: payment.gateway,
       };
     } catch (error: any) {
       // Se falhar o gateway, marca o Order como FAILED

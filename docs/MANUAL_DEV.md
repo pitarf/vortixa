@@ -92,14 +92,27 @@ Para habilitar a funcionalidade de login com o Google no ambiente local de desen
 
 ---
 
-## 5. Módulo de Pagamentos e Ledger Financeiro (Fase 6 & 6.5)
+## 5. Módulo de Pagamentos e Ledger Financeiro (Fase 6, 6.4 & 6.5)
 
-### Arquitetura Financeira
-* **Modelagem**: Transações de crédito são atômicas (`CreditBalance` e `CreditTransaction`).
-* **Integridade do Ledger**: Toda concessão ou débito é processado com `prisma.$transaction` e `SELECT FOR UPDATE` para evitar double-spending e race conditions.
-* **Gateway VorexPay**:
-  * Provedor desacoplado via interface `PaymentProvider` com chave `PAYMENT_PROVIDER_MODE=mock` ou `live`.
-  * Validação criptográfica de Webhooks (`x-signature` HMAC SHA-256) e idempotência estrita via `PaymentRecord.gatewayTxId` e `CreditTransaction.paymentId`.
+### Arquitetura Financeira e Princípios de Integridade
+* **Autoridade do Servidor**: Preços (`amountCents`) e créditos (`creditsGranted`) são obtidos exclusivamente da base de dados PostgreSQL (`CreditPackage`), gravando snapshot imutável em `Order` e `Payment`. Nenhuma informação de valor enviada pelo cliente é aceita (prevenção a Mass Assignment).
+* **Resolução Dinâmica de Gateways**: `PaymentProviderFactory.getProvider(name)` resolve transparentemente entre `mercadopago`, `stripe` e `mock_gateway` (ambiente de teste/desenvolvimento).
+* **Mercado Pago Checkout Pro**:
+  - Filtro granular de métodos de pagamento configurado em preferências (`pix`, `credit_card` ou todos).
+  - Redirecionamentos seguros configurados via `back_urls`:
+    - Sucesso: `${NEXT_PUBLIC_APP_URL}/dashboard/credits?status=success&orderId={orderId}`
+    - Pendente: `${NEXT_PUBLIC_APP_URL}/dashboard/credits?status=pending&orderId={orderId}`
+    - Falha: `${NEXT_PUBLIC_APP_URL}/dashboard/credits?status=failure&orderId={orderId}`
+  - Notificações direcionadas para `/api/webhooks/payment?provider=mercadopago`.
+  - Resolução transparente de eventos webhook e IPN (`action: "payment.created"`, `action: "payment.updated"`, `query: data.id`), com suporte a consulta na API REST do Mercado Pago (`GET /v1/payments/{id}`).
+* **Camada Dupla de Idempotência e Concorrência**:
+  - **Nível 1 (Webhook)**: Registro em `PaymentWebhook` com constraint única em `gatewayEventId`. Re-tentativas retornam HTTP 200 sem duplicar processamento.
+  - **Nível 2 (Ledger Transacional)**: `PaymentLedgerService.confirmPayment()` executa sob `prisma.$transaction` com lock pessimista SQL `SELECT ... FOR UPDATE` tanto na linha do `Payment` quanto na tabela `CreditBalance`.
+  - Bloqueio de regressão de estado (se `status === PAID`, descarta re-execuções de forma idempotente).
+* **Prevenção Anti-IDOR e Sanitização de Sessão**:
+  - Endpoint de consulta de status (`GET /api/payments/status/[paymentId]`) valida rigorosamente `payment.userId === session.user.id`. Contas suspensas (`isBlocked: true`) são rejeitadas em todas as operações com HTTP 403.
+* **Suíte de Testes Adversariais**:
+  - `__tests__/adversarial-payment-flow.test.ts` valida 6 vetores de ataque com 100% de mocks locais, sem requisições a APIs externas pagas.
 
 ---
 

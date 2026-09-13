@@ -5,6 +5,20 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [2.0.0] - 2026-09-13
+### Infraestrutura Completa de Pagamento, Planos, Modais, Webhook e Testes Adversariais
+- **Fluxo de Checkout & Modais Reativos (`components/credits/*`)**:
+  - `PaymentCheckoutModal`: Apresentação clara do pacote/plano selecionado com bônus, valor congelado em R$ e seleção de método de pagamento (Pix Instantâneo ou Cartão de Crédito).
+  - `PaymentPixModal`: Modal de pagamento via Pix com QR Code de alta precisão, botão de cópia com 1 clique para "Pix Copia e Cola", timer regressivo de 15 minutos e detector em tempo real com polling automático (`/api/payments/status/[paymentId]`).
+  - `PaymentSuccessModal`: Modal de comemoração com áudio nativo de vitória via Web Audio API, recibo detalhado com ID do pedido, créditos adicionados (+ bônus), novo saldo da carteira e botão de redirecionamento para o Studio CREATE.
+  - `PaymentFailureModal`: Modal de suporte e recuperação com explicações claras para pagamentos recusados ou expirados e opção de tentar novamente.
+- **Backend & APIs de Pagamentos (`/api/payments/*`)**:
+  - `POST /api/payments/checkout`: Integração dinâmica com `PaymentProviderFactory.getProvider()`, validação de contas suspensas (`isBlocked`), suporte a parâmetro de método de pagamento (`pix` | `credit_card`) e congelamento atômico de valores da base de dados (Zero Trust Mass Assignment).
+  - `GET /api/payments/status/[paymentId]`: Endpoint seguro com autenticação estrita e barreira Anti-IDOR para consulta de status da transação em tempo real pelo cliente.
+  - `POST /api/webhooks/payment`: Processamento resiliente de webhooks e notificações IPN do Mercado Pago com consulta de detalhes (`getPaymentDetails`), normalização de status e atualização atômica de pedidos (`Order`) e pagamentos (`Payment`).
+- **Segurança Adversária & Integridade Financeira (`__tests__/adversarial-payment-flow.test.ts`)**:
+  - Implementação de suíte de testes cobrindo 6 vetores de ataque: manipulação de preço em centavos, 5 chamadas concorrentes com `Promise.all()` (concorrência e double-spending neutralizados por lock `FOR UPDATE`), replay attack de webhook, falsificação de HMAC, Anti-IDOR e acesso não autenticado (100% de sucesso em 182 testes no Vitest).
+
 ## [1.9.8] - 2026-09-13
 ### Tag Visual e Validação de Requisito de Imagem no Gerador Hot (+18)
 - **Tag Visual e Badge "Requer Imagem" nos Motores Hot (`HotGenerationClient.tsx`)**:

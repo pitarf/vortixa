@@ -340,6 +340,30 @@ O **Studio CREATE v2.0** é o ambiente integrado de alta performance para criaç
 
 ---
 
+## 6. Planos, Recarga de Créditos & Checkout Seguro (`/dashboard/credits`)
+
+A área de créditos do VORIXA permite adquirir pacotes sob demanda sem mensalidades forçadas ou expiração de saldo.
+
+### A. Pacotes Disponíveis
+* **Iniciante (100 Créditos)**: R$ 19,90 — Ideal para experimentar os motores e criar os primeiros conteúdos.
+* **Profissional (500 + 50 Bônus = 550 Créditos)**: R$ 79,90 — Pacote mais popular entre agências e criadores frequentes.
+* **Criador Pro (1000 + 150 Bônus = 1150 Créditos)**: R$ 149,90 — Para estúdios e alta demanda com maior custo-benefício.
+
+### B. Formas de Pagamento
+* **Pix Instantâneo (Mercado Pago)**:
+  - Liberação imediata em poucos segundos.
+  - Exibe na tela o QR Code em alta resolução e o campo **Pix Copia e Cola** com botão de 1 clique.
+  - Timer de validade de 15 minutos e detector automático em tempo real: assim que o pagamento for concluído no app do seu banco, a tela atualiza sozinha sem precisar recarregar a página.
+* **Cartão de Crédito Nacional / Outros**:
+  - Aceita Visa, Mastercard, Elo, Hipercard e American Express em até 12x.
+  - Tokenização criptografada e proteção antifraude.
+
+### C. Confirmação e Recibo
+* Ao confirmar a transação, o modal de sucesso apresenta o resumo com número do pedido, créditos adicionados e o novo saldo atualizado.
+* A partir do modal, é possível ir diretamente para o **Studio CREATE** ou para o **VORIXA FLOW** para iniciar suas produções.
+
+---
+
 ## 7. Vitrine de Modelos & Casting (`/dashboard/models`)
 
 A Vitrine de Modelos do VORIXA é um marketplace completo para encontrar, explorar e contratar tanto **Modelos Virtuais de IA** quanto **Modelos Reais**.

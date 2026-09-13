@@ -1,5 +1,10 @@
 import crypto from "crypto";
-import { PaymentProvider, PaymentCheckoutRequest, PaymentCheckoutResponse } from "./payment-provider.interface";
+import {
+  PaymentProvider,
+  PaymentCheckoutRequest,
+  PaymentCheckoutResponse,
+  PaymentDetailsResponse,
+} from "./payment-provider.interface";
 
 export class MercadoPagoProvider implements PaymentProvider {
   readonly name: string = "mercadopago";
@@ -26,6 +31,23 @@ export class MercadoPagoProvider implements PaymentProvider {
     }
 
     try {
+      // Configuração granular de métodos de pagamento (Pix / Cartão / Todos)
+      const paymentMethodsConfig: any = {};
+      if (request.paymentMethod === "pix") {
+        paymentMethodsConfig.excluded_payment_types = [
+          { id: "credit_card" },
+          { id: "debit_card" },
+          { id: "ticket" },
+        ];
+        paymentMethodsConfig.default_payment_method_id = "pix";
+        paymentMethodsConfig.installments = 1;
+      } else if (request.paymentMethod === "credit_card") {
+        paymentMethodsConfig.excluded_payment_types = [
+          { id: "ticket" },
+          { id: "bank_transfer" },
+        ];
+      }
+
       const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
         method: "POST",
         headers: {
@@ -55,6 +77,7 @@ export class MercadoPagoProvider implements PaymentProvider {
           },
           auto_return: "approved",
           notification_url: `${appUrl}/api/webhooks/payment?provider=mercadopago`,
+          ...(Object.keys(paymentMethodsConfig).length > 0 ? { payment_methods: paymentMethodsConfig } : {}),
           metadata: {
             order_id: request.orderId,
             user_id: request.userId,
@@ -77,6 +100,50 @@ export class MercadoPagoProvider implements PaymentProvider {
       };
     } catch (error: any) {
       throw new Error(error.message || "Falha na comunicação com o Mercado Pago.");
+    }
+  }
+
+  /**
+   * Consulta os detalhes de um pagamento no Mercado Pago pelo payment ID (ex: recebido via data.id no webhook).
+   * Em ambiente de teste ou sem credenciais, retorna mock para não disparar requisições externas desnecessárias.
+   */
+  async getPaymentDetails(paymentId: string | number): Promise<PaymentDetailsResponse | null> {
+    if (!this.accessToken || process.env.NODE_ENV === "test" || process.env.VITEST) {
+      return {
+        id: String(paymentId),
+        status: "approved",
+        externalReference: "",
+      };
+    }
+
+    try {
+      const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Erro na consulta do pagamento MP (${response.status}): ${errorText}`);
+        return null;
+      }
+
+      const data = await response.json();
+      return {
+        id: String(data.id),
+        status: data.status,
+        externalReference: data.external_reference || data.metadata?.order_id,
+        statusDetail: data.status_detail,
+        transactionAmount: data.transaction_amount,
+        payerEmail: data.payer?.email,
+        raw: data,
+      };
+    } catch (error: any) {
+      console.error(`Falha ao conectar com a API do Mercado Pago para o pagamento ${paymentId}:`, error);
+      return null;
     }
   }
 

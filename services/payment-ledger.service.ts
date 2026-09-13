@@ -66,6 +66,14 @@ export class PaymentLedgerService {
         },
       });
 
+      // 4.1 Atualiza também o pedido correspondente (Order) caso exista
+      if (currentPayment.orderId) {
+        await tx.order.update({
+          where: { id: currentPayment.orderId },
+          data: { status: PaymentStatus.PAID },
+        });
+      }
+
       // 5. Atualiza ou cria saldo de créditos
       await tx.creditBalance.upsert({
         where: { userId: currentPayment.userId },
@@ -138,6 +146,13 @@ export class PaymentLedgerService {
           status: PaymentStatus.REFUNDED,
         },
       });
+
+      if (currentPayment.orderId) {
+        await tx.order.update({
+          where: { id: currentPayment.orderId },
+          data: { status: PaymentStatus.REFUNDED },
+        });
+      }
 
       // Atualiza o saldo do usuário
       await tx.creditBalance.update({

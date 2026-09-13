@@ -8,6 +8,14 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Infraestrutura Completa de Pagamento, Planos, Modais, Webhook e Testes Adversariais**:
+  - Resolução dinâmica de gateways via `PaymentProviderFactory` com suporte oficial a **Mercado Pago** (Pix instantâneo e Cartão de Crédito Nacional em até 12x), Stripe e Mock Gateway.
+  - Modal de Checkout (`PaymentCheckoutModal`) com resumo de créditos, bônus, selo SSL e seletor de método de pagamento.
+  - Modal Pix Dedicado (`PaymentPixModal`) com QR Code de alta resolução, Pix Copia e Cola, timer de expiração de 15 minutos e polling em tempo real a cada 3s via `GET /api/payments/status/[paymentId]`.
+  - Modal de Celebração de Sucesso (`PaymentSuccessModal`) com áudio de vitória via Web Audio API, recibo formal, créditos creditados e atalho para o Studio CREATE.
+  - Modal de Falha amigável (`PaymentFailureModal`) com orientações de resolução e botão para tentar novamente.
+  - Webhook de pagamentos robusto (`POST /api/webhooks/payment`) com camada dupla de idempotência (`PaymentWebhook` e `PaymentLedgerService`), suporte a notificações IPN do Mercado Pago com consulta de detalhes (`getPaymentDetails`) e lock pessimista `SELECT FOR UPDATE` para atomicidade financeira.
+  - Suíte de testes adversariais automatizada (`__tests__/adversarial-payment-flow.test.ts`) cobrindo 6 vetores de ataque: Mass Assignment / adulteração de preço, concorrência simultânea (double-spending), replay attack, falsificação de assinatura HMAC, Anti-IDOR e acesso não autenticado (100% de aprovação em 182 testes globais).
 - [x] **Tag Visual e Alerta "Requer Imagem" no Gerador Hot (+18)**:
   - Adicionada badge destacada `📷 Requer Imagem` com estilização âmbar nos cards de modelos que exigem obrigatoriamente foto para funcionar (motores de vídeo *Image-to-Video*).
   - Estado dinâmico no botão de disparo: quando o modelo ativo exige imagem e nenhuma está selecionada, o botão adota o rótulo `Selecione uma Foto para Gerar (+18)` e ao ser clicado rola suavemente a tela até a seção de seleção de foto.

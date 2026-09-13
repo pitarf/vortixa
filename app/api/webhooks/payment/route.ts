@@ -7,6 +7,8 @@ export async function POST(req: Request) {
   try {
     const url = new URL(req.url);
     const queryProvider = url.searchParams.get("provider") || undefined;
+    const queryDataId = url.searchParams.get("data.id") || url.searchParams.get("id") || undefined;
+    const queryTopic = url.searchParams.get("type") || url.searchParams.get("topic") || undefined;
 
     const stripeSig = req.headers.get("stripe-signature");
     const mpSig = req.headers.get("x-signature");
@@ -20,26 +22,35 @@ export async function POST(req: Request) {
       "stripe-signature": stripeSig || undefined,
       "x-vorexpay-signature": vorexSig || undefined,
       "x-request-id": req.headers.get("x-request-id") || undefined,
-      "data-id": url.searchParams.get("data.id") || undefined,
+      "data-id": queryDataId,
     };
 
-    const rawBody = await req.text();
-    if (!rawBody) {
-      return NextResponse.json({ error: "Payload vazio." }, { status: 400 });
-    }
+    let rawBody = await req.text();
+    let payload: any = {};
 
-    let payload: any;
-    try {
-      payload = JSON.parse(rawBody);
-    } catch {
-      return NextResponse.json({ error: "JSON inválido." }, { status: 400 });
+    if (rawBody && rawBody.trim().length > 0) {
+      try {
+        payload = JSON.parse(rawBody);
+      } catch {
+        return NextResponse.json({ error: "JSON inválido." }, { status: 400 });
+      }
+    } else if (queryDataId) {
+      // Suporte a IPN/Notificação via query params do Mercado Pago quando o body vem vazio
+      payload = {
+        action: "payment.updated",
+        data: { id: queryDataId },
+        type: queryTopic || "payment",
+      };
+      rawBody = JSON.stringify(payload);
+    } else {
+      return NextResponse.json({ error: "Payload vazio." }, { status: 400 });
     }
 
     let providerName = queryProvider;
     if (!providerName) {
       if (stripeSig || payload?.type?.startsWith("checkout.session.") || payload?.type?.startsWith("charge.")) {
         providerName = "stripe";
-      } else if (mpSig || payload?.action?.startsWith("payment.") || payload?.type === "payment") {
+      } else if (mpSig || payload?.action?.startsWith("payment.") || payload?.type === "payment" || queryDataId) {
         providerName = "mercadopago";
       } else if (vorexSig || payload?.gateway === "vorexpay") {
         providerName = "mock_gateway";
@@ -55,7 +66,7 @@ export async function POST(req: Request) {
     let normalizedStatus: "PAID" | "REFUNDED" | "PENDING" | "FAILED" | string = "";
 
     // Normalização Stripe
-    if (payload.type) {
+    if (payload.type && (payload.type.startsWith("checkout.session.") || payload.type.startsWith("charge.") || payload.type.startsWith("payment_intent."))) {
       eventId = payload.id;
       const stripeObj = payload.data?.object || {};
       gatewayTxId = stripeObj.id || gatewayTxId;
@@ -86,30 +97,58 @@ export async function POST(req: Request) {
       }
     }
 
-    // Normalização Mercado Pago
-    if (payload.action || payload.type === "payment") {
-      eventId = String(payload.id || payload.data?.id || `mp_evt_${Date.now()}`);
-      const mpDataId = String(payload.data?.id || payload.id || "");
-      gatewayTxId = mpDataId || gatewayTxId;
+    // Normalização Mercado Pago (Webhook e IPN)
+    if (payload.action || payload.type === "payment" || queryDataId || providerName === "mercadopago") {
+      const mpDataId = String(payload.data?.id || payload.id || queryDataId || "");
+      eventId = String(payload.id || payload.data?.id || queryDataId || `mp_evt_${Date.now()}`);
 
-      if (payload.action === "payment.created" || payload.action === "payment.updated") {
-        if (payload.data?.status === "approved") {
-          normalizedStatus = "PAID";
-        } else if (payload.data?.status === "refunded") {
-          normalizedStatus = "REFUNDED";
-        } else if (payload.data?.status === "rejected") {
-          normalizedStatus = "FAILED";
-        } else {
-          normalizedStatus = payload.status || "PAID";
+      // 1. Status pré-definido no payload (ex: mocks e testes unitários)
+      if (payload.data?.status === "approved" || payload.status === "approved" || payload.status === "PAID") {
+        normalizedStatus = "PAID";
+      } else if (payload.data?.status === "refunded" || payload.status === "refunded" || payload.status === "REFUNDED") {
+        normalizedStatus = "REFUNDED";
+      } else if (payload.data?.status === "rejected" || payload.data?.status === "cancelled" || payload.status === "FAILED") {
+        normalizedStatus = "FAILED";
+      } else if (payload.data?.status === "pending" || payload.data?.status === "in_process" || payload.status === "PENDING") {
+        normalizedStatus = "PENDING";
+      }
+
+      let externalRef = payload.external_reference || payload.data?.external_reference;
+
+      // 2. Se o status ou external_reference não estiverem presentes no payload, consulta a API do Mercado Pago
+      if ((!normalizedStatus || !externalRef) && mpDataId && typeof provider.getPaymentDetails === "function") {
+        const mpDetails = await provider.getPaymentDetails(mpDataId);
+        if (mpDetails) {
+          if (!normalizedStatus) {
+            if (mpDetails.status === "approved") {
+              normalizedStatus = "PAID";
+            } else if (mpDetails.status === "refunded") {
+              normalizedStatus = "REFUNDED";
+            } else if (mpDetails.status === "rejected" || mpDetails.status === "cancelled") {
+              normalizedStatus = "FAILED";
+            } else if (mpDetails.status === "pending" || mpDetails.status === "in_process") {
+              normalizedStatus = "PENDING";
+            }
+          }
+          if (!externalRef && mpDetails.externalReference) {
+            externalRef = mpDetails.externalReference;
+          }
         }
       }
 
-      if (!paymentId && gatewayTxId) {
+      // Se ainda não definiu status mas a ação é de pagamento, padrão para status fornecido ou PENDING
+      if (!normalizedStatus && payload.action?.startsWith("payment.")) {
+        normalizedStatus = payload.status || "PENDING";
+      }
+
+      // Localiza o Payment no banco pelo external_reference (orderId) ou mpDataId (gatewayTxId)
+      if (!paymentId) {
         const paymentRecord = await prisma.payment.findFirst({
           where: {
             OR: [
-              { gatewayTxId },
-              { orderId: payload.external_reference || payload.data?.external_reference },
+              ...(externalRef ? [{ orderId: externalRef }] : []),
+              ...(mpDataId ? [{ gatewayTxId: mpDataId }] : []),
+              ...(gatewayTxId ? [{ gatewayTxId }] : []),
             ],
           },
         });
@@ -134,6 +173,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Assinatura inválida." }, { status: 401 });
     }
 
+    // Validação de idempotência rigorosa com PaymentWebhook
     const existingWebhook = await prisma.paymentWebhook.findUnique({
       where: { gatewayEventId: eventId },
     });
@@ -178,6 +218,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Pagamento não localizado." }, { status: 404 });
     }
 
+    // Processamento transacional via PaymentLedgerService
     if (normalizedStatus === "PAID") {
       await PaymentLedgerService.confirmPayment(payment.id, gatewayTxId || payment.gatewayTxId, eventId);
     } else if (normalizedStatus === "REFUNDED") {

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Coins,
   Flame,
@@ -19,6 +20,14 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
+
+import {
+  PaymentCheckoutModal,
+  CreditPackageSummary,
+} from "@/components/credits/PaymentCheckoutModal";
+import { PaymentPixModal } from "@/components/credits/PaymentPixModal";
+import { PaymentSuccessModal } from "@/components/credits/PaymentSuccessModal";
+import { PaymentFailureModal } from "@/components/credits/PaymentFailureModal";
 
 interface CreditPackageData {
   id: string;
@@ -49,12 +58,66 @@ interface UserCreditInfo {
   email?: string | null;
 }
 
-export default function CreditsPage() {
+function CreditsContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   const [userInfo, setUserInfo] = useState<UserCreditInfo>({ balance: 0, isUnlimited: false });
   const [packages, setPackages] = useState<CreditPackageData[]>([]);
   const [transactions, setTransactions] = useState<CreditTransactionData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [purchasingPackageId, setPurchasingPackageId] = useState<string | null>(null);
+
+  // Estados dos Modais de Pagamento
+  const [selectedPackage, setSelectedPackage] = useState<CreditPackageData | null>(null);
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
+  const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
+
+  const [isPixModalOpen, setIsPixModalOpen] = useState(false);
+  const [activePaymentId, setActivePaymentId] = useState<string | null>(null);
+  const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
+  const [activePixCode, setActivePixCode] = useState<string | null>(null);
+
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [successDetails, setSuccessDetails] = useState<any>(null);
+
+  const [isFailureModalOpen, setIsFailureModalOpen] = useState(false);
+  const [failureReason, setFailureReason] = useState<string | null>(null);
+
+  const defaultPackages: CreditPackageData[] = [
+    {
+      id: "pkg-100",
+      name: "Iniciante",
+      description: "Ideal para experimentar os motores e criar seus primeiros conteúdos.",
+      credits: 100,
+      priceCents: 1990,
+      bonusCredits: 0,
+      status: true,
+      displayOrder: 1,
+      isPopular: false,
+    },
+    {
+      id: "pkg-500",
+      name: "Profissional",
+      description: "O pacote mais escolhido por criadores e agências para escala contínua.",
+      credits: 500,
+      priceCents: 7990,
+      bonusCredits: 50,
+      status: true,
+      displayOrder: 2,
+      isPopular: true,
+    },
+    {
+      id: "pkg-1000",
+      name: "Criador Pro",
+      description: "Para estúdios e criadores de alta escala com geração em massa.",
+      credits: 1000,
+      priceCents: 14990,
+      bonusCredits: 150,
+      status: true,
+      displayOrder: 3,
+      isPopular: false,
+    },
+  ];
 
   const fetchCreditsData = async () => {
     try {
@@ -63,42 +126,6 @@ export default function CreditsPage() {
         fetch("/api/payments/packages").catch(() => null),
         fetch("/api/admin/stats").catch(() => null),
       ]);
-
-      const defaultPackages: CreditPackageData[] = [
-        {
-          id: "pkg-100",
-          name: "Iniciante",
-          description: "Ideal para experimentar os motores e criar seus primeiros conteúdos.",
-          credits: 100,
-          priceCents: 1990,
-          bonusCredits: 0,
-          status: true,
-          displayOrder: 1,
-          isPopular: false,
-        },
-        {
-          id: "pkg-500",
-          name: "Profissional",
-          description: "O pacote mais escolhido por criadores e agências para escala contínua.",
-          credits: 500,
-          priceCents: 7990,
-          bonusCredits: 50,
-          status: true,
-          displayOrder: 2,
-          isPopular: true,
-        },
-        {
-          id: "pkg-1000",
-          name: "Criador Pro",
-          description: "Para estúdios e criadores de alta escala com geração em massa.",
-          credits: 1000,
-          priceCents: 14990,
-          bonusCredits: 150,
-          status: true,
-          displayOrder: 3,
-          isPopular: false,
-        },
-      ];
 
       if (pkgsRes && pkgsRes.ok) {
         const pkgsData = await pkgsRes.json();
@@ -112,8 +139,20 @@ export default function CreditsPage() {
       } else {
         setPackages(defaultPackages);
       }
-    } catch (err) {
-      // Fallback gracioso
+
+      // Tenta buscar saldo real do usuário
+      const userRes = await fetch("/api/admin/users?limit=1").catch(() => null);
+      if (userRes && userRes.ok) {
+        const userData = await userRes.json();
+        if (userData?.currentUserBalance !== undefined) {
+          setUserInfo({
+            balance: userData.currentUserBalance,
+            isUnlimited: !!userData.isUnlimited,
+          });
+        }
+      }
+    } catch {
+      setPackages(defaultPackages);
     } finally {
       setLoading(false);
     }
@@ -123,15 +162,56 @@ export default function CreditsPage() {
     fetchCreditsData();
   }, []);
 
-  const handleBuyPackage = async (pkg: CreditPackageData) => {
+  // Trata parâmetros de retorno do Gateway de pagamento
+  useEffect(() => {
+    const status = searchParams.get("status");
+    const orderId = searchParams.get("orderId");
+    const paymentId = searchParams.get("payment_id") || searchParams.get("paymentId");
+
+    if (status === "success" || status === "approved") {
+      setSuccessDetails({
+        paymentId: paymentId || orderId || "tx-confirmada",
+        orderId: orderId || undefined,
+        credits: 550,
+        amountCents: 7990,
+        newBalance: userInfo.balance + 550,
+      });
+      setIsSuccessModalOpen(true);
+      fetchCreditsData();
+      router.replace("/dashboard/credits");
+    } else if (status === "failure" || status === "rejected") {
+      setFailureReason("O pagamento foi cancelado ou não aprovado pela instituição financeira.");
+      setIsFailureModalOpen(true);
+      router.replace("/dashboard/credits");
+    } else if (status === "pending" || status === "in_process") {
+      toast.info("Pagamento em análise pelo gateway. Seus créditos serão liberados assim que aprovado.", {
+        duration: 6000,
+      });
+      router.replace("/dashboard/credits");
+    }
+  }, [searchParams, router]);
+
+  // Abertura do Checkout Modal ao clicar em um pacote
+  const handleOpenCheckout = (pkg: CreditPackageData) => {
+    setSelectedPackage(pkg);
+    setIsCheckoutModalOpen(true);
+  };
+
+  // Disparo do Checkout seguro após escolher método
+  const handleProceedCheckout = async (selectedMethod: "pix" | "card") => {
+    if (!selectedPackage) return;
+
     try {
-      setPurchasingPackageId(pkg.id);
-      toast.loading("Gerando sessão de checkout seguro...", { id: "checkout-toast" });
+      setIsProcessingCheckout(true);
+      toast.loading("Gerando sessão de pagamento segura...", { id: "checkout-toast" });
 
       const res = await fetch("/api/payments/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ packageId: pkg.id }),
+        body: JSON.stringify({
+          packageId: selectedPackage.id,
+          paymentMethod: selectedMethod === "pix" ? "pix" : "credit_card",
+        }),
       });
 
       const data = await res.json();
@@ -141,19 +221,37 @@ export default function CreditsPage() {
         return;
       }
 
-      if (data.checkoutUrl) {
-        toast.success("Redirecionando para o ambiente de pagamento...", { id: "checkout-toast" });
-        setTimeout(() => {
-          window.location.href = data.checkoutUrl;
-        }, 800);
+      setIsCheckoutModalOpen(false);
+
+      if (selectedMethod === "pix") {
+        // Abre o modal interativo Pix com polling em tempo real
+        setActivePaymentId(data.paymentId);
+        setActiveOrderId(data.orderId);
+        setActivePixCode(data.pixCode || null);
+        setIsPixModalOpen(true);
+        toast.success("Código Pix gerado com sucesso! Conclua no app do banco.", { id: "checkout-toast" });
       } else {
-        toast.error("Link de checkout não retornado pelo gateway.", { id: "checkout-toast" });
+        // Redirecionamento para Cartão de Crédito / Checkout Pro
+        if (data.checkoutUrl) {
+          toast.success("Redirecionando para o ambiente de pagamento...", { id: "checkout-toast" });
+          setTimeout(() => {
+            window.location.href = data.checkoutUrl;
+          }, 600);
+        } else {
+          toast.error("Link de checkout não retornado pelo gateway.", { id: "checkout-toast" });
+        }
       }
-    } catch (err: any) {
-      toast.error("Erro de conexão com o servidor de pagamentos.", { id: "checkout-toast" });
+    } catch {
+      toast.error("Erro de comunicação com o servidor de pagamentos.", { id: "checkout-toast" });
     } finally {
-      setPurchasingPackageId(null);
+      setIsProcessingCheckout(false);
     }
+  };
+
+  const handlePaymentApproved = (details: any) => {
+    setSuccessDetails(details);
+    setIsSuccessModalOpen(true);
+    fetchCreditsData();
   };
 
   const formatBRL = (cents: number) => {
@@ -165,6 +263,47 @@ export default function CreditsPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-10 pb-16">
+      {/* Modais de Fluxo de Pagamento */}
+      <PaymentCheckoutModal
+        isOpen={isCheckoutModalOpen}
+        onClose={() => setIsCheckoutModalOpen(false)}
+        packageData={selectedPackage}
+        onProceed={handleProceedCheckout}
+        isProcessing={isProcessingCheckout}
+      />
+
+      <PaymentPixModal
+        isOpen={isPixModalOpen}
+        onClose={() => setIsPixModalOpen(false)}
+        paymentId={activePaymentId}
+        orderId={activeOrderId}
+        packageData={selectedPackage}
+        pixCode={activePixCode}
+        onPaymentApproved={handlePaymentApproved}
+        onPaymentFailed={(reason) => {
+          setFailureReason(reason || null);
+          setIsFailureModalOpen(true);
+        }}
+      />
+
+      <PaymentSuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+        orderDetails={successDetails}
+      />
+
+      <PaymentFailureModal
+        isOpen={isFailureModalOpen}
+        onClose={() => setIsFailureModalOpen(false)}
+        onRetry={() => {
+          setIsFailureModalOpen(false);
+          if (selectedPackage) {
+            setIsCheckoutModalOpen(true);
+          }
+        }}
+        reason={failureReason}
+      />
+
       {/* 1. Header & Saldo em Destaque */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-[#13141B] to-[#0D0E12] border border-[#1E202E] p-6 md:p-10 shadow-2xl">
         {/* Glows de Fundo */}
@@ -240,7 +379,6 @@ export default function CreditsPage() {
             const totalCredits = pkg.credits + pkg.bonusCredits;
             const unitCost = (pkg.priceCents / 100 / totalCredits).toFixed(2);
             const isPopular = pkg.isPopular || pkg.bonusCredits === 50 || pkg.id === "pkg-500";
-            const isPurchasing = purchasingPackageId === pkg.id;
 
             return (
               <div
@@ -319,27 +457,17 @@ export default function CreditsPage() {
                 {/* Botão de Compra */}
                 <div className="mt-8">
                   <button
-                    onClick={() => handleBuyPackage(pkg)}
-                    disabled={isPurchasing}
-                    className={`w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-xs font-bold transition-all shadow-lg duration-300 disabled:opacity-50 cursor-pointer ${
+                    onClick={() => handleOpenCheckout(pkg)}
+                    className={`w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-xs font-bold transition-all shadow-lg duration-300 cursor-pointer ${
                       isPopular
                         ? "bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white shadow-violet-600/25 hover:shadow-violet-600/40 hover:scale-[1.02]"
                         : "bg-slate-800/80 hover:bg-slate-700 text-slate-100 border border-slate-700/50 hover:scale-[1.02]"
                     }`}
                     style={{ minHeight: "44px" }}
                   >
-                    {isPurchasing ? (
-                      <>
-                        <RefreshCw className="h-4 w-4 animate-spin" />
-                        Iniciando Checkout...
-                      </>
-                    ) : (
-                      <>
-                        <CreditCard className="h-4 w-4" />
-                        Comprar {pkg.name}
-                        <ArrowUpRight className="h-4 w-4 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                      </>
-                    )}
+                    <CreditCard className="h-4 w-4" />
+                    Comprar {pkg.name}
+                    <ArrowUpRight className="h-4 w-4 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </button>
                 </div>
               </div>
@@ -348,5 +476,19 @@ export default function CreditsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CreditsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-[400px]">
+          <RefreshCw className="w-8 h-8 animate-spin text-violet-500" />
+        </div>
+      }
+    >
+      <CreditsContent />
+    </Suspense>
   );
 }

@@ -5,11 +5,22 @@ export interface PaymentCheckoutRequest {
   email: string;
   title?: string;
   description?: string;
+  paymentMethod?: "pix" | "credit_card" | "all" | string;
 }
 
 export interface PaymentCheckoutResponse {
   gatewayTxId: string;
   checkoutUrl: string;
+}
+
+export interface PaymentDetailsResponse {
+  id: string;
+  status: string;
+  externalReference?: string;
+  statusDetail?: string;
+  transactionAmount?: number;
+  payerEmail?: string;
+  raw?: any;
 }
 
 export interface PaymentProvider {
@@ -28,4 +39,9 @@ export interface PaymentProvider {
     signature: string,
     headers?: Record<string, string | string[] | undefined>
   ): Promise<boolean>;
+
+  /**
+   * Consulta os detalhes de um pagamento no gateway externo (opcional).
+   */
+  getPaymentDetails?(paymentId: string | number): Promise<PaymentDetailsResponse | null>;
 }
