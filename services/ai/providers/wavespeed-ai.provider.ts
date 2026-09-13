@@ -115,11 +115,10 @@ export class WaveSpeedAIProvider implements IAIProvider {
         prompt: finalPrompt,
       };
 
-      // Para modelos de vídeo (ex: seedance spicy, wan spicy), o campo costuma ser "image" e não "image_url"
-      const imgUrl = payload.inputs.image_url || payload.inputs.image || payload.inputs.reference_image_url;
-      if (imgUrl) {
-        bodyPayload.image_url = imgUrl;
-        bodyPayload.image = imgUrl; // Seedance Spicy exige "image"
+      // Para modelos de vídeo (ex: seedance spicy, wan spicy), o campo obrigatório é "image"
+      const imgUrl = payload.inputs.image || payload.inputs.image_url || payload.inputs.reference_image_url;
+      if (imgUrl && (modelPath.includes("video") || modelPath.includes("image-to") || modelPath.includes("spicy"))) {
+        bodyPayload.image = imgUrl;
       }
 
       // Mapeamento e adaptação de dimensões (aspect ratio -> size em pixels "LARGURA*ALTURA")
@@ -154,7 +153,7 @@ export class WaveSpeedAIProvider implements IAIProvider {
         }
       }
 
-      if (payload.inputs.negative_prompt) {
+      if (payload.inputs.negative_prompt && !modelPath.includes("video")) {
         bodyPayload.negative_prompt = payload.inputs.negative_prompt;
       }
 
