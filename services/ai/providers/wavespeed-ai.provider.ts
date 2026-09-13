@@ -80,6 +80,15 @@ export class WaveSpeedAIProvider implements IAIProvider {
         "wavespeed-ai/pony-diffusion-v6-xl": "wavespeed-ai/chroma",
         "chroma": "wavespeed-ai/chroma",
         "wavespeed-ai/chroma": "wavespeed-ai/chroma",
+        // Modelos de Edição de Imagem (Image-Edit com preservação de identidade)
+        "minimax-h3/image-edit": "wavespeed-ai/minimax-h3/image-edit",
+        "wavespeed-ai/minimax-h3/image-edit": "wavespeed-ai/minimax-h3/image-edit",
+        "qwen-image/edit": "wavespeed-ai/qwen-image/edit",
+        "wavespeed-ai/qwen-image/edit": "wavespeed-ai/qwen-image/edit",
+        "qwen-image/edit-plus": "wavespeed-ai/qwen-image/edit-plus",
+        "wavespeed-ai/qwen-image/edit-plus": "wavespeed-ai/qwen-image/edit-plus",
+        "hidream-o1-image/edit": "wavespeed-ai/hidream-o1-image/edit",
+        "wavespeed-ai/hidream-o1-image/edit": "wavespeed-ai/hidream-o1-image/edit",
         // Vídeo Spicy (Sem Censura / Nudez)
         "wan-2.2-spicy": "wavespeed-ai/wan-2.2-spicy/image-to-video",
         "wavespeed-ai/wan-2.2-spicy": "wavespeed-ai/wan-2.2-spicy/image-to-video",
@@ -103,7 +112,7 @@ export class WaveSpeedAIProvider implements IAIProvider {
 
       // Injeção de realismo fotográfico: remove o aspecto plástico de pele lisa (plastic/doll look)
       let finalPrompt = payload.inputs.prompt || "";
-      if (!modelPath.includes("video")) {
+      if (!modelPath.includes("video") && !modelPath.includes("edit")) {
         // Enfatiza microtextura, pele crua, poros, iluminação natural e elimina estética plástica/render
         if (!finalPrompt.includes("pores") && !finalPrompt.includes("raw photo")) {
           finalPrompt = `${finalPrompt}, authentic raw photograph, natural unairbrushed skin texture, visible fine pores and subtle imperfections, realistic soft ambient lighting, shot on 35mm lens f/1.8, documentary boudoir style, no plastic skin, no CGI render, no doll look, 8k uhd`;
@@ -115,10 +124,21 @@ export class WaveSpeedAIProvider implements IAIProvider {
         prompt: finalPrompt,
       };
 
-      // Para modelos de vídeo (ex: seedance spicy, wan spicy), o campo obrigatório é "image"
+      // Para modelos de vídeo ou modelos de edição de imagem, o campo obrigatório é "image"
       const imgUrl = payload.inputs.image || payload.inputs.image_url || payload.inputs.reference_image_url;
-      if (imgUrl && (modelPath.includes("video") || modelPath.includes("image-to") || modelPath.includes("spicy"))) {
+      if (imgUrl && (modelPath.includes("video") || modelPath.includes("image-to") || modelPath.includes("spicy") || modelPath.includes("edit"))) {
         bodyPayload.image = imgUrl;
+      }
+
+      // Parâmetros específicos de edição de imagem
+      if (payload.inputs.strength !== undefined) {
+        bodyPayload.strength = Number(payload.inputs.strength);
+      }
+      if (payload.inputs.guidance_scale !== undefined) {
+        bodyPayload.guidance_scale = Number(payload.inputs.guidance_scale);
+      }
+      if (payload.inputs.mask_image) {
+        bodyPayload.mask_image = payload.inputs.mask_image;
       }
 
       // Mapeamento e adaptação de dimensões (aspect ratio -> size em pixels "LARGURA*ALTURA")

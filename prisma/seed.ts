@@ -250,6 +250,42 @@ async function main() {
       toolName: 'Wan 2.1 Motion Hot',
       toolDesc: 'Movimento fluido a fotos sensuais sem travas ou filtros de censura.',
     },
+    {
+      name: 'MiniMax H3 Image Edit (Alta Preservação)',
+      technicalName: 'wavespeed/minimax-h3/image-edit',
+      creditCost: 3,
+      apiUnitCost: 0.02,
+      toolSlug: 'minimax-h3-image-edit',
+      toolName: 'MiniMax H3 Image Edit',
+      toolDesc: 'Edição fotorrealista com alta preservação de identidade e estrutura da imagem de referência.',
+    },
+    {
+      name: 'Qwen Image Edit (Edição Semântica)',
+      technicalName: 'wavespeed/qwen-image/edit',
+      creditCost: 3,
+      apiUnitCost: 0.02,
+      toolSlug: 'qwen-image-edit',
+      toolName: 'Qwen Image Edit',
+      toolDesc: 'Edição precisa guiada por texto natural com alta fidelidade ao cenário.',
+    },
+    {
+      name: 'Qwen Image Edit Plus (Ultra Fidelidade)',
+      technicalName: 'wavespeed/qwen-image/edit-plus',
+      creditCost: 4,
+      apiUnitCost: 0.025,
+      toolSlug: 'qwen-image-edit-plus',
+      toolName: 'Qwen Image Edit Plus',
+      toolDesc: 'Versão aprimorada com máxima retenção de detalhes finos, texturas e proporções.',
+    },
+    {
+      name: 'HiDream O1 Image Edit (Fotorrealismo)',
+      technicalName: 'wavespeed/hidream-o1-image/edit',
+      creditCost: 3,
+      apiUnitCost: 0.02,
+      toolSlug: 'hidream-o1-image-edit',
+      toolName: 'HiDream O1 Image Edit',
+      toolDesc: 'Edição avançada com refinamento orgânico de texturas, pele e iluminação.',
+    },
   ];
 
   for (const m of models) {

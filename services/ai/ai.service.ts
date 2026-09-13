@@ -41,11 +41,12 @@ export class AIService {
           where: { technicalName: request.modelId },
         });
       }
-      // Suporte a modelos dinâmicos da WaveSpeed / Hot
-      if (!customModel && (request.modelId.startsWith("wavespeed") || request.modelId.includes("spicy") || request.modelId.includes("chroma"))) {
-        const isVideo = request.modelId.includes("video") || request.modelId.includes("spicy") || request.modelId.includes("wan") || request.modelId.includes("seedance") || request.modelId.includes("minimax");
-        const defaultCost = request.modelId.includes("seedance") ? 30 : request.modelId.includes("minimax") ? 18 : isVideo ? 15 : 3;
-        const defaultApiCost = request.modelId.includes("seedance") ? 0.90 : request.modelId.includes("minimax") ? 0.20 : isVideo ? 0.15 : 0.015;
+      // Suporte a modelos dinâmicos da WaveSpeed / Hot / Image-Edit
+      if (!customModel && (request.modelId.startsWith("wavespeed") || request.modelId.includes("spicy") || request.modelId.includes("chroma") || request.modelId.includes("qwen") || request.modelId.includes("hidream") || request.modelId.includes("edit"))) {
+        const isVideo = request.modelId.includes("video") || request.modelId.includes("spicy") || request.modelId.includes("wan") || request.modelId.includes("seedance") || (request.modelId.includes("minimax") && !request.modelId.includes("image-edit"));
+        const isEditPlus = request.modelId.includes("edit-plus");
+        const defaultCost = request.modelId.includes("seedance") ? 30 : request.modelId.includes("minimax") && isVideo ? 18 : isVideo ? 15 : isEditPlus ? 4 : 3;
+        const defaultApiCost = request.modelId.includes("seedance") ? 0.90 : request.modelId.includes("minimax") && isVideo ? 0.20 : isVideo ? 0.15 : isEditPlus ? 0.025 : 0.02;
         
         let wavespeedProvider = await prisma.aIProvider.findUnique({
           where: { name: "wavespeed" },

@@ -8,6 +8,12 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Integração de Modelos de Edição de Imagem com Preservação de Identidade (WaveSpeed AI)**:
+  - Mapeamento e suporte completo aos endpoints oficiais da WaveSpeed: `minimax-h3/image-edit`, `qwen-image/edit`, `qwen-image/edit-plus` e `hidream-o1-image/edit`.
+  - Tratamento de parâmetros de edição no backend (`image` obrigatório, `strength`, `guidance_scale` e `mask_image`).
+  - Resolução dinâmica sob demanda de modelos no `ai.service.ts` com precificação equilibrada (3 a 4 créditos).
+  - Atualização do catálogo oficial no seed do banco de dados (`prisma/seed.ts`).
+  - Integração no `HotGenerationClient.tsx` com badges informativos de fidelidade, tag `requiresImage: true` e validação preventiva com toasts da Sonner.
 - [x] **Infraestrutura Completa de Pagamento, Planos, Modais, Webhook e Testes Adversariais**:
   - Resolução dinâmica de gateways via `PaymentProviderFactory` com suporte oficial a **Mercado Pago** (Pix instantâneo e Cartão de Crédito Nacional em até 12x), Stripe e Mock Gateway.
   - Modal de Checkout (`PaymentCheckoutModal`) com resumo de créditos, bônus, selo SSL e seletor de método de pagamento.

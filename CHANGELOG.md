@@ -5,6 +5,19 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [2.1.0] - 2026-09-13
+### Integração de Modelos de Edição de Imagem com Preservação de Identidade (WaveSpeed AI)
+- **Integração de Motores de Edição de Imagem (`services/ai/providers/wavespeed-ai.provider.ts`)**:
+  - Mapeamento oficial dos endpoints: `wavespeed-ai/minimax-h3/image-edit`, `wavespeed-ai/qwen-image/edit`, `wavespeed-ai/qwen-image/edit-plus` e `wavespeed-ai/hidream-o1-image/edit`.
+  - Tratamento e injeção do parâmetro `image` obrigatório para modelos de edição, além de suporte a `strength`, `guidance_scale` e `mask_image`.
+  - Isolamento de prompts para modelos de edição (sem injeção indiscriminada de modificadores de câmera que conflitam com tarefas de instrução semântica).
+- **Resolução Dinâmica e Catálogo (`services/ai/ai.service.ts` e `prisma/seed.ts`)**:
+  - Resolução dinâmica sob demanda de modelos de edição da WaveSpeed com custos pré-configurados (3 a 4 créditos).
+  - Cadastro formal dos modelos no banco de dados para gestão no catálogo do Painel Executivo Administrativo.
+- **Interface e Validação Reativa (`app/dashboard/tools/hot/HotGenerationClient.tsx`)**:
+  - Adição dos modelos de edição na seleção de fotos com badges explicativos de fidelidade (`Preservação Facial 👤`, `Edição Precisa 🎯`, `Ultra Definição 💎`, `Composição Natural 🌿`).
+  - Flag `requiresImage: true` e validação instantânea com toasts específicos em PT-BR para fotos base ausentes.
+
 ## [2.0.0] - 2026-09-13
 ### Infraestrutura Completa de Pagamento, Planos, Modais, Webhook e Testes Adversariais
 - **Fluxo de Checkout & Modais Reativos (`components/credits/*`)**:

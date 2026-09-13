@@ -60,6 +60,46 @@ const HOT_MODELS: HotModel[] = [
     requiresImage: false,
   },
   {
+    id: "wavespeed/minimax-h3/image-edit",
+    name: "VORIXA MiniMax Edit (Alta Fidelidade)",
+    badge: "Preservação Facial 👤",
+    type: "image",
+    cost: 3,
+    description: "Edição fotorrealista mantendo máxima consistência da pessoa, rosto, corpo e iluminação original.",
+    speed: "~ 8s",
+    requiresImage: true,
+  },
+  {
+    id: "wavespeed/qwen-image/edit",
+    name: "VORIXA Qwen Edit (Instrução Semântica)",
+    badge: "Edição Precisa 🎯",
+    type: "image",
+    cost: 3,
+    description: "Modificação anatômica e de vestimenta guiada por texto natural com alta fidelidade ao cenário.",
+    speed: "~ 7s",
+    requiresImage: true,
+  },
+  {
+    id: "wavespeed/qwen-image/edit-plus",
+    name: "VORIXA Qwen Edit Plus (Ultra Detalhes)",
+    badge: "Ultra Definição 💎",
+    type: "image",
+    cost: 4,
+    description: "Versão avançada com máxima retenção de detalhes finos, texturas de pele e proporções.",
+    speed: "~ 10s",
+    requiresImage: true,
+  },
+  {
+    id: "wavespeed/hidream-o1-image/edit",
+    name: "VORIXA HiDream Edit (Fotorrealista)",
+    badge: "Composição Natural 🌿",
+    type: "image",
+    cost: 3,
+    description: "Edição com refinamento orgânico de pele, sombras naturais e consistência de ambiente.",
+    speed: "~ 8s",
+    requiresImage: true,
+  },
+  {
     id: "wavespeed/wan-2.2-spicy",
     name: "VORIXA Motion Hot (Vídeo +18 Fluido)",
     badge: "Alta Eficiência 🎥",
@@ -283,6 +323,11 @@ export default function HotGenerationClient() {
 
     if (creditMode !== "UNLIMITED" && balance < cost) {
       toast.error(`Saldo insuficiente (${balance} créditos disponíveis. Custo: ${cost}).`);
+      return;
+    }
+
+    if (selectedModel.requiresImage && !referenceImageUrl) {
+      toast.error("Este modelo exige uma foto base. Por favor, envie uma foto ou use uma recente ao lado.");
       return;
     }
 
@@ -522,12 +567,12 @@ export default function HotGenerationClient() {
                   ) : (
                     <span
                       className={`text-[10px] font-mono px-2 py-0.5 rounded ${
-                        selectedModel.type === "video"
+                        selectedModel.requiresImage
                           ? "bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold"
                           : "text-slate-500 bg-[#13141B]"
                       }`}
                     >
-                      {selectedModel.type === "video" ? "Obrigatório para Vídeo" : "Opcional"}
+                      {selectedModel.requiresImage ? "Obrigatório para este Modelo" : "Opcional"}
                     </span>
                   )}
                 </div>
@@ -571,6 +616,8 @@ export default function HotGenerationClient() {
                     <p className="text-[11px] text-slate-400 leading-tight">
                       {selectedModel.type === "video"
                         ? "Esta imagem será animada com movimentos corporais sem censura."
+                        : selectedModel.requiresImage
+                        ? "Esta imagem será modificada pelo motor de edição mantendo a mesma pessoa e pose."
                         : "Usada como modelo de anatomia, pose e iluminação no próximo prompt."}
                     </p>
 
@@ -608,11 +655,13 @@ export default function HotGenerationClient() {
               ) : (
                 /* Estado Vazio: Slot de Upload ou Selecionar Recente */
                 <div className="space-y-2.5">
-                  {selectedModel.type === "video" && (
+                  {selectedModel.requiresImage && (
                     <div className="p-2.5 rounded-xl bg-amber-950/20 border border-amber-500/30 text-amber-200 text-xs flex items-center gap-2">
                       <Lock className="w-4 h-4 text-amber-400 shrink-0" />
                       <span>
-                        Vídeos sem censura animam uma foto de base. Carregue uma imagem ou clique em <strong>"Usar como Referência"</strong> em qualquer foto recente ao lado.
+                        {selectedModel.type === "video"
+                          ? "Vídeos sem censura animam uma foto de base. Carregue uma imagem ou clique em \"Usar como Referência\" em qualquer foto recente ao lado."
+                          : "Modelos de edição necessitam de uma foto base para aplicar as modificações. Carregue uma imagem ou use uma foto recente ao lado."}
                       </span>
                     </div>
                   )}
