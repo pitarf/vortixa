@@ -302,7 +302,7 @@ export const CHANGELOG_ITEMS: ChangelogItem[] = [
     href: "/dashboard/tools/motion",
     actionText: "Testar Motion Control",
     isHero: false,
-    modelId: "fal-ai/kling/motion-control",
+    modelId: "fal-ai/kling-video/v3/standard/motion-control",
     costInCredits: 15,
   },
   {

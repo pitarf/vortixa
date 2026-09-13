@@ -95,7 +95,7 @@ export const TOOLS: Record<StudioTool, ToolDefinition> = {
     description: "Transfira movimentação de um vídeo de referência para qualquer personagem.",
     color: "from-fuchsia-500 to-purple-600",
     models: [
-      { id: "fal-ai/kling/motion-control", name: "Kling Motion", badge: "Pose Transfer", cost: 15, description: "Transferência física precisa de movimento", speed: "~ 60s" },
+      { id: "fal-ai/kling-video/v3/standard/motion-control", name: "Kling Motion", badge: "Pose Transfer", cost: 15, description: "Transferência física precisa de movimento", speed: "~ 60s" },
     ],
   },
   upscale: {

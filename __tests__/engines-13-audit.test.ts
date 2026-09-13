@@ -20,7 +20,7 @@ describe('Audit & Readiness Test: All 17 Generative AI Engines (Latest Versions)
     { name: 'Luma Ray 2', slug: 'luma-ray-2', technicalName: 'fal-ai/luma-dream-machine/ray-2' },
     { name: 'Wan 2.1 Video', slug: 'wan-video', technicalName: 'fal-ai/wan-i2v' },
     { name: 'Hailuo Minimax 01 Live', slug: 'minimax-live', technicalName: 'fal-ai/minimax/video-01-live' },
-    { name: 'Kling Motion Control', slug: 'motion-control', technicalName: 'fal-ai/kling/motion-control' },
+    { name: 'Kling Motion Control', slug: 'motion-control', technicalName: 'fal-ai/kling-video/v3/standard/motion-control' },
     { name: 'LatentSync Pro LipSync', slug: 'lip-sync', technicalName: 'fal-ai/latentsync' },
     { name: 'Creative Video Upscaler', slug: 'upscale', technicalName: 'fal-ai/creative-upscaler' },
     { name: 'FLUX Dev', slug: 'gerador-imagem-dev', technicalName: 'fal-ai/flux/dev' },
@@ -191,12 +191,12 @@ describe('Audit & Readiness Test: All 17 Generative AI Engines (Latest Versions)
     // Test Motion Control
     await provider.submitJob({
       jobId: 'fake-job-motion',
-      modelTechnicalName: 'fal-ai/kling/motion-control',
+      modelTechnicalName: 'fal-ai/kling-video/v3/standard/motion-control',
       inputs: { character_image_url: 'https://test.com/c.png', pose_reference_url: 'https://test.com/pose.mp4' },
       webhookUrl: 'https://vorixa.com/webhook',
     });
     expect(queueSpy).toHaveBeenLastCalledWith(
-      'fal-ai/kling/motion-control',
+      'fal-ai/kling-video/v3/standard/motion-control',
       expect.objectContaining({
         input: expect.objectContaining({
           image_url: 'https://test.com/c.png',

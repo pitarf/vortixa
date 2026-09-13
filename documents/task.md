@@ -8,6 +8,12 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Correção do Endpoint e Protocolo do Kling Motion Control (Fal.ai v3 Standard)**:
+  - Diagnóstico e resolução do erro `Unexpected status code: 404` / `Path /motion-control not found` disparado pela fal.ai.
+  - Varredura da API do provedor e atualização do endpoint para `fal-ai/kling-video/v3/standard/motion-control`.
+  - Mapeamento estrito dos parâmetros `image_url` e `video_url` e remoção de campos internos conflitantes antes da submissão da requisição.
+  - Atualização do banco de dados relacional PostgreSQL na tabela `AIModel` vinculando o slug `motion-control` ao motor corrigido.
+  - Atualização dos formulários no frontend (`app/dashboard/tools/motion/page.tsx`, `components/studio/types.ts`) e suíte de testes Vitest.
 - [x] **Integração Oficial do Gateway de Pagamentos Vorexpay (https://app.vorexpay.com)**:
   - Inspeção e engenharia reversa completa da documentação técnica e endpoints em `https://app.vorexpay.com/docs` a partir do bundle de produção da plataforma.
   - Implementação do provedor oficial `VorexPayProvider` (`services/payment-provider/vorexpay.provider.ts`) compatível com a interface unificada `PaymentProvider`.

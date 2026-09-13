@@ -431,6 +431,25 @@ export class FalAIProvider implements IAIProvider {
         );
       }
 
+      // Sanitização estrita para Kling Motion Control (espera image_url, video_url e opcionalmente prompt)
+      if (payload.modelTechnicalName.includes("motion-control")) {
+        const finalImg = modelInputs.image_url || modelInputs.character_image_url || modelInputs.image;
+        const finalVid = modelInputs.video_url || modelInputs.reference_video_url || modelInputs.video;
+        if (finalImg) {
+          modelInputs.image_url = finalImg;
+        }
+        if (finalVid) {
+          modelInputs.video_url = finalVid;
+        }
+        delete modelInputs.character_image_url;
+        delete modelInputs.reference_video_url;
+        delete modelInputs.image;
+        delete modelInputs.video;
+        if (typeof modelInputs.prompt === "string" && !modelInputs.prompt.trim()) {
+          delete modelInputs.prompt;
+        }
+      }
+
       const submitOptions: any = {
         input: modelInputs,
       };

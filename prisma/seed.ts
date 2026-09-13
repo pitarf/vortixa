@@ -113,7 +113,7 @@ async function main() {
     },
     {
       name: 'Kling Motion Control',
-      technicalName: 'fal-ai/kling/motion-control',
+      technicalName: 'fal-ai/kling-video/v3/standard/motion-control',
       creditCost: 15,
       apiUnitCost: 0.25,
       toolSlug: 'motion-control',

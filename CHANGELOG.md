@@ -3,6 +3,21 @@
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [2.3.4] - 2026-09-13
+### Correção do Endpoint e Protocolo do Kling Motion Control (Fal.ai v3 Standard)
+- **Diagnóstico do Erro 404 (`Path /motion-control not found`)**:
+  - Identificado que o identificador de modelo anterior `fal-ai/kling/motion-control` não existia no cluster da fal.ai, resultando em erro 404 durante a execução do job.
+  - Varredura completa do catálogo da fal.ai via API oficial (`https://fal.ai/api/models`) e extração do esquema OpenAPI (`MotionControlV3StandardRequest`).
+  - Atualização do endpoint oficial para `fal-ai/kling-video/v3/standard/motion-control` (Kling Video v3 Motion Control [Standard]).
+- **Alinhamento e Sanitização de Parâmetros (`FalAIProvider`)**:
+  - Garantia de conformidade com o schema OpenAPI do provedor: mapeamento rigoroso de `image_url` (imagem do personagem) e `video_url` (vídeo guia de movimento/dança).
+  - Remoção de chaves conflitantes ou apelidos internos (`character_image_url`, `reference_video_url`, `image`, `video`) antes do despacho para a API.
+  - Omissão graciosa do campo `prompt` quando vazio para evitar rejeições de validação.
+- **Sincronização no Banco de Dados e Frontend**:
+  - Atualização da tabela `AIModel` no PostgreSQL relacional vinculando a ferramenta `motion-control` ao motor `fal-ai/kling-video/v3/standard/motion-control`.
+  - Atualização do seletor em `app/dashboard/tools/motion/page.tsx`, `components/studio/types.ts` e `lib/data/changelog-data.ts`.
+  - Atualização das suítes de teste em `__tests__/engines-13-audit.test.ts`.
+
 ## [2.3.3] - 2026-09-13
 ### Integração Oficial do Gateway de Pagamentos Vorexpay (https://app.vorexpay.com)
 - **Engenharia Reversa & Inspeção da Documentação Oficial**:

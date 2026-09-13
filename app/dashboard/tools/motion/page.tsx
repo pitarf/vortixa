@@ -7,8 +7,8 @@ import { FileUploader } from "@/components/ai/file-uploader";
 
 const MOTION_MODELS = [
   {
-    id: "fal-ai/kling/motion-control",
-    name: "Kling Motion Control",
+    id: "fal-ai/kling-video/v3/standard/motion-control",
+    name: "Kling Video v3 Motion Control",
     badge: "Fidelidade Óssea",
     cost: 15,
     description: "Transfere poses e movimentos de corpo inteiro de um vídeo para imagem estática",
