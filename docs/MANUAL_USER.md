@@ -371,9 +371,11 @@ A ferramenta Hot do VORIXA é dedicada à geração artística de fotos e vídeo
 ### B. Motores Neurais Disponíveis
 * **VORIXA HyperReal (Foto Realista 8K)**: Motor com calibração profunda de micro-texturas naturais, poros visíveis, iluminação ambiente suave e eliminação completa do aspecto artificial de plástico/boneca.
 * **VORIXA Chroma (Nudez Total)**: Motor sem travas para nudez explícita, anatomia natural e ensaios boudoir sem censura.
-* **VORIXA Motion Hot (Vídeo +18 Fluido)**: Motor de animação corporal explícita e movimentos sensuais de alta fluidez.
-* **VORIXA Live Voice Hot (Vídeo com Áudio)**: Clipes animados com respiração e áudio estéreo nativo.
-* **VORIXA Ultra Cinema Hot (Vídeo 4K)**: Alta definição cinematográfica para movimentos complexos.
+* **VORIXA Motion Hot (Vídeo +18 Fluido)** `[📷 Requer Imagem]`: Motor de animação corporal explícita e movimentos sensuais de alta fluidez a partir de uma foto guia.
+* **VORIXA Live Voice Hot (Vídeo com Áudio)** `[📷 Requer Imagem]`: Clipes animados com respiração e áudio estéreo nativo baseados em foto guia.
+* **VORIXA Ultra Cinema Hot (Vídeo 4K)** `[📷 Requer Imagem]`: Alta definição cinematográfica para movimentos complexos a partir de foto guia.
+
+> ℹ️ **Identificação Visual "📷 Requer Imagem"**: Todos os motores de vídeo trazem a tag âmbar destacada `📷 Requer Imagem`. Caso nenhum arquivo esteja carregado, o botão principal de geração alertará automaticamente `Selecione uma Foto para Gerar (+18)`, direcionando a tela diretamente para a área de anexar ou escolher uma imagem guia.
 
 ### C. Recurso de Foto de Referência ("Usar como Referência")
 * **Card de Foto de Referência (Card 3)**:

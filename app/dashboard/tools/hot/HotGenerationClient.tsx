@@ -35,6 +35,7 @@ interface HotModel {
   cost: number;
   description: string;
   speed: string;
+  requiresImage?: boolean;
 }
 
 const HOT_MODELS: HotModel[] = [
@@ -46,6 +47,7 @@ const HOT_MODELS: HotModel[] = [
     cost: 4,
     description: "Motor WAN 2.2 com foco em pele crua, micro-texturas reais, iluminação natural e zero aspecto de plástico ou 3D.",
     speed: "~ 8s",
+    requiresImage: false,
   },
   {
     id: "wavespeed/chroma",
@@ -55,6 +57,7 @@ const HOT_MODELS: HotModel[] = [
     cost: 3,
     description: "Motor sem travas com calibração fotográfica para nudez explícita, anatomia natural e detalhes íntimos.",
     speed: "~ 6s",
+    requiresImage: false,
   },
   {
     id: "wavespeed/wan-2.2-spicy",
@@ -64,6 +67,7 @@ const HOT_MODELS: HotModel[] = [
     cost: 15,
     description: "Animação de fotos e movimentos corporais explícitos sem filtros. Rápido e ultra-estável.",
     speed: "~ 30s",
+    requiresImage: true,
   },
   {
     id: "wavespeed/minimax-h3-spicy",
@@ -73,6 +77,7 @@ const HOT_MODELS: HotModel[] = [
     cost: 18,
     description: "Gera clipes de vídeo sem censura com animação expressiva e áudio ambiente/gemidos nativos.",
     speed: "~ 35s",
+    requiresImage: true,
   },
   {
     id: "wavespeed/seedance-2.5-spicy",
@@ -82,6 +87,7 @@ const HOT_MODELS: HotModel[] = [
     cost: 30,
     description: "Motor cinematográfico pesado para movimentos complexos e alta definição anatômica.",
     speed: "~ 50s",
+    requiresImage: true,
   },
 ];
 
@@ -465,12 +471,17 @@ export default function HotGenerationClient() {
                           : "bg-[#070709] border-[#1E202E] hover:border-slate-700"
                       }`}
                     >
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
+                      <div className="space-y-1 flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-xs font-bold text-white">{model.name}</span>
                           <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/20">
                             {model.badge}
                           </span>
+                          {model.requiresImage && (
+                            <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase tracking-wider flex items-center gap-1 shadow-xs">
+                              📷 Requer Imagem
+                            </span>
+                          )}
                         </div>
                         <p className="text-[11px] text-slate-400">{model.description}</p>
                       </div>
@@ -788,6 +799,11 @@ export default function HotGenerationClient() {
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
                     <span>{activeStepText || "Renderizando..."}</span>
+                  </>
+                ) : selectedModel.requiresImage && !referenceImageUrl ? (
+                  <>
+                    <Upload className="w-4 h-4 text-amber-300" />
+                    <span>Selecione uma Foto para Gerar (+18)</span>
                   </>
                 ) : (
                   <>

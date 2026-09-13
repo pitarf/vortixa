@@ -8,6 +8,10 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Tag Visual e Alerta "Requer Imagem" no Gerador Hot (+18)**:
+  - Adicionada badge destacada `📷 Requer Imagem` com estilização âmbar nos cards de modelos que exigem obrigatoriamente foto para funcionar (motores de vídeo *Image-to-Video*).
+  - Estado dinâmico no botão de disparo: quando o modelo ativo exige imagem e nenhuma está selecionada, o botão adota o rótulo `Selecione uma Foto para Gerar (+18)` e ao ser clicado rola suavemente a tela até a seção de seleção de foto.
+  - Sanitização estrita do payload no backend da GPU para modelos de vídeo spicy, garantindo entrega exclusiva do campo `image` e prevenindo rejeição por schema da API externa.
 - [x] **Recurso de Foto de Referência no Gerador Sensual Hot (+18)**:
   - Card 3 dedicado e destacado para Foto / Imagem de Referência no formulário de geração.
   - Exibição de preview nítido com badge `Ativa ✅`, identificador `GUIA`, botões `Trocar Foto`, `Ver Foto` e `Remover`.

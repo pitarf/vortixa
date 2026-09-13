@@ -5,6 +5,14 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.9.8] - 2026-09-13
+### Tag Visual e Validação de Requisito de Imagem no Gerador Hot (+18)
+- **Tag Visual e Badge "Requer Imagem" nos Motores Hot (`HotGenerationClient.tsx`)**:
+  - Inserida a tag de alta visibilidade `📷 Requer Imagem` com acabamento âmbar/dourado (`bg-amber-500/20 text-amber-300 border border-amber-500/40`) em todos os modelos que operam no modo *Image-to-Video* (`VORIXA Motion Hot`, `VORIXA Live Voice Hot` e `VORIXA Ultra Cinema Hot`).
+  - Estado dinâmico do botão principal de ação: quando o motor selecionado requer imagem e nenhuma foto está ativa, o botão exibe o ícone de upload e o aviso claro `Selecione uma Foto para Gerar (+18)`, com auto-scroll suave até o card de upload caso seja clicado.
+- **Sanitização de Schema Pydantic de Vídeo no Backend (`wavespeed-ai.provider.ts`)**:
+  - Ajustado payload dos modelos spicy de vídeo para envio exclusivo do atributo `image`, removendo campos extras incompatíveis (`negative_prompt`, `image_url`) e prevenindo erros 400/422 de validação da GPU.
+
 ## [1.9.7] - 2026-09-13
 ### Recurso de Foto de Referência no Gerador Sensual Hot (+18)
 - **Painel Visual e Card de Foto de Referência (`HotGenerationClient.tsx`)**:

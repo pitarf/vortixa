@@ -215,12 +215,17 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
 ## 14. Ferramenta Hot (+18) e Integração de Imagens de Referência
 
 ### 1. Arquitetura do Cliente Hot (`app/dashboard/tools/hot/HotGenerationClient.tsx`)
+* **Interface `HotModel` e Flag `requiresImage`**:
+  - Propriedade booleana `requiresImage` adicionada para cada motor registrado.
+  - Modelos de vídeo (`wavespeed/wan-2.2-spicy`, `wavespeed/minimax-h3-spicy`, `wavespeed/seedance-2.5-spicy`) possuem `requiresImage: true`.
+  - Renderiza badge visual `📷 Requer Imagem` com estilização âmbar nos cards de seleção.
+  - O botão de ação principal reflete dinamicamente o estado: quando `selectedModel.requiresImage && !referenceImageUrl`, exibe o ícone de upload com o texto `Selecione uma Foto para Gerar (+18)`, e ao ser acionado rola a tela para o Card 3 (`#hot-reference-section`).
 * **Card 3: Foto de Referência**:
   - Permite carregamento manual de arquivos de imagem locais (`/api/tools/upload`) ou seleção imediata via `handleSetReference()`.
   - Exibe preview com miniatura de 80x80px, tag `GUIA`, badge de status `Ativa ✅` e botões de `Trocar Foto`, `Ver Foto` e `Remover`.
   - Atalho `Usar Última Foto` vinculado à lista de histórico recente (`/api/library?limit=24`).
 * **Validação de Pré-Voo**:
-  - Para modelos do tipo `video` (`wan-2.2-spicy`, `minimax-h3-spicy`, `seedance-2.5-spicy`), a presença de `referenceImageUrl` é mandatória para disparar a geração, impedindo requisições incompletas na GPU e consumo indevido de créditos.
+  - Para modelos do tipo `video`, a presença de `referenceImageUrl` é mandatória para disparar a geração, impedindo requisições incompletas na GPU e consumo indevido de créditos.
 * **Ações Rápidas na Mídia Ativa e Miniaturas**:
   - Botão `Usar como Referência` abaixo do visualizador principal permite fixar o resultado atual como guia para variações subsequentes ou animações de vídeo.
   - Hover action `Usar Ref` em cada item de imagem do grid de histórico recente com tag visual `REF` indicativa.
@@ -228,7 +233,8 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
 ### 2. Provedor WaveSpeed AI (`services/ai/providers/wavespeed-ai.provider.ts`)
 * **Tratamento de Payload e Imagens**:
   - `imgUrl` resolvido a partir de `image_url || image || reference_image_url`.
-  - Propagado como `image` e `image_url` para modelos de vídeo ou edit/redux.
-  - Sanitização preservada em modelos text-to-image com `additionalProperties: false`.
+  - Para modelos de vídeo spicy (`wan-2.2-spicy`, `minimax-h3-spicy`, `seedance-2.5-spicy`): envio exclusivo de `bodyPayload.image = imgUrl`, expurgando `image_url` e `negative_prompt` para satisfazer schemas Pydantic com `additionalProperties: false`.
+  - Sanitização preservada em modelos text-to-image com schemas restritos.
+
 
 
