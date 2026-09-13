@@ -41,6 +41,41 @@ export class AIService {
           where: { technicalName: request.modelId },
         });
       }
+      // Suporte a modelos dinâmicos da WaveSpeed / Hot
+      if (!customModel && (request.modelId.startsWith("wavespeed") || request.modelId.includes("spicy") || request.modelId.includes("chroma"))) {
+        const isVideo = request.modelId.includes("video") || request.modelId.includes("spicy") || request.modelId.includes("wan") || request.modelId.includes("seedance") || request.modelId.includes("minimax");
+        const defaultCost = request.modelId.includes("seedance") ? 30 : request.modelId.includes("minimax") ? 18 : isVideo ? 15 : 3;
+        const defaultApiCost = request.modelId.includes("seedance") ? 0.90 : request.modelId.includes("minimax") ? 0.20 : isVideo ? 0.15 : 0.015;
+        
+        let wavespeedProvider = await prisma.aIProvider.findUnique({
+          where: { name: "wavespeed" },
+        });
+        if (!wavespeedProvider) {
+          wavespeedProvider = await prisma.aIProvider.create({
+            data: { name: "wavespeed", status: true },
+          });
+        }
+
+        const existing = await prisma.aIModel.findFirst({
+          where: { technicalName: request.modelId },
+        });
+
+        if (existing) {
+          customModel = existing;
+        } else {
+          customModel = await prisma.aIModel.create({
+            data: {
+              name: request.modelId,
+              technicalName: request.modelId,
+              providerId: wavespeedProvider.id,
+              creditCost: defaultCost,
+              apiUnitCost: defaultApiCost,
+              status: true,
+              billingUnit: "GENERATION",
+            },
+          });
+        }
+      }
       if (!customModel) {
         throw new Error(`O modelo solicitado (${request.modelId}) não foi encontrado no sistema.`);
       }
