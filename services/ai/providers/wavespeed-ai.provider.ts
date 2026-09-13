@@ -130,7 +130,17 @@ export class WaveSpeedAIProvider implements IAIProvider {
         bodyPayload.size = resolvedSize;
       } else {
         // Se for modelo de vídeo, passar resolution e duration como número inteiro
-        bodyPayload.resolution = "720p";
+        const resInput = payload.inputs.resolution || "720p";
+        // MiniMax H3 aceita 480p, 540p, 768p, 1080p
+        // Seedance 2.5 aceita 480p, 720p, 1080p, 4k
+        // WAN 2.2 aceita 480p, 720p
+        if (modelPath.includes("wan-2.2") && (resInput === "1080p" || resInput === "4k")) {
+          bodyPayload.resolution = "720p"; // WAN 2.2 max é 720p
+        } else if (modelPath.includes("minimax") && resInput === "720p") {
+          bodyPayload.resolution = "768p"; // MiniMax usa 768p em vez de 720p
+        } else {
+          bodyPayload.resolution = resInput;
+        }
       }
 
       if (payload.inputs.negative_prompt) {

@@ -100,6 +100,7 @@ export default function HotGenerationClient() {
   const [isUploadingRef, setIsUploadingRef] = useState<boolean>(false);
   const [aspectRatio, setAspectRatio] = useState<string>("9:16");
   const [duration, setDuration] = useState<string>("5");
+  const [resolution, setResolution] = useState<string>("720p");
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [activeStepText, setActiveStepText] = useState<string>("");
   const [resultMediaUrl, setResultMediaUrl] = useState<string>("");
@@ -230,8 +231,15 @@ export default function HotGenerationClient() {
       return;
     }
 
-    const durationMultiplier = selectedModel.type === "video" && duration === "10" ? 2 : 1;
-    const cost = selectedModel.cost * durationMultiplier;
+    // Cálculo de créditos conforme duração e qualidade (480p, 720p, 1080p, 4k)
+    let multiplier = 1;
+    if (selectedModel.type === "video") {
+      if (duration === "10") multiplier *= 1.8;
+      if (duration === "15") multiplier *= 2.5;
+      if (resolution === "1080p") multiplier *= 1.5;
+      if (resolution === "4k") multiplier *= 2.5;
+    }
+    const cost = Math.round(selectedModel.cost * multiplier);
 
     if (creditMode !== "UNLIMITED" && balance < cost) {
       toast.error(`Saldo insuficiente (${balance} créditos disponíveis. Custo: ${cost}).`);
@@ -246,6 +254,7 @@ export default function HotGenerationClient() {
         prompt,
         aspect_ratio: aspectRatio,
         duration,
+        resolution,
       };
 
       if (referenceImageUrl) {
@@ -528,8 +537,8 @@ export default function HotGenerationClient() {
                 {selectedModel.type === "video" && (
                   <div className="space-y-1.5">
                     <label className="text-[11px] font-bold text-slate-400 block">Duração</label>
-                    <div className="grid grid-cols-2 gap-1 p-1 bg-[#070709] border border-[#1E202E] rounded-xl">
-                      {["5", "10"].map((d) => (
+                    <div className="grid grid-cols-3 gap-1 p-1 bg-[#070709] border border-[#1E202E] rounded-xl">
+                      {["5", "8", "10"].map((d) => (
                         <button
                           key={d}
                           type="button"
@@ -545,6 +554,38 @@ export default function HotGenerationClient() {
                   </div>
                 )}
               </div>
+
+              {/* Seletor de Qualidade / Resolução (Exclusivo para Vídeos Hot) */}
+              {selectedModel.type === "video" && (
+                <div className="space-y-1.5 pt-2 border-t border-[#1E202E]/60">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-bold text-slate-400 block">Qualidade de Renderização</label>
+                    <span className="text-[10px] text-rose-400 font-mono">
+                      {resolution === "480p" && "Rápido / Econômico"}
+                      {resolution === "720p" && "HD Padrão (Recomendado)"}
+                      {resolution === "1080p" && "Full HD Máxima Nitidez"}
+                      {resolution === "4k" && "Ultra HD 4K Máximo"}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-4 gap-1.5 p-1 bg-[#070709] border border-[#1E202E] rounded-xl">
+                    {["480p", "720p", "1080p", "4k"].map((res) => {
+                      const isSelected = resolution === res;
+                      return (
+                        <button
+                          key={res}
+                          type="button"
+                          onClick={() => setResolution(res)}
+                          className={`py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                            isSelected ? "bg-rose-600 text-white shadow-md shadow-rose-600/30" : "text-slate-400 hover:text-white"
+                          }`}
+                        >
+                          {res}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Barra de Ação e Disparo */}
@@ -556,7 +597,16 @@ export default function HotGenerationClient() {
                 <div>
                   <span className="text-[11px] text-slate-400 block">Custo Estimado</span>
                   <span className="text-sm font-bold text-white font-mono">
-                    {selectedModel.cost * (selectedModel.type === "video" && duration === "10" ? 2 : 1)} créditos
+                    {(() => {
+                      let multiplier = 1;
+                      if (selectedModel.type === "video") {
+                        if (duration === "10") multiplier *= 1.8;
+                        if (duration === "15") multiplier *= 2.5;
+                        if (resolution === "1080p") multiplier *= 1.5;
+                        if (resolution === "4k") multiplier *= 2.5;
+                      }
+                      return Math.round(selectedModel.cost * multiplier);
+                    })()} créditos
                   </span>
                 </div>
               </div>
