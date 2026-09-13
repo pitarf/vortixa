@@ -10,6 +10,8 @@ export interface CheckoutResult {
   amountCents: number;
   creditsGranted: number;
   gateway: string;
+  pixCode?: string;
+  pixQrCode?: string;
 }
 
 export class CheckoutService {
@@ -84,6 +86,8 @@ export class CheckoutService {
         amountCents: payment.amountCents,
         creditsGranted: payment.creditsGranted,
         gateway: payment.gateway,
+        pixCode: checkoutResponse.pixCode,
+        pixQrCode: checkoutResponse.pixQrCode,
       };
     } catch (error: any) {
       // Se falhar o gateway, marca o Order como FAILED

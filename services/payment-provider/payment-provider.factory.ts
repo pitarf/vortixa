@@ -2,6 +2,7 @@ import { PaymentProvider } from "./payment-provider.interface";
 import { MockPaymentProvider } from "./mock-payment-provider.service";
 import { MercadoPagoProvider } from "./mercadopago.provider";
 import { StripeProvider } from "./stripe.provider";
+import { VorexPayProvider } from "./vorexpay.provider";
 
 export class PaymentProviderFactory {
   private static providers: Map<string, PaymentProvider> = new Map();
@@ -21,6 +22,10 @@ export class PaymentProviderFactory {
     let provider: PaymentProvider;
 
     switch (configuredProvider) {
+      case "vorexpay":
+      case "vorex":
+        provider = new VorexPayProvider();
+        break;
       case "mercadopago":
       case "mp":
         provider = new MercadoPagoProvider();
@@ -30,7 +35,6 @@ export class PaymentProviderFactory {
         break;
       case "mock_gateway":
       case "mock":
-      case "vorexpay":
       default:
         provider = new MockPaymentProvider();
         break;

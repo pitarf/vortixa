@@ -194,7 +194,7 @@ export function PaymentCheckoutModal({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-sm font-bold text-white">
-                      Pix Instantâneo (Mercado Pago)
+                      Pix Instantâneo (Vorexpay)
                     </span>
                     <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />

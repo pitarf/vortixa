@@ -13,10 +13,11 @@ export default function RegisterPage() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [utms, setUtms] = useState<Record<string, string | null>>({});
+  const [referralCode, setReferralCode] = useState<string>("");
   const router = useRouter();
 
   useEffect(() => {
-    // Capture UTMs from URL
+    // Capture UTMs and Referral from URL
     const searchParams = new URLSearchParams(window.location.search);
     const capturedUtms = {
       utmSource: searchParams.get("utm_source"),
@@ -27,6 +28,26 @@ export default function RegisterPage() {
       referrer: typeof document !== "undefined" ? document.referrer : null,
     };
     setUtms(capturedUtms);
+
+    // Captura código de afiliado (ref, referral ou indicação)
+    let ref = searchParams.get("ref") || searchParams.get("referral") || searchParams.get("indicacao");
+    
+    // Se não veio na URL, tenta buscar no cookie vorixa_ref
+    if (!ref && typeof document !== "undefined") {
+      const match = document.cookie.match(/(?:^|;\s*)vorixa_ref=([^;]+)/);
+      if (match) {
+        ref = decodeURIComponent(match[1]);
+      }
+    }
+
+    if (ref) {
+      const cleanRef = ref.trim().toUpperCase();
+      setReferralCode(cleanRef);
+      // Salva ou renova o cookie de atribuição por 30 dias (2592000 segundos)
+      if (typeof document !== "undefined") {
+        document.cookie = `vorixa_ref=${encodeURIComponent(cleanRef)}; path=/; max-age=2592000; SameSite=Lax`;
+      }
+    }
   }, []);
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -51,6 +72,7 @@ export default function RegisterPage() {
           name,
           email,
           password,
+          referralCode: referralCode || undefined,
           ...utms,
         }),
       });
@@ -152,6 +174,28 @@ export default function RegisterPage() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            {/* Código de Indicação / Afiliado */}
+            <div>
+              <div className="flex items-center justify-between">
+                <label htmlFor="referralCode" className="block text-xs font-medium text-[hsl(240,5%,65%)]">
+                  Código de Indicação (Opcional)
+                </label>
+                {referralCode && (
+                  <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                    🎁 Indicação Ativa
+                  </span>
+                )}
+              </div>
+              <input
+                id="referralCode"
+                type="text"
+                className="mt-1 block w-full rounded-lg border border-[hsl(240,6%,12%)] bg-[hsl(240,10%,2%)] px-4 py-2.5 text-xs text-[hsl(0,0%,100%)] uppercase placeholder-[hsl(240,5%,35%)] focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors font-mono"
+                placeholder="Ex: VORIXA-ABC12"
+                value={referralCode}
+                onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
               />
             </div>
           </div>

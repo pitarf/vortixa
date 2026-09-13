@@ -27,6 +27,7 @@ import { AdminLogsViewer } from "@/components/admin/logs/AdminLogsViewer";
 import { AdminServicesCatalog } from "@/components/admin/services/AdminServicesCatalog";
 import { AdminUsersTable } from "@/components/admin/users/AdminUsersTable";
 import { AdminModelsManager } from "@/components/admin/models/AdminModelsManager";
+import { AdminAffiliatesManager } from "@/components/admin/affiliates/AdminAffiliatesManager";
 import { ScrollText, Layers2, LayoutDashboard, UserCog } from "lucide-react";
 
 interface BrandingData {
@@ -61,8 +62,8 @@ export default function AdminDashboardPage() {
   const [creditsAmount, setCreditsAmount] = useState<number>(100);
   const [reason, setReason] = useState("");
 
-  // Aba principal do Painel Admin ("overview" | "services" | "users" | "logs" | "models")
-  const [mainTab, setMainTab] = useState<"overview" | "services" | "users" | "logs" | "models">("overview");
+  // Aba principal do Painel Admin ("overview" | "services" | "users" | "logs" | "models" | "affiliates")
+  const [mainTab, setMainTab] = useState<"overview" | "services" | "users" | "logs" | "models" | "affiliates">("overview");
 
   // Aba móvel ativa para a seção de configurações inferiores ("adjust" | "branding")
   const [activeConfigTab, setActiveConfigTab] = useState<"adjust" | "branding">("adjust");
@@ -293,6 +294,20 @@ export default function AdminDashboardPage() {
 
         <button
           type="button"
+          onClick={() => setMainTab("affiliates")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+            mainTab === "affiliates"
+              ? "bg-violet-600 text-white shadow-lg shadow-violet-600/20"
+              : "bg-slate-900/60 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+          }`}
+          style={{ minHeight: "44px" }}
+        >
+          <Users className="h-4 w-4 text-emerald-400" />
+          <span>Programa de Afiliados & Saques</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => setMainTab("logs")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             mainTab === "logs"
@@ -306,7 +321,25 @@ export default function AdminDashboardPage() {
         </button>
       </div>
 
-      {mainTab === "models" ? (
+      {mainTab === "affiliates" ? (
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs uppercase tracking-wider mb-1">
+                <Users className="h-4 w-4" />
+                Programa de Afiliados & Comissões
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight font-heading">
+                Gestão de Afiliados & Transferências Pix
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+                Aprovação de saques Pix solicitados por afiliados, auditoria de comissões e ajuste de taxas VIP.
+              </p>
+            </div>
+          </div>
+          <AdminAffiliatesManager />
+        </div>
+      ) : mainTab === "models" ? (
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>

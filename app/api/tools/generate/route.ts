@@ -116,7 +116,11 @@ export async function POST(req: Request) {
       err.message.includes("insuficiente") ||
       err.message.includes("suspensa") ||
       err.message.includes("WaveSpeed") ||
-      err.message.includes("fal.ai")
+      err.message.includes("fal.ai") ||
+      err.message.includes("cluster neural") ||
+      err.message.includes("referência") ||
+      err.message.includes("foto") ||
+      err.message.includes("imagem")
     );
     const isSyntaxOrInternal = err instanceof SyntaxError || (err.message && (err.message.includes("JSON") || err.message.includes("token")));
     let msg = isBusinessError && !isSyntaxOrInternal ? err.message : "Ocorreu um erro de processamento da geração de IA.";

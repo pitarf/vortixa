@@ -110,9 +110,10 @@ export class WaveSpeedAIProvider implements IAIProvider {
 
       const endpoint = `${this.baseUrl}/${modelPath}`;
 
-      // Injeção de realismo fotográfico: remove o aspecto plástico de pele lisa (plastic/doll look)
+      // Injeção de realismo fotográfico exclusiva para modelos realistas (ex: WAN 2.2 Text-to-Image)
+      // O Chroma é modelo de estética 3D/videogame, não devendo receber injeção de câmera raw e 'no CGI'
       let finalPrompt = payload.inputs.prompt || "";
-      if (!modelPath.includes("video") && !modelPath.includes("edit")) {
+      if (!modelPath.includes("video") && !modelPath.includes("edit") && !modelPath.includes("chroma")) {
         // Enfatiza microtextura, pele crua, poros, iluminação natural e elimina estética plástica/render
         if (!finalPrompt.includes("pores") && !finalPrompt.includes("raw photo")) {
           finalPrompt = `${finalPrompt}, authentic raw photograph, natural unairbrushed skin texture, visible fine pores and subtle imperfections, realistic soft ambient lighting, shot on 35mm lens f/1.8, documentary boudoir style, no plastic skin, no CGI render, no doll look, 8k uhd`;
@@ -140,18 +141,38 @@ export class WaveSpeedAIProvider implements IAIProvider {
       }
 
       if (modelPath.includes("minimax-h3/image-edit")) {
-        // Schema do MiniMax H3 Image Edit: prompt, images (array), aspect_ratio, resolution
-        if (imgUrl) bodyPayload.images = [imgUrl];
-        bodyPayload.aspect_ratio = (ratio === "16:9" || ratio === "9:16" || ratio === "1:1") ? ratio : "9:16";
-        const resInput = payload.inputs.resolution || "768p";
-        bodyPayload.resolution = resInput === "720p" ? "768p" : resInput;
+        // Schema do MiniMax H3 Image Edit:
+        // Obrigatórios: prompt (string), images (array de URLs, 1 a 9)
+        // Opcionais: aspect_ratio (enum), resolution ("1k" | "2k"), output_format, seed
+        // PROIBIDO: size, negative_prompt, ou resolutions fora do enum ["1k", "2k"]
+        if (!imgUrl) {
+          throw new Error("O motor MiniMax Edit requer uma foto de referência obrigatória para edição.");
+        }
+        bodyPayload.images = [imgUrl];
+
+        const validAspectRatios = ["1:1", "1:2", "2:1", "1:3", "3:1", "2:3", "3:2", "3:4", "4:3", "4:5", "5:4", "9:16", "16:9", "9:21", "21:9"];
+        bodyPayload.aspect_ratio = validAspectRatios.includes(ratio) ? ratio : "9:16";
+
+        const resInput = String(payload.inputs.resolution || "").toLowerCase();
+        bodyPayload.resolution = (resInput === "2k" || resInput === "1080p" || resInput === "4k") ? "2k" : "1k";
+
+        // Referenciar <Picture 1> para guiar a atenção do MiniMax H3 conforme documentação oficial
+        if (!finalPrompt.includes("<Picture 1>")) {
+          bodyPayload.prompt = `<Picture 1> ${finalPrompt}`;
+        }
       } else if (modelPath.includes("hidream-o1-image/edit") || modelPath.includes("qwen-image/edit-plus")) {
         // Schema do HiDream O1 Edit e Qwen Edit Plus: prompt, images (array), size
-        if (imgUrl) bodyPayload.images = [imgUrl];
+        if (!imgUrl) {
+          throw new Error("Este motor de edição requer uma foto de referência obrigatória.");
+        }
+        bodyPayload.images = [imgUrl];
         bodyPayload.size = resolvedSize;
       } else if (modelPath.includes("qwen-image/edit")) {
         // Schema do Qwen Image Edit: prompt, image (string), size
-        if (imgUrl) bodyPayload.image = imgUrl;
+        if (!imgUrl) {
+          throw new Error("Este motor de edição requer uma foto de referência obrigatória.");
+        }
+        bodyPayload.image = imgUrl;
         bodyPayload.size = resolvedSize;
       } else if (modelPath.includes("video") || modelPath.includes("spicy")) {
         // Modelos de Vídeo (WAN 2.2, MiniMax H3 Spicy, Seedance 2.5)
@@ -187,8 +208,18 @@ export class WaveSpeedAIProvider implements IAIProvider {
       });
 
       if (!res.ok) {
-        const errJson = await res.json().catch(() => ({}));
-        throw new Error(errJson.message || `Erro da WaveSpeed API: HTTP ${res.status}`);
+        const errJson: any = await res.json().catch(() => ({}));
+        console.error("[WaveSpeedAIProvider] Erro retornado pela API HTTP", res.status, errJson);
+        const detailMsg =
+          errJson.message ||
+          errJson.error ||
+          (Array.isArray(errJson.detail)
+            ? errJson.detail.map((d: any) => `${d.loc ? d.loc.slice(-1) : ''}: ${d.msg || JSON.stringify(d)}`).join('; ')
+            : typeof errJson.detail === 'string'
+            ? errJson.detail
+            : null) ||
+          `HTTP ${res.status}`;
+        throw new Error(`Falha no cluster neural VORIXA: ${detailMsg}`);
       }
 
       const data = await res.json();
@@ -215,7 +246,8 @@ export class WaveSpeedAIProvider implements IAIProvider {
       return { providerJobId: taskId };
     } catch (err: any) {
       console.error("[WaveSpeedAIProvider] Falha ao submeter job:", err);
-      throw new Error(`Falha no cluster neural VORIXA: ${err.message}`);
+      const isCustomMsg = err.message?.includes("requer uma foto de referência") || err.message?.startsWith("Falha no cluster neural");
+      throw new Error(isCustomMsg ? err.message : `Falha no cluster neural VORIXA: ${err.message}`);
     }
   }
 

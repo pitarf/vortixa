@@ -70,4 +70,16 @@ describe("VORIXA Contextual Story Director Engine Dynamic Tests", () => {
     expect(cyberpunk.optimizedPrompt).toContain("cyberpunk dystopian aesthetic");
     expect(cyberpunk.optimizedPrompt).toContain("neon lights");
   });
+
+  it("should detect hot niche prompts, translate sensual vocabulary and inject boudoir glamour optics", () => {
+    const hotPrompt = "Uma mulher em pose sensual com lingerie de renda vermelha em um quarto de luxo";
+    const result = PromptEngine.optimize(hotPrompt, { toolType: "image", isHotNiche: true });
+
+    expect(result.inferredContext).toBe("HOT");
+    expect(result.optimizedPrompt).toContain("seductive dynamic pose");
+    expect(result.optimizedPrompt).toContain("scarlet red lace intimates set with delicate embroidery");
+    expect(result.optimizedPrompt).toContain("luxurious penthouse bedroom with warm ambient rim lighting");
+    expect(result.optimizedPrompt).toContain("boudoir and glamour photography");
+    expect(result.optimizedPrompt).toContain("Sony A7R V 85mm f/1.4 lens");
+  });
 });

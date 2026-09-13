@@ -6,9 +6,10 @@ import { z } from "zod";
 const optimizeSchema = z.object({
   prompt: z.string().min(1, "O prompt não pode estar vazio.").max(2000),
   enhanceQuality: z.boolean().default(true),
-  toolType: z.enum(["image", "video", "lipsync", "motion", "upscale"]).default("image"),
+  toolType: z.enum(["image", "video", "lipsync", "motion", "upscale", "hot"]).default("image"),
   style: z.enum(["cinematic", "photorealistic", "realist", "photographic", "anime", "octane3d", "cyberpunk", "digital-art"]).optional(),
   hasReferenceImage: z.boolean().optional(),
+  isHotNiche: z.boolean().optional(),
   image_url: z.string().optional(),
   image: z.string().optional(),
   reference_image_url: z.string().optional(),
@@ -47,6 +48,7 @@ export async function POST(req: Request) {
       toolType: parsed.data.toolType,
       style: parsed.data.style,
       hasReferenceImage,
+      isHotNiche: parsed.data.isHotNiche,
     });
 
     return NextResponse.json({

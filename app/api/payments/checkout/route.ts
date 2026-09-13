@@ -93,6 +93,8 @@ export async function POST(req: Request) {
       amountCents: result.amountCents,
       creditsGranted: result.creditsGranted,
       gateway: result.gateway,
+      pixCode: result.pixCode,
+      pixQrCode: result.pixQrCode,
     });
   } catch (error: any) {
     console.error("Erro na rota de checkout:", error);

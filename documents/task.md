@@ -8,6 +8,53 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Integração Oficial do Gateway de Pagamentos Vorexpay (https://app.vorexpay.com)**:
+  - Inspeção e engenharia reversa completa da documentação técnica e endpoints em `https://app.vorexpay.com/docs` a partir do bundle de produção da plataforma.
+  - Implementação do provedor oficial `VorexPayProvider` (`services/payment-provider/vorexpay.provider.ts`) compatível com a interface unificada `PaymentProvider`.
+  - Suporte à emissão de Pix Instantâneo (`POST /payments`), com geração de código Pix Copia e Cola (`pix_copy_paste`), QR Code (`pix_qr_code`), checkout transparente e vinculação atômica de `orderId`.
+  - Tratamento de webhooks com verificação rigorosa de assinatura HMAC SHA-256 via cabeçalhos `X-Webhook-Signature` e `x-vorexpay-signature` utilizando o segredo `VOREXPAY_WEBHOOK_SECRET`.
+  - Normalização completa de eventos de webhook (`PAYMENT_CONFIRMED`, `PAYMENT_RECEIVED`, `PAYMENT_APPROVED`, `PAYMENT_REFUNDED`, `PAYMENT_FAILED`).
+  - Suporte a polling e consulta de status detalhado via `getPaymentDetails` (`GET /payments/:id` e `GET /payments/:id/status`).
+  - Integração na `PaymentProviderFactory` com resolução automática das chaves `vorexpay` e `vorex`.
+  - Atualização do `PaymentCheckoutModal` para exibir a opção `Pix Instantâneo (Vorexpay)`.
+  - Atualização das variáveis no `.env.example` (`VOREXPAY_API_KEY`, `VOREXPAY_SECRET_KEY`, `VOREXPAY_PUBLIC_KEY`, `VOREXPAY_WEBHOOK_SECRET`, `VOREXPAY_API_URL`).
+  - Suíte de testes unitários e de integração automatizada em `__tests__/vorexpay-provider.test.ts` com 100% de aprovação.
+- [x] **Especialização de Motores de Remoção de Roupas & Presets Rápidos no Gerador Hot (+18)**:
+  - Destacado o Trio de Motores de Remoção com calibração de badges e descrições:
+    * `VORIXA Qwen Edit Plus (Ultra Detalhes)` com a badge `🏆 Ultra Remoção & Detalhes 🔞` para máxima retenção de detalhes finos e consistência anatômica.
+    * `VORIXA HiDream Edit (Fotorrealista)` com a badge `✨ Remoção Fotorrealista 🌿` para refinamento orgânico de pele e preservação de sombras naturais e ambiente.
+    * `VORIXA Qwen Edit (Instrução Semântica)` com a badge `⚡ Remoção Rápida & Ágil 🎯` para alta velocidade (~7s) e excelente remoção anatômica e de vestimentas guiada por texto natural.
+  - Validação prática confirmando que os **3 modelos removem com excelência** a partir de imagem base e prompt em inglês.
+  - Criados atalhos de 1-clique `HOT_REMOVAL_PRESETS` (`Remoção Total (Nude)`, `Topless` e `Lingerie de Renda`) com prompts em inglês calibrados para preservação de identidade e cenário.
+  - Exibição de banner `💡 Dica Pro: Instrução Clara em Inglês` com badge `Trio de Remoção: Qwen Edit, Plus & HiDream` orientando os usuários sobre a excelência dos 3 modelos e o uso de prompts descritivos em inglês ou o botão `Otimizar com IA ✨`.
+  - Mapeamento avançado no `PromptEngine.dynamicVocabulary` e diretiva semântica para converter termos coloquiais de despir em português para instruções estruturadas em inglês sem censura.
+  - Correção de conformidade de schema no `VORIXA MiniMax Edit (Alta Fidelidade)`: ajuste do parâmetro `resolution` para o enum oficial `["1k", "2k"]` (substituindo `"768p"` inválido), injeção da referência `<Picture 1>` no prompt e blindagem contra classificação indevida como vídeo no `ai.service.ts`.
+  - Resolução de duplicidade de chaves e validação estática completa com `npx tsc --noEmit` e suíte de testes Vitest (100% de aprovação).
+- [x] **Ocultação de Foto de Referência & Redefinição Estética do VORIXA Chroma (+18)**:
+  - Renomeado para `VORIXA Chroma (Personagem / Game 3D)` com badge `Estilo Videogame / 3D 🎮` e descrição que deixa claro que se trata de estética 3D / personagem de videogame (não fotorrealista).
+  - Adicionada badge visual destacada `✍️ Só Geração` para modelos puramente textuais (`VORIXA HyperReal` e `VORIXA Chroma`).
+  - Adicionada flag `supportsReferenceImage: false` nos motores textuais para evitar exibir caixa de upload inútil.
+  - Card 3 ("3. Foto de Referência") agora só é renderizado quando o modelo selecionado aceita fotos (`supportsReferenceImage !== false`).
+  - Ocultação imediata do upload ao selecionar `VORIXA HyperReal` ou `VORIXA Chroma`, com renumeração dinâmica para `3. Prompt & Estética Desejada`.
+  - Remoção de injeção de parâmetros fotográficos ("authentic raw photograph... no CGI") no WaveSpeed Provider para o Chroma, evitando conflitos estéticos.
+  - Limpeza automática de estado e aviso explicativo em PT-BR para tentativas de "Usar como Referência" em modelos de texto.
+- [x] **Programa de Indicação, Afiliados e Resgates Pix (Fase 15)**:
+  - Modelagem relacional completa em PostgreSQL com Prisma: `AffiliateProfile`, `Referral`, `AffiliateCommission` e `AffiliatePayout`.
+  - Geração automática e customização de código único de afiliado (`VORIXA-XXXXXX`).
+  - Atribuição automática de indicação via URL com parâmetro `?ref=...`, cookie seguro `vorixa_ref` (30 dias) ou inserção manual no cadastro.
+  - Bloqueio estrito de auto-indicação e limite de uma vinculação por cliente indicado.
+  - Comissionamento padrão de 15% (comissionamento VIP ajustável individualmente pelo painel de controle).
+  - Cálculo e crédito atômico da comissão no `PaymentLedgerService.confirmPayment` com lock pessimista (`SELECT FOR UPDATE`), garantindo idempotência estrita.
+  - Estorno atômico de comissão em devoluções/estornos de pagamento no `PaymentLedgerService.refundPayment`.
+  - Módulo de solicitação de resgates Pix com valor mínimo de R$ 50,00, lock pessimista de saldo, retenção temporária e prevenção de solicitações concorrentes.
+  - Central de governança administrativa de saques com aprovação mediante envio de ID/comprovante de liquidação Pix ou rejeição com estorno imediato do saldo do afiliado.
+  - Dashboard completo do Afiliado (`app/dashboard/affiliates/page.tsx`) com 4 KPIs em tempo real, link com 1-click copy, compartilhamento direto no WhatsApp/Telegram, modais de customização de código, chave Pix e saque.
+  - Gestão de Afiliados e Saques integrada ao Painel Admin (`AdminAffiliatesManager.tsx`).
+  - Suíte de testes adversariais automatizados com 100% de sucesso (`__tests__/adversarial-affiliate-flow.test.ts`).
+  - Botão interativo `Otimizar com IA ✨` posicionado estrategicamente na seção de prompt do gerador Hot (`app/dashboard/tools/hot/HotGenerationClient.tsx`).
+  - IA analisa a ideia informal digitada em português, detecta o contexto `HOT` (poses, lingerie, decotes, iluminação, pele) e aprimora para um prompt cinematográfico em inglês.
+  - Expansão do `PromptEngine.optimizeAsync` com suporte a `isHotNiche`, vocabulário fotográfico boudoir, termos de lingerie/swimwear e prevenção de censura do cluster neural.
+  - Suíte de testes unitários automatizada aprovada (183 testes passando no Vitest).
 - [x] **Integração de Modelos de Edição de Imagem com Preservação de Identidade (WaveSpeed AI)**:
   - Mapeamento e suporte completo aos endpoints oficiais da WaveSpeed: `minimax-h3/image-edit`, `qwen-image/edit`, `qwen-image/edit-plus` e `hidream-o1-image/edit`.
   - Tratamento de parâmetros de edição no backend (`image` obrigatório, `strength`, `guidance_scale` e `mask_image`).

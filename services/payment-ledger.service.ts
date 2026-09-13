@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { CreditTransactionType, PaymentStatus } from "@prisma/client";
+import { AffiliateService } from "@/services/affiliate.service";
 
 export class PaymentLedgerService {
   /**
@@ -96,6 +97,14 @@ export class PaymentLedgerService {
           paymentId: paymentId,
         },
       });
+
+      // 7. Processa comissão de afiliado de forma atômica (se o comprador tiver sido indicado)
+      await AffiliateService.processPaymentCommission(tx, {
+        id: paymentId,
+        userId: currentPayment.userId,
+        amountCents: currentPayment.amountCents,
+        orderId: currentPayment.orderId,
+      });
     });
   }
 
@@ -174,6 +183,9 @@ export class PaymentLedgerService {
           description: `Estorno de compra - Pagamento ID: ${paymentId}`,
         },
       });
+
+      // Estorno atômico de comissão de afiliado (se houver)
+      await AffiliateService.processPaymentRefundCommission(tx, paymentId);
     });
   }
 }

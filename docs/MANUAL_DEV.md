@@ -228,19 +228,22 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
 ## 14. Ferramenta Hot (+18) e Integração de Imagens de Referência
 
 ### 1. Arquitetura do Cliente Hot (`app/dashboard/tools/hot/HotGenerationClient.tsx`)
-* **Interface `HotModel` e Flag `requiresImage`**:
-  - Propriedade booleana `requiresImage` adicionada para cada motor registrado.
-  - Modelos de vídeo (`wavespeed/wan-2.2-spicy`, `wavespeed/minimax-h3-spicy`, `wavespeed/seedance-2.5-spicy`) possuem `requiresImage: true`.
-  - Renderiza badge visual `📷 Requer Imagem` com estilização âmbar nos cards de seleção.
+* **Interface `HotModel`, Flag `requiresImage` e Flag `supportsReferenceImage`**:
+  - Propriedade booleana `requiresImage`: Modelos de vídeo e edição (`minimax-h3/image-edit`, `qwen-image/edit`, etc.) possuem `requiresImage: true` e exibem o badge `📷 Requer Imagem`.
+  - Propriedade booleana `supportsReferenceImage`: Define se o modelo consome fotos de referência (`true`) ou se opera puramente a partir de descrições textuais (`false` para `VORIXA HyperReal (Foto Realista 8K)` e `VORIXA Chroma`).
   - O botão de ação principal reflete dinamicamente o estado: quando `selectedModel.requiresImage && !referenceImageUrl`, exibe o ícone de upload com o texto `Selecione uma Foto para Gerar (+18)`, e ao ser acionado rola a tela para o Card 3 (`#hot-reference-section`).
-* **Card 3: Foto de Referência**:
+* **Card 3 Condicional: Foto de Referência**:
+  - Renderizado exclusivamente quando `selectedModel.supportsReferenceImage !== false`.
+  - Para o motor `VORIXA HyperReal (Foto Realista 8K)`, o Card 3 e seu box de upload são totalmente omitidos da árvore DOM, avançando o formulário diretamente do Motor Neural para a descrição do prompt.
+  - Numeração dinâmica dos passos: "3. Prompt & Estética Desejada" quando não há etapa de referência, ou "4. Prompt & Estética Desejada" quando há foto de referência.
   - Permite carregamento manual de arquivos de imagem locais (`/api/tools/upload`) ou seleção imediata via `handleSetReference()`.
   - Exibe preview com miniatura de 80x80px, tag `GUIA`, badge de status `Ativa ✅` e botões de `Trocar Foto`, `Ver Foto` e `Remover`.
   - Atalho `Usar Última Foto` vinculado à lista de histórico recente (`/api/library?limit=24`).
 * **Validação de Pré-Voo**:
-  - Para modelos do tipo `video`, a presença de `referenceImageUrl` é mandatória para disparar a geração, impedindo requisições incompletas na GPU e consumo indevido de créditos.
+  - Para modelos com `supportsReferenceImage: false`, valida apenas a presença de prompt de texto antes de disparar.
+  - Para modelos do tipo `video` ou edição, a presença de `referenceImageUrl` é mandatória para disparar a geração.
 * **Ações Rápidas na Mídia Ativa e Miniaturas**:
-  - Botão `Usar como Referência` abaixo do visualizador principal permite fixar o resultado atual como guia para variações subsequentes ou animações de vídeo.
+  - Botão `Usar como Referência` abaixo do visualizador principal permite fixar o resultado atual como guia para motores compatíveis. Se acionado em modelos puramente textuais, um toast informativo em PT-BR explica a restrição do modelo.
   - Hover action `Usar Ref` em cada item de imagem do grid de histórico recente com tag visual `REF` indicativa.
 
 ### 2. Provedor WaveSpeed AI (`services/ai/providers/wavespeed-ai.provider.ts`)
@@ -248,6 +251,112 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
   - `imgUrl` resolvido a partir de `image_url || image || reference_image_url`.
   - Para modelos de vídeo spicy (`wan-2.2-spicy`, `minimax-h3-spicy`, `seedance-2.5-spicy`): envio exclusivo de `bodyPayload.image = imgUrl`, expurgando `image_url` e `negative_prompt` para satisfazer schemas Pydantic com `additionalProperties: false`.
   - Sanitização preservada em modelos text-to-image com schemas restritos.
+
+### 3. Otimização e Tradução de Prompt com IA no Hot (`PromptEngine` & `/api/tools/optimize-prompt`)
+* **Interpretação e Tradução com IA**:
+  - Usuários podem digitar ideias em Português (PT-BR) de forma coloquial. O botão `Otimizar com IA ✨` dispara `POST /api/tools/optimize-prompt` com `isHotNiche: true`.
+  - O `PromptEngine.optimizeAsync` classifica o contexto como `HOT` e instrui o cluster neural (`fal-ai/any-llm`) a traduzir para Inglês cinematográfico, enriquecendo o prompt com estética boudoir, vestuário/lingerie, microtextura realista de pele e iluminação sensual volumétrica.
+  - Fallback local instantâneo via `dynamicVocabulary` e detecção de intenção `HOT` caso o cluster neural esteja indisponível.
+
+### 4. Especialização em Remoção de Roupas & Presets Semânticos (`HOT_REMOVAL_PRESETS`)
+* **Trio de Motores de Remoção (Todos com Alta Performance Comprovada)**:
+  - `wavespeed/qwen-image/edit-plus` (`VORIXA Qwen Edit Plus`): Badge `🏆 Ultra Remoção & Detalhes 🔞`. Maior retenção de feições faciais, simetria e microdetalhes corporais ao despir a pessoa da foto guia.
+  - `wavespeed/hidream-o1-image/edit` (`VORIXA HiDream Edit`): Badge `✨ Remoção Fotorrealista 🌿`. Refinamento fotorrealista de pele e fidelidade à iluminação do ambiente original.
+  - `wavespeed/qwen-image/edit` (`VORIXA Qwen Edit`): Badge `⚡ Remoção Rápida & Ágil 🎯`. Alta velocidade de renderização (~7s) e excelente fidelidade anatômica e de vestimenta.
+  - *Validação de Produção*: Confirmado em testes reais que os 3 modelos removem com excelência, diferenciando-se em detalhes de textura, iluminação e velocidade de entrega.
+* **Estrutura de Presets de 1-Clique (`HOT_REMOVAL_PRESETS`)**:
+  - `Remoção Total (Nude)`: Injeta instrução em inglês autoritativa: `"Remove all clothes and bra, completely naked and nude, natural uncovered breasts, realistic soft bare skin... strictly preserving exact same face, hair, body pose, identity, natural lighting and background from reference photo, raw photo 8k."`
+  - `Topless (Sem Parte de Cima)`: Injeta instrução para remoção de sutiã/camisa mantendo a calça/saia e o mesmo cenário.
+  - `Lingerie de Renda Sensual`: Troca a vestimenta por lingerie rendada escura de alta sofisticação mantendo a pessoa intacta.
+* **Diretiva Semântica no PromptEngine**:
+  - Quando termos como "tira a roupa", "deixa pelada", "nua" ou "topless" são identificados em conjunto com imagem de referência, o motor neural prioriza instruções estruturadas em inglês que proíbem alterações no rosto, cabelos, pose e plano de fundo.
+* **Especificações de Schema do MiniMax H3 Image Edit (`wavespeed-ai/minimax-h3/image-edit`)**:
+  - Parâmetro `images`: Array de URLs (min 1, max 9).
+  - Parâmetro `resolution`: Enum estrito `["1k", "2k"]` (valores como `"768p"` ou `"720p"` são estritamente proibidos e resultam em HTTP 422).
+  - Parâmetro `aspect_ratio`: Enum estrito (`"1:1"`, `"9:16"`, `"16:9"`, etc.). O campo `size` não é suportado e deve ser omitido (`additionalProperties: false`).
+  - Formato de Prompt: Requer que a foto de referência seja indexada como `<Picture 1>` para que a atenção visual seja aplicada corretamente à imagem base enviada.
+
+---
+
+## 15. Arquitetura do Programa de Afiliados, Comissionamento e Resgates Pix (Fase 15)
+
+### 1. Modelagem Relacional e Integridade Financeira
+* **`AffiliateProfile`**: Perfil financeiro do afiliado com código exclusivo (`code`), código personalizado (`customCode`), comissão VIP opcional (`customCommissionRate`), saldo disponível em centavos (`balanceCents`), total ganho (`totalEarningsCents`), total sacado (`withdrawnCents`), chave Pix e status (`ACTIVE`, `PAUSED`, `BANNED`).
+* **`Referral`**: Tabela de vínculo exclusivo entre o usuário indicado (`referredUserId`) e o afiliado (`affiliateId`), garantindo chave única (`@unique [referredUserId]`).
+* **`AffiliateCommission`**: Registro imutável de cada comissão financeira aprovada, pendente ou estornada, vinculada a um pagamento (`paymentId`).
+* **`AffiliatePayout`**: Solicitações de saque Pix (`PENDING`, `PROCESSING`, `PAID`, `REJECTED`), com rastreabilidade de chave Pix, notas da administração e URL de comprovante bancário.
+
+### 2. Fluxo Atômico de Comissões (`AffiliateService` & `PaymentLedgerService`)
+* **Vínculo no Cadastro**:
+  - Parâmetro `?ref=...` na URL armazena cookie assinado `vorixa_ref` com validade de 30 dias.
+  - No `POST /api/auth/register`, o código de indicação é processado por `AffiliateService.processReferralRegistration`.
+  - **Bloqueio de Auto-Indicação**: Afiliados não podem indicar suas próprias contas (`affiliate.userId !== referredUserId`).
+  - **Unicidade de Vínculo**: Cada usuário só pode ter um afiliado associado para sempre.
+* **Crédito Atômico na Compra de Créditos**:
+  - Ao confirmar o pagamento em `PaymentLedgerService.confirmPayment`, o método `AffiliateService.processPaymentCommission(tx, payment)` é executado atomicamente na mesma transação PostgreSQL.
+  - Lock pessimista: `SELECT * FROM "AffiliateProfile" WHERE "id" = ... FOR UPDATE`.
+  - Calcula a comissão (15% padrão ou taxa customizada do afiliado VIP).
+  - Idempotência Estrita: Se já existir registro em `AffiliateCommission` com o `paymentId`, o processamento retorna imediatamente sem duplicar crédito.
+  - Incrementa `balanceCents` e `totalEarningsCents` no perfil do afiliado.
+* **Estorno de Comissões em Reembolsos (Refund)**:
+  - No `PaymentLedgerService.refundPayment`, executa `AffiliateService.processPaymentRefundCommission(tx, paymentId)`.
+  - Atualiza a comissão para `REFUNDED` e debita o saldo com lock pessimista (`SELECT FOR UPDATE`).
+
+### 3. Solicitação de Saque Pix e Governança Administrativa
+* **Regras de Validação no Saque (`AffiliateService.requestPayout`)**:
+  - Bloqueio se a conta estiver suspensa (`profile.status !== 'ACTIVE'`).
+  - Chave Pix obrigatória e validada (`profile.pixKey`).
+  - Prevenção de Concorrência: Bloqueio estrito se já houver solicitação pendente ou em processamento (`PENDING` ou `PROCESSING`).
+  - Valor mínimo de resgate: R$ 50,00 (`MIN_WITHDRAWAL_CENTS = 5000`).
+  - Validação de saldo: `profile.balanceCents >= amountCents`.
+  - Débito imediato de saldo na solicitação com lock pessimista para evitar double-spending.
+* **Aprovação e Liquidação (`adminProcessPayout`)**:
+  - **Aprovar (`APPROVE`)**: Marca como `PAID`, insere `proofUrl` / chave de autenticação bancária Pix e incrementa `withdrawnCents`.
+  - **Rejeitar (`REJECT`)**: Marca como `REJECTED`, registra motivo em `adminNotes` e devolve imediatamente o valor sacado para o `balanceCents` do afiliado dentro da transação atômica.
+  - Todas as decisões geram eventos no `AuditLog` para compliance financeiro.
+
+### 4. Endpoints REST Protegidos
+* `/api/affiliates/me`: GET (perfil e métricas), PATCH (chave Pix e customCode).
+* `/api/affiliates/payout`: GET (histórico de saques), POST (solicitar saque).
+* `/api/affiliates/conversions`: GET (clientes indicados e comissões).
+* `/api/admin/affiliates`: GET (lista de afiliados com busca), PATCH (taxa VIP e status).
+* `/api/admin/affiliates/payouts`: GET (saques pendentes/pagos), POST (aprovação/rejeição de saques).
+
+---
+
+## 16. Arquitetura e Integração do Gateway de Pagamentos Vorexpay
+
+### 1. Visão Geral e Especificação Técnica
+* **URL Oficial da Plataforma**: [https://app.vorexpay.com](https://app.vorexpay.com)
+* **Documentação Oficial**: [https://app.vorexpay.com/docs](https://app.vorexpay.com/docs)
+* **Base URL da API**: `https://uayfvfryypcooochsxlc.supabase.co/functions/v1/api-gateway`
+* **Implementação no Core**: `services/payment-provider/vorexpay.provider.ts`
+* **Padrão de Resolução**: `PaymentProviderFactory.getProvider("vorexpay")`
+
+### 2. Autenticação e Headers Mandatórios
+* **`apikey`**: Chave de projeto Supabase pública/publishable (`VOREXPAY_API_KEY`).
+* **`X-API-Secret-Key`**: Chave secreta de produção do lojista (`sk_live_...`), nunca exposta no frontend.
+* **`Idempotency-Key`**: Header enviado com o `orderId` para garantir que repetições em até 24h não criem cobranças duplicadas.
+* **`Content-Type`**: `application/json`.
+
+### 3. Emissão de Cobrança Pix (`POST /payments`)
+* A Vorexpay recebe valores obrigatoriamente em **centavos** (`amount_in_cents`).
+* Retorno de sucesso com HTTP **201 Created**:
+  - `id`: UUID interno da transação.
+  - `pix_copy_paste`: Código Pix Copia e Cola para pagamento no app do banco.
+  - `pix_qr_code`: Imagem do QR Code em Base64 para escaneamento.
+  - `status`: `pending`.
+
+### 4. Notificações em Tempo Real (Webhooks)
+* **Endpoint Receptor no VORIXA**: `POST /api/webhooks/payment`
+* **Cabeçalho de Assinatura**: `X-Webhook-Signature`
+* **Algoritmo de Assinatura**: HMAC SHA-256 gerado sobre o **raw body** bruto da requisição utilizando a chave `VOREXPAY_WEBHOOK_SECRET`. A verificação no `VorexPayProvider` utiliza `crypto.timingSafeEqual` para imunidade a ataques de temporização (timing attacks).
+* **Mapeamento de Eventos**:
+  - `PAYMENT_CONFIRMED`, `PAYMENT_RECEIVED`, `PAYMENT_APPROVED` $\rightarrow$ Status `PAID`.
+  - `PAYMENT_REFUNDED` $\rightarrow$ Status `REFUNDED`.
+  - `PAYMENT_FAILED` $\rightarrow$ Status `FAILED`.
+* **Idempotência no Webhook**: Tabela `PaymentWebhook` com constraint `UNIQUE` em `gatewayEventId` e lock pessimista `SELECT FOR UPDATE` no `PaymentLedgerService`.
+
 
 
 

@@ -102,7 +102,8 @@ export class AIService {
     }
 
     // Cálculo dinâmico de custo: Duração (10s = 2x) e Qualidade (Kling Pro/Alta = 1.5x)
-    const isVideo = request.toolSlug.includes("video") || targetModel.technicalName.includes("video") || targetModel.technicalName.includes("wan") || targetModel.technicalName.includes("luma") || targetModel.technicalName.includes("seedance") || targetModel.technicalName.includes("minimax");
+    const isImageOrEdit = targetModel.technicalName.includes("image") || targetModel.technicalName.includes("edit");
+    const isVideo = !isImageOrEdit && (request.toolSlug.includes("video") || targetModel.technicalName.includes("video") || targetModel.technicalName.includes("wan-2.2-spicy") || targetModel.technicalName.includes("luma") || targetModel.technicalName.includes("seedance") || targetModel.technicalName.includes("minimax-h3-spicy") || targetModel.technicalName.includes("minimax-video"));
     const is10s = String(request.inputs?.duration) === "10";
     const durationMultiplier = (isVideo && is10s) ? 2 : 1;
 

@@ -3,6 +3,8 @@ export interface PaymentCheckoutRequest {
   amountCents: number;
   userId: string;
   email: string;
+  name?: string;
+  cpf?: string;
   title?: string;
   description?: string;
   paymentMethod?: "pix" | "credit_card" | "all" | string;
@@ -11,6 +13,8 @@ export interface PaymentCheckoutRequest {
 export interface PaymentCheckoutResponse {
   gatewayTxId: string;
   checkoutUrl: string;
+  pixCode?: string;
+  pixQrCode?: string;
 }
 
 export interface PaymentDetailsResponse {

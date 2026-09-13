@@ -24,6 +24,7 @@ import {
   Boxes,
   Maximize2,
   Check,
+  Wand2,
 } from "lucide-react";
 import { AgeVerificationModal } from "@/components/tools/hot/AgeVerificationModal";
 
@@ -36,6 +37,7 @@ interface HotModel {
   description: string;
   speed: string;
   requiresImage?: boolean;
+  supportsReferenceImage?: boolean;
 }
 
 const HOT_MODELS: HotModel[] = [
@@ -45,19 +47,21 @@ const HOT_MODELS: HotModel[] = [
     badge: "Máximo Fotorrealismo 👑",
     type: "image",
     cost: 4,
-    description: "Motor WAN 2.2 com foco em pele crua, micro-texturas reais, iluminação natural e zero aspecto de plástico ou 3D.",
+    description: "Motor WAN 2.2 com foco em pele crua, micro-texturas reais e iluminação natural. Geração exclusivamente por texto (não aceita foto de referência).",
     speed: "~ 8s",
     requiresImage: false,
+    supportsReferenceImage: false,
   },
   {
     id: "wavespeed/chroma",
-    name: "VORIXA Chroma (Nudez Total)",
-    badge: "100% Sem Censura 🔞",
+    name: "VORIXA Chroma (Personagem / Game 3D)",
+    badge: "Estilo Videogame / 3D 🎮",
     type: "image",
     cost: 3,
-    description: "Motor sem travas com calibração fotográfica para nudez explícita, anatomia natural e detalhes íntimos.",
+    description: "Estilo desenho 3D, arte digital e personagem de videogame sem censura (não é foto real). Geração exclusivamente por texto (não aceita foto de referência).",
     speed: "~ 6s",
     requiresImage: false,
+    supportsReferenceImage: false,
   },
   {
     id: "wavespeed/minimax-h3/image-edit",
@@ -68,36 +72,40 @@ const HOT_MODELS: HotModel[] = [
     description: "Edição fotorrealista mantendo máxima consistência da pessoa, rosto, corpo e iluminação original.",
     speed: "~ 8s",
     requiresImage: true,
-  },
-  {
-    id: "wavespeed/qwen-image/edit",
-    name: "VORIXA Qwen Edit (Instrução Semântica)",
-    badge: "Edição Precisa 🎯",
-    type: "image",
-    cost: 3,
-    description: "Modificação anatômica e de vestimenta guiada por texto natural com alta fidelidade ao cenário.",
-    speed: "~ 7s",
-    requiresImage: true,
+    supportsReferenceImage: true,
   },
   {
     id: "wavespeed/qwen-image/edit-plus",
     name: "VORIXA Qwen Edit Plus (Ultra Detalhes)",
-    badge: "Ultra Definição 💎",
+    badge: "🏆 Ultra Remoção & Detalhes 🔞",
     type: "image",
     cost: 4,
-    description: "Versão avançada com máxima retenção de detalhes finos, texturas de pele e proporções.",
+    description: "Excelente para remoção de roupas com máxima retenção de detalhes finos, textura de pele e anatomia idêntica. Exige prompt claro em inglês.",
     speed: "~ 10s",
     requiresImage: true,
+    supportsReferenceImage: true,
   },
   {
     id: "wavespeed/hidream-o1-image/edit",
     name: "VORIXA HiDream Edit (Fotorrealista)",
-    badge: "Composição Natural 🌿",
+    badge: "✨ Remoção Fotorrealista 🌿",
     type: "image",
     cost: 3,
-    description: "Edição com refinamento orgânico de pele, sombras naturais e consistência de ambiente.",
+    description: "Excelente para remoção de roupas com refinamento orgânico de pele e preservação de sombras naturais e ambiente. Exige prompt em inglês.",
     speed: "~ 8s",
     requiresImage: true,
+    supportsReferenceImage: true,
+  },
+  {
+    id: "wavespeed/qwen-image/edit",
+    name: "VORIXA Qwen Edit (Instrução Semântica)",
+    badge: "⚡ Remoção Rápida & Ágil 🎯",
+    type: "image",
+    cost: 3,
+    description: "Excelente para remoção de roupas e modificação anatômica rápida (~7s) guiada por texto natural com alta fidelidade ao cenário. Exige prompt em inglês.",
+    speed: "~ 7s",
+    requiresImage: true,
+    supportsReferenceImage: true,
   },
   {
     id: "wavespeed/wan-2.2-spicy",
@@ -108,6 +116,7 @@ const HOT_MODELS: HotModel[] = [
     description: "Animação de fotos e movimentos corporais explícitos sem filtros. Rápido e ultra-estável.",
     speed: "~ 30s",
     requiresImage: true,
+    supportsReferenceImage: true,
   },
   {
     id: "wavespeed/minimax-h3-spicy",
@@ -118,6 +127,7 @@ const HOT_MODELS: HotModel[] = [
     description: "Gera clipes de vídeo sem censura com animação expressiva e áudio ambiente/gemidos nativos.",
     speed: "~ 35s",
     requiresImage: true,
+    supportsReferenceImage: true,
   },
   {
     id: "wavespeed/seedance-2.5-spicy",
@@ -128,6 +138,7 @@ const HOT_MODELS: HotModel[] = [
     description: "Motor cinematográfico pesado para movimentos complexos e alta definição anatômica.",
     speed: "~ 50s",
     requiresImage: true,
+    supportsReferenceImage: true,
   },
 ];
 
@@ -135,6 +146,35 @@ const HOT_PROMPT_SUGGESTIONS = [
   "Mulher deslumbrante em lingerie de seda preta ao lado de uma janela iluminada pelo luar, iluminação suave e dramática, retrato fotográfico ultra realista 8k.",
   "Modelo fitness em ensaio sensual na praia ao pôr do sol, biquíni molhado, gotas de água brilhando na pele, foto cinematográfica de alta definição.",
   "Retrato íntimo de uma jovem mulher em um quarto sofisticado, iluminação dourada e calorosa, textura de pele natural, pose elegante e provocante.",
+];
+
+interface RemovalPreset {
+  label: string;
+  icon: string;
+  badge?: string;
+  prompt: string;
+}
+
+const HOT_REMOVAL_PRESETS: RemovalPreset[] = [
+  {
+    label: "Remoção Total (Nude)",
+    icon: "🔞",
+    badge: "Mais Usado",
+    prompt:
+      "Remove all clothes and bra, completely naked and nude, natural uncovered breasts, realistic soft bare skin, anatomically correct body, strictly preserving the exact same face, hair, body pose, identity, natural lighting, and original background from reference photo, raw photo 8k.",
+  },
+  {
+    label: "Topless (Sem Parte de Cima)",
+    icon: "🔥",
+    prompt:
+      "Remove shirt and bra, completely topless, bare natural uncovered breasts, natural skin texture, keeping lower clothing, strictly preserving exact same face, hair, body pose, identity, and background from reference photo.",
+  },
+  {
+    label: "Lingerie de Renda Sensual",
+    icon: "🩱",
+    prompt:
+      "Change outfit into delicate sexy sheer black lace lingerie set, elegant cleavage, realistic skin texture, preserving exact same face, hair, body pose, and background from reference photo, cinematic lighting.",
+  },
 ];
 
 export default function HotGenerationClient() {
@@ -158,6 +198,7 @@ export default function HotGenerationClient() {
   const [duration, setDuration] = useState<string>("5");
   const [resolution, setResolution] = useState<string>("720p");
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [isOptimizing, setIsOptimizing] = useState<boolean>(false);
   const [activeStepText, setActiveStepText] = useState<string>("");
   const [resultMediaUrl, setResultMediaUrl] = useState<string>("");
   const [historyItems, setHistoryItems] = useState<Array<{ id: string; url: string; mimeType?: string; name?: string }>>([]);
@@ -238,6 +279,10 @@ export default function HotGenerationClient() {
       toast.error("Apenas fotos/imagens podem ser usadas como referência visual.");
       return;
     }
+    if (selectedModel.supportsReferenceImage === false) {
+      toast.info(`O motor "${selectedModel.name}" opera exclusivamente a partir de texto. Selecione um motor de Edição (ex: MiniMax Edit) ou Vídeo para usar fotos de referência.`);
+      return;
+    }
     setReferenceImageUrl(targetUrl);
     toast.success("Foto definida como referência para o próximo prompt!");
     const el = document.getElementById("hot-reference-section");
@@ -296,11 +341,57 @@ export default function HotGenerationClient() {
   };
 
   // Disparo de Geração
+  // Otimização e Tradução Inteligente do Prompt com IA para Inglês
+  const handleOptimizePrompt = async () => {
+    if (!prompt.trim()) {
+      toast.error("Digite uma ideia de prompt antes de otimizar.");
+      return;
+    }
+    try {
+      setIsOptimizing(true);
+      const res = await fetch("/api/tools/optimize-prompt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt,
+          enhanceQuality: true,
+          toolType: selectedModel.type === "video" ? "video" : "image",
+          hasReferenceImage: selectedModel.supportsReferenceImage !== false && Boolean(referenceImageUrl),
+          style: selectedModel.id === "wavespeed/chroma" ? "octane3d" : "photorealistic",
+          isHotNiche: true,
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Não foi possível otimizar o prompt no cluster neural.");
+      }
+
+      const data = await res.json();
+      if (data.optimizedPrompt) {
+        setPrompt(data.optimizedPrompt);
+        toast.success("Prompt otimizado e traduzido para inglês com sucesso!");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Erro na otimização do prompt.");
+    } finally {
+      setIsOptimizing(false);
+    }
+  };
+
   const handleGenerate = async () => {
     if (isGenerating) return;
-    if (!prompt.trim() && !referenceImageUrl) {
-      toast.error("Insira a descrição ou anexe uma foto de referência.");
-      return;
+
+    if (selectedModel.supportsReferenceImage === false) {
+      if (!prompt.trim()) {
+        toast.error("Por favor, digite a descrição do que deseja gerar.");
+        return;
+      }
+    } else {
+      if (!prompt.trim() && !referenceImageUrl) {
+        toast.error("Insira a descrição ou anexe uma foto de referência.");
+        return;
+      }
     }
 
     // Para modelos de vídeo, uma foto de referência é obrigatória para animar
@@ -342,7 +433,7 @@ export default function HotGenerationClient() {
         resolution,
       };
 
-      if (referenceImageUrl) {
+      if (selectedModel.supportsReferenceImage !== false && referenceImageUrl) {
         inputs.image_url = referenceImageUrl;
         inputs.image = referenceImageUrl;
         inputs.reference_image_url = referenceImageUrl;
@@ -472,6 +563,9 @@ export default function HotGenerationClient() {
                   onClick={() => {
                     setMediaType("image");
                     setSelectedModel(HOT_MODELS[0]);
+                    if (HOT_MODELS[0].supportsReferenceImage === false) {
+                      setReferenceImageUrl("");
+                    }
                   }}
                   className={`py-2.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     mediaType === "image"
@@ -486,7 +580,8 @@ export default function HotGenerationClient() {
                   type="button"
                   onClick={() => {
                     setMediaType("video");
-                    setSelectedModel(HOT_MODELS[2]);
+                    const firstVideo = HOT_MODELS.find((m) => m.type === "video") || HOT_MODELS[6];
+                    setSelectedModel(firstVideo);
                   }}
                   className={`py-2.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     mediaType === "video"
@@ -509,7 +604,12 @@ export default function HotGenerationClient() {
                   return (
                     <div
                       key={model.id}
-                      onClick={() => setSelectedModel(model)}
+                      onClick={() => {
+                        setSelectedModel(model);
+                        if (model.supportsReferenceImage === false) {
+                          setReferenceImageUrl("");
+                        }
+                      }}
                       className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
                         isSelected
                           ? "bg-rose-950/20 border-rose-500/50 shadow-sm"
@@ -525,6 +625,11 @@ export default function HotGenerationClient() {
                           {model.requiresImage && (
                             <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase tracking-wider flex items-center gap-1 shadow-xs">
                               📷 Requer Imagem
+                            </span>
+                          )}
+                          {!model.supportsReferenceImage && (
+                            <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/40 uppercase tracking-wider flex items-center gap-1 shadow-xs">
+                              ✍️ Só Geração
                             </span>
                           )}
                         </div>
@@ -543,9 +648,10 @@ export default function HotGenerationClient() {
               </div>
             </div>
 
-            {/* Card 3: Foto de Referência (Usar como Referência) */}
-            <div
-              id="hot-reference-section"
+            {/* Card 3: Foto de Referência (Apenas exibido quando o modelo suporta fotos de referência) */}
+            {selectedModel.supportsReferenceImage !== false && (
+              <div
+                id="hot-reference-section"
               className={`bg-[#0D0E12] border rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl transition-all ${
                 referenceImageUrl
                   ? "border-rose-500/50 bg-gradient-to-b from-rose-950/20 to-[#0D0E12]"
@@ -711,32 +817,113 @@ export default function HotGenerationClient() {
                 </div>
               )}
             </div>
+          )}
 
-            {/* Card 4: Descrição e Prompt */}
+            {/* Card: Descrição e Prompt */}
             <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-slate-300">4. Prompt & Estética Desejada</label>
-                <div className="flex gap-1.5">
-                  {HOT_PROMPT_SUGGESTIONS.map((_, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => setPrompt(HOT_PROMPT_SUGGESTIONS[i])}
-                      className="px-2 py-0.5 text-[10px] font-mono rounded bg-[#13141B] text-slate-400 hover:text-rose-300 border border-[#1E202E] cursor-pointer"
-                    >
-                      Ideia #{i + 1}
-                    </button>
-                  ))}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                  <span>{selectedModel.supportsReferenceImage !== false ? "4" : "3"}. Prompt & Estética Desejada</span>
+                </label>
+                <div className="flex items-center gap-2 flex-wrap justify-between sm:justify-end">
+                  <div className="flex gap-1">
+                    {HOT_PROMPT_SUGGESTIONS.map((_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setPrompt(HOT_PROMPT_SUGGESTIONS[i])}
+                        className="px-2 py-1 text-[10px] font-mono rounded-lg bg-[#13141B] text-slate-400 hover:text-rose-300 border border-[#1E202E] cursor-pointer"
+                        title="Carregar sugestão rápida de cena"
+                      >
+                        Ideia #{i + 1}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Botão de Otimizar Prompt com IA */}
+                  <button
+                    type="button"
+                    onClick={handleOptimizePrompt}
+                    disabled={isOptimizing || !prompt.trim()}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 hover:opacity-95 disabled:opacity-40 text-white shadow-md shadow-rose-600/30 transition-all active:scale-95 cursor-pointer touch-manipulation min-h-[32px]"
+                    title="A IA analisa sua ideia em português, identifica a estética e traduz para um prompt cinematográfico em inglês"
+                  >
+                    {isOptimizing ? (
+                      <RefreshCw className="h-3.5 w-3.5 animate-spin text-white" />
+                    ) : (
+                      <Wand2 className="h-3.5 w-3.5 text-amber-200" />
+                    )}
+                    <span>{isOptimizing ? "Otimizando..." : "Otimizar com IA ✨"}</span>
+                  </button>
                 </div>
               </div>
+
+              {/* Atalhos Rápidos para Modelos de Edição / Remoção de Roupas */}
+              {selectedModel.requiresImage && selectedModel.type === "image" && (
+                <div className="space-y-1.5 pt-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-rose-300 flex items-center gap-1.5">
+                      <Flame className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+                      <span>Atalhos de Remoção / Despir (Inglês Calibrado):</span>
+                    </span>
+                    <span className="text-[10px] font-mono text-slate-400">1-Clique</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    {HOT_REMOVAL_PRESETS.map((preset, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          setPrompt(preset.prompt);
+                          toast.success(`Preset "${preset.label}" aplicado em inglês!`);
+                        }}
+                        className="p-2.5 rounded-xl bg-[#070709] hover:bg-rose-950/25 border border-[#1E202E] hover:border-rose-500/40 text-left transition-all cursor-pointer group flex flex-col justify-between gap-1 min-h-[48px]"
+                      >
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="text-xs font-bold text-slate-200 group-hover:text-rose-200 flex items-center gap-1.5">
+                            <span>{preset.icon}</span>
+                            <span>{preset.label}</span>
+                          </span>
+                          {preset.badge && (
+                            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                              {preset.badge}
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-[10px] text-slate-500 group-hover:text-slate-400 line-clamp-1 font-mono">
+                          {preset.prompt.slice(0, 48)}...
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 rows={4}
-                placeholder="Descreva a modelo, a lingerie, o ambiente, a pose e a iluminação desejada..."
+                placeholder="Descreva a modelo, o cenário, o figurino, a pose e a iluminação desejada... Você pode digitar em português e clicar em 'Otimizar com IA' para traduzir para inglês enriquecido."
                 className="w-full bg-[#070709] border border-[#1E202E] rounded-xl p-3 text-xs text-white placeholder-slate-600 focus:border-rose-500 outline-none transition-colors resize-none leading-relaxed"
               />
+
+              {/* Dica Pro Especial para Motores de Edição / Remoção */}
+              {selectedModel.requiresImage && selectedModel.type === "image" && (
+                <div className="p-3 rounded-xl bg-gradient-to-r from-rose-950/30 via-[#13141B] to-purple-950/20 border border-rose-500/30 text-xs text-rose-200 flex items-start gap-2.5 shadow-sm">
+                  <Sparkles className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <p className="font-bold text-white flex items-center gap-1.5">
+                      <span>💡 Dica Pro: Instrução Clara em Inglês</span>
+                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                        Trio de Remoção: Qwen Edit, Plus & HiDream
+                      </span>
+                    </p>
+                    <p className="text-[11px] text-slate-300 leading-relaxed">
+                      Os 3 motores de edição (<strong>Qwen Edit</strong>, <strong>Qwen Edit Plus</strong> e <strong>HiDream Edit</strong>) removem roupas com excelência mantendo a identidade e o cenário original. O prompt precisa ser <strong>claro, detalhado e estritamente em inglês</strong>. Use os atalhos de 1-clique acima ou digite em português e clique no botão <strong className="text-amber-300">"Otimizar com IA ✨"</strong> para gerar a instrução perfeita em inglês!
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Card 5: Proporção e Duração */}

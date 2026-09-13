@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
+import { AffiliateService } from "@/services/affiliate.service";
 
 const registerSchema = z.object({
   email: z.string().email("E-mail inválido."),
@@ -13,6 +14,7 @@ const registerSchema = z.object({
   utmContent: z.string().optional().nullable(),
   utmTerm: z.string().optional().nullable(),
   referrer: z.string().optional().nullable(),
+  referralCode: z.string().optional().nullable(),
 });
 
 export async function POST(req: Request) {
@@ -69,6 +71,18 @@ export async function POST(req: Request) {
       });
 
       return newUser;
+    });
+
+    // Vincula indicação caso código válido tenha sido fornecido
+    if (validatedData.referralCode) {
+      await AffiliateService.processReferralRegistration(user.id, validatedData.referralCode).catch((err) => {
+        console.warn("Aviso ao vincular indicação:", err?.message || err);
+      });
+    }
+
+    // Inicializa o perfil de afiliado para que o usuário já tenha seu link exclusivo disponível
+    await AffiliateService.getOrCreateAffiliateProfile(user.id).catch((err) => {
+      console.warn("Aviso ao inicializar perfil de afiliado:", err?.message || err);
     });
 
     return NextResponse.json(

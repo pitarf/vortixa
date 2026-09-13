@@ -207,6 +207,13 @@ export function DashboardShell({
       color: "text-cyan-400",
     },
     { name: "Planos & Créditos", href: "/dashboard/credits", icon: Coins, highlight: true },
+    {
+      name: "Programa de Afiliados",
+      href: "/dashboard/affiliates",
+      icon: Users,
+      badge: "Ganhe R$",
+      color: "text-emerald-400",
+    },
     { name: "Configurações", href: "/dashboard/settings", icon: Settings },
     { name: "Ajuda & Suporte", href: "/dashboard/help", icon: HelpCircle },
     ...(user?.role === "ADMIN"

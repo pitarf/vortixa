@@ -393,24 +393,101 @@ A ferramenta Hot do VORIXA é dedicada à geração artística de fotos e vídeo
 * O acesso só é liberado após a confirmação expressa de que você possui 18 anos ou mais.
 
 ### B. Motores Neurais Disponíveis
-* **VORIXA HyperReal (Foto Realista 8K)**: Motor com calibração profunda de micro-texturas naturais, poros visíveis, iluminação ambiente suave e eliminação completa do aspecto artificial de plástico/boneca.
-* **VORIXA Chroma (Nudez Total)**: Motor sem travas para nudez explícita, anatomia natural e ensaios boudoir sem censura.
-* **VORIXA Motion Hot (Vídeo +18 Fluido)** `[📷 Requer Imagem]`: Motor de animação corporal explícita e movimentos sensuais de alta fluidez a partir de uma foto guia.
-* **VORIXA Live Voice Hot (Vídeo com Áudio)** `[📷 Requer Imagem]`: Clipes animados com respiração e áudio estéreo nativo baseados em foto guia.
-* **VORIXA Ultra Cinema Hot (Vídeo 4K)** `[📷 Requer Imagem]`: Alta definição cinematográfica para movimentos complexos a partir de foto guia.
+* **VORIXA Qwen Edit Plus (Ultra Detalhes)** `[🏆 Ultra Remoção & Detalhes 🔞]` `[📷 Requer Imagem]`: Excelente motor para remoção de roupas e despir mantendo rigorosamente o mesmo rosto, formato do corpo e plano de fundo. Exige prompt claro, detalhado e em inglês (4 créditos).
+* **VORIXA HiDream Edit (Fotorrealista)** `[✨ Remoção Fotorrealista 🌿]` `[📷 Requer Imagem]`: Excelente para remoção de vestimentas com refinamento orgânico de textura de pele e iluminação realista natural. Exige prompt detalhado em inglês (3 créditos).
+* **VORIXA Qwen Edit (Instrução Semântica)** `[⚡ Remoção Rápida & Ágil 🎯]` `[📷 Requer Imagem]`: Excelente para remoção rápida (~7s) e modificação de roupas guiada por texto natural com alta fidelidade ao cenário original (3 créditos).
+* **VORIXA MiniMax Edit (Alta Fidelidade)** `[Preservação Facial 👤]` `[📷 Requer Imagem]`: Edição fotorrealista mantendo máxima consistência da pessoa, rosto, corpo e iluminação original (3 créditos).
+* **VORIXA HyperReal (Foto Realista 8K)** `[✍️ Só Geração]`: Motor WAN 2.2 com foco em pele crua, micro-texturas reais e iluminação natural. Geração exclusivamente por texto (sem foto de referência, 4 créditos).
+* **VORIXA Chroma (Personagem / Game 3D)** `[✍️ Só Geração]`: Estilo desenho 3D, arte digital e personagem de videogame sem censura (não é fotorrealista). Geração exclusivamente por texto (sem foto de referência, 3 créditos).
+* **VORIXA Motion Hot (Vídeo +18 Fluido)** `[📷 Requer Imagem]`: Animação de fotos e movimentos corporais explícitos sem filtros. Rápido e ultra-estável (15 créditos).
+* **VORIXA Live Voice Hot (Vídeo com Áudio)** `[📷 Requer Imagem]`: Clipes animados sem censura com respiração e áudio ambiente/gemidos nativos (18 créditos).
+* **VORIXA Ultra Cinema Hot (Vídeo 4K)** `[📷 Requer Imagem]`: Motor cinematográfico pesado para movimentos complexos e máxima definição anatômica (30 créditos).
 
-> ℹ️ **Identificação Visual "📷 Requer Imagem"**: Todos os motores de vídeo trazem a tag âmbar destacada `📷 Requer Imagem`. Caso nenhum arquivo esteja carregado, o botão principal de geração alertará automaticamente `Selecione uma Foto para Gerar (+18)`, direcionando a tela diretamente para a área de anexar ou escolher uma imagem guia.
+> ℹ️ **Identificação Visual "📷 Requer Imagem"**: Todos os motores de vídeo e de edição fotográfica trazem a tag âmbar destacada `📷 Requer Imagem`. Caso nenhum arquivo esteja carregado, o botão principal de geração alertará automaticamente `Selecione uma Foto para Gerar (+18)`, direcionando a tela diretamente para a área de anexar ou escolher uma imagem guia. Já os motores textuais trazem a badge roxa `✍️ Só Geração`.
 
 ### C. Recurso de Foto de Referência ("Usar como Referência")
 * **Card de Foto de Referência (Card 3)**:
-  * Permite anexar uma foto de modelo, pose ou cenário para guiar a criação.
-  * **Obrigatório para Vídeos (+18)**: Os motores de vídeo necessitam de uma imagem base para animar os movimentos. Caso você selecione vídeo sem foto de referência, o sistema alertará para selecionar uma imagem.
+  * Exibido apenas para motores que suportam ou exigem fotos guia (motores de Edição Facial/Corporal e motores de Vídeo).
+  * **Motores Textuais (VORIXA HyperReal & Chroma)**: Por operarem exclusivamente a partir de texto sem carregar fotos guia, o Card 3 de upload é ocultado automaticamente, simplificando o fluxo de criação.
+  * **Obrigatório para Vídeos (+18) e Edição**: Os motores de vídeo e de edição fotográfica necessitam de uma imagem base para aplicar as instruções ou animar os movimentos.
   * **Atalho "Usar Última Foto"**: Se você já gerou imagens anteriormente, um botão de 1 clique permite utilizar a foto mais recente como referência imediata.
 * **Botão "Usar como Referência" na Mídia Ativa**:
-  * Ao gerar qualquer foto e visualizá-la no painel direito, basta clicar no botão destacado **"Usar como Referência 🖼️"** para fixá-la instantaneamente como guia para o próximo prompt ou animação em vídeo.
+  * Ao gerar qualquer foto e visualizá-la no painel direito, basta clicar no botão destacado **"Usar como Referência 🖼️"** para fixá-la instantaneamente como guia para o próximo prompt ou animação em vídeo (caso o motor ativo seja de edição ou vídeo).
 * **Miniaturas de Gerações Recentes**:
   * No grid de criações recentes à direita, passe o mouse sobre qualquer foto gerada para ver o botão **"Usar Ref"**.
   * A foto atualmente ativa como referência recebe uma etiqueta destacada `REF` para identificação visual clara.
 * **Visualização em Tela Cheia**:
   * O modal de tela cheia conta com um botão direto **"Usar como Referência"** para definir a imagem em alta resolução sem precisar fechar a visualização.
+
+### D. Otimizar Prompt com IA (Tradução e Enriquecimento para Inglês ✨)
+* **Como Funciona**:
+  1. Digite livremente a sua ideia em Português no campo de descrição (ex: *"Uma mulher em pose sensual com lingerie de renda vermelha em um quarto de luxo à noite"*).
+  2. Clique no botão **"Otimizar com IA ✨"** localizado no canto superior direito do Card de Prompt.
+  3. A inteligência artificial analisa a sua cena, identifica elementos de vestuário/lingerie, iluminação de contorno, anatomia e atmosfera boudoir, convertendo tudo em um prompt fotográfico e cinematográfico de alto padrão em Inglês.
+  4. O campo é atualizado automaticamente pronto para a geração no motor selecionado.
+
+### E. Guia Especial de Remoção de Roupas & Despir (Trio de Motores: Qwen Edit, Plus & HiDream)
+Os 3 motores de edição — **VORIXA Qwen Edit**, **VORIXA Qwen Edit Plus** e **VORIXA HiDream Edit** — removem roupas com excelência mantendo a fisionomia, proporções corporais e o cenário original da foto intactos.
+* **Regra Fundamental**: O prompt para esses modelos precisa ser **claro, detalhado e estritamente em inglês**. Prompts em português ou vagos podem não aplicar a alteração desejada.
+* **Atalhos Rápidos de 1-Clique (`HOT_REMOVAL_PRESETS`)**:
+  * **🔞 Remoção Total (Nude)**: Remove todas as roupas e sutiã, gerando nudez com pele realista e mantendo o mesmo rosto, cabelo, pose e fundo da foto de referência.
+  * **🔥 Topless (Sem Parte de Cima)**: Remove camisas, sutiãs e tops, mantendo a calça, saia ou calcinha e o cenário original.
+  * **🩱 Lingerie de Renda Sensual**: Substitui a roupa atual por um conjunto de lingerie delicada em renda preta.
+* **Uso do Botão "Otimizar com IA ✨"**:
+  * Caso queira uma remoção personalizada (ex: *"tira a jaqueta e o sutiã deixando só a saia"*), você pode digitar em português e clicar em **"Otimizar com IA ✨"**.
+  * A inteligência artificial identificará o comando de despir e estruturará uma diretiva autoritativa em inglês orientando o modelo a remover as peças solicitadas com preservação facial estrita.
+
+---
+
+## 9. Programa de Indicação, Afiliados e Resgates Pix (`/dashboard/affiliates`)
+
+O Programa de Afiliados do VORIXA permite que você monetize a sua rede de contatos, amigos e clientes. Cada compra de créditos efetuada pelos seus indicados gera comissão financeira creditada diretamente no seu saldo de afiliado.
+
+### A. Como Funciona a Indicação
+1. Acesse o menu lateral e clique em **"Afiliados & Recompensas"** ou navegue até `/dashboard/affiliates`.
+2. Você terá acesso imediato ao seu **Link de Indicação Exclusivo** e ao seu **Código de Afiliado** (ex: `VORIXA-A1B2C3`).
+3. Ao enviar o link para seus contatos, qualquer pessoa que clicar receberá um cookie de identificação seguro (com duração de 30 dias).
+4. Quando o convidado criar a conta e efetuar qualquer compra de pacotes de créditos, você receberá automaticamente a comissão financeira na sua carteira.
+
+### B. Taxa de Comissão e Ganhos
+* **Comissão Padrão**: 15% do valor total de cada compra aprovada do seu indicado.
+* **Comissão VIP**: Parceiros estratégicos e grandes influenciadores podem receber taxas personalizadas configuradas pela equipe administrativa (ex: 20%, 25%).
+* **Ganhos Recorrentes**: A comissão não se limita apenas à primeira compra; você recebe porcentagem em **todas as recargas** feitas pelo seu indicado enquanto a conta estiver ativa.
+
+### C. Personalização de Código e Compartilhamento Rápido
+* **Copiar com 1 Clique**: Clique no botão "Copiar Link" para ter o endereço pronto para envio.
+* **Compartilhamento no WhatsApp e Telegram**: Botões dedicados abrem a mensagem pré-formatada para envio imediato aos seus grupos e conversas.
+* **Personalizar Código**: Clique em **"Personalizar Código"** para definir um identificador memorável da sua marca (ex: `SEUNOME`, `VIP2026`).
+
+### D. Cadastro de Chave Pix e Solicitação de Saque
+1. **Configuração da Chave Pix**:
+   * Clique em **"Cadastrar Chave Pix"** ou **"Alterar Chave"**.
+   * Selecione o tipo de chave (CPF, CNPJ, E-mail, Telefone Celular ou Chave Aleatória EVP) e insira sua chave.
+2. **Solicitação de Saque**:
+   * O valor mínimo para solicitação de resgate é de **R$ 50,00**.
+   * Assim que seu saldo disponível atingir o valor mínimo, o botão **"Solicitar Saque Pix"** ficará habilitado.
+   * Digite o valor desejado e confirme o envio.
+   * Seu saldo é retido de forma segura e a equipe administrativa processará o envio do Pix diretamente para a sua conta bancária.
+3. **Acompanhamento**:
+   * Na aba **"Histórico de Saques"**, acompanhe o status da sua transferência (`Em Análise ⏳`, `Pago / Concluído ✅` ou `Recusado ❌`). Em saques concluídos, você poderá conferir o identificador bancário do Pix.
+   * Na aba **"Histórico de Conversões"**, acompanhe cada cliente que comprou pelo seu link e o valor exato da comissão creditada.
+
+---
+
+## 10. Recargas e Pagamentos com Pix Instantâneo via Vorexpay (`/dashboard/credits`)
+
+O VORIXA utiliza o gateway oficial **Vorexpay** ([app.vorexpay.com](https://app.vorexpay.com/)) para processar compras de pacotes de crédito com segurança financeira e liberação imediata.
+
+### A. Como Adquirir Créditos
+1. Acesse o menu lateral e clique em **"Planos & Créditos"** ou acesse `/dashboard/credits`.
+2. Escolha o pacote de créditos desejado (ex: Starter, Creator Pro, Studio Ultra).
+3. No modal de checkout seguro, selecione a opção **"Pix Instantâneo (Vorexpay)"**.
+4. Clique em **"Prosseguir para Pagamento Seguro"**.
+
+### B. Pagamento com Pix Copia e Cola & QR Code
+1. Um código **Pix Copia e Cola** e um **QR Code dinâmico** serão gerados instantaneamente.
+2. Abra o aplicativo do seu banco no smartphone, escolha a opção "Pix Copia e Cola" (ou escaneie o QR Code na tela do computador) e confirme o pagamento.
+3. **Confirmação Automática em Tempo Real**: A tela do VORIXA monitora a confirmação do banco automaticamente a cada 3 segundos. Assim que o banco liquida o pagamento, o modal fecha sozinho e celebra a aprovação com som e confirmação visual.
+4. Seus créditos são disponibilizados imediatamente na sua carteira digital para uso no Studio CREATE, VORIXA FLOW e demais ferramentas neurais!
+
 

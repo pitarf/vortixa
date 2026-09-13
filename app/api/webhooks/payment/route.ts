@@ -12,7 +12,7 @@ export async function POST(req: Request) {
 
     const stripeSig = req.headers.get("stripe-signature");
     const mpSig = req.headers.get("x-signature");
-    const vorexSig = req.headers.get("x-vorexpay-signature");
+    const vorexSig = req.headers.get("x-vorexpay-signature") || req.headers.get("x-webhook-signature");
     const genericSig = req.headers.get("signature");
 
     const signature = stripeSig || mpSig || vorexSig || genericSig || "";
@@ -21,6 +21,7 @@ export async function POST(req: Request) {
       "x-signature": mpSig || undefined,
       "stripe-signature": stripeSig || undefined,
       "x-vorexpay-signature": vorexSig || undefined,
+      "x-webhook-signature": req.headers.get("x-webhook-signature") || undefined,
       "x-request-id": req.headers.get("x-request-id") || undefined,
       "data-id": queryDataId,
     };
@@ -52,8 +53,8 @@ export async function POST(req: Request) {
         providerName = "stripe";
       } else if (mpSig || payload?.action?.startsWith("payment.") || payload?.type === "payment" || queryDataId) {
         providerName = "mercadopago";
-      } else if (vorexSig || payload?.gateway === "vorexpay") {
-        providerName = "mock_gateway";
+      } else if (vorexSig || payload?.gateway === "vorexpay" || payload?.event?.startsWith("PAYMENT_") || payload?.event?.startsWith("TRANSFER_")) {
+        providerName = "vorexpay";
       }
     }
 
@@ -148,6 +149,51 @@ export async function POST(req: Request) {
             OR: [
               ...(externalRef ? [{ orderId: externalRef }] : []),
               ...(mpDataId ? [{ gatewayTxId: mpDataId }] : []),
+              ...(gatewayTxId ? [{ gatewayTxId }] : []),
+            ],
+          },
+        });
+        if (paymentRecord) {
+          paymentId = paymentRecord.id;
+          gatewayTxId = paymentRecord.gatewayTxId;
+        }
+      }
+    }
+
+    // Normalização Vorexpay (eventos PAYMENT_CONFIRMED, PAYMENT_RECEIVED, PAYMENT_APPROVED, etc.)
+    if (providerName === "vorexpay" || vorexSig || payload?.event?.startsWith("PAYMENT_") || payload?.gateway === "vorexpay") {
+      eventId = String(payload.eventId || payload.id || `vorex_evt_${Date.now()}`);
+      const vorexTxId = String(payload.id || payload.gatewayTxId || payload.external_id || "");
+
+      if (
+        payload.event === "PAYMENT_CONFIRMED" ||
+        payload.event === "PAYMENT_RECEIVED" ||
+        payload.event === "PAYMENT_APPROVED" ||
+        payload.status === "paid" ||
+        payload.status === "PAID"
+      ) {
+        normalizedStatus = "PAID";
+      } else if (
+        payload.event === "PAYMENT_REFUNDED" ||
+        payload.status === "refunded" ||
+        payload.status === "REFUNDED"
+      ) {
+        normalizedStatus = "REFUNDED";
+      } else if (
+        payload.event === "PAYMENT_FAILED" ||
+        payload.status === "failed" ||
+        payload.status === "FAILED"
+      ) {
+        normalizedStatus = "FAILED";
+      }
+
+      if (!paymentId) {
+        const paymentRecord = await prisma.payment.findFirst({
+          where: {
+            OR: [
+              ...(vorexTxId ? [{ gatewayTxId: vorexTxId }] : []),
+              ...(payload.external_id ? [{ orderId: payload.external_id }] : []),
+              ...(payload.client_reference ? [{ orderId: payload.client_reference }] : []),
               ...(gatewayTxId ? [{ gatewayTxId }] : []),
             ],
           },
