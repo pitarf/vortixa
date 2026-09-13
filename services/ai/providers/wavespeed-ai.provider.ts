@@ -119,30 +119,14 @@ export class WaveSpeedAIProvider implements IAIProvider {
         }
       }
 
-      // Mapeamento e adaptação dos inputs para a API
+      // Mapeamento e adaptação dos inputs rigorosamente aderente ao schema Pydantic da WaveSpeed
       const bodyPayload: Record<string, any> = {
         prompt: finalPrompt,
       };
 
-      // Para modelos de vídeo ou modelos de edição de imagem, o campo obrigatório é "image"
       const imgUrl = payload.inputs.image || payload.inputs.image_url || payload.inputs.reference_image_url;
-      if (imgUrl && (modelPath.includes("video") || modelPath.includes("image-to") || modelPath.includes("spicy") || modelPath.includes("edit"))) {
-        bodyPayload.image = imgUrl;
-      }
-
-      // Parâmetros específicos de edição de imagem
-      if (payload.inputs.strength !== undefined) {
-        bodyPayload.strength = Number(payload.inputs.strength);
-      }
-      if (payload.inputs.guidance_scale !== undefined) {
-        bodyPayload.guidance_scale = Number(payload.inputs.guidance_scale);
-      }
-      if (payload.inputs.mask_image) {
-        bodyPayload.mask_image = payload.inputs.mask_image;
-      }
 
       // Mapeamento e adaptação de dimensões (aspect ratio -> size em pixels "LARGURA*ALTURA")
-      // A WaveSpeed exige o formato de pixels (ex: 768*1344 para 9:16, 1344*768 para 16:9, 1024*1024 para 1:1)
       const ratio = String(payload.inputs.aspect_ratio || payload.inputs.size || "9:16").trim();
       let resolvedSize = "768*1344"; // Padrão 9:16 Vertical
       if (ratio === "16:9") {
@@ -155,35 +139,42 @@ export class WaveSpeedAIProvider implements IAIProvider {
         resolvedSize = ratio.replace("x", "*");
       }
 
-      // Se for modelo de imagem (ex: chroma), passar size
-      if (!modelPath.includes("video")) {
+      if (modelPath.includes("minimax-h3/image-edit")) {
+        // Schema do MiniMax H3 Image Edit: prompt, images (array), aspect_ratio, resolution
+        if (imgUrl) bodyPayload.images = [imgUrl];
+        bodyPayload.aspect_ratio = (ratio === "16:9" || ratio === "9:16" || ratio === "1:1") ? ratio : "9:16";
+        const resInput = payload.inputs.resolution || "768p";
+        bodyPayload.resolution = resInput === "720p" ? "768p" : resInput;
+      } else if (modelPath.includes("hidream-o1-image/edit") || modelPath.includes("qwen-image/edit-plus")) {
+        // Schema do HiDream O1 Edit e Qwen Edit Plus: prompt, images (array), size
+        if (imgUrl) bodyPayload.images = [imgUrl];
         bodyPayload.size = resolvedSize;
-      } else {
-        // Se for modelo de vídeo, passar resolution e duration como número inteiro
+      } else if (modelPath.includes("qwen-image/edit")) {
+        // Schema do Qwen Image Edit: prompt, image (string), size
+        if (imgUrl) bodyPayload.image = imgUrl;
+        bodyPayload.size = resolvedSize;
+      } else if (modelPath.includes("video") || modelPath.includes("spicy")) {
+        // Modelos de Vídeo (WAN 2.2, MiniMax H3 Spicy, Seedance 2.5)
+        if (imgUrl) bodyPayload.image = imgUrl;
         const resInput = payload.inputs.resolution || "720p";
-        // MiniMax H3 aceita 480p, 540p, 768p, 1080p
-        // Seedance 2.5 aceita 480p, 720p, 1080p, 4k
-        // WAN 2.2 aceita 480p, 720p
         if (modelPath.includes("wan-2.2") && (resInput === "1080p" || resInput === "4k")) {
-          bodyPayload.resolution = "720p"; // WAN 2.2 max é 720p
+          bodyPayload.resolution = "720p";
         } else if (modelPath.includes("minimax") && resInput === "720p") {
-          bodyPayload.resolution = "768p"; // MiniMax usa 768p em vez de 720p
+          bodyPayload.resolution = "768p";
         } else {
           bodyPayload.resolution = resInput;
         }
-      }
-
-      if (payload.inputs.negative_prompt && !modelPath.includes("video")) {
-        bodyPayload.negative_prompt = payload.inputs.negative_prompt;
-      }
-
-      if (payload.inputs.seed !== undefined) {
-        bodyPayload.seed = Number(payload.inputs.seed);
-      }
-
-      if (payload.inputs.duration !== undefined) {
-        // WaveSpeed exige número inteiro para duration (ex: 5 em vez de "5")
         bodyPayload.duration = parseInt(String(payload.inputs.duration), 10) || 5;
+      } else {
+        // Modelos de Texto para Imagem (Chroma, WAN 2.2 Text-to-Image, etc.)
+        bodyPayload.size = resolvedSize;
+        if (payload.inputs.negative_prompt) {
+          bodyPayload.negative_prompt = payload.inputs.negative_prompt;
+        }
+      }
+
+      if (payload.inputs.seed !== undefined && payload.inputs.seed !== "") {
+        bodyPayload.seed = Number(payload.inputs.seed);
       }
 
       const res = await fetch(endpoint, {
