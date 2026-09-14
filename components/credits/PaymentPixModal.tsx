@@ -159,27 +159,16 @@ export function PaymentPixModal({
     };
   }, [isOpen, paymentId, orderId, packageData, timeLeft, playVictorySound, onPaymentApproved, onPaymentFailed, onClose]);
 
-  if (!isOpen || !packageData) return null;
-
-  const formatTimer = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-  };
-
-  const formatBRL = (cents: number) => {
-    return (cents / 100).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-  };
-
   const activePixCode =
     pixCode ||
-    `00020126580014br.gov.bcb.pix0136${paymentId || "vorixa-checkout-tx"}520400005303986540${(packageData.priceCents / 100).toFixed(2)}5802BR5916VORIXA CREATIVE6009SAO PAULO62070503***6304`;
+    (packageData
+      ? `00020126580014br.gov.bcb.pix0136${paymentId || "vorixa-checkout-tx"}520400005303986540${(packageData.priceCents / 100).toFixed(2)}5802BR5916VORIXA CREATIVE6009SAO PAULO62070503***6304`
+      : "");
 
-  // Determina a imagem oficial do QR Code de forma puramente determinística e segura
+  // Determina a imagem oficial do QR Code de forma puramente determinística e segura (declarado antes do early return)
   const qrImageUrl = useMemo(() => {
+    if (!isOpen) return null;
+
     // 1. Se o backend já enviou uma Data URL ou URL remota HTTP
     if (
       qrCodeBase64 &&
@@ -204,7 +193,23 @@ export function PaymentPixModal({
     }
 
     return null;
-  }, [qrCodeBase64, activePixCode]);
+  }, [isOpen, qrCodeBase64, activePixCode]);
+
+  // Early return após TODOS os React Hooks declarados
+  if (!isOpen || !packageData) return null;
+
+  const formatTimer = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  };
+
+  const formatBRL = (cents: number) => {
+    return (cents / 100).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  };
 
   const handleCopyPix = async () => {
     try {

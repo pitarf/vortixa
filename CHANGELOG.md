@@ -4,6 +4,21 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 
+
+## [2.5.6] - 2026-09-14
+### Correção de Violação das Regras de Hooks do React (Erro #310) & Criação de /dashboard/settings
+- **Diagnóstico do Erro Minified React error #310**:
+  - No componente `PaymentPixModal.tsx`, o hook `useMemo` (responsável por calcular `qrImageUrl`) estava posicionado **após** a instrução de early return `if (!isOpen || !packageData) return null;`.
+  - Quando o modal estava fechado (`isOpen: false`), o componente retornava antes de chamar `useMemo`. Ao abrir o modal (`isOpen: true`), o componente executava um hook a mais do que na renderização anterior, disparando a violação fatal do React: `Minified React error #310` ("Rendered more hooks than during the previous render").
+  - Essa exceção causava a quebra imediata da árvore de componentes, exibindo a tela "This page couldn't load".
+- **Correção Estrita das Regras dos Hooks (`PaymentPixModal.tsx`)**:
+  - Movimentação incondicional de `useMemo` e da variável `activePixCode` para o topo da função do componente, antes de qualquer cláusula de retorno antecipado.
+  - A contagem e a ordem dos hooks permanecem 100% idênticas em todos os ciclos de renderização.
+- **Criação da Página de Configurações (`app/dashboard/settings/page.tsx`)**:
+  - Implementação da página `/dashboard/settings` com visual Dark Obsidian, atalho para alteração de senha e preferências de notificação por e-mail, eliminando o erro 404 que ocorria durante o prefetch do link no `DashboardShell`.
+- **Verificação**:
+  - 100% dos testes aprovados (207 testes em 28 arquivos no Vitest) e 0 erros de compilação em `tsc --noEmit`.
+
 ## [2.5.5] - 2026-09-14
 ### Resolução Definitiva de Geração de QR Code Pix no Servidor & Rota Dedicada
 - **Diagnóstico da Falha no Cliente e Payload Vorexpay**:

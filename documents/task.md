@@ -8,6 +8,10 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Correção de Violação das Regras de Hooks do React (Erro #310) & Criação de /dashboard/settings**:
+  - Resolução definitiva do `Minified React error #310` ("Rendered more hooks than during the previous render") movendo a declaração de `useMemo` em `PaymentPixModal.tsx` para antes do early return.
+  - Implementação da página `/dashboard/settings` (`app/dashboard/settings/page.tsx`), eliminando o erro 404 durante o prefetch de rotas no `DashboardShell`.
+  - 100% dos testes aprovados (207/207 testes em 28 arquivos no Vitest) e 0 erros em `tsc --noEmit`.
 - [x] **Resolução Definitiva de Geração de QR Code Pix no Servidor & Rota Dedicada**:
   - Resolução da falha de renderização e colisão de pacotes Node.js (`fs`, `stream`) no navegador ao remover a importação de `qrcode` do componente client (`PaymentPixModal.tsx`).
   - Correção do tratamento de `pix_qr_code` no `VorexPayProvider` (`vorexpay.provider.ts`): diferenciação entre imagem base64 real e string textual EMV (`000201...`), gerando no Node.js uma Data URL PNG 512x512 de alta definição.
