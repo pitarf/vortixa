@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
   X,
   Copy,
@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   QrCode,
 } from "lucide-react";
-import QRCode from "qrcode";
 import { toast } from "sonner";
 
 export interface PaymentPixModalProps {
@@ -179,49 +178,33 @@ export function PaymentPixModal({
     pixCode ||
     `00020126580014br.gov.bcb.pix0136${paymentId || "vorixa-checkout-tx"}520400005303986540${(packageData.priceCents / 100).toFixed(2)}5802BR5916VORIXA CREATIVE6009SAO PAULO62070503***6304`;
 
-  const [generatedQrDataUrl, setGeneratedQrDataUrl] = useState<string | null>(null);
-  const [isGeneratingQr, setIsGeneratingQr] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!isOpen) {
-      setGeneratedQrDataUrl(null);
-      return;
+  // Determina a imagem oficial do QR Code de forma puramente determinística e segura
+  const qrImageUrl = useMemo(() => {
+    // 1. Se o backend já enviou uma Data URL ou URL remota HTTP
+    if (
+      qrCodeBase64 &&
+      (qrCodeBase64.startsWith("data:image/") ||
+        qrCodeBase64.startsWith("http://") ||
+        qrCodeBase64.startsWith("https://"))
+    ) {
+      return qrCodeBase64;
     }
 
-    // Prioridade 1: Se já veio uma imagem ou base64 pronta do backend
-    if (qrCodeBase64 && (qrCodeBase64.startsWith("data:") || qrCodeBase64.startsWith("http"))) {
-      setGeneratedQrDataUrl(qrCodeBase64);
-      return;
+    // 2. Se o backend enviou imagem base64 sem o prefixo data:image
+    if (
+      qrCodeBase64 &&
+      (qrCodeBase64.startsWith("iVBORw0KGgo") || qrCodeBase64.startsWith("/9j/"))
+    ) {
+      return `data:image/png;base64,${qrCodeBase64}`;
     }
 
-    if (qrCodeBase64 && qrCodeBase64.length > 50) {
-      setGeneratedQrDataUrl(`data:image/png;base64,${qrCodeBase64}`);
-      return;
-    }
-
-    // Prioridade 2: Gerar o QR Code oficial escaneável diretamente da string EMV (Pix Copia e Cola)
+    // 3. Fallback: rota de alta performance no servidor Node.js que renderiza PNG 512x512
     if (activePixCode) {
-      setIsGeneratingQr(true);
-      QRCode.toDataURL(activePixCode, {
-        width: 512,
-        margin: 1,
-        errorCorrectionLevel: "M",
-        color: {
-          dark: "#000000",
-          light: "#ffffff",
-        },
-      })
-        .then((url) => {
-          setGeneratedQrDataUrl(url);
-        })
-        .catch((err) => {
-          console.error("Erro ao gerar QR Code localmente:", err);
-        })
-        .finally(() => {
-          setIsGeneratingQr(false);
-        });
+      return `/api/payments/qrcode?text=${encodeURIComponent(activePixCode)}`;
     }
-  }, [isOpen, qrCodeBase64, activePixCode]);
+
+    return null;
+  }, [qrCodeBase64, activePixCode]);
 
   const handleCopyPix = async () => {
     try {
@@ -315,19 +298,13 @@ export function PaymentPixModal({
               <div className="absolute -bottom-1.5 -left-1.5 w-4 h-4 border-b-2 border-l-2 border-emerald-500 rounded-bl pointer-events-none" />
               <div className="absolute -bottom-1.5 -right-1.5 w-4 h-4 border-b-2 border-r-2 border-emerald-500 rounded-br pointer-events-none" />
 
-              {generatedQrDataUrl ? (
+              {qrImageUrl ? (
                 <img
-                  src={generatedQrDataUrl}
-                  alt="QR Code Pix Oficial"
+                  src={qrImageUrl}
+                  alt="QR Code Pix Oficial do Banco Central"
                   className="w-full h-full max-w-[200px] max-h-[200px] sm:max-w-[220px] sm:max-h-[220px] object-contain rounded-lg"
+                  loading="eager"
                 />
-              ) : isGeneratingQr ? (
-                <div className="flex flex-col items-center justify-center gap-2 p-4 text-center">
-                  <div className="w-8 h-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
-                  <span className="text-[11px] text-slate-600 font-medium">
-                    Gerando QR Code oficial...
-                  </span>
-                </div>
               ) : (
                 <div className="flex flex-col items-center justify-center gap-2 p-4 text-center">
                   <QrCode className="w-10 h-10 text-slate-400 animate-pulse" />

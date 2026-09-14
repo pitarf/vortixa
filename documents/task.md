@@ -8,6 +8,12 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Resolução Definitiva de Geração de QR Code Pix no Servidor & Rota Dedicada**:
+  - Resolução da falha de renderização e colisão de pacotes Node.js (`fs`, `stream`) no navegador ao remover a importação de `qrcode` do componente client (`PaymentPixModal.tsx`).
+  - Correção do tratamento de `pix_qr_code` no `VorexPayProvider` (`vorexpay.provider.ts`): diferenciação entre imagem base64 real e string textual EMV (`000201...`), gerando no Node.js uma Data URL PNG 512x512 de alta definição.
+  - Criação da rota serverless dedicada `/api/payments/qrcode/route.ts` que aceita `?text=...` e responde diretamente em PNG binário com cabeçalhos de cache imutável (24h).
+  - Resolução reativa e segura com `useMemo` em `PaymentPixModal.tsx` com fallback automático.
+  - 100% dos testes aprovados (207/207 testes em 28 arquivos no Vitest) e 0 erros em `tsc --noEmit`.
 - [x] **Geração Autêntica de QR Code Pix (EMV / BR Code) & Remoção de Placeholder Estático**:
   - Resolução do problema onde o modal do Pix exibia um SVG estático ilustrativo não escaneável.
   - Integração da biblioteca oficial `qrcode` para gerar PNG Data URLs em alta definição a partir do código Pix Copia e Cola (EMV) tanto no frontend (`PaymentPixModal.tsx`) quanto no backend (`vorexpay.provider.ts`).

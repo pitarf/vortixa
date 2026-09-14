@@ -417,3 +417,19 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
 * **Inputs de Formulário**:
   - Altura mínima de 48px (`min-h-[48px]`) e tamanho de fonte de pelo menos `16px` (`text-base sm:text-sm`) em campos móveis para evitar o auto-zoom involuntário do Safari iOS.
 
+---
+
+## 19. Arquitetura de Pagamentos Pix Instantâneo & Motor de QR Code Server-Side
+
+### 1. Desacoplamento Client/Server para Geração de QR Code
+* **Eliminação de Dependências Node no Navegador**:
+  - A biblioteca `qrcode` depende de módulos de baixo nível (`fs`, `stream`). Seu carregamento em componentes `"use client"` causa falhas em navegadores.
+  - Toda renderização gráfica do Pix BR Code foi transferida exclusivamente para o Node.js runtime.
+* **Resolução Rigorosa no Provedor (`services/payment-provider/vorexpay.provider.ts`)**:
+  - Adquirentes Pix (como Vorexpay e Velana) frequentemente retornam a string textual EMV (`000201...`) sob o campo `pix_qr_code`.
+  - O provedor valida o formato: se a resposta não for uma imagem real (`data:image/` ou `http://`), o servidor Node.js gera instantaneamente a Data URL PNG 512x512 de alta definição (`errorCorrectionLevel: "M"`).
+* **Rota Dedicada de Backup (`/api/payments/qrcode/route.ts`)**:
+  - Endpoint `GET /api/payments/qrcode?text=<EMV>` que entrega diretamente o buffer PNG binário com cabeçalho `Cache-Control: public, max-age=86400, immutable`.
+  - Permite que o frontend renderize o QR Code como uma simples tag `<img src="/api/payments/qrcode?text=..." />` em caso de ausência de Data URL pré-compilada, garantindo tolerância a falhas.
+
+

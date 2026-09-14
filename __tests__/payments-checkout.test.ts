@@ -327,4 +327,44 @@ describe('Payments & Checkout Security and Integration Suite (Fase 6.4 / Infra)'
     });
     expect(txCount).toBe(1);
   });
+
+  it('should render 512x512 PNG QR Code from /api/payments/qrcode route', async () => {
+    const { GET: qrcodeRoute } = await import('@/app/api/payments/qrcode/route');
+    const { NextRequest } = await import('next/server');
+    const req = new NextRequest('http://localhost:3000/api/payments/qrcode?text=00020126580014br.gov.bcb.pix');
+    const res = await qrcodeRoute(req);
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toBe('image/png');
+    const arrayBuffer = await res.arrayBuffer();
+    const bytes = new Uint8Array(arrayBuffer);
+    // Valida magic bytes do PNG: 0x89 0x50 0x4E 0x47
+    expect(bytes[0]).toBe(0x89);
+    expect(bytes[1]).toBe(0x50);
+    expect(bytes[2]).toBe(0x4E);
+    expect(bytes[3]).toBe(0x47);
+  });
+
+  it('should return 400 from /api/payments/qrcode if text parameter is missing', async () => {
+    const { GET: qrcodeRoute } = await import('@/app/api/payments/qrcode/route');
+    const { NextRequest } = await import('next/server');
+    const req = new NextRequest('http://localhost:3000/api/payments/qrcode');
+    const res = await qrcodeRoute(req);
+    expect(res.status).toBe(400);
+  });
+
+  it('should generate valid pixQrCode data URL in VorexPayProvider', async () => {
+    const { VorexPayProvider } = await import('@/services/payment-provider/vorexpay.provider');
+    const vorex = new VorexPayProvider();
+    const result = await vorex.createCheckoutSession({
+      orderId: 'test_order_qr_123',
+      amountCents: 990,
+      userId: legitimateUser.id,
+      email: legitimateUser.email,
+      paymentMethod: 'pix',
+    });
+    expect(result.pixCode).toBeDefined();
+    expect(result.pixQrCode).toBeDefined();
+    expect(result.pixQrCode?.startsWith('data:image/png;base64,')).toBe(true);
+  });
 });
+

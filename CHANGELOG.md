@@ -3,6 +3,22 @@
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+
+## [2.5.5] - 2026-09-14
+### Resolução Definitiva de Geração de QR Code Pix no Servidor & Rota Dedicada
+- **Diagnóstico da Falha no Cliente e Payload Vorexpay**:
+  - `Importação de Módulo Node no Cliente`: `PaymentPixModal.tsx` importava `qrcode` diretamente em componente client (`"use client"`), disparando erros de resolução de módulos nativos (`fs`, `stream`) no bundle de produção do navegador e quebrando a montagem do modal.
+  - `Colisão de Payload EMV com Data URL`: O gateway Vorexpay/Velana retornava a string textual EMV (`000201...`) no campo `pix_qr_code`. O cliente prefixava `data:image/png;base64,` sobre a string textual, gerando uma URI de imagem inválida e tela com erro.
+- **Renderização Exclusiva no Servidor & Validação Rígida (`vorexpay.provider.ts`)**:
+  - O provider agora inspeciona estritamente se `rawQrImage` é uma URL HTTP ou Data URL real (`data:image/` ou `iVBOR...`). Se for a string EMV (`000201...`), o servidor Node.js compila automaticamente o código para um PNG 512x512 de alta nitidez com correção de erro nível M.
+- **Nova Rota de Backup Serverless (`/api/payments/qrcode/route.ts`)**:
+  - Endpoint GET dedicado que gera a imagem PNG 512x512 sob demanda a partir do parâmetro `text`, com cache imutável de 24h e resposta com `Content-Type: image/png`.
+- **Refatoração do Componente do Pix (`PaymentPixModal.tsx`)**:
+  - Remoção completa de dependências de runtime Node/canvas no navegador.
+  - Resolução puramente declarativa com `useMemo` selecionando entre Data URL do backend ou URL da rota `/api/payments/qrcode`.
+- **Verificação**:
+  - 100% dos testes aprovados (207 testes em 28 arquivos) com 0 erros de compilação em `tsc --noEmit`.
+
 ## [2.5.4] - 2026-09-14
 ### Geração Autêntica de QR Code Pix (EMV / BR Code) & Remoção de Placeholder Estático
 - **Diagnóstico do QR Code Inválido**:

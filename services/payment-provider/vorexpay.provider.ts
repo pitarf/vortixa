@@ -67,10 +67,24 @@ export class VorexPayProvider implements PaymentProvider {
         );
       }
       const gatewayTxId = `vorex_tx_${request.orderId}_${Date.now()}`;
+      const pixCode = `00020126580014br.gov.bcb.pix0136${gatewayTxId}520400005303986540${(request.amountCents / 100).toFixed(2)}5802BR5913VORIXA_AI6009SAO_PAULO62070503***6304ABCD`;
+      let pixQrCode: string | undefined = undefined;
+      try {
+        const QRCode = (await import("qrcode")).default || (await import("qrcode"));
+        pixQrCode = await QRCode.toDataURL(pixCode, {
+          width: 512,
+          margin: 1,
+          errorCorrectionLevel: "M",
+          color: { dark: "#000000", light: "#ffffff" },
+        });
+      } catch {
+        // Ignora silenciosamente em ambientes de mock restritos
+      }
       return {
         gatewayTxId,
         checkoutUrl: `${appUrl}/dashboard/credits?status=success&orderId=${request.orderId}`,
-        pixCode: `00020126580014br.gov.bcb.pix0136${gatewayTxId}520400005303986540${(request.amountCents / 100).toFixed(2)}5802BR5913VORIXA_AI6009SAO_PAULO62070503***6304ABCD`,
+        pixCode,
+        pixQrCode,
       };
     }
 
@@ -167,31 +181,54 @@ export class VorexPayProvider implements PaymentProvider {
       const gatewayTxId = String(data.id || data.external_id || request.orderId);
 
       // A Vorexpay retorna HTTP 201 com pix_copy_paste e pix_qr_code (suporta chaves alternativas)
-      const pixCopyPaste =
+      const pixCopyPaste: string | undefined =
         data.pix_copy_paste ||
         data.pix_code ||
         data.emv ||
         data.copy_paste ||
         data.qr_code_text ||
-        undefined;
-      let pixQrCode =
+        (typeof data.pix_qr_code === "string" && data.pix_qr_code.startsWith("000201") ? data.pix_qr_code : undefined);
+
+      let rawQrImage: string | undefined =
         data.pix_qr_code ||
         data.qr_code ||
         data.qr_code_base64 ||
         data.image ||
         undefined;
 
-      // Se a API retornar o código Copia e Cola (EMV) mas não a imagem base64 do QR Code, gera dinamicamente
-      if (!pixQrCode && pixCopyPaste) {
+      let pixQrCode: string | undefined = undefined;
+
+      if (typeof rawQrImage === "string") {
+        const trimmed = rawQrImage.trim();
+        if (trimmed.startsWith("data:image/") || trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+          // Imagem já no formato URL ou Data URL completa
+          pixQrCode = trimmed;
+        } else if (trimmed.startsWith("iVBORw0KGgo") || trimmed.startsWith("/9j/")) {
+          // Imagem PNG ou JPEG base64 sem o prefixo data:image
+          pixQrCode = `data:image/png;base64,${trimmed}`;
+        } else if (trimmed.startsWith("<svg") || trimmed.includes("xmlns=\"http://www.w3.org/2000/svg\"")) {
+          // SVG em texto limpo
+          pixQrCode = `data:image/svg+xml;utf8,${encodeURIComponent(trimmed)}`;
+        }
+        // OBS: Se trimmed iniciar com "000201", trata-se da string EMV Copia e Cola, NÃO de imagem base64
+      }
+
+      // Se a adquirente não enviou a imagem renderizada do QR Code, o servidor Node.js gera o QR Code oficial em 512x512
+      const codeToRender = pixCopyPaste || (typeof rawQrImage === "string" && rawQrImage.startsWith("000201") ? rawQrImage : undefined);
+      if (!pixQrCode && codeToRender) {
         try {
-          const QRCode = await import("qrcode");
-          pixQrCode = await QRCode.toDataURL(pixCopyPaste, {
+          const QRCode = (await import("qrcode")).default || (await import("qrcode"));
+          pixQrCode = await QRCode.toDataURL(codeToRender, {
             width: 512,
-            margin: 2,
+            margin: 1,
             errorCorrectionLevel: "M",
+            color: {
+              dark: "#000000",
+              light: "#ffffff",
+            },
           });
         } catch (qrErr) {
-          console.error("[Vorexpay] Erro ao gerar QRCode Data URL:", qrErr);
+          console.error("[Vorexpay] Erro ao gerar QRCode Data URL no servidor:", qrErr);
         }
       }
 
