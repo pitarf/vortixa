@@ -76,6 +76,8 @@ export class VorexPayProvider implements PaymentProvider {
 
     try {
       const isCard = request.paymentMethod === "credit_card";
+      const cleanDoc = request.cpf ? request.cpf.replace(/\D/g, "") : "";
+
       const payload: Record<string, any> = {
         amount_in_cents: request.amountCents,
         payment_method: isCard ? "credit_card" : "pix",
@@ -85,8 +87,22 @@ export class VorexPayProvider implements PaymentProvider {
         external_id: request.orderId,
       };
 
-      if (request.cpf) {
-        payload.customer_cpf = request.cpf.replace(/\D/g, "");
+      if (cleanDoc) {
+        payload.customer_cpf = cleanDoc;
+        payload.cpf = cleanDoc;
+        payload.document = {
+          number: cleanDoc,
+          type: cleanDoc.length === 11 ? "cpf" : "cnpj",
+        };
+        payload.customer = {
+          name: request.name || "Cliente VORIXA",
+          email: request.email,
+          cpf: cleanDoc,
+          document: {
+            number: cleanDoc,
+            type: cleanDoc.length === 11 ? "cpf" : "cnpj",
+          },
+        };
       }
 
       // Suporta tanto o endpoint de URL única curta (/u/slug) quanto a URL base (/payments)
@@ -112,9 +128,25 @@ export class VorexPayProvider implements PaymentProvider {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(
-          `Erro na API Vorexpay (${response.status}): ${errorText}`
-        );
+        let errorMessage = `Erro na API Vorexpay (${response.status}): ${errorText}`;
+        try {
+          const parsed = JSON.parse(errorText);
+          if (parsed.message && typeof parsed.message === "string") {
+            if (
+              parsed.message.includes("document.number") ||
+              parsed.message.includes("Velana") ||
+              parsed.message.includes("cpf")
+            ) {
+              errorMessage =
+                "O CPF ou CNPJ informado é inválido ou não foi aceito pela adquirente (Vorexpay/Velana). Verifique os dígitos informados e tente novamente.";
+            } else {
+              errorMessage = parsed.message;
+            }
+          }
+        } catch {
+          // Mantém mensagem padrão
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();

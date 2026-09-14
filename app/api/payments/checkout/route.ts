@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { CheckoutService } from "@/services/payment-provider/checkout.service";
 import { PaymentProviderFactory } from "@/services/payment-provider/payment-provider.factory";
+import { isValidDocument, cleanDocument } from "@/lib/document-validator";
 
 const VALID_PAYMENT_METHODS = ["pix", "credit_card", "all"] as const;
 type PaymentMethod = (typeof VALID_PAYMENT_METHODS)[number];
@@ -50,7 +51,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { packageId, paymentMethod, provider: requestedProvider } = body || {};
+    const { packageId, paymentMethod, provider: requestedProvider, cpf } = body || {};
 
     if (!packageId || typeof packageId !== "string" || packageId.trim().length === 0) {
       return NextResponse.json(
@@ -71,17 +72,44 @@ export async function POST(req: Request) {
       validatedPaymentMethod = paymentMethod as PaymentMethod;
     }
 
+    // Validação do Documento (CPF / CNPJ)
+    const cleanDoc = typeof cpf === "string" ? cleanDocument(cpf) : undefined;
+    if (cleanDoc && cleanDoc.length > 0) {
+      const docValidation = isValidDocument(cleanDoc);
+      if (!docValidation.isValid) {
+        return NextResponse.json(
+          { error: docValidation.error || "CPF ou CNPJ inválido." },
+          { status: 400 }
+        );
+      }
+    }
+
     // 4. Instancia o adaptador dinamicamente via PaymentProviderFactory
     const provider = PaymentProviderFactory.getProvider(
       typeof requestedProvider === "string" ? requestedProvider : undefined
     );
+
+    // Vorexpay e Velana exigem estritamente CPF/CNPJ válido em modo de produção
+    const isLiveVorexpay =
+      provider.name === "vorexpay" &&
+      process.env.PAYMENT_PROVIDER_MODE === "live" &&
+      !process.env.VITEST;
+
+    if (isLiveVorexpay && (!cleanDoc || cleanDoc.length === 0)) {
+      return NextResponse.json(
+        { error: "O CPF ou CNPJ do pagador é obrigatório para emissão de cobranças via Vorexpay." },
+        { status: 400 }
+      );
+    }
+
     const checkoutService = new CheckoutService(provider);
 
     // 5. Executa criação do checkout congelando valores do banco de dados (Snapshot seguro)
     const result = await checkoutService.handleCheckout(
       session.user.id,
       packageId.trim(),
-      validatedPaymentMethod
+      validatedPaymentMethod,
+      cleanDoc
     );
 
     // 6. Retorno padronizado em JSON

@@ -3,6 +3,23 @@
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [2.5.2] - 2026-09-14
+### Correção de Checkout Vorexpay & Validação de Documento CPF/CNPJ (Adquirente Velana 422)
+- **Diagnóstico do Erro Velana 422**:
+  - A adquirente bancária subjacente do Vorexpay (Velana) rejeitava requisições de checkout Pix e Cartão com `Velana (422): document.number is required` quando o documento fiscal do pagador não era informado.
+- **Utilitário Dedicado de Validação (`lib/document-validator.ts`)**:
+  - Implementação de algoritmos oficiais Módulo 11 para validação de dígitos verificadores de CPF (11 dígitos) e CNPJ (14 dígitos), além de máscaras dinâmicas de formatação e limpeza de caracteres não numéricos.
+  - Suíte de testes unitários dedicada em `__tests__/document-validator.test.ts`.
+- **Experiência de Checkout (`PaymentCheckoutModal.tsx` e `credits/page.tsx`)**:
+  - Novo campo Obsidian Dark de identificação do titular com máscara instantânea, validação em tempo real e persistência segura em `localStorage` para compras recorrentes.
+  - Bloqueio inteligente no frontend caso o documento seja inválido ou vazio antes de onerar a rede.
+- **Backend & Provedor Vorexpay (`route.ts`, `checkout.service.ts`, `vorexpay.provider.ts`)**:
+  - A rota de checkout sanitiza e valida o documento antes de chamar o gateway.
+  - O `VorexPayProvider` agora injeta o documento nos múltiplos formatos aceitos (`customer_cpf`, `cpf`, `document.number`, `customer.document.number`), satisfazendo plenamente a adquirente Velana.
+  - Mensagens de erro de adquirente traduzidas para alertas amigáveis e esclarecedores em PT-BR.
+- **Testes & Qualidade**:
+  - 28 suítes com 204/204 testes passando no Vitest e 0 erros de tipagem no TypeScript.
+
 ## [2.5.1] - 2026-09-14
 ### Otimização do Hero: Vídeo Protagonista Único 16:9 & Eliminação de Conflitos de Aspect Ratio
 - **Eliminação de Abas Redundantes & Scrollbar Indesejada (`HeroCinematic.tsx`)**:

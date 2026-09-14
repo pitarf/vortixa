@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   X,
   ShieldCheck,
@@ -14,7 +14,10 @@ import {
   Check,
   Coins,
   ArrowRight,
+  FileText,
 } from "lucide-react";
+import { cleanDocument, formatDocument, isValidDocument } from "@/lib/document-validator";
+import { toast } from "sonner";
 
 export interface CreditPackageSummary {
   id: string;
@@ -30,7 +33,7 @@ export interface PaymentCheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
   packageData: CreditPackageSummary | null;
-  onProceed: (selectedMethod: "pix" | "card") => Promise<void> | void;
+  onProceed: (selectedMethod: "pix" | "card", cpf?: string) => Promise<void> | void;
   isProcessing?: boolean;
 }
 
@@ -42,6 +45,27 @@ export function PaymentCheckoutModal({
   isProcessing = false,
 }: PaymentCheckoutModalProps) {
   const [selectedMethod, setSelectedMethod] = useState<"pix" | "card">("pix");
+  const [cpf, setCpf] = useState<string>("");
+  const [cpfTouched, setCpfTouched] = useState<boolean>(false);
+
+  // Carrega CPF salvo previamente no localStorage para máxima conveniência
+  useEffect(() => {
+    if (isOpen && typeof window !== "undefined") {
+      try {
+        const savedCpf = localStorage.getItem("vorixa_user_cpf");
+        if (savedCpf) {
+          setCpf(formatDocument(savedCpf));
+        }
+      } catch {
+        // Ignora caso storage esteja bloqueado
+      }
+    }
+  }, [isOpen]);
+
+  const docValidation = useMemo(() => {
+    if (!cpf) return { isValid: false, clean: "" };
+    return isValidDocument(cpf);
+  }, [cpf]);
 
   if (!isOpen || !packageData) return null;
 
@@ -57,7 +81,29 @@ export function PaymentCheckoutModal({
 
   const handleConfirm = () => {
     if (isProcessing) return;
-    onProceed(selectedMethod);
+    setCpfTouched(true);
+
+    const clean = cleanDocument(cpf);
+    if (!clean) {
+      toast.error("Informe seu CPF ou CNPJ para emissão da cobrança segura.");
+      return;
+    }
+
+    if (!docValidation.isValid) {
+      toast.error(docValidation.error || "CPF ou CNPJ inválido. Verifique os dígitos informados.");
+      return;
+    }
+
+    // Salva no localStorage para próximas compras
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("vorixa_user_cpf", clean);
+      } catch {
+        // Ignora
+      }
+    }
+
+    onProceed(selectedMethod, clean);
   };
 
   return (
@@ -285,7 +331,63 @@ export function PaymentCheckoutModal({
             </div>
           </div>
 
-          {/* 4. Selos de Garantia e Confiança Financeira */}
+          {/* 4. Identificação do Titular (CPF / CNPJ) */}
+          <div className="space-y-2 pt-1">
+            <div className="flex items-center justify-between gap-2">
+              <label
+                htmlFor="checkout-cpf-input"
+                className="text-xs font-mono uppercase tracking-wider text-slate-300 font-bold flex items-center gap-1.5"
+              >
+                <FileText className="w-3.5 h-3.5 text-violet-400" />
+                CPF ou CNPJ do Titular
+              </label>
+              {cpfTouched && docValidation.isValid && (
+                <span className="text-[10px] font-mono text-emerald-400 font-bold flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3" />
+                  Documento Válido
+                </span>
+              )}
+            </div>
+
+            <div className="relative">
+              <input
+                id="checkout-cpf-input"
+                type="text"
+                inputMode="numeric"
+                value={cpf}
+                onChange={(e) => {
+                  setCpf(formatDocument(e.target.value));
+                  if (!cpfTouched) setCpfTouched(true);
+                }}
+                onBlur={() => setCpfTouched(true)}
+                placeholder="000.000.000-00"
+                maxLength={18}
+                disabled={isProcessing}
+                style={{ minHeight: "48px" }}
+                className={`w-full bg-[#070709] border rounded-2xl px-4 py-3 text-sm text-white font-mono placeholder:text-slate-600 focus:outline-none transition-all ${
+                  cpfTouched && !docValidation.isValid && cpf.length > 0
+                    ? "border-rose-500/80 focus:border-rose-500 focus:ring-1 focus:ring-rose-500/30"
+                    : docValidation.isValid
+                    ? "border-emerald-500/50 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/30"
+                    : "border-[#1E202E] focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30"
+                }`}
+              />
+            </div>
+
+            <div className="flex items-center justify-between text-[11px]">
+              {cpfTouched && !docValidation.isValid && cpf.length > 0 ? (
+                <span className="text-rose-400 font-medium">
+                  {docValidation.error || "CPF ou CNPJ inválido."}
+                </span>
+              ) : (
+                <span className="text-slate-400">
+                  Exigido pelo Banco Central para liquidação do Pix e antifraude do cartão.
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* 5. Selos de Garantia e Confiança Financeira */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
             <div className="flex items-center gap-2.5 p-3 rounded-xl bg-[#070709] border border-[#1E202E] text-xs text-slate-300">
               <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />

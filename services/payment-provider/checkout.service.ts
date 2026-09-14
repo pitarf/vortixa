@@ -29,12 +29,13 @@ export class CheckoutService {
   async handleCheckout(
     userId: string,
     packageId: string,
-    paymentMethod?: "pix" | "credit_card" | "all" | string
+    paymentMethod?: "pix" | "credit_card" | "all" | string,
+    cpf?: string
   ): Promise<CheckoutResult> {
-    // 1. Busca usuário para pegar email de contato (usado no gateway)
+    // 1. Busca usuário para pegar email de contato e nome (usados no gateway)
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { email: true, isBlocked: true },
+      select: { email: true, name: true, isBlocked: true },
     });
 
     if (!user) {
@@ -61,6 +62,8 @@ export class CheckoutService {
         amountCents: order.amountCents,
         userId: userId,
         email: user.email,
+        name: user.name || "Cliente VORIXA",
+        cpf: cpf,
         title: pkg ? `VORIXA - Pacote ${pkg.name}` : "Pacote de Créditos VORIXA",
         description: pkg?.description || "Créditos para geração de IA na plataforma VORIXA",
         paymentMethod,

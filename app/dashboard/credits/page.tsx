@@ -202,7 +202,7 @@ function CreditsContent() {
     setIsCheckoutModalOpen(true);
   };
 
-  const handleProceedCheckout = async (selectedMethod: "pix" | "card") => {
+  const handleProceedCheckout = async (selectedMethod: "pix" | "card", cpf?: string) => {
     if (!selectedPackage || isProcessingCheckout) return;
 
     try {
@@ -215,6 +215,7 @@ function CreditsContent() {
         body: JSON.stringify({
           packageId: selectedPackage.id,
           paymentMethod: selectedMethod === "pix" ? "pix" : "credit_card",
+          cpf: cpf,
         }),
       });
 

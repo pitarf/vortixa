@@ -178,4 +178,64 @@ describe("VorexPayProvider Unit & Integration Tests", () => {
       })
     );
   });
+
+  it("deve sanitizar e incluir campos de documento (customer_cpf, document.number) quando CPF for informado", async () => {
+    const provider = new VorexPayProvider(mockApiKey, mockSecretKey, mockWebhookSecret, mockApiUrl);
+
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 201,
+      json: async () => ({
+        id: "vorex_cpf_ok",
+        status: "pending",
+        pix_copy_paste: "000201...",
+      }),
+    });
+    global.fetch = mockFetch;
+
+    await provider.createCheckoutSession({
+      orderId: "ord_cpf_123",
+      amountCents: 7990,
+      userId: "usr_cpf",
+      email: "cliente@vorixa.ai",
+      name: "Maria Compradora",
+      cpf: "123.456.789-00",
+      title: "VORIXA Pro",
+      paymentMethod: "pix",
+    });
+
+    const sentBody = JSON.parse(mockFetch.mock.calls[0][1].body);
+    expect(sentBody.customer_cpf).toBe("12345678900");
+    expect(sentBody.cpf).toBe("12345678900");
+    expect(sentBody.document.number).toBe("12345678900");
+    expect(sentBody.document.type).toBe("cpf");
+    expect(sentBody.customer.document.number).toBe("12345678900");
+  });
+
+  it("deve converter erro da adquirente Velana em mensagem amigável em PT-BR", async () => {
+    const provider = new VorexPayProvider(mockApiKey, mockSecretKey, mockWebhookSecret, mockApiUrl);
+
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 422,
+      text: async () =>
+        JSON.stringify({
+          error: "acquirer_error",
+          message:
+            "Velana (422): document.number is required,document.number must have between 11 (CPF) and 14 characters long (CNPJ)",
+        }),
+    });
+    global.fetch = mockFetch;
+
+    await expect(
+      provider.createCheckoutSession({
+        orderId: "ord_fail_doc",
+        amountCents: 7990,
+        userId: "usr_fail",
+        email: "erro@vorixa.ai",
+        title: "VORIXA Pro",
+        paymentMethod: "pix",
+      })
+    ).rejects.toThrow("O CPF ou CNPJ informado é inválido ou não foi aceito pela adquirente (Vorexpay/Velana)");
+  });
 });

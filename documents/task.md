@@ -8,6 +8,13 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Resolução do Erro de Checkout Vorexpay & Adquirente Velana 422 (`document.number is required`)**:
+  - Diagnóstico e correção do erro 422 retornado pela adquirente Velana via API do Vorexpay ao emitir pagamentos sem o documento do pagador.
+  - Criação do utilitário `lib/document-validator.ts` com validação oficial Módulo 11 de dígitos verificadores de CPF/CNPJ e formatação com máscara dinâmica.
+  - Adição do campo de identificação do titular no modal de checkout (`PaymentCheckoutModal.tsx`), com máscara, validação em tempo real e persistência em `localStorage`.
+  - Repasse automático do CPF/CNPJ na rota de checkout e injeção completa de parâmetros no `VorexPayProvider` (`customer_cpf`, `cpf`, `document.number`, `customer.document.number`).
+  - Tradução amigável de mensagens de erro da adquirente para avisos claros em PT-BR.
+  - 100% dos testes aprovados (204/204 testes em 28 arquivos) e 0 erros de compilação.
 - [x] **Otimização do Hero: Vídeo Protagonista Único 16:9 & Eliminação de Conflitos de Aspect Ratio**:
   - Eliminação das abas de seleção no Hero (`HeroCinematic.tsx`) que causavam overflow e exibiam scrollbar cinza do navegador no desktop/mobile.
   - Resolução definitiva de cortes de enquadramento (cabeça/pés): o Hero agora foca exclusivamente em um vídeo widescreen 16:9 cinematográfico de alta definição com atuação e fala em português (`Seedance 2.0`), enquanto os vídeos verticais (9:16) de dança/TikTok ficam perfeitamente acomodados na seção dedicada `MotionProofShowcase` logo abaixo.
