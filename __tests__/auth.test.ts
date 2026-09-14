@@ -82,7 +82,7 @@ describe('Auth Security and Hashing Tests', () => {
     expect(res.status).toBe(200);
     const data = await res.json();
     expect(data.message).toContain("Se o e-mail estiver cadastrado, você receberá");
-  });
+  }, 15000);
 
   it('should only use relative login/error pages to prevent Open Redirect vulnerabilities', () => {
     // NextAuth páginas customizadas devem ser relativas

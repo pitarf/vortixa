@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { Zap, Volume2, VolumeX, Sparkles, ArrowRight, Film } from "lucide-react";
 
@@ -11,50 +11,19 @@ import { Zap, Volume2, VolumeX, Sparkles, ArrowRight, Film } from "lucide-react"
  */
 export function HeroCinematic() {
   const [isMuted, setIsMuted] = useState<boolean>(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  const heroVideos = [
-    {
-      id: "hero_carnaval",
-      label: "🎭 Atuação & Fala PT-BR",
-      src: "/uploads/87cf520d-8277-4f00-9644-26f4584735a6.mp4",
-      poster: "/uploads/867192da-b5f6-4d67-b4b5-8191723e46fe.jpg",
-      tag: "ByteDance Seedance 2.0 Native",
-      fps: "60 FPS",
-      res: "4K Master",
-    },
-    {
-      id: "hero_speech",
-      label: "🗣️ Modelo Falando com Emoção",
-      src: "/uploads/f80d19de-085b-4378-98ea-b7733c8ffdd8.mp4",
-      poster: "/uploads/fc5afea8-272c-4afc-8deb-beebfa65a118.jpg",
-      tag: "Kling 2.6 Pro + Áudio",
-      fps: "30 FPS",
-      res: "1080p Studio",
-    },
-    {
-      id: "hero_motion",
-      label: "💃 Coreografia & TikTok Motion",
-      src: "/uploads/motion_gerado_vorixa.mp4",
-      poster: "/uploads/motion_personagem_base.png",
-      tag: "Kling v3 Motion Control",
-      fps: "60 FPS",
-      res: "Full HD",
-    },
-    {
-      id: "hero_kling21",
-      label: "👗 Moda & Lookbook Editorial",
-      src: "/uploads/bdc1b96b-d7d2-4f55-8f2b-a90631629c00.mp4",
-      poster: "/uploads/bc3c42a6-32d9-4f53-bbc8-a27accc1800e.jpg",
-      tag: "Kling 2.1 Pro",
-      fps: "60 FPS",
-      res: "4K Cinema",
-    },
-  ];
-
-  const [activeHero, setActiveHero] = useState(heroVideos[0]);
+  const toggleAudio = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
+    } else {
+      setIsMuted(!isMuted);
+    }
+  };
 
   return (
-    <section className="pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 px-3 sm:px-6 max-w-7xl mx-auto relative w-full">
+    <section className="pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 px-3 sm:px-6 max-w-7xl mx-auto relative w-full overflow-hidden">
       {/* Aura Difusa de Iluminação Traseira */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[94%] max-w-5xl h-[70%] bg-gradient-to-r from-violet-600/20 via-indigo-500/15 to-cyan-500/20 blur-[120px] sm:blur-[140px] pointer-events-none -z-10" />
 
@@ -89,63 +58,45 @@ export function HeroCinematic() {
           </p>
         </div>
 
-        {/* Seletor de Cenas Táteis (Apple-Style com Rolagem Horizontal Suave no Mobile) */}
-        <div className="w-full max-w-3xl overflow-x-auto no-scrollbar py-1">
-          <div className="flex items-center justify-start sm:justify-center gap-2 px-1 min-w-max mx-auto">
-            {heroVideos.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setActiveHero(item)}
-                className={`px-3.5 sm:px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer border flex items-center gap-1.5 min-h-[44px] shrink-0 active:scale-95 ${
-                  activeHero.id === item.id
-                    ? "bg-white text-slate-950 border-white shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-[1.02] sm:scale-105 font-bold"
-                    : "bg-white/[0.03] hover:bg-white/[0.08] text-slate-300 border-white/[0.08]"
-                }`}
-              >
-                <span>{item.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Video Player Protagonista com Zero CLS (aspect-video estrito) */}
+        {/* Video Player Protagonista com Zero CLS (aspect-video 16:9 estrito) */}
         <div className="w-full max-w-4xl mx-auto rounded-2xl sm:rounded-3xl overflow-hidden bg-black border border-white/[0.12] shadow-[0_20px_60px_rgba(0,0,0,0.9)] relative aspect-video group transition-all duration-500 hover:border-violet-500/40">
           <video
-            key={activeHero.src}
-            src={activeHero.src}
-            poster={activeHero.poster}
+            ref={videoRef}
             autoPlay
             loop
             muted={isMuted}
             playsInline
             preload="auto"
+            poster="/uploads/867192da-b5f6-4d67-b4b5-8191723e46fe.jpg"
             className="w-full h-full object-cover"
-          />
+          >
+            <source src="/uploads/87cf520d-8277-4f00-9644-26f4584735a6.mp4" type="video/mp4" />
+            <source src="/media/landing/hero/hero_main.mp4" type="video/mp4" />
+          </video>
 
           {/* HUD Superior Esquerdo — Badge do Motor */}
           <div className="absolute top-3 left-3 sm:top-4 sm:left-4 flex items-center gap-2 pointer-events-none">
-            <span className="bg-[#07080B]/85 border border-white/20 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[10px] sm:text-[11px] font-mono text-cyan-300 font-bold backdrop-blur-md shadow-lg flex items-center gap-1.5 max-w-[200px] sm:max-w-none truncate">
+            <span className="bg-[#07080B]/85 border border-white/20 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[10px] sm:text-[11px] font-mono text-cyan-300 font-bold backdrop-blur-md shadow-lg flex items-center gap-1.5 max-w-[260px] sm:max-w-none truncate">
               <Sparkles className="w-3 h-3 text-cyan-400 shrink-0" />
-              <span className="truncate">Gerado com: {activeHero.tag}</span>
+              <span className="truncate">Gerado com: ByteDance Seedance 2.0 • Áudio & Fala PT-BR</span>
             </span>
           </div>
 
           {/* HUD Superior Direito — Telemetria de Render */}
           <div className="absolute top-3 right-3 sm:top-4 sm:right-4 hidden sm:flex items-center gap-2 pointer-events-none">
             <span className="bg-[#07080B]/85 border border-white/20 px-2.5 py-1 rounded-lg text-[10px] font-mono text-emerald-400 font-bold backdrop-blur-md">
-              {activeHero.fps}
+              60 FPS
             </span>
             <span className="bg-[#07080B]/85 border border-white/20 px-2.5 py-1 rounded-lg text-[10px] font-mono text-slate-300 backdrop-blur-md">
-              {activeHero.res}
+              4K Master
             </span>
           </div>
 
           {/* Controle de Áudio Flutuante (Touch target >= 44x44px) */}
           <button
             type="button"
-            onClick={() => setIsMuted(!isMuted)}
-            className={`absolute bottom-3 right-3 sm:bottom-4 sm:right-4 text-xs font-mono font-medium px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl flex items-center gap-2 shadow-2xl backdrop-blur-md transition-all duration-200 cursor-pointer border min-h-[44px] active:scale-95 ${
+            onClick={toggleAudio}
+            className={`absolute bottom-3 right-3 sm:bottom-4 sm:right-4 text-xs font-mono font-medium px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl flex items-center gap-2 shadow-2xl backdrop-blur-md transition-all duration-200 cursor-pointer border min-h-[44px] active:scale-95 touch-manipulation select-none ${
               !isMuted
                 ? "bg-emerald-500/25 border-emerald-500/60 text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.3)] font-bold"
                 : "bg-black/85 hover:bg-black text-white border-white/20"

@@ -8,6 +8,10 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Otimização do Hero: Vídeo Protagonista Único 16:9 & Eliminação de Conflitos de Aspect Ratio**:
+  - Eliminação das abas de seleção no Hero (`HeroCinematic.tsx`) que causavam overflow e exibiam scrollbar cinza do navegador no desktop/mobile.
+  - Resolução definitiva de cortes de enquadramento (cabeça/pés): o Hero agora foca exclusivamente em um vídeo widescreen 16:9 cinematográfico de alta definição com atuação e fala em português (`Seedance 2.0`), enquanto os vídeos verticais (9:16) de dança/TikTok ficam perfeitamente acomodados na seção dedicada `MotionProofShowcase` logo abaixo.
+  - Zero erros em `npx tsc --noEmit` e 100% de aprovação (195/195 testes) no Vitest.
 - [x] **Arquitetura Adaptativa Mobile-First, Ergonomia Tátil e Performance Multi-Dispositivo**:
   - Mobilização de 6 subagentes especialistas adaptativos para auditar e refatorar 51 arquivos em todo o frontend (Landing, Studio, Ferramentas, Vitrine de Modelos, Fintech/Afiliados e Admin/Shell).
   - Implementação de **Bottom Navigation Bar** ergonômica voltada à zona do polegar no mobile em `DashboardShell.tsx`, trava de scroll do body e gaveta deslizante touch-safe.

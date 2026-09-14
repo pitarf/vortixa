@@ -3,6 +3,15 @@
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [2.5.1] - 2026-09-14
+### Otimização do Hero: Vídeo Protagonista Único 16:9 & Eliminação de Conflitos de Aspect Ratio
+- **Eliminação de Abas Redundantes & Scrollbar Indesejada (`HeroCinematic.tsx`)**:
+  - Remoção do seletor de abas que misturava formatos verticais (9:16) e horizontais (16:9), eliminando o corte de enquadramento (cabeça/pés) e a barra de rolagem horizontal cinza do navegador.
+  - O showroom de coreografia e dança vertical do TikTok permanece em destaque exclusivamente no componente dedicado `MotionProofShowcase.tsx` logo abaixo, onde brilha com proporção 9:16 nativa.
+- **Vídeo Protagonista Único de Alto Impacto em 16:9**:
+  - Enquadramento cinematográfico perfeito com o vídeo widescreen de atuação e fala em português (`/uploads/87cf520d-8277-4f00-9644-26f4584735a6.mp4` e fallback `/media/landing/hero/hero_main.mp4`).
+  - Player com proporção fixa `aspect-video`, áudio em português com botão de 1 toque (`Ouvir som` / `Áudio Ativo`) e telemetria de 60 FPS / 4K Master.
+
 ## [2.5.0] - 2026-09-13
 ### Arquitetura Adaptativa Mobile-First, Ergonomia Tátil e Performance Multi-Dispositivo
 - **Mobilização de 6 Subagentes Especialistas em Interfaces Adaptativas**:
