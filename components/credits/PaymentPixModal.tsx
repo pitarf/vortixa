@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   QrCode,
 } from "lucide-react";
+import QRCode from "qrcode";
 import { toast } from "sonner";
 
 export interface PaymentPixModalProps {
@@ -178,6 +179,50 @@ export function PaymentPixModal({
     pixCode ||
     `00020126580014br.gov.bcb.pix0136${paymentId || "vorixa-checkout-tx"}520400005303986540${(packageData.priceCents / 100).toFixed(2)}5802BR5916VORIXA CREATIVE6009SAO PAULO62070503***6304`;
 
+  const [generatedQrDataUrl, setGeneratedQrDataUrl] = useState<string | null>(null);
+  const [isGeneratingQr, setIsGeneratingQr] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setGeneratedQrDataUrl(null);
+      return;
+    }
+
+    // Prioridade 1: Se já veio uma imagem ou base64 pronta do backend
+    if (qrCodeBase64 && (qrCodeBase64.startsWith("data:") || qrCodeBase64.startsWith("http"))) {
+      setGeneratedQrDataUrl(qrCodeBase64);
+      return;
+    }
+
+    if (qrCodeBase64 && qrCodeBase64.length > 50) {
+      setGeneratedQrDataUrl(`data:image/png;base64,${qrCodeBase64}`);
+      return;
+    }
+
+    // Prioridade 2: Gerar o QR Code oficial escaneável diretamente da string EMV (Pix Copia e Cola)
+    if (activePixCode) {
+      setIsGeneratingQr(true);
+      QRCode.toDataURL(activePixCode, {
+        width: 512,
+        margin: 1,
+        errorCorrectionLevel: "M",
+        color: {
+          dark: "#000000",
+          light: "#ffffff",
+        },
+      })
+        .then((url) => {
+          setGeneratedQrDataUrl(url);
+        })
+        .catch((err) => {
+          console.error("Erro ao gerar QR Code localmente:", err);
+        })
+        .finally(() => {
+          setIsGeneratingQr(false);
+        });
+    }
+  }, [isOpen, qrCodeBase64, activePixCode]);
+
   const handleCopyPix = async () => {
     try {
       await navigator.clipboard.writeText(activePixCode);
@@ -270,59 +315,26 @@ export function PaymentPixModal({
               <div className="absolute -bottom-1.5 -left-1.5 w-4 h-4 border-b-2 border-l-2 border-emerald-500 rounded-bl pointer-events-none" />
               <div className="absolute -bottom-1.5 -right-1.5 w-4 h-4 border-b-2 border-r-2 border-emerald-500 rounded-br pointer-events-none" />
 
-              {qrCodeBase64 ? (
+              {generatedQrDataUrl ? (
                 <img
-                  src={
-                    qrCodeBase64.startsWith("data:")
-                      ? qrCodeBase64
-                      : `data:image/png;base64,${qrCodeBase64}`
-                  }
-                  alt="QR Code Pix"
-                  className="w-full h-full max-w-[200px] max-h-[200px] sm:max-w-[220px] sm:max-h-[220px] object-contain"
+                  src={generatedQrDataUrl}
+                  alt="QR Code Pix Oficial"
+                  className="w-full h-full max-w-[200px] max-h-[200px] sm:max-w-[220px] sm:max-h-[220px] object-contain rounded-lg"
                 />
+              ) : isGeneratingQr ? (
+                <div className="flex flex-col items-center justify-center gap-2 p-4 text-center">
+                  <div className="w-8 h-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
+                  <span className="text-[11px] text-slate-600 font-medium">
+                    Gerando QR Code oficial...
+                  </span>
+                </div>
               ) : (
-                <svg
-                  viewBox="0 0 200 200"
-                  className="w-full h-full max-w-[200px] max-h-[200px] sm:max-w-[220px] sm:max-h-[220px] fill-slate-900"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect x="15" y="15" width="45" height="45" rx="6" fill="#000" />
-                  <rect x="23" y="23" width="29" height="29" rx="4" fill="#fff" />
-                  <rect x="29" y="29" width="17" height="17" rx="2" fill="#000" />
-
-                  <rect x="140" y="15" width="45" height="45" rx="6" fill="#000" />
-                  <rect x="148" y="23" width="29" height="29" rx="4" fill="#fff" />
-                  <rect x="154" y="29" width="17" height="17" rx="2" fill="#000" />
-
-                  <rect x="15" y="140" width="45" height="45" rx="6" fill="#000" />
-                  <rect x="23" y="148" width="29" height="29" rx="4" fill="#fff" />
-                  <rect x="29" y="154" width="17" height="17" rx="2" fill="#000" />
-
-                  <rect x="75" y="20" width="12" height="12" rx="2" />
-                  <rect x="95" y="20" width="12" height="12" rx="2" />
-                  <rect x="115" y="20" width="12" height="12" rx="2" />
-                  <rect x="75" y="45" width="12" height="12" rx="2" />
-                  <rect x="105" y="45" width="12" height="12" rx="2" />
-                  <rect x="20" y="75" width="12" height="12" rx="2" />
-                  <rect x="45" y="75" width="12" height="12" rx="2" />
-                  <rect x="145" y="75" width="12" height="12" rx="2" />
-                  <rect x="165" y="75" width="12" height="12" rx="2" />
-                  <rect x="20" y="95" width="12" height="12" rx="2" />
-                  <rect x="45" y="115" width="12" height="12" rx="2" />
-                  <rect x="145" y="115" width="12" height="12" rx="2" />
-                  <rect x="165" y="95" width="12" height="12" rx="2" />
-                  <rect x="75" y="145" width="12" height="12" rx="2" />
-                  <rect x="95" y="145" width="12" height="12" rx="2" />
-                  <rect x="115" y="165" width="12" height="12" rx="2" />
-                  <rect x="145" y="145" width="12" height="12" rx="2" />
-                  <rect x="165" y="165" width="12" height="12" rx="2" />
-
-                  <circle cx="100" cy="100" r="22" fill="#0D0E12" />
-                  <path
-                    d="M106.5 95.5L101.5 90.5c-0.8-0.8-2.2-0.8-3 0l-5 5c-0.8 0.8-0.8 2.2 0 3l5 5c0.8 0.8 2.2 0.8 3 0l5-5c0.8-0.8 0.8-2.2 0-3zm-6.5 6.5l-3-3 3-3 3 3-3 3z"
-                    fill="#10B981"
-                  />
-                </svg>
+                <div className="flex flex-col items-center justify-center gap-2 p-4 text-center">
+                  <QrCode className="w-10 h-10 text-slate-400 animate-pulse" />
+                  <span className="text-[11px] text-slate-600 font-medium">
+                    Carregando QR Code...
+                  </span>
+                </div>
               )}
             </div>
 

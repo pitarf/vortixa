@@ -70,6 +70,7 @@ function CreditsContent() {
   const [activePaymentId, setActivePaymentId] = useState<string | null>(null);
   const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
   const [activePixCode, setActivePixCode] = useState<string | null>(null);
+  const [activePixQrCode, setActivePixQrCode] = useState<string | null>(null);
 
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [successDetails, setSuccessDetails] = useState<any>(null);
@@ -78,6 +79,17 @@ function CreditsContent() {
   const [failureReason, setFailureReason] = useState<string | null>(null);
 
   const defaultPackages: CreditPackageData[] = [
+    {
+      id: "pkg-test",
+      name: "Plano Teste",
+      description: "Pacote promocional para validação rápida de fluxo de pagamentos e ferramentas de IA.",
+      credits: 50,
+      priceCents: 990,
+      bonusCredits: 0,
+      status: true,
+      displayOrder: 0,
+      badgeText: "TESTE R$ 9,90",
+    },
     {
       id: "pkg-100",
       name: "Iniciante",
@@ -242,6 +254,7 @@ function CreditsContent() {
         setActivePaymentId(data.paymentId);
         setActiveOrderId(data.orderId);
         setActivePixCode(data.pixCode || null);
+        setActivePixQrCode(data.pixQrCode || null);
         setIsPixModalOpen(true);
         toast.success("Código Pix gerado com sucesso! Conclua o pagamento no seu banco.", { id: "checkout-toast" });
       } else {
@@ -312,6 +325,7 @@ function CreditsContent() {
         orderId={activeOrderId}
         packageData={selectedPackage}
         pixCode={activePixCode}
+        qrCodeBase64={activePixQrCode}
         onPaymentApproved={handlePaymentApproved}
         onPaymentFailed={(reason) => {
           setFailureReason(reason || null);
@@ -489,14 +503,15 @@ function CreditsContent() {
           </div>
         </div>
 
-        {/* GRID ADAPTATIVO: 1 col celular, 2 cols tablet (md), 4 cols desktop (lg) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+        {/* GRID ADAPTATIVO: 1 col celular, 2 cols tablet (md), 3 cols (lg), 5 cols ultrawide (xl) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 sm:gap-6">
           {packages.map((pkg) => {
             const totalCredits = pkg.credits + pkg.bonusCredits;
             const unitCost = (pkg.priceCents / 100 / totalCredits).toFixed(2);
-            const isPopular = pkg.isPopular || pkg.id === "pkg-500";
-            const isBestValue = pkg.isBestValue || pkg.id === "pkg-1000";
-            const hasBadge = isPopular || isBestValue;
+            const isTest = pkg.id === "pkg-test" || pkg.priceCents === 990;
+            const isPopular = (pkg.isPopular || pkg.id === "pkg-500") && !isTest;
+            const isBestValue = (pkg.isBestValue || pkg.id === "pkg-1000") && !isTest;
+            const hasBadge = isTest || isPopular || isBestValue;
 
             return (
               <div
@@ -504,7 +519,9 @@ function CreditsContent() {
                 className={`relative flex flex-col justify-between rounded-3xl p-5 sm:p-6 transition-all duration-300 group ${
                   hasBadge ? "pt-8 sm:pt-8" : ""
                 } ${
-                  isPopular
+                  isTest
+                    ? "bg-gradient-to-b from-[#1c180e] via-[#120f09] to-[#070709] border-2 border-amber-500/80 shadow-[0_0_35px_rgba(245,158,11,0.2)] hover:border-amber-400 hover:scale-[1.01]"
+                    : isPopular
                     ? "bg-gradient-to-b from-[#161824] via-[#0E1017] to-[#070709] border-2 border-violet-500 shadow-[0_0_40px_rgba(139,92,246,0.22)] hover:border-violet-400 hover:scale-[1.01]"
                     : isBestValue
                     ? "bg-gradient-to-b from-[#101924] via-[#0B1017] to-[#070709] border-2 border-cyan-500/80 shadow-[0_0_35px_rgba(6,182,212,0.18)] hover:border-cyan-400 hover:scale-[1.01]"
@@ -512,6 +529,13 @@ function CreditsContent() {
                 }`}
               >
                 {/* Badge Luminosa no Topo (Posicionamento Seguro sem Colisão) */}
+                {isTest && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 sm:px-4 py-1 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-emerald-500 text-white text-[10px] font-black uppercase tracking-wider shadow-lg shadow-amber-500/30 flex items-center gap-1.5 whitespace-nowrap z-20">
+                    <Sparkles className="h-3.5 w-3.5 fill-current text-white shrink-0" />
+                    <span>{pkg.badgeText || "TESTE R$ 9,90"}</span>
+                  </div>
+                )}
+
                 {isPopular && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 sm:px-4 py-1 rounded-full bg-gradient-to-r from-violet-600 via-indigo-500 to-cyan-500 text-white text-[10px] font-black uppercase tracking-wider shadow-lg shadow-violet-600/40 flex items-center gap-1.5 whitespace-nowrap z-20">
                     <Flame className="h-3.5 w-3.5 fill-current text-amber-300 shrink-0" />

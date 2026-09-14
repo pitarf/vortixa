@@ -3,6 +3,19 @@
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [2.5.4] - 2026-09-14
+### Geração Autêntica de QR Code Pix (EMV / BR Code) & Remoção de Placeholder Estático
+- **Diagnóstico do QR Code Inválido**:
+  - O modal do Pix (`PaymentPixModal.tsx`) continha um SVG ilustrativo estático (com cerca de 15 retângulos fixos e círculo central) como fallback caso a imagem em base64 não fosse enviada pronta pela adquirente.
+  - A página de créditos não armazenava nem repassava `data.pixQrCode` para a prop `qrCodeBase64` do modal, fazendo com que o modal sempre exibisse o desenho estático em vez de um QR Code real, sendo rejeitado pelos aplicativos dos bancos ao escanear.
+- **Motor Oficial de Renderização de QR Code (`qrcode`)**:
+  - Integração da biblioteca oficial `qrcode` para compilar strings BR Code (EMV) padrão Banco Central em imagens PNG Data URL de alta resolução (512x512) em tempo de execução.
+  - `PaymentPixModal.tsx`: Hook `useEffect` que detecta a chave Pix Copia e Cola ativa e gera o QR Code matematicamente escaneável instantaneamente, eliminando 100% o SVG placeholder falso.
+  - `vorexpay.provider.ts`: Geração de segurança também no backend caso a adquirente envie apenas o payload textual `pix_copy_paste`, garantindo redundância dupla.
+  - `credits/page.tsx`: Armazenamento de `activePixQrCode` no estado e repasse da prop `qrCodeBase64` para o modal.
+- **Verificação**:
+  - 100% dos testes aprovados no Vitest (28 suítes, 204 testes) e 0 erros de compilação em `tsc --noEmit`.
+
 ## [2.5.3] - 2026-09-14
 ### Checkout Transparente com Cartão de Crédito & Correção de Mapeamento de Erros Vorexpay/Velana
 - **Diagnóstico da Causa Raiz do Erro de CPF no Cartão**:

@@ -361,6 +361,7 @@ async function main() {
 
   // 3. Pacotes de Créditos
   const packages = [
+    { id: 'pkg-test', name: 'Plano Teste', description: 'Pacote promocional para validação rápida de pagamentos e motores de IA.', credits: 50, priceCents: 990, bonus: 0, order: 0 },
     { id: 'pkg-100', name: 'Iniciante', description: 'Ideal para testes rápidos.', credits: 100, priceCents: 1990, bonus: 0, order: 1 },
     { id: 'pkg-500', name: 'Profissional', description: 'Nosso pacote mais vendido.', credits: 500, priceCents: 7990, bonus: 50, order: 2 },
     { id: 'pkg-1000', name: 'Criador', description: 'Para quem precisa de alta escala.', credits: 1000, priceCents: 14990, bonus: 150, order: 3 },

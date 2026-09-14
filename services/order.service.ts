@@ -15,9 +15,33 @@ export class OrderService {
     const { packageId } = input;
 
     // 1. Busca pacote comercial seguro direto do backend (única fonte de verdade)
-    const creditPackage = await prisma.creditPackage.findUnique({
+    let creditPackage = await prisma.creditPackage.findUnique({
       where: { id: packageId },
     });
+
+    // Auto-criação resiliente do pacote de teste R$ 9,90 caso ainda não exista no banco
+    if (!creditPackage && packageId === "pkg-test") {
+      creditPackage = await prisma.creditPackage.upsert({
+        where: { id: "pkg-test" },
+        create: {
+          id: "pkg-test",
+          name: "Plano Teste",
+          description: "Pacote promocional para validação rápida de pagamentos e motores de IA.",
+          credits: 50,
+          priceCents: 990,
+          bonusCredits: 0,
+          status: true,
+          displayOrder: 0,
+        },
+        update: {
+          name: "Plano Teste",
+          priceCents: 990,
+          credits: 50,
+          status: true,
+          displayOrder: 0,
+        },
+      }).catch(() => null);
+    }
 
     if (!creditPackage) {
       throw new Error("Pacote de créditos não encontrado.");

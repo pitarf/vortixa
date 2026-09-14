@@ -163,11 +163,38 @@ export class VorexPayProvider implements PaymentProvider {
       }
 
       const data = await response.json();
+      console.log("[Vorexpay API Response Keys]", Object.keys(data), "has pix_copy_paste:", !!data.pix_copy_paste, "has pix_qr_code:", !!data.pix_qr_code);
       const gatewayTxId = String(data.id || data.external_id || request.orderId);
 
-      // A Vorexpay retorna HTTP 201 com pix_copy_paste e pix_qr_code
-      const pixCopyPaste = data.pix_copy_paste || undefined;
-      const pixQrCode = data.pix_qr_code || undefined;
+      // A Vorexpay retorna HTTP 201 com pix_copy_paste e pix_qr_code (suporta chaves alternativas)
+      const pixCopyPaste =
+        data.pix_copy_paste ||
+        data.pix_code ||
+        data.emv ||
+        data.copy_paste ||
+        data.qr_code_text ||
+        undefined;
+      let pixQrCode =
+        data.pix_qr_code ||
+        data.qr_code ||
+        data.qr_code_base64 ||
+        data.image ||
+        undefined;
+
+      // Se a API retornar o código Copia e Cola (EMV) mas não a imagem base64 do QR Code, gera dinamicamente
+      if (!pixQrCode && pixCopyPaste) {
+        try {
+          const QRCode = await import("qrcode");
+          pixQrCode = await QRCode.toDataURL(pixCopyPaste, {
+            width: 512,
+            margin: 2,
+            errorCorrectionLevel: "M",
+          });
+        } catch (qrErr) {
+          console.error("[Vorexpay] Erro ao gerar QRCode Data URL:", qrErr);
+        }
+      }
+
       const checkoutUrl =
         data.checkout_url ||
         data.url ||

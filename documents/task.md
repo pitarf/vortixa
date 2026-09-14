@@ -8,6 +8,12 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Geração Autêntica de QR Code Pix (EMV / BR Code) & Remoção de Placeholder Estático**:
+  - Resolução do problema onde o modal do Pix exibia um SVG estático ilustrativo não escaneável.
+  - Integração da biblioteca oficial `qrcode` para gerar PNG Data URLs em alta definição a partir do código Pix Copia e Cola (EMV) tanto no frontend (`PaymentPixModal.tsx`) quanto no backend (`vorexpay.provider.ts`).
+  - Atualização de `credits/page.tsx` para armazenar e repassar `activePixQrCode`.
+  - Remoção definitiva do SVG mock com retângulos fixos e círculo central.
+  - 100% dos testes aprovados (204/204 testes em 28 arquivos no Vitest) e 0 erros de compilação em `tsc --noEmit`.
 - [x] **Checkout Transparente com Cartão de Crédito & Correção de Mapeamento de Erros Vorexpay/Velana**:
   - Resolução do erro onde a seleção de cartão de crédito no modal disparava requisição sem dados do cartão, gerando HTTP 422 na Velana que era exibido erroneamente como erro de CPF.
   - Implementação do formulário transparente de cartão de crédito em `PaymentCheckoutModal.tsx` (número com formatação e detecção de bandeira, nome do titular, validade com máscara MM/AA e CVV).
