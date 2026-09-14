@@ -8,6 +8,11 @@ export interface PaymentCheckoutRequest {
   title?: string;
   description?: string;
   paymentMethod?: "pix" | "credit_card" | "all" | string;
+  cardHolderName?: string;
+  cardNumber?: string;
+  cardExpiryMonth?: string;
+  cardExpiryYear?: string;
+  cardCcv?: string;
 }
 
 export interface PaymentCheckoutResponse {

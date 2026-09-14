@@ -30,7 +30,14 @@ export class CheckoutService {
     userId: string,
     packageId: string,
     paymentMethod?: "pix" | "credit_card" | "all" | string,
-    cpf?: string
+    cpf?: string,
+    cardData?: {
+      cardHolderName?: string;
+      cardNumber?: string;
+      cardExpiryMonth?: string;
+      cardExpiryYear?: string;
+      cardCcv?: string;
+    }
   ): Promise<CheckoutResult> {
     // 1. Busca usuário para pegar email de contato e nome (usados no gateway)
     const user = await prisma.user.findUnique({
@@ -67,6 +74,11 @@ export class CheckoutService {
         title: pkg ? `VORIXA - Pacote ${pkg.name}` : "Pacote de Créditos VORIXA",
         description: pkg?.description || "Créditos para geração de IA na plataforma VORIXA",
         paymentMethod,
+        cardHolderName: cardData?.cardHolderName,
+        cardNumber: cardData?.cardNumber,
+        cardExpiryMonth: cardData?.cardExpiryMonth,
+        cardExpiryYear: cardData?.cardExpiryYear,
+        cardCcv: cardData?.cardCcv,
       });
 
       // 4. Salva a transação pendente (Payment com status PENDING) no banco

@@ -28,12 +28,14 @@ O painel principal está organizado em abas acessíveis:
 
 ## 3. Como Adquirir Créditos
 
-Se o seu saldo de créditos estiver baixo ou zerado, você pode adquirir novos créditos de forma avulsa ou assinar pacotes mensais:
-1. No cabeçalho superior (Header), clique no botão **Adicionar Créditos** ou navegue até a seção de Planos.
-2. Selecione o pacote que melhor atende à sua necessidade.
-3. Você será redirecionado para a página de checkout seguro do gateway **VorexPay**.
-4. Efetue o pagamento por Pix ou Cartão de Crédito.
-5. Assim que o pagamento for compensado pelo gateway, os créditos serão liberados em sua conta de forma automática e seu saldo será atualizado no topo da tela.
+Se o seu saldo de créditos estiver baixo ou zerado, você pode adquirir novos créditos de forma avulsa ou em pacotes profissionais:
+1. No cabeçalho superior (Header) ou menu de navegação, acesse a página de **Créditos & Planos** (`/dashboard/credits`).
+2. Selecione o pacote que melhor atende à sua necessidade (ex: Iniciante, Profissional, Criador Pro ou Studio Ultra).
+3. No modal de checkout seguro, informe o **CPF ou CNPJ** do pagador (exigido pelos regulamentos bancários do Banco Central e adquirente Velana).
+4. Escolha a modalidade de pagamento:
+   * **Pix Instantâneo (Vorexpay)**: Gera na hora o QR Code dinâmico e o código "Pix Copia e Cola" com 1 clique. O sistema realiza verificação em tempo real a cada 3 segundos e libera seus créditos automaticamente em até 3 segundos após o pagamento.
+   * **Cartão de Crédito**: Preencha os dados do cartão de forma transparente e segura (Número do cartão, Nome do titular, Validade MM/AA e Código CVV/CVC) com criptografia ponta a ponta AES-256 e proteção 3D Secure.
+5. Ao concluir o pagamento, o modal de celebração exibirá o comprovante digital e seu saldo atualizado em tempo real.
 
 ---
 

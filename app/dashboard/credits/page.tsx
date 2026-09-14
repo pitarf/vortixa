@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import {
   PaymentCheckoutModal,
   CreditPackageSummary,
+  CardData,
 } from "@/components/credits/PaymentCheckoutModal";
 import { PaymentPixModal } from "@/components/credits/PaymentPixModal";
 import { PaymentSuccessModal } from "@/components/credits/PaymentSuccessModal";
@@ -202,7 +203,11 @@ function CreditsContent() {
     setIsCheckoutModalOpen(true);
   };
 
-  const handleProceedCheckout = async (selectedMethod: "pix" | "card", cpf?: string) => {
+  const handleProceedCheckout = async (
+    selectedMethod: "pix" | "card",
+    cpf?: string,
+    cardData?: CardData
+  ) => {
     if (!selectedPackage || isProcessingCheckout) return;
 
     try {
@@ -216,6 +221,11 @@ function CreditsContent() {
           packageId: selectedPackage.id,
           paymentMethod: selectedMethod === "pix" ? "pix" : "credit_card",
           cpf: cpf,
+          cardNumber: cardData?.cardNumber,
+          cardHolderName: cardData?.cardHolderName,
+          cardExpiryMonth: cardData?.cardExpiryMonth,
+          cardExpiryYear: cardData?.cardExpiryYear,
+          cardCcv: cardData?.cardCcv,
         }),
       });
 
@@ -241,7 +251,8 @@ function CreditsContent() {
             window.location.href = data.checkoutUrl;
           }, 600);
         } else {
-          toast.error("Link de checkout não retornado pelo gateway.", { id: "checkout-toast" });
+          toast.success("Transação enviada com sucesso!", { id: "checkout-toast" });
+          fetchCreditsData();
         }
       }
     } catch {

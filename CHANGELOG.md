@@ -3,6 +3,27 @@
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [2.5.3] - 2026-09-14
+### Checkout Transparente com Cartão de Crédito & Correção de Mapeamento de Erros Vorexpay/Velana
+- **Diagnóstico da Causa Raiz do Erro de CPF no Cartão**:
+  - Quando o usuário selecionava a opção "Cartão de Crédito", o modal disparava a requisição com `paymentMethod: "credit_card"` sem os dados do cartão (número, titular, validade e CVV).
+  - A adquirente Velana rejeitava a cobrança com HTTP 422 por falta de dados do cartão. O manipulador de erros do provider continha a condição `parsed.message.includes("Velana")`, convertendo erroneamente qualquer erro da adquirente na mensagem de "CPF inválido".
+- **Formulário Transparente de Cartão de Crédito (`PaymentCheckoutModal.tsx`)**:
+  - Implementação de campos dedicados ao selecionar a aba de Cartão de Crédito:
+    - Número do cartão com formatação automática de espaços a cada 4 dígitos e detecção de bandeira.
+    - Nome do titular impresso no cartão.
+    - Data de validade com máscara (MM/AA) e validação de mês/ano.
+    - Código de segurança (CVV) com limite de 3 a 4 dígitos numéricos.
+  - Botão de ação dinâmico exibindo `"Gerar QR Code Pix Instantâneo"` para Pix e `"Pagar R$ XX,XX com Cartão"` para cartão.
+  - Badges de segurança 3D Secure e Criptografia AES-256 integradas ao formulário.
+- **Mapeamento Preciso de Erros & Sanitização no Provider (`vorexpay.provider.ts`)**:
+  - Remoção da verificação genérica por `"Velana"`, garantindo que mensagens de erro específicas sobre cartão ou limites sejam repassadas de forma fiel ao usuário.
+  - Mapeamento de erro de documento apenas quando a adquirente indicar explicitamente `document.number` ou `customer_cpf`.
+  - Suporte completo ao payload de cartão (`card_holder_name`, `card_number`, `card_expiry_month`, `card_expiry_year`, `card_ccv`).
+- **Integração Ponta a Ponta (`credits/page.tsx`, `checkout/route.ts`, `checkout.service.ts`)**:
+  - Repasse completo e sanitizado dos dados de cartão da interface ao serviço de checkout e ao gateway.
+  - 100% dos testes aprovados (204/204 testes em 28 arquivos) e 0 erros de compilação.
+
 ## [2.5.2] - 2026-09-14
 ### Correção de Checkout Vorexpay & Validação de Documento CPF/CNPJ (Adquirente Velana 422)
 - **Diagnóstico do Erro Velana 422**:

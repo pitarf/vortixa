@@ -92,17 +92,27 @@ export class VorexPayProvider implements PaymentProvider {
         payload.cpf = cleanDoc;
         payload.document = {
           number: cleanDoc,
-          type: cleanDoc.length === 11 ? "cpf" : "cnpj",
+          type: cleanDoc.length > 11 ? "cnpj" : "cpf",
         };
         payload.customer = {
-          name: request.name || "Cliente VORIXA",
-          email: request.email,
-          cpf: cleanDoc,
+          name: payload.customer_name,
+          email: payload.customer_email,
           document: {
             number: cleanDoc,
-            type: cleanDoc.length === 11 ? "cpf" : "cnpj",
+            type: cleanDoc.length > 11 ? "cnpj" : "cpf",
           },
         };
+      }
+
+      if (isCard) {
+        if (request.cardHolderName) payload.card_holder_name = request.cardHolderName;
+        if (request.cardNumber) payload.card_number = request.cardNumber.replace(/\D/g, "");
+        if (request.cardExpiryMonth) payload.card_expiry_month = String(request.cardExpiryMonth).padStart(2, "0");
+        if (request.cardExpiryYear) {
+          const yr = String(request.cardExpiryYear);
+          payload.card_expiry_year = yr.length === 2 ? `20${yr}` : yr;
+        }
+        if (request.cardCcv) payload.card_ccv = String(request.cardCcv);
       }
 
       // Suporta tanto o endpoint de URL única curta (/u/slug) quanto a URL base (/payments)
@@ -128,20 +138,23 @@ export class VorexPayProvider implements PaymentProvider {
 
       if (!response.ok) {
         const errorText = await response.text();
+        console.error("[Vorexpay API Error]", response.status, errorText);
+
         let errorMessage = `Erro na API Vorexpay (${response.status}): ${errorText}`;
         try {
           const parsed = JSON.parse(errorText);
           if (parsed.message && typeof parsed.message === "string") {
             if (
               parsed.message.includes("document.number") ||
-              parsed.message.includes("Velana") ||
-              parsed.message.includes("cpf")
+              parsed.message.includes("customer_cpf")
             ) {
               errorMessage =
                 "O CPF ou CNPJ informado é inválido ou não foi aceito pela adquirente (Vorexpay/Velana). Verifique os dígitos informados e tente novamente.";
             } else {
               errorMessage = parsed.message;
             }
+          } else if (parsed.error && typeof parsed.error === "string") {
+            errorMessage = parsed.error;
           }
         } catch {
           // Mantém mensagem padrão

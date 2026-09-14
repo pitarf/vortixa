@@ -8,6 +8,12 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Checkout Transparente com Cartão de Crédito & Correção de Mapeamento de Erros Vorexpay/Velana**:
+  - Resolução do erro onde a seleção de cartão de crédito no modal disparava requisição sem dados do cartão, gerando HTTP 422 na Velana que era exibido erroneamente como erro de CPF.
+  - Implementação do formulário transparente de cartão de crédito em `PaymentCheckoutModal.tsx` (número com formatação e detecção de bandeira, nome do titular, validade com máscara MM/AA e CVV).
+  - Repasse e tipagem de `CardData` em `credits/page.tsx`, `checkout/route.ts`, `checkout.service.ts` e `payment-provider.interface.ts`.
+  - Tratamento aprimorado de erros em `vorexpay.provider.ts` removendo a checagem genérica pela substring "Velana".
+  - 100% dos testes aprovados (204/204 testes em 28 arquivos no Vitest) e 0 erros de compilação em `tsc --noEmit`.
 - [x] **Resolução do Erro de Checkout Vorexpay & Adquirente Velana 422 (`document.number is required`)**:
   - Diagnóstico e correção do erro 422 retornado pela adquirente Velana via API do Vorexpay ao emitir pagamentos sem o documento do pagador.
   - Criação do utilitário `lib/document-validator.ts` com validação oficial Módulo 11 de dígitos verificadores de CPF/CNPJ e formatação com máscara dinâmica.

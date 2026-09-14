@@ -29,11 +29,23 @@ export interface CreditPackageSummary {
   isPopular?: boolean;
 }
 
+export interface CardData {
+  cardNumber?: string;
+  cardHolderName?: string;
+  cardExpiryMonth?: string;
+  cardExpiryYear?: string;
+  cardCcv?: string;
+}
+
 export interface PaymentCheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
   packageData: CreditPackageSummary | null;
-  onProceed: (selectedMethod: "pix" | "card", cpf?: string) => Promise<void> | void;
+  onProceed: (
+    selectedMethod: "pix" | "card",
+    cpf?: string,
+    cardData?: CardData
+  ) => Promise<void> | void;
   isProcessing?: boolean;
 }
 
@@ -47,6 +59,26 @@ export function PaymentCheckoutModal({
   const [selectedMethod, setSelectedMethod] = useState<"pix" | "card">("pix");
   const [cpf, setCpf] = useState<string>("");
   const [cpfTouched, setCpfTouched] = useState<boolean>(false);
+
+  // Campos de Cartão de Crédito
+  const [cardNumber, setCardNumber] = useState<string>("");
+  const [cardHolder, setCardHolder] = useState<string>("");
+  const [cardExpiry, setCardExpiry] = useState<string>("");
+  const [cardCcv, setCardCcv] = useState<string>("");
+  const [cardTouched, setCardTouched] = useState<boolean>(false);
+
+  const formatCardNumber = (val: string) => {
+    const digits = val.replace(/\D/g, "").slice(0, 16);
+    return digits.replace(/(\d{4})(?=\d)/g, "$1 ");
+  };
+
+  const formatCardExpiry = (val: string) => {
+    const digits = val.replace(/\D/g, "").slice(0, 4);
+    if (digits.length >= 3) {
+      return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+    }
+    return digits;
+  };
 
   // Carrega CPF salvo previamente no localStorage para máxima conveniência
   useEffect(() => {
@@ -101,6 +133,43 @@ export function PaymentCheckoutModal({
       } catch {
         // Ignora
       }
+    }
+
+    // Validação específica para Cartão de Crédito
+    if (selectedMethod === "card") {
+      setCardTouched(true);
+      const cleanNum = cardNumber.replace(/\D/g, "");
+      if (cleanNum.length < 15) {
+        toast.error("Informe o número completo do cartão de crédito (15 ou 16 dígitos).");
+        return;
+      }
+      if (!cardHolder.trim()) {
+        toast.error("Informe o nome impresso no cartão de crédito.");
+        return;
+      }
+      const [expMonth, expYear] = cardExpiry.split("/");
+      if (!expMonth || !expYear || expMonth.length !== 2 || expYear.length !== 2) {
+        toast.error("Informe a validade do cartão no formato MM/AA.");
+        return;
+      }
+      const monthNum = parseInt(expMonth, 10);
+      if (monthNum < 1 || monthNum > 12) {
+        toast.error("Mês de validade do cartão deve ser entre 01 e 12.");
+        return;
+      }
+      if (cardCcv.length < 3) {
+        toast.error("Informe o código de segurança CVV (3 ou 4 dígitos).");
+        return;
+      }
+
+      onProceed(selectedMethod, clean, {
+        cardNumber: cleanNum,
+        cardHolderName: cardHolder.trim(),
+        cardExpiryMonth: expMonth,
+        cardExpiryYear: expYear,
+        cardCcv: cardCcv,
+      });
+      return;
     }
 
     onProceed(selectedMethod, clean);
@@ -387,7 +456,81 @@ export function PaymentCheckoutModal({
             </div>
           </div>
 
-          {/* 5. Selos de Garantia e Confiança Financeira */}
+          {/* 5. Dados do Cartão de Crédito (exibido apenas se método Cartão selecionado) */}
+          {selectedMethod === "card" && (
+            <div className="space-y-3 pt-2 p-4 rounded-2xl bg-[#070709] border border-[#1E202E] animate-in fade-in duration-200">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xs font-mono uppercase tracking-wider text-violet-400 font-bold flex items-center gap-1.5">
+                  <CreditCard className="w-3.5 h-3.5" />
+                  Dados do Cartão de Crédito
+                </span>
+                <span className="text-[10px] font-mono text-slate-400 uppercase bg-[#13141B] px-2 py-0.5 rounded border border-white/5">
+                  Criptografia 3D Secure
+                </span>
+              </div>
+
+              {/* Número do Cartão */}
+              <div className="space-y-1">
+                <label className="text-[11px] font-mono text-slate-300">Número do Cartão</label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={cardNumber}
+                  onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
+                  placeholder="0000 0000 0000 0000"
+                  maxLength={19}
+                  disabled={isProcessing}
+                  className="w-full bg-[#0D0E12] border border-[#1E202E] rounded-xl px-3.5 py-2.5 text-sm text-white font-mono placeholder:text-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 focus:outline-none transition-all"
+                />
+              </div>
+
+              {/* Nome Impresso no Cartão */}
+              <div className="space-y-1">
+                <label className="text-[11px] font-mono text-slate-300">Nome Impresso no Cartão</label>
+                <input
+                  type="text"
+                  value={cardHolder}
+                  onChange={(e) => setCardHolder(e.target.value.toUpperCase())}
+                  placeholder="NOME COMO ESTÁ NO CARTÃO"
+                  disabled={isProcessing}
+                  className="w-full bg-[#0D0E12] border border-[#1E202E] rounded-xl px-3.5 py-2.5 text-sm text-white uppercase placeholder:text-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 focus:outline-none transition-all"
+                />
+              </div>
+
+              {/* Validade e CVV */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[11px] font-mono text-slate-300">Validade (MM/AA)</label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={cardExpiry}
+                    onChange={(e) => setCardExpiry(formatCardExpiry(e.target.value))}
+                    placeholder="MM/AA"
+                    maxLength={5}
+                    disabled={isProcessing}
+                    className="w-full bg-[#0D0E12] border border-[#1E202E] rounded-xl px-3.5 py-2.5 text-sm text-white font-mono placeholder:text-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 focus:outline-none transition-all"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[11px] font-mono text-slate-300">CVV</label>
+                  <input
+                    type="password"
+                    inputMode="numeric"
+                    value={cardCcv}
+                    onChange={(e) => setCardCcv(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                    placeholder="123"
+                    maxLength={4}
+                    disabled={isProcessing}
+                    className="w-full bg-[#0D0E12] border border-[#1E202E] rounded-xl px-3.5 py-2.5 text-sm text-white font-mono placeholder:text-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 focus:outline-none transition-all"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 6. Selos de Garantia e Confiança Financeira */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
             <div className="flex items-center gap-2.5 p-3 rounded-xl bg-[#070709] border border-[#1E202E] text-xs text-slate-300">
               <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -412,14 +555,14 @@ export function PaymentCheckoutModal({
             {isProcessing ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin shrink-0" />
-                <span>Gerando Sessão de Pagamento...</span>
+                <span>Processando Pagamento Seguro...</span>
               </>
             ) : (
               <>
                 <span className="truncate">
                   {selectedMethod === "pix"
                     ? "Gerar QR Code Pix Instantâneo"
-                    : "Prosseguir para Pagamento Seguro"}
+                    : `Pagar ${formatBRL(packageData.priceCents)} com Cartão`}
                 </span>
                 <ArrowRight className="w-4 h-4 shrink-0" />
               </>

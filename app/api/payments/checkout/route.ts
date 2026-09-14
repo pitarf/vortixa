@@ -51,7 +51,17 @@ export async function POST(req: Request) {
       );
     }
 
-    const { packageId, paymentMethod, provider: requestedProvider, cpf } = body || {};
+    const {
+      packageId,
+      paymentMethod,
+      provider: requestedProvider,
+      cpf,
+      cardNumber,
+      cardHolderName,
+      cardExpiryMonth,
+      cardExpiryYear,
+      cardCcv,
+    } = body || {};
 
     if (!packageId || typeof packageId !== "string" || packageId.trim().length === 0) {
       return NextResponse.json(
@@ -102,6 +112,19 @@ export async function POST(req: Request) {
       );
     }
 
+    // Validação de campos de cartão de crédito no gateway transparente Vorexpay
+    if (validatedPaymentMethod === "credit_card" && provider.name === "vorexpay" && isLiveVorexpay) {
+      if (!cardNumber || !cardHolderName || !cardExpiryMonth || !cardExpiryYear || !cardCcv) {
+        return NextResponse.json(
+          {
+            error:
+              "Dados do cartão incompletos. Informe o número do cartão, nome impresso, validade e código de segurança (CVV). Ou selecione 'Pix Instantâneo' para aprovação imediata.",
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     const checkoutService = new CheckoutService(provider);
 
     // 5. Executa criação do checkout congelando valores do banco de dados (Snapshot seguro)
@@ -109,7 +132,14 @@ export async function POST(req: Request) {
       session.user.id,
       packageId.trim(),
       validatedPaymentMethod,
-      cleanDoc
+      cleanDoc,
+      {
+        cardNumber,
+        cardHolderName,
+        cardExpiryMonth,
+        cardExpiryYear,
+        cardCcv,
+      }
     );
 
     // 6. Retorno padronizado em JSON
