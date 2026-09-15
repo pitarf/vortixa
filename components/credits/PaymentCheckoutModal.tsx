@@ -135,40 +135,10 @@ export function PaymentCheckoutModal({
       }
     }
 
-    // Validação específica para Cartão de Crédito
-    if (selectedMethod === "card") {
-      setCardTouched(true);
-      const cleanNum = cardNumber.replace(/\D/g, "");
-      if (cleanNum.length < 15) {
-        toast.error("Informe o número completo do cartão de crédito (15 ou 16 dígitos).");
-        return;
-      }
-      if (!cardHolder.trim()) {
-        toast.error("Informe o nome impresso no cartão de crédito.");
-        return;
-      }
-      const [expMonth, expYear] = cardExpiry.split("/");
-      if (!expMonth || !expYear || expMonth.length !== 2 || expYear.length !== 2) {
-        toast.error("Informe a validade do cartão no formato MM/AA.");
-        return;
-      }
-      const monthNum = parseInt(expMonth, 10);
-      if (monthNum < 1 || monthNum > 12) {
-        toast.error("Mês de validade do cartão deve ser entre 01 e 12.");
-        return;
-      }
-      if (cardCcv.length < 3) {
-        toast.error("Informe o código de segurança CVV (3 ou 4 dígitos).");
-        return;
-      }
-
-      onProceed(selectedMethod, clean, {
-        cardNumber: cleanNum,
-        cardHolderName: cardHolder.trim(),
-        cardExpiryMonth: expMonth,
-        cardExpiryYear: expYear,
-        cardCcv: cardCcv,
-      });
+    // Pagamento via Cartão de Crédito temporariamente suspenso
+    if ((selectedMethod as string) === "card") {
+      toast.error("O pagamento via Cartão de Crédito está temporariamente em manutenção. Utilize o Pix Instantâneo para liberação imediata.");
+      setSelectedMethod("pix");
       return;
     }
 
@@ -338,7 +308,8 @@ export function PaymentCheckoutModal({
                 </div>
               </button>
 
-              {/* Opção 2: Cartão de Crédito */}
+              {/* Opção 2: Cartão de Crédito - TEMPORARIAMENTE DESATIVADO / EM MANUTENÇÃO */}
+              {/*
               <button
                 type="button"
                 role="radio"
@@ -368,7 +339,6 @@ export function PaymentCheckoutModal({
                     Visa, Mastercard, Elo e Amex com tokenização bancária e proteção antifraude 3D Secure.
                   </p>
 
-                  {/* Bandeiras de Cartão */}
                   <div className="flex items-center gap-1.5 mt-2 opacity-80 flex-wrap">
                     <span className="px-1.5 py-0.5 text-[9px] font-mono uppercase bg-[#13141B] border border-slate-700 rounded text-slate-300">
                       VISA
@@ -397,6 +367,7 @@ export function PaymentCheckoutModal({
                   </div>
                 </div>
               </button>
+              */}
             </div>
           </div>
 
@@ -450,13 +421,14 @@ export function PaymentCheckoutModal({
                 </span>
               ) : (
                 <span className="text-slate-400">
-                  Exigido pelo Banco Central para liquidação do Pix e antifraude do cartão.
+                  Exigido pelo Banco Central para liquidação instantânea e emissão do Pix.
                 </span>
               )}
             </div>
           </div>
 
-          {/* 5. Dados do Cartão de Crédito (exibido apenas se método Cartão selecionado) */}
+          {/* 5. Dados do Cartão de Crédito - TEMPORARIAMENTE DESATIVADO / EM MANUTENÇÃO */}
+          {/*
           {selectedMethod === "card" && (
             <div className="space-y-3 pt-2 p-4 rounded-2xl bg-[#070709] border border-[#1E202E] animate-in fade-in duration-200">
               <div className="flex items-center justify-between gap-2">
@@ -469,7 +441,6 @@ export function PaymentCheckoutModal({
                 </span>
               </div>
 
-              {/* Número do Cartão */}
               <div className="space-y-1">
                 <label className="text-[11px] font-mono text-slate-300">Número do Cartão</label>
                 <input
@@ -484,7 +455,6 @@ export function PaymentCheckoutModal({
                 />
               </div>
 
-              {/* Nome Impresso no Cartão */}
               <div className="space-y-1">
                 <label className="text-[11px] font-mono text-slate-300">Nome Impresso no Cartão</label>
                 <input
@@ -497,7 +467,6 @@ export function PaymentCheckoutModal({
                 />
               </div>
 
-              {/* Validade e CVV */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="text-[11px] font-mono text-slate-300">Validade (MM/AA)</label>
@@ -529,6 +498,7 @@ export function PaymentCheckoutModal({
               </div>
             </div>
           )}
+          */}
 
           {/* 6. Selos de Garantia e Confiança Financeira */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
@@ -560,9 +530,7 @@ export function PaymentCheckoutModal({
             ) : (
               <>
                 <span className="truncate">
-                  {selectedMethod === "pix"
-                    ? "Gerar QR Code Pix Instantâneo"
-                    : `Pagar ${formatBRL(packageData.priceCents)} com Cartão`}
+                  Gerar QR Code Pix Instantâneo ({formatBRL(packageData.priceCents)})
                 </span>
                 <ArrowRight className="w-4 h-4 shrink-0" />
               </>

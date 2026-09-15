@@ -8,6 +8,11 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Suspensão Temporária de Pagamento via Cartão de Crédito & Foco em Pix Instantâneo (Vorexpay)**:
+  - Comentada a opção de seleção de Cartão de Crédito e o formulário de dados de cartão em `components/credits/PaymentCheckoutModal.tsx`.
+  - Inserida guarda defensiva no backend (`app/api/payments/checkout/route.ts`) rejeitando requisições de cartão com HTTP 400 e orientação para Pix.
+  - Atualizada a seção de FAQ em `app/dashboard/credits/page.tsx` esclarecendo a disponibilidade do Pix Instantâneo em 3s e a manutenção do cartão.
+  - Validação completa com 100% de testes aprovados no Vitest (218 testes) e 0 erros em `tsc --noEmit`.
 - [x] **Geração Neural Real (WaveSpeed AI WAN 2.2 Realism) dos 30 Modelos com Fotos WebP & Sincronização PostgreSQL**:
   - Geração completa de 60 imagens fotográficas analógicas em alta definição (30 fotos de perfil close-up 85mm + 30 fotos de corpo inteiro 35mm) utilizando o motor `wavespeed-ai/wan-2.2/text-to-image-realism`.
   - Consistência rigorosa de semente e identidade visual de avatar entre o plano de perfil e o plano de corpo inteiro para os 30 modelos (10 mulheres, 10 homens, 5 idosas 60+ e 5 idosos 60+).

@@ -112,17 +112,15 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validação de campos de cartão de crédito no gateway transparente Vorexpay
-    if (validatedPaymentMethod === "credit_card" && provider.name === "vorexpay" && isLiveVorexpay) {
-      if (!cardNumber || !cardHolderName || !cardExpiryMonth || !cardExpiryYear || !cardCcv) {
-        return NextResponse.json(
-          {
-            error:
-              "Dados do cartão incompletos. Informe o número do cartão, nome impresso, validade e código de segurança (CVV). Ou selecione 'Pix Instantâneo' para aprovação imediata.",
-          },
-          { status: 400 }
-        );
-      }
+    // Pagamento com Cartão de Crédito temporariamente suspenso
+    if (validatedPaymentMethod === "credit_card") {
+      return NextResponse.json(
+        {
+          error:
+            "O pagamento via Cartão de Crédito está temporariamente em manutenção. Por favor, utilize a opção 'Pix Instantâneo' para aprovação e liberação imediata dos seus créditos.",
+        },
+        { status: 400 }
+      );
     }
 
     const checkoutService = new CheckoutService(provider);

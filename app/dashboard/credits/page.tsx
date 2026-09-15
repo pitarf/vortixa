@@ -295,8 +295,8 @@ function CreditsContent() {
       answer: "Não. Todos os créditos adquiridos no VORTIXIA são vitalícios e nunca expiram. Você pode usá-los hoje, no mês seguinte ou ao longo do ano sem qualquer perda de saldo.",
     },
     {
-      question: "Qual a diferença entre o Pix e o Cartão de Crédito?",
-      answer: "O Pix Instantâneo possui liquidação e liberação automatizada em até 3 segundos via Vorexpay. O Cartão de Crédito permite parcelamento em até 12 vezes e conta com proteção antifraude criptografada 3D Secure.",
+      question: "Quais as formas de pagamento aceitas?",
+      answer: "Aceitamos Pix Instantâneo com liquidação e liberação automatizada em até 3 segundos via Vorexpay. O pagamento via Cartão de Crédito está temporariamente em manutenção para melhorias de integração.",
     },
     {
       question: "O que acontece se uma geração de vídeo ou imagem falhar?",

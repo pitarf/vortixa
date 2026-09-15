@@ -34,7 +34,7 @@ Se o seu saldo de créditos estiver baixo ou zerado, você pode adquirir novos c
 3. No modal de checkout seguro, informe o **CPF ou CNPJ** do pagador (exigido pelos regulamentos bancários do Banco Central e adquirente Velana).
 4. Escolha a modalidade de pagamento:
    * **Pix Instantâneo (Vorexpay)**: Gera na hora o QR Code dinâmico e o código "Pix Copia e Cola" com 1 clique. O sistema realiza verificação em tempo real a cada 3 segundos e libera seus créditos automaticamente em até 3 segundos após o pagamento.
-   * **Cartão de Crédito**: Preencha os dados do cartão de forma transparente e segura (Número do cartão, Nome do titular, Validade MM/AA e Código CVV/CVC) com criptografia ponta a ponta AES-256 e proteção 3D Secure.
+   * **Cartão de Crédito (Em Manutenção Técnica)**: Opção temporariamente suspensa para aprimoramento da infraestrutura de parcelamento direto. Utilize o Pix Instantâneo para liberação imediata em 3 segundos.
 5. Ao concluir o pagamento, o modal de celebração exibirá o comprovante digital e seu saldo atualizado em tempo real.
 
 ---

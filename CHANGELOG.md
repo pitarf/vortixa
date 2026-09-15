@@ -5,6 +5,18 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.7.1] - 2026-09-15
+### Suspensão Temporária de Pagamento via Cartão de Crédito & Foco em Pix Instantâneo (Vorexpay)
+- **Modal de Checkout (`components/credits/PaymentCheckoutModal.tsx`)**:
+  - Opção de Cartão de Crédito e formulário de dados de cartão temporariamente comentados e desativados na interface.
+  - Guarda de segurança no método `handleConfirm` redirecionando automaticamente para o método Pix com alerta informativo.
+  - Botão de ação (CTA) atualizado para refletir diretamente "Gerar QR Code Pix Instantâneo (R$ ...)" com cálculo dinâmico.
+  - Texto auxiliar de CPF/CNPJ ajustado para esclarecer a exigência do Banco Central para emissão do Pix.
+- **Proteção Backend (`app/api/payments/checkout/route.ts`)**:
+  - Bloqueio preventivo no servidor caso receba `validatedPaymentMethod === "credit_card"`, retornando HTTP 400 com mensagem amigável instruindo o uso do Pix Instantâneo.
+- **Página de Créditos (`app/dashboard/credits/page.tsx`)**:
+  - Atualização da seção de Perguntas Frequentes (FAQ) esclarecendo que o Pix Instantâneo opera com liquidação em até 3 segundos e que o Cartão de Crédito se encontra temporariamente em manutenção técnica.
+
 ## [2.7.0] - 2026-09-15
 ### Geração Real Neural (WaveSpeed AI WAN 2.2 Realism) dos 30 Modelos com Fotos de Perfil e Corpo Inteiro em WebP & Sincronização PostgreSQL
 - **Geração Neural 100% Real via WaveSpeed AI (WAN 2.2 Text-to-Image Realism)**:

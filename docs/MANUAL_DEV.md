@@ -357,6 +357,10 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
   - `PAYMENT_FAILED` $\rightarrow$ Status `FAILED`.
 * **Idempotência no Webhook**: Tabela `PaymentWebhook` com constraint `UNIQUE` em `gatewayEventId` e lock pessimista `SELECT FOR UPDATE` no `PaymentLedgerService`.
 
+### 5. Status dos Métodos de Pagamento e Manutenção
+* **Pix Instantâneo (Ativo)**: Processamento transparente via Vorexpay com geração imediata de QR Code EMV e chave Copia e Cola, verificação via polling em tempo real a cada 3s e confirmação via webhook.
+* **Cartão de Crédito (Temporariamente Suspenso)**: A opção de Cartão de Crédito está comentada no frontend (`PaymentCheckoutModal.tsx`) e bloqueada defensivamente no backend (`/api/payments/checkout`) com HTTP 400 enquanto a integração direta e regras de parcelamento do gateway passam por atualização.
+
 ---
 
 ## 17. Arquitetura Frontend de Elite (Awwwards / Apple Standard)
