@@ -8,6 +8,12 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Geração Neural Real (WaveSpeed AI WAN 2.2 Realism) dos 30 Modelos com Fotos WebP & Sincronização PostgreSQL**:
+  - Geração completa de 60 imagens fotográficas analógicas em alta definição (30 fotos de perfil close-up 85mm + 30 fotos de corpo inteiro 35mm) utilizando o motor `wavespeed-ai/wan-2.2/text-to-image-realism`.
+  - Consistência rigorosa de semente e identidade visual de avatar entre o plano de perfil e o plano de corpo inteiro para os 30 modelos (10 mulheres, 10 homens, 5 idosas 60+ e 5 idosos 60+).
+  - Otimização automática em formato nativo WebP (~100-300 KB por fotografia) com upload e disponibilização imediata na VPS em `/var/www/vorixa-uploads/models/` com cache de 30 dias servido pelo Nginx.
+  - Sincronização das URLs em `lib/marketplace-models.ts` e execução do script de atualização no PostgreSQL (`scripts/update_models_webp_urls.sql`) com 30 registros atualizados com sucesso.
+  - 100% de aprovação na suíte de testes do Vitest (30 arquivos, 218 testes) e 0 erros em `tsc --noEmit`.
 - [x] **Expansão da Vitrine de Modelos (30 Novos Perfis IA), Comercialização de Master Prompts & Lookbook Duplo (Corpo Todo / Perfil)**:
   - Criação de 30 modelos fotográficos ultra-realistas com fichas técnicas e prompts 8K em `lib/marketplace-models.ts`:
     * 10 modelos mulheres, 10 modelos homens, 5 modelos mulheres idosas (60+) e 5 modelos homens idosos (60+).

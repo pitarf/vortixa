@@ -501,3 +501,44 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
   - Seletor de abas dedicado: "📸 Foto de Corpo Todo" vs "👤 Foto de Perfil".
   - Módulo protegido com prévia borrada (`blur-sm select-none pointer-events-none opacity-40`) e preço em créditos.
   - Ao adquirir: atualização em tempo real do estado visual para "Prompt Desbloqueado ✅", persistência em `localStorage` para acesso instantâneo na sessão, botão de 1 toque para cópia e atalho "Usar no Studio CREATE".
+
+---
+
+## 23. Pipeline de Geração Neural Realista dos 30 Modelos (WaveSpeed AI WAN 2.2 Realism) & Otimização WebP
+
+### 1. Seleção do Motor Neural e Configuração
+* **Provedor Homologado**: WaveSpeed AI (`https://api.wavespeed.ai/api/v3`).
+* **Motor Neural Selecionado**: `wavespeed-ai/wan-2.2/text-to-image-realism`.
+  - Especializado em fotografia analógica, poros visíveis e microtextura de pele natural (sem visual plástico, doll-look ou render CGI).
+* **Enquadramentos Padronizados**:
+  - **Foto de Perfil**: Close-up facial nítido com simulação de lente 85mm f/1.4, key light suave e foco nos olhos.
+  - **Foto de Corpo Todo**: Plano editorial aberto head-to-toe com simulação de lente 35mm f/2.8, vestimenta estruturada completa e postura anatômica real.
+* **Preservação de Identidade Visual**:
+  - Paridade estrita de semente (`seed`) e descritores fenotípicos compartilhados (cor dos olhos, traços faciais, tom de pele e corte de cabelo) entre ambos os planos.
+* **Formato e Eficiência**:
+  - Parâmetro nativo `output_format: "webp"` na API, gerando arquivos de 768x1344 com peso médio de apenas 100-300 KB por fotografia.
+
+### 2. Infraestrutura de Servidor e CDN Permanente
+* **Diretório Permanente na VPS**:
+  - Caminho físico: `/var/www/vorixa-uploads/models/` com permissões `755` e proprietário `ubuntu:ubuntu`.
+* **Roteamento Nginx**:
+  - Bloco `location /uploads/` mapeado via `alias /var/www/vorixa-uploads/` com cabeçalhos de alta performance:
+    ```nginx
+    location /uploads/ {
+        alias /var/www/vorixa-uploads/;
+        autoindex off;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000, immutable";
+        add_header Access-Control-Allow-Origin *;
+    }
+    ```
+* **URLs Públicas de Produção**:
+  - `https://vortixia.com.br/uploads/models/<slug>-profile.webp`
+  - `https://vortixia.com.br/uploads/models/<slug>-body.webp`
+
+### 3. Sincronização Automatizada com o Banco de Dados
+* **Scripts Operacionais**:
+  - `scripts/generate_all_models.js`: Orquestrador assíncrono com polling, download e envio SCP com suporte a continuidade (resume).
+  - `scripts/sync_generated_models_to_db.js`: Atualizador dinâmico de `lib/marketplace-models.ts` e gerador de SQL.
+  - `scripts/update_models_webp_urls.sql`: Atualização atômica das colunas `avatarUrl`, `coverUrl`, `gallery` (`text[]`) e `referenceFaceUrl` na tabela `MarketplaceModel` do PostgreSQL.
+

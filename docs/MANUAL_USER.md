@@ -640,6 +640,11 @@ A vitrine de modelos conecta os usuários a personas digitais hiper-realistas e 
     * Clique em **"Copiar Prompt"** para transferir o texto instantaneamente para sua área de transferência.
     * Clique em **"Usar no Studio CREATE"** para ser redirecionado para a ferramenta de criação com o prompt e a foto de referência já configurados automaticamente.
 
+### D. Catálogo Autêntico de 30 Modelos Fotorrealistas
+* **Fotos Reais em WebP de Alta Performance**:
+  - Todos os 30 modelos contam com pares de fotografias analógicas e ultrarrealistas geradas por inteligência artificial avançada (lentes 85mm e 35mm), sem visual sintético ou render 3D.
+  - Carregamento ultrarrápido permanente otimizado no formato WebP servido diretamente pela infraestrutura de alta disponibilidade do VORTIXIA.
+
 ---
 
 ## 10. Página Minha Conta & Programa de Afiliados (`/dashboard/account`)

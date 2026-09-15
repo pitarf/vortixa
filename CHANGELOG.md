@@ -5,6 +5,20 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.7.0] - 2026-09-15
+### Geração Real Neural (WaveSpeed AI WAN 2.2 Realism) dos 30 Modelos com Fotos de Perfil e Corpo Inteiro em WebP & Sincronização PostgreSQL
+- **Geração Neural 100% Real via WaveSpeed AI (WAN 2.2 Text-to-Image Realism)**:
+  - Produção de 60 fotografias analógicas e ultrarrealistas em alta definição (30 fotos de perfil close-up 85mm + 30 fotos de corpo inteiro 35mm).
+  - Fidelidade anatômica absoluta, consistência de semente e preservação da identidade de cada avatar entre os planos fechado e aberto.
+  - Eliminação completa de aspecto artificial, boneco plástico ou render CGI através de descritores de microtextura de pele crua, poros visíveis e iluminação natural de estúdio.
+- **Armazenamento e Otimização WebP Permanente na VPS**:
+  - Conversão nativa para formato `.webp` de carregamento ultrarrápido (~100-300 KB por fotografia).
+  - Armazenamento permanente no servidor de arquivos `/var/www/vorixa-uploads/models/` da VPS.
+  - Servido diretamente pelo Nginx em `https://vortixia.com.br/uploads/models/<slug>-profile.webp` e `<slug>-body.webp` com cache de 30 dias (`Cache-Control: public, max-age=2592000, immutable`).
+- **Sincronização no Catálogo e no Banco de Dados PostgreSQL**:
+  - Atualização integral de `lib/marketplace-models.ts` com as URLs finais de alta performance.
+  - Execução de script SQL (`scripts/update_models_webp_urls.sql`) no container `vorixa-postgres` com atualização atômica de `avatarUrl`, `coverUrl`, `gallery` e `referenceFaceUrl` para todos os 30 modelos.
+
 ## [2.6.0] - 2026-09-15
 ### Expansão da Vitrine de Modelos (30 Novos Perfis IA), Comercialização de Master Prompts & Lookbook Duplo (Corpo Todo / Perfil)
 - **Criação e Inclusão de 30 Novos Modelos Fotográficos de IA (`lib/marketplace-models.ts`)**:
