@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { MarketplaceModelItem, CATEGORY_LABELS } from "./types";
 import {
   X,
@@ -44,6 +45,27 @@ export function ModelDetailModal({
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [unlockedPrompt, setUnlockedPrompt] = useState<string | null>(null);
   const [isPurchasing, setIsPurchasing] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Listener de tecla ESC e trava de scroll
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") onClose();
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [isOpen, onClose]);
 
   // Inicialização e persistência local do status de desbloqueio
   useEffect(() => {
@@ -131,7 +153,7 @@ export function ModelDetailModal({
     };
   }, [model]);
 
-  if (!isOpen || !model) return null;
+  if (!isOpen || !model || !mounted || typeof document === "undefined") return null;
 
   const isAi = model.type === "AI";
   const categoryMeta = CATEGORY_LABELS[model.category] || { label: model.category, icon: "✨" };
@@ -215,9 +237,9 @@ export function ModelDetailModal({
     setActiveImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
   };
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 md:p-6 bg-black/90 backdrop-blur-xl animate-in fade-in duration-200 overscroll-contain"
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-0 sm:p-4 md:p-6 bg-black/90 backdrop-blur-xl animate-in fade-in duration-200 overscroll-contain"
       onClick={onClose}
     >
       <div
@@ -617,6 +639,7 @@ export function ModelDetailModal({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

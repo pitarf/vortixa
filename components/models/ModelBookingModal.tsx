@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { MarketplaceModelItem, CATEGORY_LABELS } from "./types";
 import { X, DollarSign, Send, MapPin, Loader2, ShieldCheck, Sparkles } from "lucide-react";
 import { toast } from "sonner";
@@ -22,19 +23,29 @@ export function ModelBookingModal({
   const [estimatedBudgetStr, setEstimatedBudgetStr] = useState("");
   const [projectType, setProjectType] = useState("Campanha Comercial (TV & Digital)");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Trava de Scroll do Body
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Trava de Scroll do Body e listener de ESC
   useEffect(() => {
     if (isOpen) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") onClose();
+      };
+      window.addEventListener("keydown", handleKeyDown);
       return () => {
         document.body.style.overflow = originalOverflow;
+        window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
-  if (!isOpen || !model) return null;
+  if (!isOpen || !model || !mounted || typeof document === "undefined") return null;
 
   const categoryMeta = CATEGORY_LABELS[model.category] || { label: model.category, icon: "✨" };
 
@@ -108,9 +119,9 @@ export function ModelBookingModal({
     }
   };
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 md:p-6 bg-black/90 backdrop-blur-xl animate-in fade-in duration-200 overscroll-contain"
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-0 sm:p-4 md:p-6 bg-black/90 backdrop-blur-xl animate-in fade-in duration-200 overscroll-contain"
       onClick={onClose}
     >
       <div
@@ -266,6 +277,7 @@ export function ModelBookingModal({
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

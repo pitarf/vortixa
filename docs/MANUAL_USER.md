@@ -501,7 +501,9 @@ O VORIXA utiliza o gateway oficial **Vorexpay** ([app.vorexpay.com](https://app.
 * **Monumento Hero Interativo**: Alterne entre os canais de demonstração visual (Seedance 2.0, Kling 2.6 Pro + Áudio, Kling v3 Motion Dança e Kling 2.1 Pro) em abas táteis estilo Apple para ver os resultados cinematográficos em tempo real.
 * **Showroom de Prova Real do Motion Control**: Compare lado a lado o vídeo guia de coreografia do TikTok, a foto da personagem criada por IA e a renderização final dançando com fidelidade corporal e áudio nativo sincronizado.
 
-### B. Studio CREATE & Seleção Rápida de Casting
+### B. Studio CREATE & Seleção Rápida de Motores de IA e Casting
+* **Seleção Rápida de Motor em 1 Toque no Celular**: Diretamente no card "Motor de IA", uma barra horizontal com chips táteis dos modelos permite alternar entre os motores com apenas 1 toque na tela do smartphone (ex: alternar instantaneamente entre Kling 2.6 Pro, Seedance 2.5, Wan 2.1 e Kling 2.1 sem abrir modais).
+* **Gaveta de Motores Adaptativa (Bottom-Sheet)**: Ao tocar em "Alterar modelo" ou "Ver todos", uma gaveta moderna desliza suavemente da base da tela no celular, permitindo comparar características detalhadas, custos em créditos, velocidade e badges exclusivas sem que a tela trave ou fique preta.
 * **Textarea Editorial**: Campo de prompt espaçoso com contagem precisa de caracteres e botão integrado de **Otimização por IA** (`PromptEngine`).
 * **Insígnia de Modelo Ativo**: Ao trabalhar com modelos da vitrine, uma insígnia de luxo (`ActiveShowcaseModelBanner`) confirma a consistência facial com o motor FLUX PuLID.
 * **Seletor Rápido de Casting (`QuickModelPickerModal`)**: Permite buscar e alternar modelos fotográficos ou virtuais diretamente na tela de criação sem recarregar a página.

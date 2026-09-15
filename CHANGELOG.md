@@ -5,6 +5,26 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.7.2] - 2026-09-15
+### Correção e Refatoração Mobile-First de Seleção de Modelos de IA em Todas as Abas (Studio Create & Ferramentas)
+- **Resolução do Bloqueio de Containing Block no Celular**:
+  - Correção do bug crítico em telas menores onde os modais de seleção de motor de IA ficavam aprisionados dentro do `containing block` gerado pelo `backdrop-filter: blur(...)` dos cards principais.
+  - Implementação de teletransporte com **React Portal (`createPortal(..., document.body)`)** e camada máxima `z-[99999]` em:
+    * `components/studio/StudioModelSelector.tsx` (utilizado em todas as 5 abas do Studio Create: Imagem, Vídeo, LipSync, Motion e Upscale).
+    * `components/studio/QuickModelPickerModal.tsx` (seletor rápido de modelos e casting do Studio).
+    * `components/models/QuickModelPickerModal.tsx` (seletor de modelos da vitrine).
+    * `components/tools/video/VideoModelSection.tsx` (seletor de modelos da ferramenta de vídeo).
+    * `components/models/ModelDetailModal.tsx` e `components/models/ModelBookingModal.tsx` (lookbook e propostas de contratação).
+- **Gaveta / Bottom-Sheet Adaptativa no Mobile**:
+  - Reestruturação visual completa no mobile: abertura a partir da base visível da tela (`max-h-[88dvh]` com suporte a `safe-area-inset-bottom`), rolagem interna touch fluida (`touch-pan-y no-scrollbar`), cabeçalho fixo e botão de fechar `X` com touch target ergonômico (`min-w-[44px] min-h-[44px]`).
+  - Fechamento imediato por toque no backdrop escuro e suporte à tecla `Escape`.
+- **Barra de Seleção Rápida de Motores em 1 Toque (Horizontal Touch Carousel)**:
+  - Adicionada barra deslizante com chips táteis dos modelos diretamente nos cards do `StudioModelSelector` e `VideoModelSection`.
+  - Permite aos usuários no celular alternarem entre motores de IA instantaneamente com um único toque direto na tela sem necessidade obrigatória de abrir o modal, mantendo também o botão "Alterar modelo" para o visualizador rico.
+- **Validação de Qualidade**:
+  - `tsc --noEmit`: 0 erros de compilação.
+  - Vitest: 30 arquivos e 218 testes aprovados (100% de cobertura).
+
 ## [2.7.1] - 2026-09-15
 ### Suspensão Temporária de Pagamento via Cartão de Crédito & Foco em Pix Instantâneo (Vorexpay)
 - **Modal de Checkout (`components/credits/PaymentCheckoutModal.tsx`)**:

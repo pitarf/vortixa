@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ChevronRight, Sparkles, X, Check, Zap } from "lucide-react";
 import { StudioTool, TOOLS, QUALITY_MODES } from "./types";
 import { ModelLogo } from "@/components/tools/video/ModelLogo";
+import { toast } from "sonner";
 
 interface StudioModelSelectorProps {
   activeTool: StudioTool;
@@ -25,14 +27,26 @@ export function StudioModelSelector({
   hasActiveShowcaseModel,
 }: StudioModelSelectorProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Previne rolagem da página ao abrir modal
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Previne rolagem da página ao abrir modal e fecha com tecla ESC
   useEffect(() => {
     if (isModalOpen) {
       const prev = document.body.style.overflow;
       document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          setIsModalOpen(false);
+        }
+      };
+      window.addEventListener("keydown", handleKeyDown);
       return () => {
         document.body.style.overflow = prev;
+        window.removeEventListener("keydown", handleKeyDown);
       };
     }
   }, [isModalOpen]);
@@ -142,6 +156,51 @@ export function StudioModelSelector({
               <ChevronRight className="w-3.5 h-3.5 text-violet-400" />
             </button>
           </div>
+
+          {/* Barra de Seleção Rápida de Motor no Celular (1 toque na tela) */}
+          <div className="pt-2 border-t border-white/[0.06]">
+            <div className="flex items-center justify-between gap-1 mb-1.5">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
+                Motores Rápidos:
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(true)}
+                className="text-[10px] text-violet-400 hover:text-violet-300 font-bold cursor-pointer"
+              >
+                Ver todos ({currentToolDef.models.length}) &gt;
+              </button>
+            </div>
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 touch-pan-x">
+              {currentToolDef.models.map((m) => {
+                const isCurrent = selectedModelId === m.id;
+                return (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => {
+                      onSelectModel(m.id);
+                      toast.success(`Motor "${m.name}" selecionado!`);
+                    }}
+                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-[11px] font-bold whitespace-nowrap transition-all cursor-pointer min-h-[38px] active:scale-95 shrink-0 ${
+                      isCurrent
+                        ? "bg-gradient-to-r from-violet-600 to-indigo-600 border-violet-400 text-white shadow-sm shadow-violet-600/30 ring-1 ring-violet-400/50"
+                        : "bg-[#13141B] border-white/[0.08] text-slate-300 hover:text-white hover:border-slate-700"
+                    }`}
+                  >
+                    <span>{m.name.split("(")[0].trim()}</span>
+                    <span
+                      className={`text-[9px] font-mono px-1 py-0.5 rounded ${
+                        isCurrent ? "bg-black/30 text-violet-200 font-bold" : "bg-black/40 text-slate-400"
+                      }`}
+                    >
+                      {m.cost}cr
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         {/* Seção Qualidade / Modo (apenas para ferramenta de imagem) */}
@@ -181,16 +240,32 @@ export function StudioModelSelector({
         )}
       </div>
 
-      {/* Modal Adaptativo de Troca de Motor de IA */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-2xl flex items-end sm:items-center justify-center p-0 sm:p-4 overscroll-contain animate-in fade-in duration-200">
-          <div className="bg-[#0E1017] border-t sm:border border-white/[0.1] rounded-t-3xl sm:rounded-3xl w-full max-w-xl max-h-[88dvh] sm:max-h-[85vh] p-4 sm:p-6 space-y-4 shadow-2xl animate-in slide-in-from-bottom-5 sm:zoom-in-95 duration-200 flex flex-col pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:pb-6">
+      {/* Modal Adaptativo Teletransportado via React Portal para document.body (Escapa qualquer containing block) */}
+      {mounted && isModalOpen && typeof document !== "undefined" && createPortal(
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsModalOpen(false);
+          }}
+          className="fixed inset-0 z-[99999] bg-black/85 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 overscroll-contain animate-in fade-in duration-200"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="studio-model-modal-title"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-[#0E1017] border-t sm:border border-white/[0.1] rounded-t-3xl sm:rounded-3xl w-full max-w-xl max-h-[88dvh] sm:max-h-[85vh] p-4 sm:p-6 space-y-4 shadow-2xl animate-in slide-in-from-bottom-5 sm:zoom-in-95 duration-200 flex flex-col pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:pb-6"
+          >
             <div className="flex items-center justify-between border-b border-white/[0.08] pb-3.5 shrink-0">
               <div className="space-y-0.5">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-violet-400" />
-                  Selecione o Motor de IA
-                </h3>
+                  <h3 id="studio-model-modal-title" className="text-base font-bold text-white">
+                    Selecione o Motor de IA
+                  </h3>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 font-bold uppercase tracking-wider">
+                    {currentToolDef.name}
+                  </span>
+                </div>
                 <p className="text-xs text-slate-400">
                   {activeTool === "image"
                     ? "Cada motor oferece fidelidade, estilo e velocidade distintos."
@@ -205,7 +280,7 @@ export function StudioModelSelector({
                 className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-[#13141B] hover:bg-[#1B1D28] border border-white/[0.08] text-slate-400 hover:text-white cursor-pointer transition-colors"
                 aria-label="Fechar modal de motores"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
@@ -218,8 +293,9 @@ export function StudioModelSelector({
                     onClick={() => {
                       onSelectModel(model.id);
                       setIsModalOpen(false);
+                      toast.success(`Motor "${model.name}" selecionado!`);
                     }}
-                    className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 cursor-pointer transition-all duration-200 min-h-[48px] ${
+                    className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 cursor-pointer transition-all duration-200 min-h-[56px] select-none touch-manipulation active:scale-[0.99] ${
                       isSelected
                         ? "bg-gradient-to-r from-violet-950/40 via-[#13141B] to-[#0E1017] border-violet-500 shadow-md shadow-violet-500/20 ring-1 ring-violet-500/50"
                         : "bg-[#070709] border-white/[0.06] hover:border-slate-700 hover:bg-[#0c0d12]"
@@ -271,7 +347,8 @@ export function StudioModelSelector({
               })}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

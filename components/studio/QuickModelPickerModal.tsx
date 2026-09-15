@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { MarketplaceModelItem, CATEGORY_LABELS } from "@/components/models/types";
 import { FALLBACK_MARKETPLACE_MODELS } from "@/lib/marketplace-models";
 import { X, Search, Sparkles, User, ExternalLink } from "lucide-react";
@@ -21,17 +22,27 @@ export function QuickModelPickerModal({
   const [models, setModels] = useState<MarketplaceModelItem[]>(FALLBACK_MARKETPLACE_MODELS);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<"ALL" | "AI" | "REAL">("ALL");
+  const [mounted, setMounted] = useState(false);
 
-  // Bloqueio do Scroll de Fundo ao Abrir o Modal
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Bloqueio do Scroll de Fundo e listener de ESC ao Abrir o Modal
   useEffect(() => {
     if (isOpen) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") onClose();
+      };
+      window.addEventListener("keydown", handleKeyDown);
       return () => {
         document.body.style.overflow = originalOverflow;
+        window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -53,7 +64,7 @@ export function QuickModelPickerModal({
     fetchModels();
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted || typeof document === "undefined") return null;
 
   const filteredModels = models.filter((m) => {
     if (typeFilter !== "ALL" && m.type !== typeFilter) return false;
@@ -67,10 +78,16 @@ export function QuickModelPickerModal({
     return true;
   });
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 md:p-6 bg-black/85 backdrop-blur-2xl overscroll-contain animate-in fade-in duration-200">
+  return createPortal(
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-[99999] flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md overscroll-contain animate-in fade-in duration-200"
+    >
       <div
-        className="relative w-full sm:max-w-4xl h-[100dvh] sm:h-auto sm:max-h-[90vh] rounded-none sm:rounded-3xl bg-[#0E1017] border-0 sm:border border-white/[0.08] shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full sm:max-w-4xl h-[92dvh] sm:h-auto sm:max-h-[90vh] rounded-t-3xl sm:rounded-3xl bg-[#0E1017] border-t sm:border border-white/[0.08] shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col animate-in slide-in-from-bottom-5 sm:zoom-in-95 duration-200 pb-[max(1rem,env(safe-area-inset-bottom))] sm:pb-0"
         role="dialog"
         aria-modal="true"
       >
@@ -278,6 +295,7 @@ export function QuickModelPickerModal({
           </a>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

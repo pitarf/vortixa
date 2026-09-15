@@ -8,6 +8,12 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Correção e Refatoração Mobile-First de Seleção de Modelos de IA em Todas as Abas (Studio Create & Ferramentas)**:
+  - Eliminação definitiva do bloqueio de containing block causado por `backdrop-filter` através de teletransporte com React Portal (`createPortal(..., document.body)`) e `z-[99999]`.
+  - Aplicado nos componentes `StudioModelSelector` (5 abas do Studio Create: Imagem, Vídeo, LipSync, Motion, Upscale), `QuickModelPickerModal` (Studio e Vitrine), `VideoModelSection`, `ModelDetailModal` e `ModelBookingModal`.
+  - Implementação de gaveta/bottom-sheet no mobile (`max-h-[88dvh]`, `overscroll-contain`, safe-area bottom) com cabeçalho fixo, botão de fechar `X` com touch target >= 44px e fechamento por toque no backdrop ou tecla ESC.
+  - Implementação de carrossel touch horizontal de seleção rápida de modelos diretamente no card, permitindo troca de IA com 1 único toque direto no celular.
+  - 100% de aprovação na suíte de testes do Vitest (218 testes) e 0 erros em `tsc --noEmit`.
 - [x] **Suspensão Temporária de Pagamento via Cartão de Crédito & Foco em Pix Instantâneo (Vorexpay)**:
   - Comentada a opção de seleção de Cartão de Crédito e o formulário de dados de cartão em `components/credits/PaymentCheckoutModal.tsx`.
   - Inserida guarda defensiva no backend (`app/api/payments/checkout/route.ts`) rejeitando requisições de cartão com HTTP 400 e orientação para Pix.

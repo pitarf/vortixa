@@ -416,6 +416,13 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
 ### 4. Gestão de Modais, Drawers e Teclado Virtual Móvel
 * **Trava de Rolagem de Fundo (Body Scroll Lock)**:
   - Ao abrir gavetas móveis (`DashboardShell`) ou modais de casting e checkout (`overscroll-contain`), o `body` recebe `document.body.style.overflow = "hidden"`, impedindo que o fundo role involuntariamente.
+* **Teletransporte de Modais com React Portal (`createPortal`)**:
+  - Elementos ancestrais com `backdrop-filter: blur(...)`, `filter` ou `transform` criam um *novo containing block* no W3C CSS, quebrando elementos filhos com `position: fixed`.
+  - Todos os modais de seleção de motores de IA (`StudioModelSelector`, `QuickModelPickerModal`, `VideoModelSection`, `ModelDetailModal`, `ModelBookingModal`) devem ser obrigatoriamente teletransportados para `document.body` via `createPortal(..., document.body)` com `z-[99999]`, garantindo fixação correta na viewport e eliminando sobreposições com a barra fixa inferior (`z-40`).
+* **Gaveta / Bottom-Sheet Mobile**:
+  - No celular, os modais devem adotar layout de gaveta deslizando da base (`items-end`, `rounded-t-3xl`, `max-h-[88dvh]`, `pb-[max(1.5rem,env(safe-area-inset-bottom))]`), com cabeçalho fixo, botão de fechar `X` (`>= 44x44px`), fechamento por toque no backdrop e por tecla ESC.
+* **Seleção Rápida Horizontal (1 Toque)**:
+  - Componentes de seleção de IA devem disponibilizar uma barra horizontal com chips táteis dos modelos diretamente no card, permitindo troca imediata com 1 toque no celular sem obrigar a abertura do modal.
 * **Altura Dinâmica do Viewport**:
   - Para formulários de autenticação e modais full-screen, utilizar `min-h-dvh` (Dynamic Viewport Height) em vez de `h-screen`, prevenindo que a abertura do teclado virtual no iOS/Android oculte campos de input ou botões de submissão.
 * **Inputs de Formulário**:
