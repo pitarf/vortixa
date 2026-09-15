@@ -140,7 +140,7 @@ export async function POST(req: Request) {
       }
     );
 
-    // 6. Retorno padronizado em JSON
+    // 6. Retorno padronizado em JSON com suporte a camelCase e snake_case
     return NextResponse.json({
       success: true,
       checkoutUrl: result.checkoutUrl,
@@ -151,6 +151,8 @@ export async function POST(req: Request) {
       gateway: result.gateway,
       pixCode: result.pixCode,
       pixQrCode: result.pixQrCode,
+      pix_copy_paste: result.pixCode,
+      pix_qr_code: result.pixQrCode,
     });
   } catch (error: any) {
     console.error("Erro na rota de checkout:", error);

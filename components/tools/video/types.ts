@@ -29,6 +29,16 @@ export interface VideoRecentCreation {
 
 export const VIDEO_MODELS: VideoModelDef[] = [
   {
+    id: "fal-ai/kling-video/v2.6/pro/image-to-video",
+    name: "Kling 2.6 Pro",
+    badge: "Áudio & Fala 🗣️",
+    cost: 18,
+    description: "Vídeos ultra realistas com fala nativa e efeitos sonoros sincronizados em português.",
+    speed: "~ 50s",
+    hasNativeAudio: true,
+    thumb: "/media/landing/gallery/perfume_commercial.jpg",
+  },
+  {
     id: "fal-ai/kling-video/v2.1/pro/image-to-video",
     name: "Kling 2.1 Pro",
     badge: "RECOMENDADO",

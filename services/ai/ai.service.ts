@@ -43,7 +43,7 @@ export class AIService {
       }
       // Suporte a modelos dinâmicos da WaveSpeed / Hot / Image-Edit
       if (!customModel && (request.modelId.startsWith("wavespeed") || request.modelId.includes("spicy") || request.modelId.includes("chroma") || request.modelId.includes("qwen") || request.modelId.includes("hidream") || request.modelId.includes("edit"))) {
-        const isVideo = request.modelId.includes("video") || request.modelId.includes("spicy") || request.modelId.includes("wan") || request.modelId.includes("seedance") || (request.modelId.includes("minimax") && !request.modelId.includes("image-edit"));
+        const isVideo = (request.modelId.includes("video") || request.modelId.includes("spicy") || (request.modelId.includes("wan") && !request.modelId.includes("image")) || request.modelId.includes("seedance") || (request.modelId.includes("minimax") && !request.modelId.includes("image-edit")));
         const isEditPlus = request.modelId.includes("edit-plus");
         const defaultCost = request.modelId.includes("seedance") ? 30 : request.modelId.includes("minimax") && isVideo ? 18 : isVideo ? 15 : isEditPlus ? 4 : 3;
         const defaultApiCost = request.modelId.includes("seedance") ? 0.90 : request.modelId.includes("minimax") && isVideo ? 0.20 : isVideo ? 0.15 : isEditPlus ? 0.025 : 0.02;
@@ -106,6 +106,10 @@ export class AIService {
           friendlyName = "Kling 3.0 Pro Ultra";
           defaultCost = 20;
           defaultApiCost = 0.22;
+        } else if (request.modelId.includes("kling-video/v2.6")) {
+          friendlyName = "Kling 2.6 Pro (Vídeo & Fala Nativa)";
+          defaultCost = 18;
+          defaultApiCost = 0.20;
         } else if (request.modelId.includes("sync-lipsync") || request.modelId.includes("latentsync")) {
           friendlyName = "Sync Audio LipSync";
           defaultCost = 8;
@@ -118,6 +122,10 @@ export class AIService {
           friendlyName = "ByteDance Seedance 2.0";
           defaultCost = 20;
           defaultApiCost = 0.20;
+        } else if (request.modelId.includes("flux-pulid")) {
+          friendlyName = "FLUX PuLID (Mesmo Rosto)";
+          defaultCost = 4;
+          defaultApiCost = 0.05;
         } else if (request.modelId.includes("flux-pro")) {
           friendlyName = "FLUX Pro Ultra";
           defaultCost = 4;

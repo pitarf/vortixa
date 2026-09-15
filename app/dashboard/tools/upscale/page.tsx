@@ -3,6 +3,7 @@
 import React from "react";
 import { GenerationLayout } from "@/components/ai/generation-layout";
 import { FileUploader } from "@/components/ai/file-uploader";
+import { useSearchParams } from "next/navigation";
 import { Zap } from "lucide-react";
 
 const UPSCALE_MODELS = [
@@ -17,6 +18,8 @@ const UPSCALE_MODELS = [
 ];
 
 export default function UpscaleToolPage() {
+  const searchParams = useSearchParams();
+  const initialMedia = searchParams.get("video") || searchParams.get("sourceUrl") || searchParams.get("image") || "";
   const selectedModel = UPSCALE_MODELS[0];
 
   return (
@@ -27,7 +30,7 @@ export default function UpscaleToolPage() {
       selectedModelId={selectedModel.id}
       customCost={selectedModel.cost}
       initialInputs={{
-        video_url: "",
+        video_url: initialMedia,
         scale_factor: "2",
       }}
     >

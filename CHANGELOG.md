@@ -5,6 +5,35 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.7.4] - 2026-09-15
+### Resolução Integral de Pontas Soltas: Motores de IA, Studio Create, Vitrine, Checkout e Segurança
+- **Motores de IA & Provedor Fal.ai (`services/ai/providers/fal-ai.provider.ts`)**:
+  - Adicionado suporte a fallback automático para Kling 2.1 Pro (`fal-ai/kling-video/v2.1/pro/text-to-video`) quando invocado sem imagem de entrada.
+  - Normalização e suporte a `camera_movement` e `camera_motion` com injeção automática de diretivas de câmera no prompt.
+- **Classificação & Auto-Registro Dinâmico (`services/ai/ai.service.ts`)**:
+  - Corrigida detecção de vídeo para não classificar modelos de imagem Wan (`wan-2.2/text-to-image-realism`) como vídeo, cobrando os créditos de imagem corretos.
+  - Adicionados `fal-ai/flux-pulid` (4 créditos, Consistência Facial) e `fal-ai/kling-video/v2.6` (18 créditos, Vídeo & Fala Nativa) no auto-registro dinâmico resiliente.
+- **Studio Create (`app/dashboard/create/page.tsx` & `components/studio/*`)**:
+  - Duração de 30s ("Cinema") restrita condicionalmente aos modelos que suportam (ex: ByteDance Seedance 2.5).
+  - Adicionados blocos de upload de personagem e vídeo de referência para Motion Control e mídia para Upscale 4K.
+  - Habilitado suporte a fotos estáticas para o avatar no LipSync quando selecionado `bytedance/omnihuman`.
+  - Adicionado envio de `camera_movement` no payload de vídeo.
+  - Adicionado `fal-ai/kling-video/v2.6/pro/image-to-video` em `VIDEO_MODELS`.
+- **Ferramentas Dedicadas & Pré-Carregamento (`app/dashboard/tools/upscale/page.tsx`)**:
+  - Suporte a query params (`?video=...`, `?sourceUrl=...`, `?image=...`) para pré-carregamento automático de mídia na ferramenta de Upscale.
+- **Fintech & Checkout (`app/dashboard/credits/page.tsx`, `packages/route.ts`, `seed.ts`)**:
+  - Inserido e auto-upsertado o pacote `pkg-2500` (*Studio Ultra*, 2.500 créditos + 500 bônus por R$ 349,90).
+  - Consulta dinâmica de status de pagamento via `/api/payments/status/${paymentId}` no retorno do checkout.
+  - `PaymentFailureModal` focado exclusivamente em Pix Instantâneo (removidas menções a cartão de crédito).
+  - Aliases `pix_copy_paste` e `pix_qr_code` adicionados na resposta do checkout.
+- **Segurança & Controle de Acesso (`middleware.ts` & `auth.config.ts`)**:
+  - Criado Edge Middleware `middleware.ts` para proteção de rotas `/dashboard/*`, `/tools/*`, `/credits/*` e `/admin/*`.
+  - Bloqueio estrito de `/dashboard/admin` e `/admin` para usuários com role `ADMIN` no `auth.config.ts` e redirecionamento de 401/403 para `/dashboard`.
+  - Links legais do rodapé atualizados para rotas existentes (`/termos` e `/termos#lgpd`).
+- **Validação de Qualidade**:
+  - `tsc --noEmit`: 0 erros de compilação.
+  - Suíte Vitest com mocks: 31 arquivos e 222 testes 100% aprovados.
+
 ## [2.7.3] - 2026-09-15
 ### Correção e Resiliência da Geração do Kling 3.0 Standard (Fal.ai) & Auto-Registro Dinâmico
 - **Correção de Modelo Não Encontrado no Sistema**:

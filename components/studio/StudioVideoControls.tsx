@@ -57,11 +57,13 @@ export function StudioVideoControls({
             <span className="text-[10px] font-mono text-cyan-400 font-bold">{duration} segundos</span>
           </div>
 
-          <div className="grid grid-cols-3 gap-1.5 p-1 bg-[#0D0E12] rounded-xl border border-white/[0.04]">
+          <div className={`grid ${selectedModelId.includes("seedance") ? "grid-cols-3" : "grid-cols-2"} gap-1.5 p-1 bg-[#0D0E12] rounded-xl border border-white/[0.04]`}>
             {[
               { val: "5", label: "5s", badge: "Padrão" },
               { val: "10", label: "10s", badge: "2x cr" },
-              { val: "30", label: "30s", badge: "Cinema" },
+              ...(selectedModelId.includes("seedance")
+                ? [{ val: "30", label: "30s", badge: "Cinema" }]
+                : []),
             ].map((d) => {
               const isSelected = duration === d.val;
               return (

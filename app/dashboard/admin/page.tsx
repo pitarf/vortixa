@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { 
   ShieldCheck, 
   DollarSign, 
@@ -39,6 +40,7 @@ interface BrandingData {
 }
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
   const [stats, setStats] = useState<ExecutiveDashboardStats | null>(null);
   const [currentPeriod, setCurrentPeriod] = useState<TimePeriod>("today");
   const [customStartDate, setCustomStartDate] = useState("");
@@ -81,6 +83,7 @@ export default function AdminDashboardPage() {
 
       if (res.status === 401 || res.status === 403) {
         toast.error("Acesso restrito. Apenas administradores podem visualizar esta página.");
+        router.replace("/dashboard");
         return;
       }
 

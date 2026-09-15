@@ -145,6 +145,8 @@ export class FalAIProvider implements IAIProvider {
             } else {
               payload.modelTechnicalName = "fal-ai/kling-video/v3/pro/text-to-video";
             }
+          } else if (payload.modelTechnicalName.includes("v2.1")) {
+            payload.modelTechnicalName = "fal-ai/kling-video/v2.1/pro/text-to-video";
           } else if (payload.modelTechnicalName.includes("v1.5")) {
             payload.modelTechnicalName = "fal-ai/kling-video/v1.5/pro/text-to-video";
           }
@@ -289,7 +291,8 @@ export class FalAIProvider implements IAIProvider {
         }
 
         // 3. Movimento de Câmera (injetar no prompt caso o modelo não possua slider dedicado de API)
-        if (modelInputs.camera_movement && modelInputs.camera_movement !== "none") {
+        const cameraMove = modelInputs.camera_movement || modelInputs.camera_motion;
+        if (cameraMove && cameraMove !== "none") {
           const cameraDirectives: Record<string, string> = {
             zoom_in: "slow smooth cinematic camera zoom in, push in towards subject",
             zoom_out: "slow cinematic camera zoom out, revealing wider surroundings",
@@ -298,7 +301,7 @@ export class FalAIProvider implements IAIProvider {
             orbit_360: "360 degree orbital camera movement revolving around the subject",
             crane_down: "dramatic descending crane camera shot moving downward",
           };
-          const directive = cameraDirectives[modelInputs.camera_movement];
+          const directive = cameraDirectives[cameraMove];
           if (directive && modelInputs.prompt && !modelInputs.prompt.toLowerCase().includes(directive.toLowerCase())) {
             modelInputs.prompt = `${modelInputs.prompt.trim()}, ${directive}`;
           }

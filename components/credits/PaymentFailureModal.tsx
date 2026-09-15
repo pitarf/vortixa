@@ -67,10 +67,10 @@ export function PaymentFailureModal({
                 Para pagamentos via Pix, realize a transferência dentro dos 15 minutos de validade do QR Code.
               </li>
               <li>
-                Para cartão de crédito, verifique o limite disponível ou liberação temporária no app do banco emissor.
+                Certifique-se de copiar o código Pix integral ou escanear a chave QR diretamente no app do seu banco.
               </li>
               <li>
-                Você pode tentar novamente selecionando o <strong>Pix Instantâneo (Vorexpay)</strong> para aprovação em 3 segundos.
+                Recomendamos tentar novamente gerando uma nova chave do <strong>Pix Instantâneo (Vorexpay)</strong> para compensação em menos de 3 segundos.
               </li>
             </ul>
           </div>

@@ -189,15 +189,37 @@ function CreditsContent() {
     const paymentId = searchParams.get("payment_id") || searchParams.get("paymentId");
 
     if (status === "success" || status === "approved") {
-      setSuccessDetails({
-        paymentId: paymentId || orderId || "tx-confirmada",
-        orderId: orderId || undefined,
-        credits: 550,
-        amountCents: 7990,
-        newBalance: userInfo.balance + 550,
-      });
-      setIsSuccessModalOpen(true);
-      fetchCreditsData();
+      const fetchStatus = async () => {
+        let credits = 500;
+        let amountCents = 7990;
+        let newBal = userInfo.balance + 500;
+
+        if (paymentId) {
+          try {
+            const res = await fetch(`/api/payments/status/${paymentId}`);
+            if (res.ok) {
+              const data = await res.json();
+              if (data.creditsGranted) credits = data.creditsGranted;
+              if (data.amountCents) amountCents = data.amountCents;
+              if (data.currentBalance !== undefined) newBal = data.currentBalance;
+            }
+          } catch (e) {
+            console.warn("Erro ao obter dados dinâmicos do pagamento:", e);
+          }
+        }
+
+        setSuccessDetails({
+          paymentId: paymentId || orderId || "tx-confirmada",
+          orderId: orderId || undefined,
+          credits,
+          amountCents,
+          newBalance: newBal,
+        });
+        setIsSuccessModalOpen(true);
+        fetchCreditsData();
+      };
+
+      fetchStatus();
       router.replace("/dashboard/credits");
     } else if (status === "failure" || status === "rejected") {
       setFailureReason("O pagamento foi cancelado ou não aprovado pela instituição financeira.");

@@ -377,6 +377,7 @@ export default function StudioCreatePage() {
     } else if (activeTool === "video") {
       inputs.duration = duration;
       inputs.camera_motion = cameraMotion;
+      inputs.camera_movement = cameraMotion;
       inputs.quality = videoQuality;
       inputs.resolution = videoQuality === "high" ? "1080p" : "720p";
       if (videoMode === "image" && referenceImageUrl) inputs.image_url = referenceImageUrl;
@@ -387,6 +388,7 @@ export default function StudioCreatePage() {
       }
     } else if (activeTool === "lipsync") {
       inputs.video_url = sourceVideoUrl || resultMediaUrl;
+      inputs.image_url = sourceVideoUrl || referenceImageUrl || resultMediaUrl;
       inputs.audio_url = sourceAudioUrl;
     } else if (activeTool === "motion") {
       inputs.character_image_url = characterImageUrl || referenceImageUrl;
@@ -843,8 +845,8 @@ export default function StudioCreatePage() {
           {activeTool === "lipsync" && (
             <div className="space-y-4">
               <FileUploader
-                accept="video/*"
-                label="1. Vídeo do Personagem"
+                accept="video/*,image/*"
+                label={selectedModelId.includes("omnihuman") ? "1. Vídeo ou Foto do Personagem" : "1. Vídeo do Personagem"}
                 onUploadSuccess={(url) => setSourceVideoUrl(url)}
                 onClear={() => setSourceVideoUrl("")}
               />
@@ -852,6 +854,42 @@ export default function StudioCreatePage() {
                 label="2. Áudio de Fala do Personagem"
                 audioUrl={sourceAudioUrl}
                 onAudioChange={(url) => setSourceAudioUrl(url)}
+              />
+            </div>
+          )}
+
+          {/* Controles Específicos para Motion Control */}
+          {activeTool === "motion" && (
+            <div className="space-y-4">
+              <FileUploader
+                accept="video/*"
+                label="1. Vídeo de Referência (Movimento / Dança / Expressão)"
+                onUploadSuccess={(url) => setReferenceVideoUrl(url)}
+                onClear={() => setReferenceVideoUrl("")}
+              />
+              <FileUploader
+                accept="image/*"
+                label="2. Personagem Alvo (Foto ou Ilustração do Rosto/Corpo)"
+                onUploadSuccess={(url) => setCharacterImageUrl(url)}
+                onClear={() => setCharacterImageUrl("")}
+              />
+            </div>
+          )}
+
+          {/* Controles Específicos para Upscale 4K */}
+          {activeTool === "upscale" && (
+            <div className="space-y-4">
+              <FileUploader
+                accept="image/*,video/*"
+                label="1. Mídia para Aprimoramento e Restauração em 4K"
+                onUploadSuccess={(url) => {
+                  setResultMediaUrl(url);
+                  setReferenceImageUrl(url);
+                }}
+                onClear={() => {
+                  setResultMediaUrl("");
+                  setReferenceImageUrl("");
+                }}
               />
             </div>
           )}

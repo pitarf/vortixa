@@ -19,7 +19,7 @@ export const authConfig = {
       const isDashboard = nextUrl.pathname.startsWith("/dashboard") || 
                           nextUrl.pathname.startsWith("/tools") ||
                           nextUrl.pathname.startsWith("/credits");
-      const isAdmin = nextUrl.pathname.startsWith("/admin");
+      const isAdmin = nextUrl.pathname.startsWith("/dashboard/admin") || nextUrl.pathname.startsWith("/admin");
 
       if (isAdmin) {
         return isLoggedIn && (auth?.user as any)?.role === "ADMIN";

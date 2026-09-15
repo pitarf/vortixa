@@ -111,12 +111,12 @@ export function LandingFooter() {
               </h5>
               <ul className="space-y-2 text-slate-400">
                 <li>
-                  <Link href="/terms" className="hover:text-white transition-colors py-1 inline-block min-h-[36px] flex items-center">
+                  <Link href="/termos" className="hover:text-white transition-colors py-1 inline-block min-h-[36px] flex items-center">
                     Termos de Uso
                   </Link>
                 </li>
                 <li>
-                  <Link href="/privacy" className="hover:text-white transition-colors py-1 inline-block min-h-[36px] flex items-center">
+                  <Link href="/termos#lgpd" className="hover:text-white transition-colors py-1 inline-block min-h-[36px] flex items-center">
                     Política de Privacidade (LGPD)
                   </Link>
                 </li>

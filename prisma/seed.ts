@@ -76,6 +76,33 @@ async function main() {
       toolDesc: 'Avatar humano ultra-realista com sincronia labial, respiração e gestos expressivos a partir de 1 foto + áudio.',
     },
     {
+      name: 'FLUX PuLID (Mesmo Rosto)',
+      technicalName: 'fal-ai/flux-pulid',
+      creditCost: 4,
+      apiUnitCost: 0.05,
+      toolSlug: 'flux-pulid',
+      toolName: 'FLUX PuLID (Consistência Facial)',
+      toolDesc: 'Geração de imagem com preservação facial estrita a partir de foto de referência.',
+    },
+    {
+      name: 'ByteDance Seedance 2.0',
+      technicalName: 'fal-ai/bytedance/seedance-2.0',
+      creditCost: 20,
+      apiUnitCost: 0.20,
+      toolSlug: 'seedance-2-0',
+      toolName: 'ByteDance Seedance 2.0',
+      toolDesc: 'Motor líder com física realista e síntese de áudio nativo sincronizado.',
+    },
+    {
+      name: 'Kling 2.6 Pro (Áudio & Fala Nativa)',
+      technicalName: 'fal-ai/kling-video/v2.6/pro/image-to-video',
+      creditCost: 18,
+      apiUnitCost: 0.20,
+      toolSlug: 'kling-2-6-pro',
+      toolName: 'Kling 2.6 Pro',
+      toolDesc: 'Vídeos ultra realistas com fala nativa e efeitos sonoros sincronizados em português.',
+    },
+    {
       name: 'Kling 2.1 Pro',
       technicalName: 'fal-ai/kling-video/v2.1/pro/image-to-video',
       creditCost: 15,
@@ -383,6 +410,7 @@ async function main() {
     { id: 'pkg-100', name: 'Iniciante', description: 'Ideal para testes rápidos.', credits: 100, priceCents: 1990, bonus: 0, order: 1 },
     { id: 'pkg-500', name: 'Profissional', description: 'Nosso pacote mais vendido.', credits: 500, priceCents: 7990, bonus: 50, order: 2 },
     { id: 'pkg-1000', name: 'Criador', description: 'Para quem precisa de alta escala.', credits: 1000, priceCents: 14990, bonus: 150, order: 3 },
+    { id: 'pkg-2500', name: 'Studio Ultra', description: 'Volume máximo profissional para agências e criadores.', credits: 2500, priceCents: 34990, bonus: 500, order: 4 },
   ];
 
   for (const p of packages) {

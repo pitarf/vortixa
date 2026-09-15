@@ -8,6 +8,24 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Resolução Integral de Pontas Soltas (Motores, Studio Create, Vitrine, Checkout e Segurança)**:
+  - Adicionado fallback para Kling 2.1 Pro (`fal-ai/kling-video/v2.1/pro/text-to-video`) quando sem imagem no `fal-ai.provider.ts`.
+  - Normalização de `camera_movement` e `camera_motion` com injeção automática de diretivas de câmera cinematográfica.
+  - Correção na classificação isVideo para não debitar créditos de vídeo em modelos de imagem Wan (`wan-2.2/text-to-image-realism`).
+  - Auto-registro dinâmico contemplando `flux-pulid` (4 cr) e `kling-video/v2.6` (18 cr) no `ai.service.ts`.
+  - Duração de 30s ("Cinema") restrita a modelos compatíveis (ByteDance Seedance 2.5) em `StudioVideoControls.tsx`.
+  - Adicionados campos de upload de personagem/vídeo guia para Motion Control e mídia para Upscale 4K em `create/page.tsx`.
+  - Suporte a fotos estáticas para o avatar no LipSync (`bytedance/omnihuman`).
+  - Adicionado envio de `camera_movement` no payload de vídeo.
+  - Adicionado `fal-ai/kling-video/v2.6/pro/image-to-video` em `VIDEO_MODELS`.
+  - Suporte a pré-carregamento via searchParams na ferramenta de Upscale (`/dashboard/tools/upscale`).
+  - Auto-upsert do pacote `pkg-2500` (*Studio Ultra*, 2.500 créditos + 500 bônus por R$ 349,90) em `seed.ts` e `packages/route.ts`.
+  - Consulta dinâmica de status de pagamento via `/api/payments/status/${paymentId}` no retorno de checkout em `credits/page.tsx`.
+  - `PaymentFailureModal` focado exclusivamente em Pix Instantâneo.
+  - Aliases `pix_copy_paste` e `pix_qr_code` adicionados na resposta do checkout.
+  - Criação de `middleware.ts` com proteção de rotas privadas e bloqueio estrito de `/dashboard/admin` e `/admin` para usuários ADMIN com redirecionamento de 401/403 para `/dashboard`.
+  - Links legais do rodapé atualizados para `/termos` e `/termos#lgpd`.
+  - Validação completa com 100% de aprovação (31 arquivos de teste e 222 testes) e 0 erros em `tsc --noEmit`.
 - [x] **Correção da Falha do Kling 3.0 Standard (fal-ai/kling-video/v3/standard/image-to-video) & Auto-Registro Dinâmico**:
   - Resolução da causa raiz do erro de modelo não encontrado no sistema: sincronização do modelo `fal-ai/kling-video/v3/standard/image-to-video` (15 créditos) e `fal-ai/sync-lipsync` (8 créditos) na tabela relacional `AIModel` do PostgreSQL de produção e inserção no `prisma/seed.ts`.
   - Implementação de auto-registro resiliente no `AIService.submitJob`: modelos oficiais da família `fal.ai` chamados pelo frontend que ainda não constem na base são auto-registrados dinamicamente sem lançar erro ao usuário.
