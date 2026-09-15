@@ -1,4 +1,8 @@
-require('dotenv').config();
+try {
+  require('dotenv').config();
+} catch (e) {
+  // Em produção no Docker as variáveis de ambiente já estão injetadas
+}
 const fs = require('fs');
 const path = require('path');
 const { PrismaClient } = require('@prisma/client');
