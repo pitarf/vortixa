@@ -77,6 +77,78 @@ export class AIService {
           });
         }
       }
+
+      // Suporte a modelos dinâmicos da fal.ai (Kling 3.0 Standard, Sync LipSync, etc.)
+      if (!customModel && (request.modelId.startsWith("fal-ai") || request.modelId.startsWith("fal/"))) {
+        let falProvider = await prisma.aIProvider.findUnique({
+          where: { name: "fal.ai" },
+        });
+        if (!falProvider) {
+          falProvider = await prisma.aIProvider.findFirst({
+            where: { name: { contains: "fal" } },
+          });
+        }
+        if (!falProvider) {
+          falProvider = await prisma.aIProvider.create({
+            data: { name: "fal.ai", status: true },
+          });
+        }
+
+        let defaultCost = 15;
+        let defaultApiCost = 0.15;
+        let friendlyName = request.modelId;
+
+        if (request.modelId.includes("kling-video/v3/standard")) {
+          friendlyName = "Kling 3.0 Standard";
+          defaultCost = 15;
+          defaultApiCost = 0.15;
+        } else if (request.modelId.includes("kling-video/v3/pro")) {
+          friendlyName = "Kling 3.0 Pro Ultra";
+          defaultCost = 20;
+          defaultApiCost = 0.22;
+        } else if (request.modelId.includes("sync-lipsync") || request.modelId.includes("latentsync")) {
+          friendlyName = "Sync Audio LipSync";
+          defaultCost = 8;
+          defaultApiCost = 0.08;
+        } else if (request.modelId.includes("seedance-2.5")) {
+          friendlyName = "ByteDance Seedance 2.5";
+          defaultCost = 25;
+          defaultApiCost = 0.28;
+        } else if (request.modelId.includes("seedance-2.0")) {
+          friendlyName = "ByteDance Seedance 2.0";
+          defaultCost = 20;
+          defaultApiCost = 0.20;
+        } else if (request.modelId.includes("flux-pro")) {
+          friendlyName = "FLUX Pro Ultra";
+          defaultCost = 4;
+          defaultApiCost = 0.06;
+        } else if (request.modelId.includes("flux")) {
+          friendlyName = "FLUX Schnell";
+          defaultCost = 1;
+          defaultApiCost = 0.003;
+        }
+
+        const existing = await prisma.aIModel.findFirst({
+          where: { technicalName: request.modelId },
+        });
+
+        if (existing) {
+          customModel = existing;
+        } else {
+          customModel = await prisma.aIModel.create({
+            data: {
+              id: request.modelId,
+              name: friendlyName,
+              technicalName: request.modelId,
+              providerId: falProvider.id,
+              creditCost: defaultCost,
+              apiUnitCost: defaultApiCost,
+              status: true,
+              billingUnit: "GENERATION",
+            },
+          });
+        }
+      }
       if (!customModel) {
         throw new Error(`O modelo solicitado (${request.modelId}) não foi encontrado no sistema.`);
       }

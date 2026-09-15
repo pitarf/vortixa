@@ -553,3 +553,23 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
   - `scripts/sync_generated_models_to_db.js`: Atualizador dinâmico de `lib/marketplace-models.ts` e gerador de SQL.
   - `scripts/update_models_webp_urls.sql`: Atualização atômica das colunas `avatarUrl`, `coverUrl`, `gallery` (`text[]`) e `referenceFaceUrl` na tabela `MarketplaceModel` do PostgreSQL.
 
+---
+
+## 24. Integração do Kling 3.0 Standard & Mecanismo de Auto-Registro Resiliente de Modelos de IA
+
+### 1. Arquitetura de Resiliência do AIService (`services/ai/ai.service.ts`)
+* **Problema Resolvido**:
+  - Em ambientes onde novos modelos são habilitados no frontend (como `Kling 3.0 Standard` a 15 créditos ou `Sync Audio LipSync` a 8 créditos), requisições de geração que recebessem um `modelId` não pré-cadastrado na tabela relacional `AIModel` lançavam a exceção `"O modelo solicitado (id) não foi encontrado no sistema"`.
+* **Solução Auto-Curável**:
+  - O `AIService.submitJob` implementa um fallback dinâmico e atômico para modelos conhecidos e oficiais da família `fal.ai` (`fal-ai/*`):
+    * Se `prisma.aIModel.findUnique` e `findFirst` retornarem nulo, o sistema obtém a referência do provedor `fal.ai`.
+    * Determina dinamicamente o custo em créditos internos (ex: Kling 3.0 Standard = 15 cr, Kling 3.0 Pro = 20 cr, Seedance 2.5 = 25 cr, LipSync = 8 cr, Flux = 1 a 4 cr) e o custo unitário em USD da API.
+    * Realiza o auto-cadastro imediato em `AIModel` com `status: true` e `billingUnit: "GENERATION"`, prosseguindo com a dedução e geração sem qualquer interrupção ao usuário.
+
+### 2. Roteamento Dual Inteligente: Text-to-Video vs Image-to-Video (`services/ai/providers/fal-ai.provider.ts`)
+* Para a família Kling (`payload.modelTechnicalName.includes("kling")`):
+  - **Com Imagem Base**: Se o usuário fornecer `image_url` ou `start_image_url`, o provedor preserva o endpoint `fal-ai/kling-video/v3/standard/image-to-video` (ou v3 pro / v2.1 pro) e popula os campos `start_image_url`, `prompt_image_url` e `image_url`.
+  - **Sem Imagem (Apenas Texto)**: Se o usuário submeter apenas o prompt em texto, o motor converte dinamicamente o endpoint para `fal-ai/kling-video/v3/standard/text-to-video`, garantindo conformidade estrita com o schema da API da fal.ai.
+* **Validação Automatizada**:
+  - Suíte de testes `__tests__/kling-3-standard-generation.test.ts` com 4 testes validando a submissão via API, auto-registro no PostgreSQL, e roteamento correto com e sem imagem de referência.
+

@@ -5,6 +5,21 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.7.3] - 2026-09-15
+### Correção e Resiliência da Geração do Kling 3.0 Standard (Fal.ai) & Auto-Registro Dinâmico
+- **Correção de Modelo Não Encontrado no Sistema**:
+  - Identificada e solucionada a causa raiz do erro `"O modelo solicitado (fal-ai/kling-video/v3/standard/image-to-video) não foi encontrado no sistema"` exibido na interface do Studio Create.
+  - Inserção e sincronização do modelo `fal-ai/kling-video/v3/standard/image-to-video` (Kling 3.0 Standard, 15 créditos) e `fal-ai/sync-lipsync` (Sync Audio LipSync, 8 créditos) na tabela relacional `AIModel` e `AITool` no PostgreSQL de produção.
+  - Atualização do arquivo `prisma/seed.ts` com as definições oficiais de Kling 3.0 Standard e Sync Audio LipSync.
+- **Mecanismo de Auto-Registro Resiliente no AIService (`services/ai/ai.service.ts`)**:
+  - Implementado tratamento inteligente e auto-recuperável para modelos da família `fal.ai`: caso um modelo homologado no frontend seja invocado e ainda não esteja registrado na tabela relacional `AIModel`, o backend automaticamente localiza o provedor `fal.ai`, deduz os custos e cadastra o modelo de forma atômica, evitando qualquer interrupção ou bloqueio ao usuário.
+- **Roteamento Inteligente Text-to-Video vs Image-to-Video (`services/ai/providers/fal-ai.provider.ts`)**:
+  - Preservado e validado o roteamento dinâmico: quando o usuário cria vídeo sem imagem, o motor direciona para `fal-ai/kling-video/v3/standard/text-to-video`; quando fornece imagem base, direciona para `fal-ai/kling-video/v3/standard/image-to-video`.
+- **Validação de Qualidade & Testes**:
+  - Nova suíte de testes unitários com mocks em `__tests__/kling-3-standard-generation.test.ts` cobrindo submissão de job, roteamento text-to-video e image-to-video e auto-registro dinâmico.
+  - `tsc --noEmit`: 0 erros de tipagem.
+  - Suíte completa do Vitest: 31 arquivos de teste e 222 testes aprovados (100% de aprovação).
+
 ## [2.7.2] - 2026-09-15
 ### Correção e Refatoração Mobile-First de Seleção de Modelos de IA em Todas as Abas (Studio Create & Ferramentas)
 - **Resolução do Bloqueio de Containing Block no Celular**:

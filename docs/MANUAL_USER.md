@@ -288,7 +288,10 @@ O **Studio CREATE v2.0** é o ambiente integrado de alta performance para criaç
    * *FLUX.1 Dev* (2 créditos): Alta coerência fotográfica e micro-texturas.
    * *FLUX.1 Pro* (4 créditos): Nível de estúdio para iluminação e detalhes extremos.
    * *Google Imagen 3* (3 créditos): Renderização de tipografia e fidelidade textual.
-   * *Kling AI 1.5 & Pro* (10-15 créditos): Movimentos cinemáticos consistentes.
+   * *Kling 3.0 Standard* (15 créditos): Equilíbrio ideal entre velocidade (~45s), fluidez cinematográfica e estabilidade física (suporta Text-to-Video e Image-to-Video).
+   * *Kling 3.0 Pro Ultra* (20 créditos): Máxima fidelidade cinematográfica, consistência temporal extrema e controle dinâmico.
+   * *Kling 2.6 Pro* (18 créditos): Geração de vídeo com áudio e fala nativos sincronizados.
+   * *Kling 2.1 Pro* (15 créditos): Movimentos de câmera cinematográficos com alta fidelidade de movimento.
 5. **Prompt de Criação**:
    * *Textarea com Contador*: Limite de 1.500 caracteres para detalhar a cena.
    * *Botão ✦ Otimizar com IA*: Enriquece automaticamente a descrição adicionando iluminação, tipo de lente e estética cinematográfica.

@@ -36,8 +36,13 @@ export class TalkingVideoService {
    * Calcula o custo total combinado em créditos.
    */
   static async calculateTotalCost(videoModelId: string, hasSpeech: boolean): Promise<number> {
-    const videoModel = await prisma.aIModel.findUnique({
-      where: { id: videoModelId },
+    const videoModel = await prisma.aIModel.findFirst({
+      where: {
+        OR: [
+          { id: videoModelId },
+          { technicalName: videoModelId },
+        ],
+      },
     });
 
     const videoCost = videoModel?.creditCost || 10;

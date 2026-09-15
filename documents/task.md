@@ -8,6 +8,11 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Correção da Falha do Kling 3.0 Standard (fal-ai/kling-video/v3/standard/image-to-video) & Auto-Registro Dinâmico**:
+  - Resolução da causa raiz do erro de modelo não encontrado no sistema: sincronização do modelo `fal-ai/kling-video/v3/standard/image-to-video` (15 créditos) e `fal-ai/sync-lipsync` (8 créditos) na tabela relacional `AIModel` do PostgreSQL de produção e inserção no `prisma/seed.ts`.
+  - Implementação de auto-registro resiliente no `AIService.submitJob`: modelos oficiais da família `fal.ai` chamados pelo frontend que ainda não constem na base são auto-registrados dinamicamente sem lançar erro ao usuário.
+  - Correção na consulta do `TalkingVideoService.calculateTotalCost` buscando por `id` ou `technicalName`.
+  - Suíte de testes dedicada `__tests__/kling-3-standard-generation.test.ts` (4 testes) cobrindo submissão de job, roteamento para text-to-video e image-to-video e auto-registro. 100% aprovado (31 arquivos, 222 testes) e 0 erros em `tsc --noEmit`.
 - [x] **Correção e Refatoração Mobile-First de Seleção de Modelos de IA em Todas as Abas (Studio Create & Ferramentas)**:
   - Eliminação definitiva do bloqueio de containing block causado por `backdrop-filter` através de teletransporte com React Portal (`createPortal(..., document.body)`) e `z-[99999]`.
   - Aplicado nos componentes `StudioModelSelector` (5 abas do Studio Create: Imagem, Vídeo, LipSync, Motion, Upscale), `QuickModelPickerModal` (Studio e Vitrine), `VideoModelSection`, `ModelDetailModal` e `ModelBookingModal`.

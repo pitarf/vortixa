@@ -49,6 +49,15 @@ async function main() {
       toolDesc: 'O modelo de vídeo mais avançado do mundo. Física cinematográfica, consistência absoluta e movimentos fluidos.',
     },
     {
+      name: 'Kling 3.0 Standard',
+      technicalName: 'fal-ai/kling-video/v3/standard/image-to-video',
+      creditCost: 15,
+      apiUnitCost: 0.15,
+      toolSlug: 'kling-3-standard',
+      toolName: 'Kling 3.0 Standard',
+      toolDesc: 'Versão equilibrada e econômica do Kling 3.0 com fluidez cinematográfica e estabilidade física.',
+    },
+    {
       name: 'Kling 3.0 Pro Ultra',
       technicalName: 'fal-ai/kling-video/v3/pro/image-to-video',
       creditCost: 20,
@@ -209,6 +218,15 @@ async function main() {
       toolSlug: 'sync-v2',
       toolName: 'Sync Audio v2',
       toolDesc: 'Sincronização fonética precisa de múltiplos idiomas.',
+    },
+    {
+      name: 'Sync Audio LipSync',
+      technicalName: 'fal-ai/sync-lipsync',
+      creditCost: 8,
+      apiUnitCost: 0.08,
+      toolSlug: 'sync-lipsync',
+      toolName: 'Sync Audio LipSync',
+      toolDesc: 'Movimento labial natural com preservação de expressões faciais a partir de áudio.',
     },
   ];
 
