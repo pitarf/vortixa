@@ -33,7 +33,7 @@ export function AgeVerificationModal({ onConfirm, onCancel }: AgeVerificationMod
             Verificação de Maioridade
           </h2>
           <p className="text-xs text-slate-300 leading-relaxed">
-            Esta seção contém motores de inteligência artificial generativa sem censura moral (NSFW), incluindo nudez artística, lingerie e conteúdo adulto com processamento exclusivo nos <b>Servidores Neurais VORIXA</b>.
+            Esta seção contém motores de inteligência artificial generativa sem censura moral (NSFW), incluindo nudez artística, lingerie e conteúdo adulto com processamento exclusivo nos <b>Servidores Neurais VORTIXIA</b>.
           </p>
         </div>
 

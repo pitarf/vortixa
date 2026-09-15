@@ -8,6 +8,14 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Rebranding Integral da Plataforma para "VORTIXIA", Novas Logos Oficiais & Refatoração de Créditos**:
+  - Atualização completa do nome da marca de VORIXA para **VORTIXIA** em todas as páginas públicas (Home, Landing, Home2), autenticação (Login, Cadastro, Recuperação de Senha), área logada (Dashboard, Studio Create, Flow Canvas, Ferramentas de Imagem, Vídeo, Motion, LipSync, Upscale, Vitrine de Modelos, Galeria, Afiliados, Configurações, Admin), e serviços de backend (e-mail, afiliados, provedores de pagamento Vorexpay, Mercado Pago, Stripe, prompt engine).
+  - Instalação dos novos logotipos oficiais fornecidos pelo usuário em `public/logos/` (`logo principal.png`, `vortixia_logo_dark.png`, `vortixia_logo_light.png`), integrados na navegação flutuante, rodapé, telas de autenticação e barra lateral do Dashboard.
+  - Refatoração ergonômica da tela de Planos e Créditos (`/dashboard/credits`):
+    * Substituição do grid com 5 colunas estáticas por grid adaptativo responsivo (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`) que distribui uniformemente os 4 pacotes em 100% da largura da tela sem colunas vazias ou compressão.
+    * Remoção da truncagem (`truncate`) nas linhas de recursos, permitindo leitura completa sem reticências (`...`) e exibindo claramente `Acesso total ao VORTIXIA FLOW Canvas`.
+    * Substituição dos botões redundantes "Adquirir [Nome do Plano]" pelo botão minimalista e direto **"Selecionar"**, abrindo instantaneamente o modal de pagamento seguro (Pix Instantâneo / Cartão de Crédito).
+  - 100% de aprovação na suíte de testes do Vitest (207/207 testes em 28 arquivos) e 0 erros em `tsc --noEmit`.
 - [x] **Correção de Violação das Regras de Hooks do React (Erro #310) & Criação de /dashboard/settings**:
   - Resolução definitiva do `Minified React error #310` ("Rendered more hooks than during the previous render") movendo a declaração de `useMemo` em `PaymentPixModal.tsx` para antes do early return.
   - Implementação da página `/dashboard/settings` (`app/dashboard/settings/page.tsx`), eliminando o erro 404 durante o prefetch de rotas no `DashboardShell`.

@@ -32,7 +32,7 @@ export function ProviderModeSwitch() {
       if (res.ok) {
         setMode(nextMode);
         if (nextMode === "live") {
-          toast.success("🚀 Motor VORIXA Turbo Ativado (Alta Definição)");
+          toast.success("🚀 Motor VORTIXIA Turbo Ativado (Alta Definição)");
         } else {
           toast.info("🛡️ Modo Simulação Ativado");
         }
@@ -56,12 +56,12 @@ export function ProviderModeSwitch() {
             ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30 border border-violet-500/40"
             : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20"
         }`}
-        title={mode === "live" ? "Modo VORIXA Cloud Turbo Ativo" : "Modo Simulação Local Ativo"}
+        title={mode === "live" ? "Modo VORTIXIA Cloud Turbo Ativo" : "Modo Simulação Local Ativo"}
       >
         {mode === "live" ? (
           <>
             <Zap className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-            <span>VORIXA Turbo</span>
+            <span>VORTIXIA Turbo</span>
           </>
         ) : (
           <>

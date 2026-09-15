@@ -12,8 +12,8 @@ export function FaqSection() {
 
   const faqs = [
     {
-      q: "O que é o VORIXA e como ele funciona?",
-      a: "O VORIXA é uma plataforma tudo-em-um que reúne os melhores modelos de IA do mundo (FLUX.1, Kling AI, LipSync e Upscale 4K) em um estúdio visual unificado. Você pode criar influenciadores virtuais, comerciais, vídeos virais para TikTok/Reels e encadear nós em pipelines automáticos sem precisar assinar softwares separados.",
+      q: "O que é o VORTIXIA e como ele funciona?",
+      a: "O VORTIXIA é uma plataforma tudo-em-um que reúne os melhores modelos de IA do mundo (FLUX.1, Kling AI, LipSync e Upscale 4K) em um estúdio visual unificado. Você pode criar influenciadores virtuais, comerciais, vídeos virais para TikTok/Reels e encadear nós em pipelines automáticos sem precisar assinar softwares separados.",
     },
     {
       q: "Preciso aparecer nos vídeos ou contratar modelos?",
@@ -21,7 +21,7 @@ export function FaqSection() {
     },
     {
       q: "Posso usar as mídias geradas comercialmente?",
-      a: "Sim, 100%! Todos os direitos sobre as imagens, vídeos e áudios gerados no VORIXA pertencem a você. Você pode veicular campanhas pagas no Meta/TikTok Ads, atender clientes ou monetizar canais no YouTube.",
+      a: "Sim, 100%! Todos os direitos sobre as imagens, vídeos e áudios gerados no VORTIXIA pertencem a você. Você pode veicular campanhas pagas no Meta/TikTok Ads, atender clientes ou monetizar canais no YouTube.",
     },
     {
       q: "Como funciona a garantia de 7 dias?",

@@ -201,7 +201,7 @@ export function PageTipsModal({ isOpen: controlledIsOpen, onClose: controlledOnC
             </div>
             <div className="space-y-0.5">
               <span className="font-bold text-violet-300 text-[11px] uppercase tracking-wider block">
-                Dica Especial do VORIXA
+                Dica Especial do VORTIXIA
               </span>
               <p className="text-slate-300 text-[11px] leading-relaxed">
                 {tipData.proTip}

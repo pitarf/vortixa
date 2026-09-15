@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import HotGenerationClient from "./HotGenerationClient";
 
 export const metadata: Metadata = {
-  title: "Gerador Hot (+18) | VORIXA",
+  title: "Gerador Hot (+18) | VORTIXIA",
   description: "Criação de imagens e vídeos sensuais e adultos sem censura através de modelos de IA de alta fidelidade.",
   robots: {
     index: false,

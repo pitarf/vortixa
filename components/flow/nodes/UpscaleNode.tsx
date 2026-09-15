@@ -8,7 +8,7 @@ import { isSafeMediaUrl } from "@/lib/flow-utils";
 import { Maximize2 } from "lucide-react";
 
 /**
- * Nó de Creative Upscale 4K no VORIXA FLOW.
+ * Nó de Creative Upscale 4K no VORTIXIA FLOW.
  */
 export const UpscaleNode = memo(function UpscaleNode({ id, data, selected }: NodeProps<any>) {
   const nodeData = data as FlowNodeData;

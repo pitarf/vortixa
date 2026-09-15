@@ -29,14 +29,14 @@ import {
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 /**
- * PÁGINA OFICIAL HOME2 — VORIXA 2.0 (VERSÃO DE ALTA CONVERSÃO)
+ * PÁGINA OFICIAL HOME2 — VORTIXIA 2.0 (VERSÃO DE ALTA CONVERSÃO)
  * 
  * Concepção baseada no Benchmarking de Plataformas Líderes (Octuz AI, Higgsfield, RunwayML, Luma, Kling):
  * - Hero Cinematográfico com Prova Visual Imediata e 100 Créditos Grátis.
  * - Trust Bar com Métricas Auditadas.
  * - Showcase Interativo All-in-One dos 5 Motores de Elite com abas táteis e cópia de prompt.
- * - VORIXA FLOW™ em 3 Passos Claros (Conceito -> Frame Fotorrealista -> Animação & Voz 4K).
- * - Comparador de Custos Radical (5 Assinaturas R$ 1.110/mês vs VORIXA All-in-One R$ 49/mês).
+ * - VORTIXIA FLOW™ em 3 Passos Claros (Conceito -> Frame Fotorrealista -> Animação & Voz 4K).
+ * - Comparador de Custos Radical (5 Assinaturas R$ 1.110/mês vs VORTIXIA All-in-One R$ 49/mês).
  * - Matriz de Casos de Uso por Nicho de Mercado.
  * - Planos Transparentes com Calculadora de Capacidade.
  * - FAQ com Quebra Total de Objeções (Uso Comercial, Sem Marca d'Água, Nuvem).
@@ -128,7 +128,7 @@ export default function Home2Page() {
   // FAQ
   const faqs = [
     {
-      q: "Preciso ter um computador potente ou placa de vídeo para usar o VORIXA?",
+      q: "Preciso ter um computador potente ou placa de vídeo para usar o VORTIXIA?",
       a: "Não! Todo o processamento pesado de inteligência artificial roda 100% em nossos clusters de GPUs NVIDIA na nuvem. Você pode criar vídeos e imagens em 4K até mesmo do seu celular ou de um computador básico.",
     },
     {
@@ -140,12 +140,12 @@ export default function Home2Page() {
       a: "Zero marcas d'água em todos os planos pagos. Os arquivos são exportados limpos e em resolução máxima.",
     },
     {
-      q: "Como o VORIXA substitui 5 assinaturas separadas?",
-      a: "Em vez de assinar Midjourney (imagens), Kling/Runway (vídeos), HeyGen (avatares), ElevenLabs (voz) e Topaz (upscale), o VORIXA integra os motores mais potentes do mundo sob uma única assinatura em reais e uma esteira visual conectada.",
+      q: "Como o VORTIXIA substitui 5 assinaturas separadas?",
+      a: "Em vez de assinar Midjourney (imagens), Kling/Runway (vídeos), HeyGen (avatares), ElevenLabs (voz) e Topaz (upscale), o VORTIXIA integra os motores mais potentes do mundo sob uma única assinatura em reais e uma esteira visual conectada.",
     },
     {
       q: "Como funciona a garantia incondicional de 7 dias?",
-      a: "Se por qualquer motivo você achar que o VORIXA não atendeu às suas expectativas, basta enviar um e-mail ou mensagem no suporte dentro de 7 dias e devolveremos 100% do valor pago, sem questionamentos.",
+      a: "Se por qualquer motivo você achar que o VORTIXIA não atendeu às suas expectativas, basta enviar um e-mail ou mensagem no suporte dentro de 7 dias e devolveremos 100% do valor pago, sem questionamentos.",
     },
   ];
 
@@ -154,7 +154,7 @@ export default function Home2Page() {
       {/* 1. TOP ANNOUNCEMENT BAR */}
       <div className="bg-gradient-to-r from-violet-950 via-[#0E0F17] to-indigo-950 border-b border-violet-500/20 py-2.5 px-4 text-center text-xs font-medium flex items-center justify-center gap-3">
         <span className="px-2 py-0.5 rounded-full bg-violet-500/20 border border-violet-500/40 text-violet-300 font-mono text-[10px] font-bold uppercase tracking-wider">
-          NOVO • VORIXA 2.0
+          NOVO • VORTIXIA 2.0
         </span>
         <span className="text-slate-300 hidden sm:inline">
           🚀 Motores Kling 1.5 + LipSync Instantâneo liberados. Crie seus primeiros conteúdos sem pagar nada.
@@ -173,7 +173,7 @@ export default function Home2Page() {
         <Link href="/home2" className="flex items-center gap-3 group">
           <img
             src="/logos/logo principal.png"
-            alt="VORIXA Logo"
+            alt="VORTIXIA Logo"
             className="h-9 w-auto object-contain group-hover:scale-105 transition-transform"
           />
           <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-violet-950/80 border border-violet-500/30 text-violet-300 font-bold">
@@ -184,7 +184,7 @@ export default function Home2Page() {
         {/* Links de Navegação */}
         <nav className="hidden md:flex items-center gap-8 text-xs font-semibold text-slate-600 dark:text-slate-300">
           <a href="#engines" className="hover:text-foreground transition-colors">Motores de IA</a>
-          <a href="#flow" className="hover:text-foreground transition-colors">VORIXA FLOW</a>
+          <a href="#flow" className="hover:text-foreground transition-colors">VORTIXIA FLOW</a>
           <a href="#comparison" className="hover:text-foreground transition-colors">Comparativo de Economia</a>
           <a href="#usecases" className="hover:text-foreground transition-colors">Casos de Uso</a>
           <a href="#pricing" className="hover:text-foreground transition-colors">Planos</a>
@@ -448,7 +448,7 @@ export default function Home2Page() {
         </div>
       </section>
 
-      {/* 6. VORIXA FLOW™: DO CONCEITO AO 4K EM 3 PASSOS SIMPLES */}
+      {/* 6. VORTIXIA FLOW™: DO CONCEITO AO 4K EM 3 PASSOS SIMPLES */}
       <section id="flow" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto space-y-12">
         <div className="text-center space-y-3 max-w-3xl mx-auto">
           <span className="text-[11px] font-mono tracking-widest text-cyan-400 uppercase font-semibold block">
@@ -515,7 +515,7 @@ export default function Home2Page() {
         </div>
       </section>
 
-      {/* 7. COMPARADOR DE CUSTO RADICAL: 5 ASSINATURAS SEPARADAS VS VORIXA */}
+      {/* 7. COMPARADOR DE CUSTO RADICAL: 5 ASSINATURAS SEPARADAS VS VORTIXIA */}
       <section id="comparison" className="py-20 px-4 sm:px-6 max-w-5xl mx-auto space-y-12">
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <span className="text-[11px] font-mono tracking-widest text-emerald-400 uppercase font-semibold block">
@@ -560,7 +560,7 @@ export default function Home2Page() {
             </div>
 
             <div className="text-center sm:text-right space-y-1">
-              <div className="text-[10px] font-mono text-emerald-400 uppercase font-bold">Com o VORIXA All-in-One</div>
+              <div className="text-[10px] font-mono text-emerald-400 uppercase font-bold">Com o VORTIXIA All-in-One</div>
               <div className="text-3xl font-black text-white font-mono">
                 A partir de R$ 49 <span className="text-xs font-normal text-slate-300">/mês</span>
               </div>
@@ -573,7 +573,7 @@ export default function Home2Page() {
               href="/register"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 text-white font-bold text-xs shadow-lg hover:opacity-95 transition-all min-h-[48px]"
             >
-              <span>Economizar e Centralizar no VORIXA</span>
+              <span>Economizar e Centralizar no VORTIXIA</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -738,7 +738,7 @@ export default function Home2Page() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Acesso ilimitado ao VORIXA FLOW™</span>
+                  <span>Acesso ilimitado ao VORTIXIA FLOW™</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -801,7 +801,7 @@ export default function Home2Page() {
           <ShieldCheck className="w-8 h-8 text-emerald-400 mb-1" />
           <h4 className="text-sm font-bold text-white">Garantia Incondicional de 7 Dias</h4>
           <p className="text-xs text-slate-400 max-w-lg leading-relaxed">
-            Experimente o VORIXA sem risco algum. Se você não ficar 100% satisfeito com a qualidade dos vídeos e imagens, devolvemos seu dinheiro integralmente.
+            Experimente o VORTIXIA sem risco algum. Se você não ficar 100% satisfeito com a qualidade dos vídeos e imagens, devolvemos seu dinheiro integralmente.
           </p>
         </div>
       </section>
@@ -875,8 +875,8 @@ export default function Home2Page() {
       {/* 12. FOOTER */}
       <footer className="border-t border-[#1E202E]/80 bg-[#070709] py-12 px-6 md:px-12 text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-3">
-          <img src="/logos/logo principal.png" alt="VORIXA" className="h-7 w-auto" />
-          <span className="font-mono text-[11px]">© 2026 VORIXA AI Technologies. Todos os direitos reservados.</span>
+          <img src="/logos/logo principal.png" alt="VORTIXIA" className="h-7 w-auto" />
+          <span className="font-mono text-[11px]">© 2026 VORTIXIA AI Technologies. Todos os direitos reservados.</span>
         </div>
         <div className="flex items-center gap-6 text-[11px]">
           <a href="#engines" className="hover:text-white transition-colors">Motores</a>

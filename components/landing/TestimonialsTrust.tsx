@@ -8,14 +8,14 @@ export function TestimonialsTrust() {
     {
       name: "Rodrigo Mendonça",
       role: "Diretor Criativo @ Nexus Studio",
-      text: "O VORIXA FLOW mudou nosso pipeline. Conseguimos criar comerciais cinematográficos inteiros com dublagem e render 4K em menos de 10 minutos.",
+      text: "O VORTIXIA FLOW mudou nosso pipeline. Conseguimos criar comerciais cinematográficos inteiros com dublagem e render 4K em menos de 10 minutos.",
       rating: 5,
       avatar: "RM",
     },
     {
       name: "Camila Vaz",
       role: "Criadora de Conteúdo & UGC (1.2M)",
-      text: "A qualidade do LipSync e a consistência do Kling 1.5 no VORIXA são incomparáveis. Economizo horas de edição manual todos os dias.",
+      text: "A qualidade do LipSync e a consistência do Kling 1.5 no VORTIXIA são incomparáveis. Economizo horas de edição manual todos os dias.",
       rating: 5,
       avatar: "CV",
     },

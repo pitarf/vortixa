@@ -484,7 +484,7 @@ export default function StudioCreatePage() {
     }, 2500);
   };
 
-  // Enviar para o VORIXA FLOW
+  // Enviar para o VORTIXIA FLOW
   const handleOpenInFlow = async () => {
     try {
       setIsOpeningInFlow(true);
@@ -520,7 +520,7 @@ export default function StudioCreatePage() {
         }),
       });
 
-      toast.success("Pipeline criado no VORIXA FLOW!");
+      toast.success("Pipeline criado no VORTIXIA FLOW!");
       router.push(`/dashboard/flow/${newFlow.id}`);
     } catch (e: any) {
       toast.error(e.message || "Erro ao abrir no Flow.");
@@ -990,7 +990,7 @@ export default function StudioCreatePage() {
             Dica de Pro
           </span>
           <p className="text-xs text-slate-300 leading-relaxed">
-            Use o VORIXA FLOW para encadear múltiplos modelos e criar produções completas em pipelines visuais.
+            Use o VORTIXIA FLOW para encadear múltiplos modelos e criar produções completas em pipelines visuais.
           </p>
           <button
             type="button"

@@ -158,7 +158,7 @@ export class VorixaIAService {
     const hasBalance = await CreditService.hasEnoughCredits(userId, pricing.credits);
     if (!hasBalance) {
       throw new Error(
-        `Saldo insuficiente. São necessários ${pricing.credits} créditos para gerar este vídeo no motor VORIXA IA (${pricing.durationSeconds}s em ${pricing.resolution.toUpperCase()}).`
+        `Saldo insuficiente. São necessários ${pricing.credits} créditos para gerar este vídeo no motor VORTIXIA IA (${pricing.durationSeconds}s em ${pricing.resolution.toUpperCase()}).`
       );
     }
 
@@ -170,17 +170,17 @@ export class VorixaIAService {
 
     if (!model) {
       // Criação dinâmica resiliente se ainda não migrado
-      let provider = await prisma.aIProvider.findFirst({ where: { name: "VORIXA" } });
+      let provider = await prisma.aIProvider.findFirst({ where: { name: "VORTIXIA" } });
       if (!provider) {
         provider = await prisma.aIProvider.create({
-          data: { name: "VORIXA", status: true },
+          data: { name: "VORTIXIA", status: true },
         });
       }
 
       model = await prisma.aIModel.create({
         data: {
           providerId: provider.id,
-          name: "VORIXA IA (Vídeo & Fala 1-Clique)",
+          name: "VORTIXIA IA (Vídeo & Fala 1-Clique)",
           technicalName: "vorixa-ia",
           creditCost: 25,
           apiUnitCost: 0.45,
@@ -285,7 +285,7 @@ export class VorixaIAService {
         where: { id: job.id },
         data: {
           status: "FAILED",
-          error: err.message || "Erro no motor VORIXA IA.",
+          error: err.message || "Erro no motor VORTIXIA IA.",
         },
       });
       await CreditService.refundCredits(userId, pricing.credits, job.id).catch(() => {});

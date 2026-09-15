@@ -76,7 +76,7 @@ export function BuildWithAiVisual() {
           Da ideia em texto ao <span className="font-serif italic font-normal text-slate-300">workflow completo</span> em 1 clique.
         </h2>
         <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
-          Digite o que deseja em linguagem natural. A IA do VORIXA interpreta o objetivo, posiciona os nós, conecta os handles e entrega o pipeline pronto para rodar.
+          Digite o que deseja em linguagem natural. A IA do VORTIXIA interpreta o objetivo, posiciona os nós, conecta os handles e entrega o pipeline pronto para rodar.
         </p>
       </div>
 

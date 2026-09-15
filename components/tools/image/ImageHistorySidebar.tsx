@@ -95,7 +95,7 @@ export function ImageHistorySidebar({
         </div>
 
         <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-          Use o <span className="text-violet-600 dark:text-violet-400 font-bold">VORIXA FLOW</span> para criar variações, vídeos e até avatares a partir das suas imagens.
+          Use o <span className="text-violet-600 dark:text-violet-400 font-bold">VORTIXIA FLOW</span> para criar variações, vídeos e até avatares a partir das suas imagens.
         </p>
 
         <Link

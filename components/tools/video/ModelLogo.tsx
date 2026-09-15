@@ -21,8 +21,8 @@ export function ModelLogo({ modelId, className = "", size = "md" }: ModelLogoPro
     lg: "w-14 h-14 min-w-[56px] min-h-[56px] max-w-[56px] max-h-[56px] rounded-2xl",
   }[size];
 
-  // VORIXA IA (Motor Proprietário)
-  if (modelId === "vorixa-ia" || modelId.includes("vorixa")) {
+  // VORTIXIA IA (Motor Proprietário)
+  if (modelId === "vorixa-ia" || modelId.includes("vorixa") || modelId.includes("vortixia")) {
     return (
       <div
         className={`relative ${sizeClasses} bg-gradient-to-br from-[#120826] via-[#2E1065] to-[#06B6D4] border border-cyan-400/50 flex flex-col items-center justify-center p-0.5 shadow-lg shadow-cyan-950/40 overflow-hidden flex-shrink-0 select-none ${className}`}
@@ -30,10 +30,10 @@ export function ModelLogo({ modelId, className = "", size = "md" }: ModelLogoPro
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(6,182,212,0.4),transparent_70%)] pointer-events-none" />
         <span
           className={`font-black text-white tracking-tighter leading-none font-sans ${
-            isSm ? "text-[8px]" : "text-[11px]"
+            isSm ? "text-[8px]" : "text-[10px]"
           }`}
         >
-          VORIXA
+          VORTIXIA
         </span>
         <span
           className={`font-mono font-extrabold text-cyan-200 leading-none px-1 py-0.2 rounded bg-cyan-950/70 border border-cyan-400/40 ${

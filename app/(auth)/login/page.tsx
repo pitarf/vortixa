@@ -55,14 +55,14 @@ export default function LoginPage() {
 
       <div className="w-full max-w-md space-y-6 sm:space-y-8 rounded-3xl border border-[#1E202E] bg-[#0D0E12]/85 backdrop-blur-2xl p-6 sm:p-10 shadow-2xl shadow-black/80 relative z-10">
         {/* Cabeçalho da Marca */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#13141B] border border-[#1E202E] text-[11px] font-mono text-violet-300 font-bold mb-1">
-            <Sparkles className="h-3.5 w-3.5 text-violet-400" />
-            <span>AI CREATIVE SUITE & FLOW</span>
-          </div>
-          <h1 className="font-heading text-3xl sm:text-4xl font-black tracking-tight text-white">
-            VORIXA
-          </h1>
+        <div className="text-center space-y-3">
+          <Link href="/" className="inline-block hover:scale-105 transition-transform">
+            <img
+              src="/logos/logo principal.png"
+              alt="VORTIXIA"
+              className="h-10 sm:h-11 w-auto mx-auto object-contain"
+            />
+          </Link>
           <p className="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
             Acesse seu estúdio neural de última geração para gerar imagens, vídeos e fluxos criativos.
           </p>
@@ -182,7 +182,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-xs text-slate-400 mt-6">
-          Não tem uma conta no VORIXA?{" "}
+          Não tem uma conta no VORTIXIA?{" "}
           <Link href="/register" className="text-violet-400 hover:text-violet-300 hover:underline font-bold py-1">
             Criar conta grátis
           </Link>

@@ -133,14 +133,14 @@ export default function RegisterPage() {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-violet-600/15 via-indigo-600/10 to-cyan-500/5 blur-[120px] pointer-events-none rounded-full" />
 
       <div className="w-full max-w-md space-y-6 rounded-3xl border border-[#1E202E] bg-[#0D0E12]/85 backdrop-blur-2xl p-6 sm:p-10 shadow-2xl shadow-black/80 relative z-10">
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#13141B] border border-[#1E202E] text-[11px] font-mono text-emerald-300 font-bold mb-1">
-            <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
-            <span>CRIAÇÃO DE CONTA PROFISSIONAL</span>
-          </div>
-          <h1 className="font-heading text-3xl sm:text-4xl font-black tracking-tight text-white">
-            VORIXA
-          </h1>
+        <div className="text-center space-y-3">
+          <Link href="/" className="inline-block hover:scale-105 transition-transform">
+            <img
+              src="/logos/logo principal.png"
+              alt="VORTIXIA"
+              className="h-10 sm:h-11 w-auto mx-auto object-contain"
+            />
+          </Link>
           <p className="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
             Cadastre-se gratuitamente e receba créditos para experimentar nossos motores neurais.
           </p>
@@ -244,7 +244,7 @@ export default function RegisterPage() {
               id="referralCode"
               type="text"
               className="w-full rounded-xl border border-[#1E202E] bg-[#13141B] px-3.5 py-2.5 text-xs text-white uppercase placeholder-slate-500 focus:border-emerald-500 focus:outline-none transition-colors font-mono min-h-[44px]"
-              placeholder="Ex: VORIXA-ABC12"
+              placeholder="Ex: VORTIXIA-ABC12"
               value={referralCode}
               onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
             />

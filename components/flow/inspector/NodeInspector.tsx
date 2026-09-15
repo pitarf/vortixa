@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 /**
- * Painel Inspetor Lateral do VORIXA FLOW.
+ * Painel Inspetor Lateral do VORTIXIA FLOW.
  * Permite configuração granular de nós selecionados, ajuste de parâmetros de IA e auditoria de outputs.
  */
 export function NodeInspector() {

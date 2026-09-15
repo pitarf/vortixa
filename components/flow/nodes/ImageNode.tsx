@@ -10,7 +10,7 @@ import { Image, Maximize2, Download } from "lucide-react";
 const ASPECT_RATIOS = ["1:1", "16:9", "9:16", "4:3", "3:4"] as const;
 
 /**
- * Nó de Geração de Imagem FLUX no VORIXA FLOW.
+ * Nó de Geração de Imagem FLUX no VORTIXIA FLOW.
  */
 export const ImageNode = memo(function ImageNode({ id, data, selected }: NodeProps<any>) {
   const nodeData = data as FlowNodeData;

@@ -5,6 +5,22 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.5.7] - 2026-09-15
+### Rebranding Geral para "VORTIXIA", Novas Logos Oficiais & Refatoração dos Cards de Créditos
+- **Rebranding Completo para VORTIXIA**:
+  - Atualização sistemática de toda a terminologia visual, cópia comercial, meta tags e referências do sistema de VORIXA para **VORTIXIA** em todas as rotas públicas, área autenticada, ferramentas de geração, Studio Create, Flow Canvas e rodapés.
+  - Atualização dos serviços de backend (`services/payment-provider/*`, `services/ai/*`, `.env.example`) com descrições e títulos unificados sob a marca VORTIXIA.
+- **Instalação das Novas Logos Oficiais (`public/logos/`)**:
+  - Inclusão dos novos arquivos de logotipo de alta fidelidade enviados pelo usuário (`vortixia_logo_dark.png`, `vortixia_logo_light.png` e atualização de `logo principal.png`).
+  - Integração do novo logotipo na barra de navegação flutuante (`app/page.tsx`, `app/home2/page.tsx`), rodapé corporativo (`LandingFooter.tsx`), telas de autenticação (`login`, `register`, `recovery-password`) e no menu lateral do Dashboard (`DashboardShell.tsx`).
+- **Refatoração dos Pacotes de Créditos (`app/dashboard/credits/page.tsx`)**:
+  - Substituição da divisão rígida com 5 colunas estáticas por um grid dinâmico e auto-ajustável (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`), distribuindo uniformemente os 4 pacotes com largura generosa em 100% da tela, sem colunas órfãs ou vazias.
+  - Eliminação da classe `truncate` nos tópicos de recursos dos pacotes, permitindo leitura límpida sem corte com reticências (`...`) e garantindo a exibição integral de `Acesso total ao VORTIXIA FLOW Canvas`.
+  - Atualização dos botões de ação: remoção do texto redundante "Adquirir [Nome do Plano]" e aplicação do botão padronizado **"Selecionar"**, que abre imediatamente o modal de checkout seguro com opção de Pix Instantâneo e Cartão de Crédito.
+- **Validação de Qualidade e Segurança**:
+  - 100% dos testes aprovados na suíte Vitest (207 testes em 28 arquivos).
+  - 0 erros de compilação em `tsc --noEmit`.
+
 ## [2.5.6] - 2026-09-14
 ### Correção de Violação das Regras de Hooks do React (Erro #310) & Criação de /dashboard/settings
 - **Diagnóstico do Erro Minified React error #310**:

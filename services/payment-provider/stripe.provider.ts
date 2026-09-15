@@ -32,7 +32,7 @@ export class StripeProvider implements PaymentProvider {
       params.append("metadata[orderId]", request.orderId);
       params.append("metadata[userId]", request.userId);
       params.append("line_items[0][price_data][currency]", "brl");
-      params.append("line_items[0][price_data][product_data][name]", request.title || "Pacote de Créditos VORIXA");
+      params.append("line_items[0][price_data][product_data][name]", request.title || "Pacote de Créditos VORTIXIA");
       if (request.description) {
         params.append("line_items[0][price_data][product_data][description]", request.description);
       }

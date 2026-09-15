@@ -115,7 +115,7 @@ export default function FlowListingPage() {
               <Boxes className="w-4 h-4" />
             </div>
             <h1 className="text-xl md:text-2xl font-bold text-white tracking-tight font-heading">
-              VORIXA FLOW Studio
+              VORTIXIA FLOW Studio
             </h1>
           </div>
           <p className="text-xs md:text-sm text-slate-400">

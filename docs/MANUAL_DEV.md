@@ -1,6 +1,6 @@
-# MANUAL DO DESENVOLVEDOR - VORIXA
+# MANUAL DO DESENVOLVEDOR - VORTIXIA
 
-Este manual orienta novos desenvolvedores na configuração do ambiente local de desenvolvimento da plataforma VORIXA.
+Este manual orienta novos desenvolvedores na configuração do ambiente local de desenvolvimento da plataforma VORTIXIA.
 
 ## 1. Pré-requisitos
 

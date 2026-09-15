@@ -1,6 +1,6 @@
-# MANUAL DO USUÁRIO - VORIXA
+# MANUAL DO USUÁRIO - VORTIXIA
 
-Este guia detalha o funcionamento das principais telas e fluxos para os usuários finais da plataforma VORIXA.
+Este guia detalha o funcionamento das principais telas e fluxos para os usuários finais da plataforma VORTIXIA.
 
 ## 1. Cadastro e Acesso à Plataforma
 

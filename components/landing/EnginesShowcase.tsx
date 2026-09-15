@@ -6,7 +6,7 @@ import { Check, ArrowRight, Activity, Layers } from "lucide-react";
 
 /**
  * Seção de Recursos & Workflows — Bento Grid de Elite (Apple / Awwwards).
- * Super Bento Card do VORIXA FLOW + 3 Cards de especialidade com slider Antes/Depois em 8K.
+ * Super Bento Card do VORTIXIA FLOW + 3 Cards de especialidade com slider Antes/Depois em 8K.
  * Suporte completo a gestos touch com touch-none no slider e touch targets >= 44px.
  */
 export function EnginesShowcase() {
@@ -43,7 +43,7 @@ export function EnginesShowcase() {
         </p>
       </div>
 
-      {/* Super Bento Card: VORIXA FLOW Engine */}
+      {/* Super Bento Card: VORTIXIA FLOW Engine */}
       <div className="bg-[#0D0E14] border border-white/[0.08] hover:border-white/[0.15] rounded-[28px] sm:rounded-[32px] p-5 sm:p-8 md:p-12 shadow-[0_20px_60px_rgba(0,0,0,0.7)] overflow-hidden relative group transition-all duration-500">
         <div className="absolute top-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-cyan-500/10 rounded-full blur-[80px] sm:blur-[100px] pointer-events-none group-hover:bg-cyan-500/20 transition-all duration-700" />
         

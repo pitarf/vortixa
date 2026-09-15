@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Workflow } from "lucide-react";
 
 /**
- * Simulador Interativo do VORIXA FLOW (Visual Graph Engine).
+ * Simulador Interativo do VORTIXIA FLOW (Visual Graph Engine).
  * Abas deslizantes no mobile para navegação fluida em telas ultracompactas (320px).
  * Inspector e tela de render com zero CLS (aspect-video) e touch targets >= 44px.
  */
@@ -71,7 +71,7 @@ export function FlowInteractiveDemo() {
       cost: "2 Créditos",
       videoUrl: "/media/landing/motion/micro_loop_cosmic.mp4",
       details: "Exportação em qualidade cinematográfica com profundidade de cor e nitidez pronta para cinema e publicidade.",
-      engine: "VORIXA UltraSharp 4K AI",
+      engine: "VORTIXIA UltraSharp 4K AI",
     },
   ];
 
@@ -82,13 +82,13 @@ export function FlowInteractiveDemo() {
       <div className="text-center space-y-3 max-w-2xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono font-bold uppercase">
           <Workflow className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-          <span>VORIXA FLOW • VISUAL GRAPH ENGINE</span>
+          <span>VORTIXIA FLOW • VISUAL GRAPH ENGINE</span>
         </div>
         <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
           Crie pipelines em vez de prompts isolados
         </h2>
         <p className="text-xs sm:text-sm md:text-base text-slate-400 leading-relaxed">
-          No VORIXA FLOW, cada modelo alimenta o próximo. Um prompt vira imagem, ganha movimento, recebe voz sincronizada e é masterizado em 4K sem trocar de aba.
+          No VORTIXIA FLOW, cada modelo alimenta o próximo. Um prompt vira imagem, ganha movimento, recebe voz sincronizada e é masterizado em 4K sem trocar de aba.
         </p>
       </div>
 

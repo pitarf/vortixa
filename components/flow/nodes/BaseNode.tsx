@@ -36,7 +36,7 @@ interface BaseNodeProps {
 }
 
 /**
- * Componente Base de Nó do VORIXA FLOW.
+ * Componente Base de Nó do VORTIXIA FLOW.
  * Padroniza a moldura Dark Obsidian, portas de entrada/saída (Handles), header, custo e status de execução.
  */
 export const BaseNode = memo(function BaseNode({

@@ -9,6 +9,7 @@ import {
   Check,
   ShieldCheck,
   ArrowUpRight,
+  ArrowRight,
   RefreshCw,
   Clock,
   CreditCard,
@@ -166,7 +167,7 @@ function CreditsContent() {
           setUserInfo({
             balance: userData.currentUserBalance,
             isUnlimited: !!userData.isUnlimited,
-            name: userData.currentUserName || "Criador VORIXA",
+            name: userData.currentUserName || "Criador VORTIXIA",
           });
         }
       }
@@ -291,7 +292,7 @@ function CreditsContent() {
   const faqItems = [
     {
       question: "Os créditos possuem data de validade?",
-      answer: "Não. Todos os créditos adquiridos no VORIXA são vitalícios e nunca expiram. Você pode usá-los hoje, no mês seguinte ou ao longo do ano sem qualquer perda de saldo.",
+      answer: "Não. Todos os créditos adquiridos no VORTIXIA são vitalícios e nunca expiram. Você pode usá-los hoje, no mês seguinte ou ao longo do ano sem qualquer perda de saldo.",
     },
     {
       question: "Qual a diferença entre o Pix e o Cartão de Crédito?",
@@ -303,7 +304,7 @@ function CreditsContent() {
     },
     {
       question: "Posso utilizar meus créditos em todas as ferramentas?",
-      answer: "Sim! Os mesmos créditos são válidos universalmente para FLUX Imagem, Kling AI Vídeo, Wan 2.1, Luma Ray 2, LatentSync LipSync, Síntese de Voz TTS e no VORIXA FLOW Canvas.",
+      answer: "Sim! Os mesmos créditos são válidos universalmente para FLUX Imagem, Kling AI Vídeo, Wan 2.1, Luma Ray 2, LatentSync LipSync, Síntese de Voz TTS e no VORTIXIA FLOW Canvas.",
     },
   ];
 
@@ -361,7 +362,7 @@ function CreditsContent() {
           <div className="space-y-3.5 max-w-2xl text-center lg:text-left w-full">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/25 text-violet-400 text-xs font-mono font-semibold">
               <Sparkles className="h-3.5 w-3.5 shrink-0" />
-              <span>SISTEMA FINANCEIRO VORIXA</span>
+              <span>SISTEMA FINANCEIRO VORTIXIA</span>
             </div>
             <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight font-heading leading-tight">
               Recarga & Carteira{" "}
@@ -397,7 +398,7 @@ function CreditsContent() {
               <div className="absolute -right-12 -bottom-12 w-40 h-40 bg-gradient-to-br from-violet-600/30 to-cyan-500/20 rounded-full blur-2xl pointer-events-none" />
 
               <div className="relative z-10 flex flex-col justify-between flex-1 gap-4">
-                {/* Linha Superior: Logo VORIXA + Chip EMV + NFC */}
+                {/* Linha Superior: Logo VORTIXIA + Chip EMV + NFC */}
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     {/* Chip Metálico EMV com Escalonamento Flexível */}
@@ -410,7 +411,7 @@ function CreditsContent() {
                   </div>
 
                   <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#13141B] border border-violet-500/30 text-violet-300 text-[9px] xs:text-[10px] font-mono font-bold tracking-wider truncate">
-                    VORIXA BLACK TITANIUM
+                    VORTIXIA BLACK TITANIUM
                   </div>
                 </div>
 
@@ -436,7 +437,7 @@ function CreditsContent() {
                       Titular da Conta
                     </span>
                     <span className="text-white font-bold tracking-wide truncate block">
-                      {userInfo.name || "CRIADOR VORIXA"}
+                      {userInfo.name || "CRIADOR VORTIXIA"}
                     </span>
                   </div>
 
@@ -503,8 +504,20 @@ function CreditsContent() {
           </div>
         </div>
 
-        {/* GRID ADAPTATIVO: 1 col celular, 2 cols tablet (md), 3 cols (lg), 5 cols ultrawide (xl) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 sm:gap-6">
+        {/* GRID ADAPTATIVO: Distribuição harmoniosa na tela sem colunas vazias */}
+        <div
+          className={`grid gap-5 sm:gap-6 items-stretch w-full ${
+            packages.length === 1
+              ? "grid-cols-1 max-w-md mx-auto"
+              : packages.length === 2
+              ? "grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto"
+              : packages.length === 3
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto"
+              : packages.length === 4
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+              : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+          }`}
+        >
           {packages.map((pkg) => {
             const totalCredits = pkg.credits + pkg.bonusCredits;
             const unitCost = (pkg.priceCents / 100 / totalCredits).toFixed(2);
@@ -591,22 +604,22 @@ function CreditsContent() {
                   </div>
 
                   {/* Poder de Fogo / Mídias Estimadas */}
-                  <div className="mt-5 sm:mt-6 space-y-2 text-xs text-slate-300">
+                  <div className="mt-5 sm:mt-6 space-y-2.5 text-xs text-slate-300">
                     <div className="flex items-center gap-2.5">
                       <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                      <span className="truncate">{totalCredits} imagens com FLUX Schnell</span>
+                      <span className="leading-snug">{totalCredits} imagens com FLUX Schnell</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                      <span className="truncate">Até {Math.floor(totalCredits / 10)} vídeos cinemáticos Kling</span>
+                      <span className="leading-snug">Até {Math.floor(totalCredits / 10)} vídeos cinemáticos Kling</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                      <span className="truncate">{Math.floor(totalCredits / 8)} gerações de Lip Sync</span>
+                      <span className="leading-snug">{Math.floor(totalCredits / 8)} gerações de Lip Sync</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                      <span className="truncate">Acesso total ao VORIXA FLOW Canvas</span>
+                      <span className="leading-snug">Acesso total ao VORTIXIA FLOW Canvas</span>
                     </div>
                   </div>
                 </div>
@@ -622,12 +635,14 @@ function CreditsContent() {
                         ? "bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white shadow-violet-600/30 hover:shadow-violet-600/50 active:scale-[0.98]"
                         : isBestValue
                         ? "bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white shadow-cyan-600/30 hover:shadow-cyan-600/50 active:scale-[0.98]"
+                        : isTest
+                        ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white shadow-amber-500/25 hover:shadow-amber-500/40 active:scale-[0.98]"
                         : "bg-[#13141B] hover:bg-[#1E202E] text-slate-100 border border-[#1E202E] hover:border-slate-700 active:scale-[0.98]"
                     }`}
                   >
-                    <CreditCard className="h-4 w-4 shrink-0" />
-                    <span>Adquirir {pkg.name}</span>
-                    <ArrowUpRight className="h-4 w-4 opacity-75 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
+                    <CheckCircle2 className="h-4 w-4 shrink-0" />
+                    <span>Selecionar</span>
+                    <ArrowRight className="h-4 w-4 opacity-75 group-hover:translate-x-1 transition-transform shrink-0" />
                   </button>
                 </div>
               </div>

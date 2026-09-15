@@ -59,8 +59,8 @@ export class MercadoPagoProvider implements PaymentProvider {
           items: [
             {
               id: request.orderId,
-              title: request.title || "Pacote de Créditos VORIXA",
-              description: request.description || "Créditos para geração de IA na plataforma VORIXA",
+              title: request.title || "Pacote de Créditos VORTIXIA",
+              description: request.description || "Créditos para geração de IA na plataforma VORTIXIA",
               quantity: 1,
               unit_price: request.amountCents / 100,
               currency_id: "BRL",

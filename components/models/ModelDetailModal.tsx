@@ -319,7 +319,7 @@ export function ModelDetailModal({
               <div className="p-3.5 rounded-2xl bg-cyan-950/20 border border-cyan-900/30 text-xs text-cyan-300/90 leading-relaxed flex items-start gap-2.5">
                 <ShieldCheck className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
                 <span>
-                  <strong>Casting Verificado VORIXA:</strong> Contratação com contrato padrão de cessão de direitos de imagem, suporte presencial/remoto e garantia de produção.
+                  <strong>Casting Verificado VORTIXIA:</strong> Contratação com contrato padrão de cessão de direitos de imagem, suporte presencial/remoto e garantia de produção.
                 </span>
               </div>
             )}

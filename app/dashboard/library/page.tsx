@@ -161,7 +161,7 @@ export default function LibraryPage() {
         }),
       });
 
-      toast.success("Mídia carregada com sucesso no VORIXA FLOW!");
+      toast.success("Mídia carregada com sucesso no VORTIXIA FLOW!");
       router.push(`/dashboard/flow/${flow.id}`);
     } catch (e: any) {
       toast.error(e.message || "Não foi possível abrir no Flow.");
@@ -347,7 +347,7 @@ export default function LibraryPage() {
                       </button>
                       <a
                         href={item.url}
-                        download="vorixa-asset"
+                        download="vortixia-asset"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
@@ -540,7 +540,7 @@ export default function LibraryPage() {
                   </button>
                   <a
                     href={selectedItem.url}
-                    download="vorixa-asset"
+                    download="vortixia-asset"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 sm:flex-initial px-4 sm:px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white flex items-center justify-center gap-2 transition-all cursor-pointer min-h-[48px] shadow-lg shadow-emerald-600/30"

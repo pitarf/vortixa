@@ -251,7 +251,7 @@ export function GenerationLayout({
         <div className="space-y-1">
           <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-violet-950/40 border border-violet-800/40 text-[11px] font-mono font-semibold text-violet-400 mb-1">
             <Sparkles className="h-3 w-3" />
-            <span>ESTÚDIO CRIATIVO VORIXA</span>
+            <span>ESTÚDIO CRIATIVO VORTIXIA</span>
           </div>
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white flex items-center gap-2.5 font-heading">
             <span>{title}</span>

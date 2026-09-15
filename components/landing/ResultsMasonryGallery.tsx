@@ -127,7 +127,7 @@ export function ResultsMasonryGallery() {
             GALERIA & BENCHMARKS REAIS
           </span>
           <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Criado com o <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-cyan-200">VORIXA</span>
+            Criado com o <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-cyan-200">VORTIXIA</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 max-w-lg leading-relaxed">
             Peças audiovisuais e ensaios gerados pela nossa comunidade com consistência cinematográfica real.

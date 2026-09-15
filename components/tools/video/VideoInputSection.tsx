@@ -99,7 +99,7 @@ export function VideoInputSection({
             placeholder={
               creationMode === "image-to-video"
                 ? 'Descreva a movimentação ou fala... Ex: A moça sorri para a câmera e diz "Essa coleção está incrível!", zoom cinematográfico suave'
-                : 'Uma mulher elegante em estúdio, olhando para a câmera e dizendo "Sejam todos muito bem-vindos ao Vorixa!", iluminação suave 8k.'
+                : 'Uma mulher elegante em estúdio, olhando para a câmera e dizendo "Sejam todos muito bem-vindos ao Vortixia!", iluminação suave 8k.'
             }
             className="w-full bg-[#070709] border border-[#1E202E] rounded-xl p-3 text-xs text-white placeholder-slate-500 outline-none focus:border-violet-500/80 transition-colors resize-none leading-relaxed"
           />

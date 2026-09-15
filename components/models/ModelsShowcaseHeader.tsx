@@ -34,7 +34,7 @@ export function ModelsShowcaseHeader({
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-mono font-bold bg-violet-500/15 text-violet-300 border border-violet-500/30 backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5 text-violet-400 animate-pulse" />
-              <span>VORIXA TALENT & CASTING 2026</span>
+              <span>VORTIXIA TALENT & CASTING 2026</span>
             </span>
             <span className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 font-semibold backdrop-blur-md">
               Alta Fidelidade & Agenciamento Oficial

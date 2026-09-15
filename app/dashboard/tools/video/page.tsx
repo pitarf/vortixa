@@ -306,7 +306,7 @@ export default function VideoGenerationPage() {
 
   return (
     <div className="w-full min-h-screen bg-[#070709] text-slate-100 p-3 sm:p-5 lg:p-6 space-y-5 sm:space-y-6 max-w-[1700px] mx-auto font-sans overflow-x-hidden">
-      {/* 1. Header com Título, Subtítulo e Citação VORIXA */}
+      {/* 1. Header com Título, Subtítulo e Citação VORTIXIA */}
       <VideoHeader />
 
       {/* Seletor Móvel de Abas: Configuração vs Player (Evita scroll infinito no celular) */}

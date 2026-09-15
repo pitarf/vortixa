@@ -42,7 +42,7 @@ export function DashboardWidgets({
     if (!hasLikedCommunity) {
       setHasLikedCommunity(true);
       setLikesCount((prev) => prev + 1);
-      toast.success("Obra curtida no VORIXA Community!");
+      toast.success("Obra curtida no VORTIXIA Community!");
     } else {
       setHasLikedCommunity(false);
       setLikesCount((prev) => prev - 1);
@@ -217,14 +217,14 @@ export function DashboardWidgets({
           </p>
         </div>
 
-        {/* ================= WIDGET 3: NOVIDADES NO VORIXA ================= */}
+        {/* ================= WIDGET 3: NOVIDADES NO VORTIXIA ================= */}
         <div className="rounded-3xl bg-[#0D0E12] border border-[#1E202E] p-5 flex flex-col justify-between space-y-4">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Zap className="h-4 w-4 text-cyan-400 fill-current" />
                 <span className="text-sm font-bold text-white font-heading">
-                  Novidades no VORIXA
+                  Novidades no VORTIXIA
                 </span>
               </div>
 
@@ -242,7 +242,7 @@ export function DashboardWidgets({
               </button>
             </div>
 
-            {/* Destaques Reais do VORIXA */}
+            {/* Destaques Reais do VORTIXIA */}
             <div className="space-y-2.5">
               {featuredUpdates.map((update) => (
                 <div

@@ -162,7 +162,7 @@ export function PaymentPixModal({
   const activePixCode =
     pixCode ||
     (packageData
-      ? `00020126580014br.gov.bcb.pix0136${paymentId || "vorixa-checkout-tx"}520400005303986540${(packageData.priceCents / 100).toFixed(2)}5802BR5916VORIXA CREATIVE6009SAO PAULO62070503***6304`
+      ? `00020126580014br.gov.bcb.pix0136${paymentId || "vortixia-checkout-tx"}520400005303986540${(packageData.priceCents / 100).toFixed(2)}5802BR5917VORTIXIA CREATIVE6009SAO PAULO62070503***6304`
       : "");
 
   // Determina a imagem oficial do QR Code de forma puramente determinística e segura (declarado antes do early return)

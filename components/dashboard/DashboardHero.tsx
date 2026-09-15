@@ -88,7 +88,7 @@ export function DashboardHero({
             style={{ minHeight: "44px" }}
           >
             <Boxes className="h-4 w-4 text-cyan-400" />
-            <span>Abrir VORIXA FLOW</span>
+            <span>Abrir VORTIXIA FLOW</span>
           </Link>
 
           <Link
@@ -108,7 +108,7 @@ export function DashboardHero({
             <span className="text-violet-400 text-lg leading-none">“</span>
             <span>Ideias ganham vida aqui.</span>
             <span className="font-sans not-italic text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold ml-1">
-              — VORIXA
+              — VORTIXIA
             </span>
           </div>
 

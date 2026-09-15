@@ -104,7 +104,7 @@ const CATEGORIES = [
 ];
 
 /**
- * Seletor de Nós Estilo Command Palette do VORIXA FLOW.
+ * Seletor de Nós Estilo Command Palette do VORTIXIA FLOW.
  */
 export function NodePicker() {
   const { nodePickerOpen, setNodePickerOpen, addNode, nodePickerPosition } = useFlowStore();

@@ -1,5 +1,5 @@
 /**
- * Catálogo Oficial de Vozes de Alta Fidelidade (Estúdio Humano) do VORIXA.
+ * Catálogo Oficial de Vozes de Alta Fidelidade (Estúdio Humano) do VORTIXIA.
  * Motor: ElevenLabs Multilingual & Turbo via Fal.ai (`fal-ai/elevenlabs/tts/turbo-v2.5`).
  * Todas as vozes são de atores reais em português, com afinação e cadência 100% naturais (sem efeitos artificiais).
  */
@@ -11,7 +11,7 @@ export interface VoiceOption {
   categoryLabel: string;
 }
 
-export const VORIXA_VOICES: VoiceOption[] = [
+export const VORTIXIA_VOICES: VoiceOption[] = [
   // Vozes Femininas Reais
   {
     id: "Rachel",
@@ -75,3 +75,6 @@ export const VORIXA_VOICES: VoiceOption[] = [
 
 export const DEFAULT_FEMALE_VOICE = "Rachel";
 export const DEFAULT_MALE_VOICE = "Brian";
+
+// Alias de retrocompatibilidade
+export const VORIXA_VOICES = VORTIXIA_VOICES;

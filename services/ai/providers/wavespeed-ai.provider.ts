@@ -219,7 +219,7 @@ export class WaveSpeedAIProvider implements IAIProvider {
             ? errJson.detail
             : null) ||
           `HTTP ${res.status}`;
-        throw new Error(`Falha no cluster neural VORIXA: ${detailMsg}`);
+        throw new Error(`Falha no cluster neural VORTIXIA: ${detailMsg}`);
       }
 
       const data = await res.json();
@@ -247,7 +247,7 @@ export class WaveSpeedAIProvider implements IAIProvider {
     } catch (err: any) {
       console.error("[WaveSpeedAIProvider] Falha ao submeter job:", err);
       const isCustomMsg = err.message?.includes("requer uma foto de referência") || err.message?.startsWith("Falha no cluster neural");
-      throw new Error(isCustomMsg ? err.message : `Falha no cluster neural VORIXA: ${err.message}`);
+      throw new Error(isCustomMsg ? err.message : `Falha no cluster neural VORTIXIA: ${err.message}`);
     }
   }
 

@@ -8,7 +8,7 @@ import { isSafeMediaUrl } from "@/lib/flow-utils";
 import { Mic, Maximize2 } from "lucide-react";
 
 /**
- * Nó de Sincronização Labial LipSync no VORIXA FLOW.
+ * Nó de Sincronização Labial LipSync no VORTIXIA FLOW.
  */
 export const LipSyncNode = memo(function LipSyncNode({ id, data, selected }: NodeProps<any>) {
   const nodeData = data as FlowNodeData;

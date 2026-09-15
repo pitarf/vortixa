@@ -41,7 +41,7 @@ export function CostComparison() {
           ))}
         </div>
 
-        {/* Totalizador Concorrentes vs VORIXA */}
+        {/* Totalizador Concorrentes vs VORTIXIA */}
         <div className="pt-6 border-t border-[#1E202E] flex flex-col sm:flex-row items-center justify-between gap-6 bg-[#070709] p-6 rounded-2xl border border-red-500/20">
           <div className="text-center sm:text-left">
             <div className="text-xs font-mono text-red-400 uppercase font-bold">Total Mensal Separado</div>
@@ -51,7 +51,7 @@ export function CostComparison() {
           </div>
 
           <div className="text-center sm:text-right">
-            <div className="text-xs font-mono text-cyan-400 uppercase font-bold">Com o VORIXA</div>
+            <div className="text-xs font-mono text-cyan-400 uppercase font-bold">Com o VORTIXIA</div>
             <div className="text-3xl sm:text-4xl font-black text-white font-heading">
               A partir de R$ 39
             </div>
@@ -64,7 +64,7 @@ export function CostComparison() {
             className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-500 text-white font-bold text-xs shadow-lg hover:opacity-95 transition-all"
             style={{ minHeight: "48px" }}
           >
-            <span>Centralizar tudo no VORIXA agora</span>
+            <span>Centralizar tudo no VORTIXIA agora</span>
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

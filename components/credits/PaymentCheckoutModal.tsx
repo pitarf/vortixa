@@ -201,7 +201,7 @@ export function PaymentCheckoutModal({
                   id="checkout-modal-title"
                   className="text-sm sm:text-base font-bold text-white tracking-tight font-heading truncate"
                 >
-                  Checkout Seguro VORIXA
+                  Checkout Seguro VORTIXIA
                 </h3>
                 <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-mono font-bold flex items-center gap-1 shrink-0">
                   <Lock className="w-2.5 h-2.5" />

@@ -8,7 +8,7 @@ import { isSafeMediaUrl } from "@/lib/flow-utils";
 import { Video, Maximize2, Download, Film } from "lucide-react";
 
 /**
- * Nó de Geração de Vídeo Kling AI no VORIXA FLOW.
+ * Nó de Geração de Vídeo Kling AI no VORTIXIA FLOW.
  */
 export const VideoNode = memo(function VideoNode({ id, data, selected }: NodeProps<any>) {
   const nodeData = data as FlowNodeData;

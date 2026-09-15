@@ -98,7 +98,7 @@ export default function AffiliatesPage() {
     fetchHistory();
   }, []);
 
-  const activeCode = stats?.profile?.customCode || stats?.profile?.code || "VORIXA";
+  const activeCode = stats?.profile?.customCode || stats?.profile?.code || "VORTIXIA";
   const origin = typeof window !== "undefined" ? window.location.origin : "https://vortixia.com.br";
   const referralLink = `${origin}/register?ref=${activeCode}`;
 
@@ -122,14 +122,14 @@ export default function AffiliatesPage() {
 
   const handleShareWhatsApp = () => {
     const text = encodeURIComponent(
-      `Crie imagens e vídeos ultra-realistas com inteligência artificial no VORIXA! Cadastre-se pelo meu link com bônus de boas-vindas: ${referralLink}`
+      `Crie imagens e vídeos ultra-realistas com inteligência artificial no VORTIXIA! Cadastre-se pelo meu link com bônus de boas-vindas: ${referralLink}`
     );
     window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
   };
 
   const handleShareTelegram = () => {
     const text = encodeURIComponent(
-      `Crie imagens e vídeos ultra-realistas com inteligência artificial no VORIXA!`
+      `Crie imagens e vídeos ultra-realistas com inteligência artificial no VORTIXIA!`
     );
     window.open(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${text}`, "_blank");
   };
@@ -244,7 +244,7 @@ export default function AffiliatesPage() {
           <div className="space-y-2.5 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold tracking-wide">
               <Sparkles className="w-3.5 h-3.5 shrink-0" />
-              <span>PROGRAMA OFICIAL DE AFILIADOS VORIXA</span>
+              <span>PROGRAMA OFICIAL DE AFILIADOS VORTIXIA</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white font-heading leading-tight">
               Indique Criadores e Ganhe{" "}
@@ -459,7 +459,7 @@ export default function AffiliatesPage() {
               Simulador de Ganhos Mensais
             </h3>
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-              Arraste a barra para projetar quanto você pode faturar por mês recomendando o VORIXA para sua audiência (estimativa baseada no pacote médio de R$ 79,90).
+              Arraste a barra para projetar quanto você pode faturar por mês recomendando o VORTIXIA para sua audiência (estimativa baseada no pacote médio de R$ 79,90).
             </p>
 
             <div className="pt-3 space-y-2">

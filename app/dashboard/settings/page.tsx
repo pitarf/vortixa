@@ -15,7 +15,7 @@ import {
 import { toast } from "sonner";
 
 /**
- * Página de Configurações da Conta e Preferências do Usuário no VORIXA.
+ * Página de Configurações da Conta e Preferências do Usuário no VORTIXIA.
  * Permite visualizar informações do perfil, alterar senha e definir preferências de notificação.
  */
 export default function SettingsPage() {

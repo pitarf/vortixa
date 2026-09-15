@@ -47,7 +47,7 @@ const FAQ_DATA: FAQItem[] = [
     category: "Créditos",
     question: "O que acontece se uma geração falhar?",
     answer:
-      "O VORIXA possui proteção financeira automática e atômica. Se um motor de IA retornar timeout ou erro de renderização, seus créditos são imediatamente estornados para o seu saldo sem que você precise solicitar ao suporte.",
+      "O VORTIXIA possui proteção financeira automática e atômica. Se um motor de IA retornar timeout ou erro de renderização, seus créditos são imediatamente estornados para o seu saldo sem que você precise solicitar ao suporte.",
   },
   {
     id: "best-image-model",
@@ -66,9 +66,9 @@ const FAQ_DATA: FAQItem[] = [
   {
     id: "flow-usage",
     category: "Flow",
-    question: "O que é o VORIXA FLOW e como utilizá-lo?",
+    question: "O que é o VORTIXIA FLOW e como utilizá-lo?",
     answer:
-      "O VORIXA FLOW é um estúdio de nós visuais infinitos onde você pode encadear fluxos criativos completos (ex: gerar uma imagem base, conectar para vídeo e depois aplicar upscale 4K). Ele orquestra os nós automaticamente sem você precisar refazer downloads manuais.",
+      "O VORTIXIA FLOW é um estúdio de nós visuais infinitos onde você pode encadear fluxos criativos completos (ex: gerar uma imagem base, conectar para vídeo e depois aplicar upscale 4K). Ele orquestra os nós automaticamente sem você precisar refazer downloads manuais.",
   },
   {
     id: "payment-methods",
@@ -82,7 +82,7 @@ const FAQ_DATA: FAQItem[] = [
     category: "Geral",
     question: "Tenho direitos comerciais sobre as imagens e vídeos gerados?",
     answer:
-      "Sim! Todo o conteúdo gerado por você na plataforma VORIXA possui licença de uso comercial completa, permitindo utilização em publicidades, YouTube, redes sociais, clientes e e-commerce.",
+      "Sim! Todo o conteúdo gerado por você na plataforma VORTIXIA possui licença de uso comercial completa, permitindo utilização em publicidades, YouTube, redes sociais, clientes e e-commerce.",
   },
 ];
 
@@ -179,7 +179,7 @@ export default function HelpSupportPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* WhatsApp Suporte */}
         <a
-          href="https://wa.me/5511999999999?text=Olá,%20preciso%20de%20ajuda%20com%20minha%20conta%20no%20VORIXA"
+          href="https://wa.me/5511999999999?text=Olá,%20preciso%20de%20ajuda%20com%20minha%20conta%20no%20VORTIXIA"
           target="_blank"
           rel="noopener noreferrer"
           className="p-5 rounded-2xl border border-[#1E202E] bg-[#0D0E12] hover:border-emerald-500/50 transition-all group shadow-xl flex flex-col justify-between space-y-4 cursor-pointer"
@@ -239,7 +239,7 @@ export default function HelpSupportPage() {
               Guia de Versões & Atualizações
             </h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Acompanhe as últimas otimizações de custos, novos modelos adicionados e recursos lançados no VORIXA.
+              Acompanhe as últimas otimizações de custos, novos modelos adicionados e recursos lançados no VORTIXIA.
             </p>
           </div>
           <div className="flex items-center gap-1.5 text-xs font-bold text-violet-400">
@@ -376,7 +376,7 @@ export default function HelpSupportPage() {
                   <option value="Faturamento e Pagamentos" className="bg-[#0D0E12] text-white">Faturamento e Pagamentos (Pix / Cartão)</option>
                   <option value="Geração de Imagens" className="bg-[#0D0E12] text-white">Geração de Imagens (FLUX / Imagen 3)</option>
                   <option value="Geração de Vídeos" className="bg-[#0D0E12] text-white">Geração de Vídeos (Seedance / Wan 2.1)</option>
-                  <option value="VORIXA FLOW" className="bg-[#0D0E12] text-white">VORIXA FLOW Canvas</option>
+                  <option value="VORTIXIA FLOW" className="bg-[#0D0E12] text-white">VORTIXIA FLOW Canvas</option>
                   <option value="Sugestão de Recursos" className="bg-[#0D0E12] text-white">Sugestão de Recursos e Novos Modelos</option>
                 </select>
               </div>

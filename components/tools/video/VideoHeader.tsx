@@ -37,7 +37,7 @@ export function VideoHeader() {
           “Da ideia ao movimento.”
         </p>
         <span className="text-[10px] font-mono tracking-widest text-slate-500 uppercase mt-0.5">
-          — VORIXA
+          — VORTIXIA
         </span>
       </div>
     </div>

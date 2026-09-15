@@ -164,7 +164,7 @@ export function DashboardShell({
       color: "text-indigo-400",
     },
     {
-      name: "VORIXA FLOW",
+      name: "VORTIXIA FLOW",
       href: "/dashboard/flow",
       icon: Boxes,
       badge: "Canvas",
@@ -240,29 +240,21 @@ export function DashboardShell({
   const renderSidebarContent = () => (
     <div className="flex flex-col h-full justify-between">
       <div className="space-y-6">
-        {/* Logo VORIXA CREATIVE OS */}
+        {/* Logo VORTIXIA CREATIVE OS */}
         <div className="px-3 pt-2 pb-1 flex items-center justify-between">
           <Link
             href="/dashboard"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="flex items-center gap-3 group"
+            className="flex items-center gap-2 group"
           >
-            <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-violet-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-white font-black shadow-lg shadow-violet-600/30 group-hover:scale-105 transition-all">
-              <Zap className="h-5 w-5 fill-current" />
-            </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="text-base font-black tracking-wider text-slate-950 dark:text-white font-heading">
-                  VORIXA
-                </span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded font-mono bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 font-bold border border-violet-200 dark:border-violet-500/30">
-                  OS 2.5
-                </span>
-              </div>
-              <span className="text-[10px] font-mono tracking-widest text-slate-600 dark:text-slate-400 uppercase font-semibold">
-                CREATIVE SUITE
-              </span>
-            </div>
+            <img
+              src="/logos/logo principal.png"
+              alt="VORTIXIA"
+              className="h-8 w-auto max-w-[170px] object-contain group-hover:scale-105 transition-transform"
+            />
+            <span className="text-[9px] px-1.5 py-0.5 rounded font-mono bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 font-bold border border-violet-200 dark:border-violet-500/30 shrink-0">
+              v2.5
+            </span>
           </Link>
 
           {/* Botão fechar mobile com touch target ergonômico */}
@@ -436,7 +428,7 @@ export function DashboardShell({
             </div>
             <div className="flex flex-col truncate">
               <span className="text-xs font-bold text-slate-200 truncate">
-                {user?.name || "Criador VORIXA"}
+                {user?.name || "Criador VORTIXIA"}
               </span>
               <span className={`text-[10px] font-mono ${planName.includes("Sem") ? "text-slate-400" : "text-violet-400 font-bold"}`}>
                 {planName}
@@ -476,9 +468,11 @@ export function DashboardShell({
 
           {/* Logo Mobile */}
           <Link href="/dashboard" className="lg:hidden flex items-center gap-2 mr-1">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-violet-600/20">
-              <Zap className="h-4 w-4 fill-current" />
-            </div>
+            <img
+              src="/logos/logo principal.png"
+              alt="VORTIXIA"
+              className="h-7 w-auto object-contain"
+            />
           </Link>
 
           {/* Campo de Busca Global */}
@@ -630,7 +624,7 @@ export function DashboardShell({
               <div className="absolute right-0 mt-2 w-56 rounded-3xl bg-[#0D0E12] border border-[#1E202E] shadow-2xl p-2 z-50 space-y-1 animate-in fade-in zoom-in-95 duration-150">
                 <div className="p-3 border-b border-[#1E202E]">
                   <div className="text-xs font-bold text-white truncate">{user?.name || "Criador"}</div>
-                  <div className="text-[11px] text-slate-400 truncate">{user?.email || "usuario@vorixa.com"}</div>
+                  <div className="text-[11px] text-slate-400 truncate">{user?.email || "usuario@vortixia.com"}</div>
                   <span className={`inline-block mt-1.5 px-2 py-0.5 rounded text-[9px] font-mono font-bold ${
                     isUnlimited
                       ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"

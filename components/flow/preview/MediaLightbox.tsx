@@ -6,7 +6,7 @@ import { isSafeMediaUrl } from "@/lib/flow-utils";
 import { X, Download } from "lucide-react";
 
 /**
- * Visualizador de Mídia Lightbox de Alta Fidelidade do VORIXA FLOW.
+ * Visualizador de Mídia Lightbox de Alta Fidelidade do VORTIXIA FLOW.
  */
 export function MediaLightbox() {
   const { lightboxMedia, setLightboxMedia } = useFlowStore();
@@ -82,7 +82,7 @@ export function MediaLightbox() {
           ) : (
             <img
               src={lightboxMedia.url}
-              alt="Mídia Gerada no VORIXA FLOW"
+              alt="Mídia Gerada no VORTIXIA FLOW"
               className="max-h-[70vh] w-auto max-w-full object-contain rounded-lg"
             />
           )}

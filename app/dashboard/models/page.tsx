@@ -252,7 +252,7 @@ export default function ModelsMarketplacePage() {
             </div>
 
             <div className="p-3.5 rounded-2xl bg-rose-950/20 border border-rose-900/30 text-[11px] text-rose-300 leading-relaxed">
-              Ao prosseguir, você declara sob as penas da lei possuir 18 anos de idade ou mais e concordar com as diretrizes de conteúdo do VORIXA.
+              Ao prosseguir, você declara sob as penas da lei possuir 18 anos de idade ou mais e concordar com as diretrizes de conteúdo do VORTIXIA.
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-2">

@@ -17,7 +17,7 @@ import { LandingFooter } from "@/components/landing/LandingFooter";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 /**
- * Landing Page Oficial do VORIXA — Design de Elite Awwwards / Apple Grade.
+ * Landing Page Oficial do VORTIXIA — Design de Elite Awwwards / Apple Grade.
  * Arquitetura Dark Obsidian (#07080B, #0D0E14, #12141F) com iluminação volumétrica contida,
  * tipografia fluida de 320px a 4K, touch targets >= 44px e zero CLS.
  */
@@ -74,7 +74,7 @@ export default function LandingPage() {
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-h-[44px]">
             <img
               src="/logos/logo principal.png"
-              alt="VORIXA Logo"
+              alt="VORTIXIA Logo"
               className="h-7 sm:h-8 md:h-9 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
             />
             <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-[10px] font-mono font-bold text-violet-300 tracking-wider">
@@ -154,7 +154,7 @@ export default function LandingPage() {
             <div className="relative w-full bg-[#0D0E14] border-t border-white/[0.12] rounded-t-[28px] p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto z-10 animate-in slide-in-from-bottom duration-300">
               <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
                 <div className="flex items-center gap-2">
-                  <img src="/logos/logo principal.png" alt="VORIXA" className="h-6 w-auto" />
+                  <img src="/logos/logo principal.png" alt="VORTIXIA" className="h-6 w-auto" />
                   <span className="text-[10px] font-mono text-violet-400 font-bold bg-violet-500/10 px-2 py-0.5 rounded-full border border-violet-500/20">
                     v2.6 LIVE
                   </span>
@@ -248,12 +248,12 @@ export default function LandingPage() {
           <EnginesShowcase />
         </div>
 
-        {/* 2.1 PROVA REAL: Showroom de Tecnologia Futurista (Dança TikTok -> Personagem IA -> Vídeo Final VORIXA) */}
+        {/* 2.1 PROVA REAL: Showroom de Tecnologia Futurista (Dança TikTok -> Personagem IA -> Vídeo Final VORTIXIA) */}
         <div id="motion-proof" className="reveal-on-scroll">
           <MotionProofShowcase />
         </div>
 
-        {/* 3. TECNOLOGIA: VORIXA FLOW — Grafo Interativo Nó por Nó */}
+        {/* 3. TECNOLOGIA: VORTIXIA FLOW — Grafo Interativo Nó por Nó */}
         <div className="reveal-on-scroll">
           <FlowInteractiveDemo />
         </div>

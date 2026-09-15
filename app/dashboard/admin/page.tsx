@@ -200,7 +200,7 @@ export default function AdminDashboardPage() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3">
           <RefreshCw className="h-8 w-8 text-violet-500 animate-spin" />
-          <p className="text-slate-400 text-sm">Carregando painel executivo e métricas do VORIXA...</p>
+          <p className="text-slate-400 text-sm">Carregando painel executivo e métricas do VORTIXIA...</p>
         </div>
       </div>
     );

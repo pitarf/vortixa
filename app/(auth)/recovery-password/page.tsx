@@ -93,17 +93,24 @@ function RecoveryPasswordContent() {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-violet-600/15 via-indigo-600/10 to-cyan-500/5 blur-[120px] pointer-events-none rounded-full" />
 
       <div className="w-full max-w-md space-y-6 rounded-3xl border border-[#1E202E] bg-[#0D0E12]/85 backdrop-blur-2xl p-6 sm:p-10 shadow-2xl shadow-black/80 relative z-10">
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#13141B] border border-[#1E202E] text-[11px] font-mono text-violet-300 font-bold mb-1">
+        <div className="text-center space-y-3">
+          <Link href="/" className="inline-block hover:scale-105 transition-transform">
+            <img
+              src="/logos/logo principal.png"
+              alt="VORTIXIA"
+              className="h-10 sm:h-11 w-auto mx-auto object-contain"
+            />
+          </Link>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#13141B] border border-[#1E202E] text-[11px] font-mono text-violet-300 font-bold">
             <KeyRound className="h-3.5 w-3.5 text-violet-400" />
             <span>RECUPERAÇÃO DE ACESSO</span>
           </div>
-          <h1 className="font-heading text-3xl font-black tracking-tight text-white">
+          <h1 className="font-heading text-2xl sm:text-3xl font-black tracking-tight text-white">
             {token ? "Redefinir Senha" : "Esqueceu sua senha?"}
           </h1>
           <p className="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
             {token
-              ? "Crie uma nova credencial segura para voltar a acessar seu estúdio VORIXA."
+              ? "Crie uma nova credencial segura para voltar a acessar seu estúdio VORTIXIA."
               : "Digite o e-mail da sua conta para receber o link seguro de recuperação."}
           </p>
         </div>

@@ -20,7 +20,7 @@ export function LandingFooter() {
             <Link href="/" className="flex items-center gap-3 min-h-[44px]">
               <img
                 src="/logos/logo principal.png"
-                alt="VORIXA"
+                alt="VORTIXIA"
                 className="h-7 sm:h-8 w-auto object-contain"
               />
             </Link>
@@ -44,7 +44,7 @@ export function LandingFooter() {
               <ul className="space-y-2 text-slate-400">
                 <li>
                   <Link href="/dashboard/flow" className="hover:text-white transition-colors py-1 inline-block min-h-[36px] flex items-center">
-                    VORIXA FLOW (Canvas)
+                    VORTIXIA FLOW (Canvas)
                   </Link>
                 </li>
                 <li>
@@ -143,7 +143,7 @@ export function LandingFooter() {
         {/* Barra Inferior com Copyright e Garantia */}
         <div className="pt-6 sm:pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 font-mono text-center sm:text-left">
           <div className="flex items-center gap-2">
-            <span>© 2026 VORIXA Inc. Todos os direitos reservados.</span>
+            <span>© 2026 VORTIXIA Inc. Todos os direitos reservados.</span>
           </div>
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1.5 text-slate-400">

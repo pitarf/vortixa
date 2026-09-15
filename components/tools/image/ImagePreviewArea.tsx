@@ -228,7 +228,7 @@ export function ImagePreviewArea({
               type="button"
               onClick={onSendToFlow}
               className="flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
-              title="Enviar para o VORIXA FLOW"
+              title="Enviar para o VORTIXIA FLOW"
             >
               <Boxes className="w-4 h-4 text-emerald-400 shrink-0" />
               <span className="truncate">No Flow</span>

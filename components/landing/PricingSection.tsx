@@ -60,7 +60,7 @@ export function PricingSection() {
           </div>
         </div>
 
-        {/* Comparador Visual de Gastos: "Pagando Separado vs. VORIXA" */}
+        {/* Comparador Visual de Gastos: "Pagando Separado vs. VORTIXIA" */}
         <div className="bg-[#07080B] border border-white/[0.08] rounded-3xl p-4 sm:p-6 md:p-8 max-w-4xl mx-auto shadow-xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-center">
             {/* Gastando Separado */}
@@ -82,13 +82,13 @@ export function PricingSection() {
               </div>
             </div>
 
-            {/* Com o VORIXA FLOW */}
+            {/* Com o VORTIXIA FLOW */}
             <div className="space-y-3 p-4 sm:p-5 rounded-2xl bg-[#0D0E14] text-white border border-violet-500/40 shadow-xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/10 rounded-full blur-[40px] pointer-events-none" />
               
               <div className="flex items-center gap-2 text-violet-300 font-bold font-mono text-xs uppercase">
                 <Zap className="w-4 h-4 text-cyan-400 fill-current shrink-0" />
-                <span>Com o VORIXA All-in-One:</span>
+                <span>Com o VORTIXIA All-in-One:</span>
               </div>
               <p className="text-slate-300 text-xs leading-relaxed">
                 Todas as IAs integradas com créditos flexíveis, sem desperdício de assinaturas paradas e com pipelines automáticos.
@@ -242,7 +242,7 @@ export function PricingSection() {
           <ShieldCheck className="w-8 h-8 text-emerald-400 mb-1 shrink-0" />
           <h4 className="text-sm font-bold text-white">Garantia Incondicional de 7 Dias</h4>
           <p className="text-xs text-slate-400 max-w-lg leading-relaxed">
-            Experimente o VORIXA sem risco algum. Se por qualquer motivo você não ficar 100% satisfeito com a qualidade dos vídeos e imagens gerados, devolvemos seu dinheiro integralmente, sem burocracia.
+            Experimente o VORTIXIA sem risco algum. Se por qualquer motivo você não ficar 100% satisfeito com a qualidade dos vídeos e imagens gerados, devolvemos seu dinheiro integralmente, sem burocracia.
           </p>
         </div>
       </div>

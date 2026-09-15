@@ -67,7 +67,7 @@ export class VorexPayProvider implements PaymentProvider {
         );
       }
       const gatewayTxId = `vorex_tx_${request.orderId}_${Date.now()}`;
-      const pixCode = `00020126580014br.gov.bcb.pix0136${gatewayTxId}520400005303986540${(request.amountCents / 100).toFixed(2)}5802BR5913VORIXA_AI6009SAO_PAULO62070503***6304ABCD`;
+      const pixCode = `00020126580014br.gov.bcb.pix0136${gatewayTxId}520400005303986540${(request.amountCents / 100).toFixed(2)}5802BR5915VORTIXIA_AI6009SAO_PAULO62070503***6304ABCD`;
       let pixQrCode: string | undefined = undefined;
       try {
         const QRCode = (await import("qrcode")).default || (await import("qrcode"));
@@ -95,9 +95,9 @@ export class VorexPayProvider implements PaymentProvider {
       const payload: Record<string, any> = {
         amount_in_cents: request.amountCents,
         payment_method: isCard ? "credit_card" : "pix",
-        customer_name: request.name || "Cliente VORIXA",
+        customer_name: request.name || "Cliente VORTIXIA",
         customer_email: request.email,
-        description: request.title || "Pacote de Créditos VORIXA",
+        description: request.title || "Pacote de Créditos VORTIXIA",
         external_id: request.orderId,
       };
 

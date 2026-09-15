@@ -55,25 +55,25 @@ export default function ChangelogPage() {
   // Agrupamento por versão
   const versionReleases = [
     {
-      version: "VORIXA OS 2.5 - Supercharged AI & Imagen 3",
+      version: "VORTIXIA OS 2.5 - Supercharged AI & Imagen 3",
       tag: "Atual (Stable)",
       date: "Setembro 2026",
       items: filteredItems.filter((i) => i.version === "v2.5" || i.version === "Turbo" || i.version === "v2.2" || i.version === "4K AI"),
     },
     {
-      version: "VORIXA OS 2.0 - Flow Workspace & Studio CREATE",
+      version: "VORTIXIA OS 2.0 - Flow Workspace & Studio CREATE",
       tag: "Major Release",
       date: "Agosto 2026",
       items: filteredItems.filter((i) => i.version === "v2.0" || i.version === "v2.1" || i.version === "v3.0"),
     },
     {
-      version: "VORIXA OS 1.5 - Cinematografia 60fps & Animação Facial",
+      version: "VORTIXIA OS 1.5 - Cinematografia 60fps & Animação Facial",
       tag: "Core Engine",
       date: "Julho 2026",
       items: filteredItems.filter((i) => i.version === "v1.5" || i.version === "v1.8"),
     },
     {
-      version: "VORIXA OS 1.0 - Plataforma & Infraestrutura",
+      version: "VORTIXIA OS 1.0 - Plataforma & Infraestrutura",
       tag: "Foundations",
       date: "Junho 2026",
       items: filteredItems.filter((i) => i.version === "v2.3" || (i.category === "Plataforma" && !i.version)),
@@ -97,7 +97,7 @@ export default function ChangelogPage() {
           <div className="relative z-10 space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold">
               <Zap className="h-3.5 w-3.5 fill-current text-cyan-400" />
-              <span>VORIXA CREATIVE OS 2.5 LIVE</span>
+              <span>VORTIXIA CREATIVE OS 2.5 LIVE</span>
             </div>
 
             <div className="space-y-2">
@@ -106,7 +106,7 @@ export default function ChangelogPage() {
               </h1>
               <p className="text-sm sm:text-base text-slate-300 max-w-3xl leading-relaxed">
                 Acompanhe o lançamento de novos motores de inteligência artificial, atualizações do
-                canvas visual VORIXA FLOW e ferramentas exclusivas de produção audiovisual.
+                canvas visual VORTIXIA FLOW e ferramentas exclusivas de produção audiovisual.
               </p>
             </div>
 
