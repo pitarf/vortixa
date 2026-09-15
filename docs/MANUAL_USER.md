@@ -606,3 +606,62 @@ Este módulo documenta o conjunto de ferramentas dedicadas de IA com layout resp
   3. Clique em `Gerar Vídeo`. Acompanhe a renderização e o polling no player.
   4. Assista em tela cheia com áudio ou faça o download direto.
 
+---
+
+## 9. Vitrine de Modelos & Casting Virtual (`/dashboard/models`)
+
+A vitrine de modelos conecta os usuários a personas digitais hiper-realistas e criadores parceiros para uso no Studio Create ou contratação direta.
+
+### A. Navegação e Filtros de Categoria
+* **Filtro de Tipo**: Selecione rapidamente entre `Todos`, `Modelos IA` ou `Modelos Reais`.
+* **Pílulas de Nicho Adaptativas**:
+  * Em computadores e tablets, os botões de categoria (`Todas as Categorias`, `Moda & Editorial`, `Fitness`, `UGC`, etc.) quebram de maneira harmoniosa na tela sem necessidade de scroll horizontal.
+  * Em celulares, as categorias contam com rolagem touch suave e invisível sem barras brancas nativas.
+* **Busca e Ordenação**: Pesquise modelos pelo nome, bio ou nicho e ordene por `Populares`, `Mais Recentes` ou `Ordem Alfabética`.
+
+### B. Uso no Studio e Reserva de Modelos
+* **Usar no Studio**: Clique no botão em qualquer card para carregar instantaneamente o avatar e o trigger prompt do modelo diretamente no Studio de Criação (`/dashboard/create`).
+* **Contratar / Reservar**: Abra o formulário de reserva para contratar influenciadores reais para produções personalizadas.
+
+### C. Master Prompts de IA à Venda & Lookbook Duplo (Corpo Todo / Perfil)
+* **Visualização de Comp-Card Duplo**:
+  - No modal de detalhes do modelo, utilize o seletor tátil superior para alternar com um clique entre:
+    * **📸 Foto de Corpo Todo**: Permite avaliar proporção física, vestimenta, caimento de roupas e postura completa do modelo em alta resolução.
+    * **👤 Foto de Perfil**: Close-up fotográfico destacando simetria facial, expressividade do olhar, textura da pele e iluminação de estúdio.
+* **Comercialização dos Master Prompts**:
+  - Cada modelo de IA possui um **Master Prompt** exclusivo de alta engenharia (lentes cinematográficas, iluminação 8K e composição artística).
+  - **Estado Bloqueado**: A caixa do prompt apresenta prévia borrada protegida contra cópia não autorizada e indica claramente o preço de aquisição (ex: 5 créditos).
+  - **Como Adquirir**:
+    1. Clique no botão **"Desbloquear Master Prompt (5 créditos)"**.
+    2. O sistema debita atomicamente os créditos da sua conta e libera o prompt instantaneamente.
+    3. Usuários com **Plano Ilimitado** ou administradores possuem acesso livre e desbloqueio imediato sem custo.
+  - **Estado Desbloqueado**:
+    * O prompt completo é revelado na tela.
+    * Clique em **"Copiar Prompt"** para transferir o texto instantaneamente para sua área de transferência.
+    * Clique em **"Usar no Studio CREATE"** para ser redirecionado para a ferramenta de criação com o prompt e a foto de referência já configurados automaticamente.
+
+---
+
+## 10. Página Minha Conta & Programa de Afiliados (`/dashboard/account`)
+
+A página **Minha Conta** centraliza as informações da sua identidade na plataforma, segurança e o seu link exclusivo de indicação para o Programa de Afiliados.
+
+### A. Acesso à Página
+* **Pelo Menu Superior**: Clique na foto ou avatar do seu usuário no canto superior direito e selecione `Minha Conta`.
+* **Pelo Menu Lateral**: Clique no item `Minha Conta` na seção Sistema ou clique diretamente no card com seu nome no rodapé da barra lateral.
+
+### B. Pegando e Compartilhando seu Link de Afiliado
+1. No topo da página Minha Conta, localize o card verde esmeralda **"Seu Link Oficial de Afiliado"**.
+2. **Copiar com 1 Clique**: Clique no botão `Copiar Link` para transferir seu link exclusivo para a área de transferência (`https://vortixia.com.br/register?ref=SEUCODIGO`).
+3. **Compartilhamento Direto nas Redes Sociais**:
+   * Clique em `Enviar no WhatsApp` para abrir o WhatsApp Web ou aplicativo com o link e mensagem pronta de convite.
+   * Clique em `Enviar no Telegram` para compartilhar em grupos e canais de criadores.
+4. **Comissões**: Toda recarga de créditos efetuada pelos seus indicados gera **15% de comissão em dinheiro**, que você acompanha em tempo real e resgata via Pix no `Painel Completo de Afiliados`.
+
+### C. Gestão de Perfil e Credenciais
+* **Nome de Exibição**: Altere seu nome ou nome artístico e clique em `Salvar Alterações`.
+* **Segurança e Senha**: Visualize se sua conta está protegida por senha criptografada e clique em `Alterar Senha` para receber o link de redefinição por e-mail.
+* **Saldo e Recargas**: Acompanhe o seu saldo de créditos em tempo real e acesse o atalho `Recarregar Créditos`.
+
+
+

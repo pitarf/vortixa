@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import {
   User,
   Shield,
@@ -45,6 +46,31 @@ export default function SettingsPage() {
         <p className="text-xs sm:text-sm text-slate-400">
           Gerencie seu perfil, preferências de notificações e credenciais de segurança.
         </p>
+      </div>
+
+      {/* Banner / Atalho Rápido para Minha Conta & Link de Afiliado */}
+      <div className="rounded-3xl bg-gradient-to-r from-emerald-950/40 via-[#0D0E12] to-violet-950/30 border border-emerald-500/30 p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-mono font-bold tracking-wide">
+            <Sparkles className="w-3 h-3" />
+            NOVA CENTRAL DE PERFIL & AFILIADOS
+          </div>
+          <h3 className="text-base sm:text-lg font-bold text-white font-heading">
+            Página Minha Conta & Programa de Parceria
+          </h3>
+          <p className="text-xs text-slate-400">
+            Acesse seu perfil completo, saldo de créditos e pegue seu link exclusivo de afiliado com 1 clique.
+          </p>
+        </div>
+
+        <Link
+          href="/dashboard/account"
+          style={{ minHeight: "44px" }}
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white text-xs font-bold transition-all shadow-lg shadow-emerald-500/20 active:scale-95 shrink-0 cursor-pointer"
+        >
+          <User className="w-4 h-4" />
+          <span>Acessar Minha Conta</span>
+        </Link>
       </div>
 
       {/* Seção 1: Segurança & Autenticação */}

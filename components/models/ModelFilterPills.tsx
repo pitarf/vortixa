@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { ModelCategory, CATEGORY_LABELS } from "./types";
-import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 
 interface ModelFilterPillsProps {
   selectedType: "ALL" | "AI" | "REAL";
@@ -23,15 +23,6 @@ export function ModelFilterPills({
   onSelectSortBy,
   includeHot18,
 }: ModelFilterPillsProps) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: "left" | "right") => {
-    if (scrollContainerRef.current) {
-      const offset = direction === "left" ? -280 : 280;
-      scrollContainerRef.current.scrollBy({ left: offset, behavior: "smooth" });
-    }
-  };
-
   const categories = (Object.keys(CATEGORY_LABELS) as ModelCategory[]).filter(
     (cat) => cat !== "HOT_18" || includeHot18
   );
@@ -42,8 +33,12 @@ export function ModelFilterPills({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         {/* Controle Segmentado de Tipos Responsivo */}
         <div
-          className="flex items-center gap-1 p-1 rounded-2xl bg-[#0D0E12] border border-[#1E202E] w-full sm:w-auto overflow-x-auto no-scrollbar"
-          style={{ WebkitOverflowScrolling: "touch" }}
+          className="flex items-center gap-1 p-1 rounded-2xl bg-[#0D0E12] border border-[#1E202E] w-full sm:w-auto overflow-x-auto no-scrollbar scrollbar-none"
+          style={{
+            WebkitOverflowScrolling: "touch",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
           role="tablist"
           aria-label="Filtro de Tipo de Modelo"
         >
@@ -108,28 +103,15 @@ export function ModelFilterPills({
         </div>
       </div>
 
-      {/* Linha Inferior: Pílulas de Nicho em Carrossel Deslizante Touch com Fades */}
-      <div className="relative flex items-center group">
-        {/* Máscara de Gradiente Esquerdo */}
-        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#070709] to-transparent z-10 hidden sm:block" />
-
-        {/* Botão de Scroll Esquerda (Desktop) */}
-        <button
-          type="button"
-          onClick={() => scroll("left")}
-          className="hidden md:flex absolute -left-3 z-20 p-2 rounded-full bg-[#0D0E12]/95 border border-[#1E202E] text-slate-400 hover:text-white hover:border-slate-600 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer min-h-[44px] min-w-[44px] items-center justify-center"
-          aria-label="Rolar nichos para a esquerda"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-
-        {/* Trilho de Pílulas com Scroll Suave */}
+      {/* Linha Inferior: Pílulas de Nicho Adaptativas (Wrap no Desktop / Scroll Touch Invisível no Mobile) */}
+      <div className="w-full">
         <div
-          ref={scrollContainerRef}
-          className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-1.5 w-full px-1"
+          className="flex items-center gap-2 overflow-x-auto sm:flex-wrap no-scrollbar scrollbar-none py-1 w-full"
           style={{
             WebkitOverflowScrolling: "touch",
             overscrollBehaviorX: "contain",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
           }}
         >
           <button
@@ -137,8 +119,8 @@ export function ModelFilterPills({
             onClick={() => onSelectCategory("ALL")}
             className={`shrink-0 px-4 py-2.5 rounded-full text-xs font-semibold transition-all cursor-pointer whitespace-nowrap min-h-[44px] flex items-center justify-center ${
               selectedCategory === "ALL"
-                ? "bg-slate-100 text-slate-950 font-bold shadow-md"
-                : "bg-[#0D0E12] border border-[#1E202E] text-slate-400 hover:text-white hover:border-slate-700"
+                ? "bg-slate-100 text-slate-950 font-bold shadow-md shadow-white/10"
+                : "bg-[#0D0E12] border border-[#1E202E] text-slate-400 hover:text-white hover:border-slate-700 hover:bg-[#13141B]"
             }`}
           >
             Todas as Categorias
@@ -161,7 +143,7 @@ export function ModelFilterPills({
                       : "bg-violet-600 text-white shadow-lg shadow-violet-600/30"
                     : isHot
                     ? "bg-rose-950/20 border border-rose-900/40 text-rose-300 hover:border-rose-700"
-                    : "bg-[#0D0E12] border border-[#1E202E] text-slate-400 hover:text-white hover:border-slate-700"
+                    : "bg-[#0D0E12] border border-[#1E202E] text-slate-400 hover:text-white hover:border-slate-700 hover:bg-[#13141B]"
                 }`}
               >
                 <span>{meta.icon}</span>
@@ -170,19 +152,6 @@ export function ModelFilterPills({
             );
           })}
         </div>
-
-        {/* Botão de Scroll Direita (Desktop) */}
-        <button
-          type="button"
-          onClick={() => scroll("right")}
-          className="hidden md:flex absolute -right-3 z-20 p-2 rounded-full bg-[#0D0E12]/95 border border-[#1E202E] text-slate-400 hover:text-white hover:border-slate-600 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer min-h-[44px] min-w-[44px] items-center justify-center"
-          aria-label="Rolar nichos para a direita"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </button>
-
-        {/* Máscara de Gradiente Direito */}
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#070709] to-transparent z-10 hidden sm:block" />
       </div>
     </div>
   );

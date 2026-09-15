@@ -29,6 +29,7 @@ import {
   Flame,
   Users,
   Sparkles,
+  User as UserIcon,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { ProviderModeSwitch } from "@/components/layout/ProviderModeSwitch";
@@ -221,6 +222,7 @@ export function DashboardShell({
       badge: "Ganhe R$",
       color: "text-emerald-400",
     },
+    { name: "Minha Conta", href: "/dashboard/account", icon: UserIcon },
     { name: "Configurações", href: "/dashboard/settings", icon: Settings },
     { name: "Ajuda & Suporte", href: "/dashboard/help", icon: HelpCircle },
     ...(user?.role === "ADMIN"
@@ -413,8 +415,13 @@ export function DashboardShell({
       {/* Footer da Sidebar: Perfil do Usuário */}
       <div className="pt-4 border-t border-[#1E202E] mt-6">
         <div className="flex items-center justify-between p-2 rounded-2xl bg-[#0D0E12] border border-[#1E202E]">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="relative h-9 w-9 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0 shadow-md">
+          <Link
+            href="/dashboard/account"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="flex items-center gap-2.5 overflow-hidden flex-1 group hover:opacity-90 transition-opacity"
+            title="Acessar Minha Conta"
+          >
+            <div className="relative h-9 w-9 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0 shadow-md group-hover:scale-105 transition-transform">
               {user?.image ? (
                 <img
                   src={user.image}
@@ -427,14 +434,14 @@ export function DashboardShell({
               <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-[#070709]" />
             </div>
             <div className="flex flex-col truncate">
-              <span className="text-xs font-bold text-slate-200 truncate">
+              <span className="text-xs font-bold text-slate-200 group-hover:text-violet-300 transition-colors truncate">
                 {user?.name || "Criador VORTIXIA"}
               </span>
               <span className={`text-[10px] font-mono ${planName.includes("Sem") ? "text-slate-400" : "text-violet-400 font-bold"}`}>
                 {planName}
               </span>
             </div>
-          </div>
+          </Link>
 
           <Link
             href="/api/auth/signout"
@@ -635,6 +642,14 @@ export function DashboardShell({
                     {planName}
                   </span>
                 </div>
+                <Link
+                  href="/dashboard/account"
+                  onClick={() => setIsUserMenuOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#13141B] min-h-[44px]"
+                >
+                  <UserIcon className="h-4 w-4 text-violet-400" />
+                  <span>Minha Conta</span>
+                </Link>
                 <Link
                   href="/dashboard/credits"
                   onClick={() => setIsUserMenuOpen(false)}

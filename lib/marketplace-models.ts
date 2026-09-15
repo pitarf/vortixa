@@ -2,247 +2,1053 @@ import { MarketplaceModelItem } from "@/components/models/types";
 
 export const FALLBACK_MARKETPLACE_MODELS: MarketplaceModelItem[] = [
   {
-    id: "model_elena_vance",
-    name: "Elena Vance",
-    slug: "elena-vance",
-    type: "AI",
-    category: "FASHION",
-    bio: "Modelo editorial de alta costura com traços escandinavos e presença marcante em passarelas europeias virtuais.",
-    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-    coverUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1600&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80",
+    "id": "model_isabella_fiore",
+    "name": "Isabella Fiore",
+    "slug": "isabella-fiore",
+    "type": "AI",
+    "category": "FASHION",
+    "bio": "Musa da alta costura milanesa com traços esculturais, olhar penetrante e presença imponente em passarelas e capas de revista de luxo.",
+    "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80"
     ],
-    tags: ["Fashion", "Editorial", "Vogue", "Runway", "Haute Couture"],
-    promptTrigger: "elena vance fashion model, striking blue eyes, blonde hair, chic vogue editorial portrait, ultra realistic 8k",
-    referenceFaceUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-    loraModelId: "lora_elena_vance_v2",
-    instagramHandle: "@elenavance.ai",
-    location: "Paris, França",
-    contactEmail: "booking@elenavance.ai",
-    bookingPriceCents: null,
-    creditsPricePerGen: 5,
-    status: true,
-    isFeatured: true,
-    isHot18: false,
-    _count: { bookings: 28 },
+    "tags": [
+      "Fashion",
+      "Haute Couture",
+      "Milão",
+      "Vogue",
+      "Editorial"
+    ],
+    "promptTrigger": "ultra photorealistic 8k full body and portrait of Isabella Fiore, Italian fashion model, high fashion editorial runway, striking hazel eyes, flowing dark brunette waves, wearing structured silk blazer and trousers, soft studio key lighting, Hasselblad H6D-100c, 85mm lens f/1.4, cinematic color grading",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_isabella_fiore_v1",
+    "instagramHandle": "@isabellafiore.ai",
+    "location": "Milão, Itália",
+    "contactEmail": "booking@isabellafiore.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": true,
+    "isHot18": false,
+    "_count": {
+      "bookings": 42
+    }
   },
   {
-    id: "model_lucas_alencar",
-    name: "Lucas Alencar",
-    slug: "lucas-alencar",
-    type: "AI",
-    category: "FITNESS",
-    bio: "Atleta e modelo fitness focado em campanhas esportivas, suplementos e estilo de vida ativo e saudável.",
-    avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
-    coverUrl: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1600&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80",
+    "id": "model_camila_duarte",
+    "name": "Camila Duarte",
+    "slug": "camila-duarte",
+    "type": "AI",
+    "category": "COMMERCIAL",
+    "bio": "Modelo brasileira com beleza natural, carisma envolvente e tom de pele caloroso, perfeita para campanhas de lifestyle, beleza limpa e varejo moderno.",
+    "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80"
     ],
-    tags: ["Fitness", "Men", "Sports", "Athletic", "Gym"],
-    promptTrigger: "lucas alencar athletic male model, defined jawline, athletic physique, gym lighting, high contrast commercial photography",
-    referenceFaceUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
-    loraModelId: "lora_lucas_fit_v1",
-    instagramHandle: "@lucas.alencar_fit",
-    location: "São Paulo, Brasil",
-    contactEmail: "lucas@vorixa.models",
-    bookingPriceCents: null,
-    creditsPricePerGen: 5,
-    status: true,
-    isFeatured: true,
-    isHot18: false,
-    _count: { bookings: 19 },
+    "tags": [
+      "Comercial",
+      "Beleza Natural",
+      "Brasil",
+      "Publicidade",
+      "Skincare"
+    ],
+    "promptTrigger": "commercial 8k portrait and full body of Camila Duarte, Brazilian lifestyle model, radiant warm smile, natural skin texture with subtle freckles, wearing breezy linen shirt and denim, golden hour sunflare, Sony A7R V, 50mm lens f/1.8, authentic candid commercial lighting",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_camila_duarte_v1",
+    "instagramHandle": "@camiladuarte.br",
+    "location": "Rio de Janeiro, Brasil",
+    "contactEmail": "comercial@camiladuarte.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": true,
+    "isHot18": false,
+    "_count": {
+      "bookings": 37
+    }
   },
   {
-    id: "model_aria_cyber",
-    name: "Aria Cyber",
-    slug: "aria-cyber",
-    type: "AI",
-    category: "GAMES",
-    bio: "Visual cyberpunk futurista, ideal para campanhas gamers, sci-fi, interfaces de tecnologia e universo tech.",
-    avatarUrl: "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80",
-    coverUrl: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1600&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1200&q=80",
+    "id": "model_yuki_tanaka",
+    "name": "Yuki Tanaka",
+    "slug": "yuki-tanaka",
+    "type": "AI",
+    "category": "FASHION",
+    "bio": "Visual vanguardista de Tóquio. Minimalismo urbano, corte bob afiado e estética futurista para campanhas de streetwear e tecnologia.",
+    "avatarUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80"
     ],
-    tags: ["Cyberpunk", "Gaming", "Futuristic", "Sci-Fi", "Neon"],
-    promptTrigger: "aria cyber futuristic female character, neon reflection, cyberpunk city backdrop, holographic implants, hyper-detailed render",
-    referenceFaceUrl: "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80",
-    loraModelId: "lora_aria_cyber_v3",
-    instagramHandle: "@aria.cyber.core",
-    location: "Neo Tóquio, Metaverso",
-    contactEmail: "aria@neocyber.ai",
-    bookingPriceCents: null,
-    creditsPricePerGen: 8,
-    status: true,
-    isFeatured: true,
-    isHot18: false,
-    _count: { bookings: 45 },
+    "tags": [
+      "Streetwear",
+      "Tóquio",
+      "Cyber",
+      "Minimalista",
+      "Editorial"
+    ],
+    "promptTrigger": "Tokyo streetwear editorial 8k, Yuki Tanaka, Japanese fashion model, sharp sleek black bob hair, minimalist oversized dark aesthetic trenchcoat, neon wet asphalt Shibuya reflections, Canon EOS R5, 35mm f/1.4, cinematic film tone",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_yuki_tanaka_v2",
+    "instagramHandle": "@yuki.tanaka.tokyo",
+    "location": "Tóquio, Japão",
+    "contactEmail": "contact@yukitanaka.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": true,
+    "isHot18": false,
+    "_count": {
+      "bookings": 29
+    }
   },
   {
-    id: "model_chloe_sweet",
-    name: "Chloe Sweet",
-    slug: "chloe-sweet",
-    type: "AI",
-    category: "LIFESTYLE",
-    bio: "Estilo jovial, natural e caloroso para marcas de moda casual, skincare, café da manhã e rotinas cotidianas.",
-    avatarUrl: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
-    coverUrl: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=1600&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80",
+    "id": "model_zara_almansoor",
+    "name": "Zara Al-Mansoor",
+    "slug": "zara-al-mansoor",
+    "type": "AI",
+    "category": "FASHION",
+    "bio": "A síntese do luxo do Oriente Médio. Elegância régia para campanhas de alta joalheria, vestidos de festa e perfumaria de nicho.",
+    "avatarUrl": "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=800&q=80"
     ],
-    tags: ["Lifestyle", "Natural", "Skincare", "Influencer", "Casual"],
-    promptTrigger: "chloe sweet natural smile, warm sunlight, golden hour, casual cozy outfit, portrait photography 35mm lens",
-    referenceFaceUrl: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
-    loraModelId: "lora_chloe_sweet_v1",
-    instagramHandle: "@chloesweet.life",
-    location: "Florianópolis, Brasil",
-    contactEmail: "collab@chloesweet.ai",
-    bookingPriceCents: null,
-    creditsPricePerGen: 5,
-    status: true,
-    isFeatured: false,
-    isHot18: false,
-    _count: { bookings: 16 },
+    "tags": [
+      "Joalheria",
+      "Luxo",
+      "Dubai",
+      "Gala",
+      "Alta Moda"
+    ],
+    "promptTrigger": "high jewelry luxury campaign 8k, Zara Al-Mansoor, Middle Eastern beauty, emerald jewelry necklace, captivating almond eyes, regal poise, flowing emerald green silk evening gown, softbox rim lighting, Leica SL2, 90mm f/2.0 portrait",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_zara_almansoor_v1",
+    "instagramHandle": "@zara.almansoor",
+    "location": "Dubai, EAU",
+    "contactEmail": "concierge@zaraalmansoor.com",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 33
+    }
   },
   {
-    id: "model_gabriel_ramos",
-    name: "Gabriel Ramos",
-    slug: "gabriel-ramos",
-    type: "AI",
-    category: "CORPORATE",
-    bio: "Executivo corporativo moderno, perfil confiável para apresentações de negócios, finanças, startups e tecnologia B2B.",
-    avatarUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80",
-    coverUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1200&q=80",
+    "id": "model_beatriz_lima",
+    "name": "Beatriz Lima",
+    "slug": "beatriz-lima",
+    "type": "AI",
+    "category": "FITNESS",
+    "bio": "Atleta de alta performance com condicionamento impecável, energia solar e autenticidade para moda fitness e esportes ao ar livre.",
+    "avatarUrl": "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80"
     ],
-    tags: ["Corporate", "Executive", "Business", "B2B", "Fintech"],
-    promptTrigger: "gabriel ramos corporate executive in sharp navy suit, clean boardroom backdrop, confident professional posture, 8k business portrait",
-    referenceFaceUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80",
-    loraModelId: "lora_gabriel_corp_v1",
-    instagramHandle: "@gabriel.exec.ai",
-    location: "Nova York, EUA",
-    contactEmail: "gabriel@vorixa.models",
-    bookingPriceCents: null,
-    creditsPricePerGen: 5,
-    status: true,
-    isFeatured: false,
-    isHot18: false,
-    _count: { bookings: 14 },
+    "tags": [
+      "Fitness",
+      "Atleta",
+      "Treino",
+      "Praia",
+      "Energia"
+    ],
+    "promptTrigger": "athletic female fitness model 8k, Beatriz Lima, toned physique, natural sun-kissed skin, wearing technical athletic sportswear, coastal morning sunrise backdrop, dynamic sports photography, Nikon Z9, 70-200mm f/2.8, high shutter speed clarity",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_beatriz_lima_v1",
+    "instagramHandle": "@beatrizlima.fit",
+    "location": "Florianópolis, Brasil",
+    "contactEmail": "press@beatrizlima.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 21
+    }
   },
   {
-    id: "model_valentina_noir",
-    name: "Valentina Noir",
-    slug: "valentina-noir",
-    type: "AI",
-    category: "HOT_18",
-    bio: "Sensualidade refinada, glamour noturno e estética noir boudoir. Exclusivo para marcas adultas e campanhas intimistas.",
-    avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
-    coverUrl: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=1600&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=1200&q=80",
+    "id": "model_sophie_laurent",
+    "name": "Sophie Laurent",
+    "slug": "sophie-laurent",
+    "type": "AI",
+    "category": "FASHION",
+    "bio": "Delicadeza e sofisticação parisiense. Especializada em beleza clássica, maquiagem editorial e alta perfumaria europeia.",
+    "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80"
     ],
-    tags: ["Hot 18+", "Boudoir", "Glamour", "Intimate", "Sensual"],
-    promptTrigger: "valentina noir sensual dark portrait, moody dim atmospheric lighting, silky black lingerie, elegant erotic allure, cinematic 8k",
-    referenceFaceUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
-    loraModelId: "lora_valentina_noir_v2",
-    instagramHandle: "@valentina.noir.vip",
-    location: "Milão, Itália",
-    contactEmail: "contact@valentinanoir.com",
-    bookingPriceCents: null,
-    creditsPricePerGen: 10,
-    status: true,
-    isFeatured: true,
-    isHot18: true,
-    _count: { bookings: 53 },
+    "tags": [
+      "Paris",
+      "Editorial",
+      "Perfume",
+      "Beleza",
+      "Haute Couture"
+    ],
+    "promptTrigger": "French haute couture perfume advertisement 8k, Sophie Laurent, delicate Parisian features, effortless blonde updo, satin haute couture gown, Haussmann apartment interior, soft window natural light, Phase One IQ4 150MP, 80mm Schneider lens",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_sophie_laurent_v1",
+    "instagramHandle": "@sophielaurent.paris",
+    "location": "Paris, França",
+    "contactEmail": "agence@sophielaurent.fr",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 31
+    }
   },
   {
-    id: "model_mariana_rios",
-    name: "Mariana Rios",
-    slug: "mariana-rios-real",
-    type: "REAL",
-    category: "COMMERCIAL",
-    bio: "Modelo e atriz comercial profissional com mais de 8 anos de experiência em gravações de comerciais de TV e campanhas digitais no Brasil.",
-    avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
-    coverUrl: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1600&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80",
+    "id": "model_aisha_bello",
+    "name": "Aisha Bello",
+    "slug": "aisha-bello",
+    "type": "AI",
+    "category": "COMMERCIAL",
+    "bio": "Presença marcante e exuberância contemporânea. Pele retinta iluminada e porte majestoso para marcas vibrantes e campanhas globais.",
+    "avatarUrl": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "Moda Afro",
+      "Vibrante",
+      "Comercial",
+      "Studio",
+      "Cores"
+    ],
+    "promptTrigger": "vibrant contemporary commercial fashion 8k, Aisha Bello, radiant deep ebony skin, high cheekbones, wearing structured colorful tailored dress, minimalist studio cyclorama, crisp commercial beauty dish lighting, 8k hyper-detail",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_aisha_bello_v1",
+    "instagramHandle": "@aishabello.model",
+    "location": "Lagos / São Paulo",
+    "contactEmail": "hello@aishabello.com",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": true,
+    "isHot18": false,
+    "_count": {
+      "bookings": 25
+    }
+  },
+  {
+    "id": "model_mia_chen",
+    "name": "Mia Chen",
+    "slug": "mia-chen",
+    "type": "AI",
+    "category": "LIFESTYLE",
+    "bio": "Criadora de conteúdo moderna e cosmopolita. Estética acolhedora, café lifestyle e visual relaxado para o público jovem urbano.",
+    "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "Lifestyle",
+      "Café",
+      "Urbano",
+      "Creator",
+      "Inverno"
+    ],
+    "promptTrigger": "modern urban lifestyle portrait 8k, Mia Chen, East Asian modern creator, stylish oversized knit sweater and pleated skirt, modern architectural cafe backdrop, soft morning diffused light, Fujifilm GFX 100S, 45mm lens f/2.8",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_mia_chen_v1",
+    "instagramHandle": "@miachen.life",
+    "location": "Singapura",
+    "contactEmail": "collab@miachen.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 18
+    }
+  },
+  {
+    "id": "model_valentina_rossi",
+    "name": "Valentina Rossi",
+    "slug": "valentina-rossi",
+    "type": "AI",
+    "category": "LIFESTYLE",
+    "bio": "Beleza solar e espírito livre do verão europeu e baiano. Perfeita para moda praia, resorts de luxo e marcas solares.",
+    "avatarUrl": "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "Resort",
+      "Verão",
+      "Praia",
+      "Linho",
+      "Moda Praia"
+    ],
+    "promptTrigger": "summer luxury resort lookbook 8k, Valentina Rossi, tanned golden complexion, flowing white linen resort wear, turquoise ocean cliffside background, brilliant Mediterranean daylight, Canon R5, 50mm f/1.2, editorial travel vogue style",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_valentina_rossi_v1",
+    "instagramHandle": "@valentinarossi.resort",
+    "location": "Salvador, Brasil",
+    "contactEmail": "contato@valentinarossi.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 27
+    }
+  },
+  {
+    "id": "model_clara_mendes",
+    "name": "Clara Mendes",
+    "slug": "clara-mendes",
+    "type": "AI",
+    "category": "CORPORATE",
+    "bio": "Liderança e credibilidade corporativa. Estilo executivo refinado para apresentações institucionais, fintechs e comunicação B2B.",
+    "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
       "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80"
     ],
-    tags: ["Comercial", "Atriz", "Publicidade", "TV", "Campanhas"],
-    promptTrigger: null,
-    referenceFaceUrl: null,
-    loraModelId: null,
-    instagramHandle: "@marianarios.real",
-    location: "São Paulo, SP - Brasil",
-    contactEmail: "agenciamento@marianarios.com.br",
-    bookingPriceCents: 450000,
-    creditsPricePerGen: 5,
-    status: true,
-    isFeatured: true,
-    isHot18: false,
-    _count: { bookings: 34 },
+    "tags": [
+      "Corporativo",
+      "Executiva",
+      "Liderança",
+      "B2B",
+      "Alfaiataria"
+    ],
+    "promptTrigger": "modern executive portrait 8k, Clara Mendes, smart corporate leader, tailored charcoal blazer and crisp white shirt, minimalist glass glassboard fintech office, confident empowered stance, soft studio rim lighting, 85mm lens",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_clara_mendes_v1",
+    "instagramHandle": "@claramendes.corp",
+    "location": "Curitiba, Brasil",
+    "contactEmail": "assessoria@claramendes.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 15
+    }
   },
   {
-    id: "model_rodrigo_santoro",
-    name: "Rodrigo Santoro",
-    slug: "rodrigo-santoro-real",
-    type: "REAL",
-    category: "FASHION",
-    bio: "Modelo masculino sênior para alfaiataria, relógios de luxo, fragrâncias masculinas e campanhas de prestígio internacional.",
-    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
-    coverUrl: "https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&w=1600&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80",
+    "id": "model_matheus_becker",
+    "name": "Matheus Becker",
+    "slug": "matheus-becker",
+    "type": "AI",
+    "category": "FASHION",
+    "bio": "Alfaiataria impecável e elegância masculina clássica. O padrão ouro para ternos sob medida, relógios suíços e editoriais masculinos.",
+    "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "Alfaiataria",
+      "Ternos",
+      "Moda Masculina",
+      "GQ",
+      "Luxo"
+    ],
+    "promptTrigger": "bespoke men tailoring 8k, Matheus Becker, sharp masculine jawline, tailored navy Italian wool three-piece suit, luxury hotel lobby setting, warm directional interior lighting, Leica M11, 50mm f/1.4 Summilux, GQ editorial cover style",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_matheus_becker_v1",
+    "instagramHandle": "@matheusbecker.suit",
+    "location": "São Paulo, Brasil",
+    "contactEmail": "booking@matheusbecker.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": true,
+    "isHot18": false,
+    "_count": {
+      "bookings": 38
+    }
+  },
+  {
+    "id": "model_liam_gallagher",
+    "name": "Liam Gallagher",
+    "slug": "liam-gallagher",
+    "type": "AI",
+    "category": "LIFESTYLE",
+    "bio": "Visual britânico rebelde e atemporal. Jaqueta de couro vintage, bota Chelsea e presença magnética para marcas urbanas e streetwear.",
+    "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
       "https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80"
     ],
-    tags: ["Moda Masculina", "Luxo", "Suits", "Editorial Masculino"],
-    promptTrigger: null,
-    referenceFaceUrl: null,
-    loraModelId: null,
-    instagramHandle: "@rodrigo.model.oficial",
-    location: "Rio de Janeiro, RJ - Brasil",
-    contactEmail: "contato@rodrigomodel.com",
-    bookingPriceCents: 600000,
-    creditsPricePerGen: 5,
-    status: true,
-    isFeatured: true,
-    isHot18: false,
-    _count: { bookings: 22 },
+    "tags": [
+      "Rock",
+      "Couro",
+      "Londres",
+      "Vintage",
+      "Urbano"
+    ],
+    "promptTrigger": "raw British rock aesthetic 8k, Liam Gallagher, rugged handsome features, vintage distressed leather jacket, Chelsea boots, brick wall Shoreditch alleyway, moody overcast London lighting, Hasselblad 80mm, gritty cinema grain",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_liam_gallagher_v1",
+    "instagramHandle": "@liamgallagher.raw",
+    "location": "Londres, Reino Unido",
+    "contactEmail": "mgmt@liamgallagher.uk",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 26
+    }
   },
   {
-    id: "model_beatriz_nogueira",
-    name: "Beatriz Nogueira",
-    slug: "beatriz-nogueira-real",
-    type: "REAL",
-    category: "LIFESTYLE",
-    bio: "Criadora de conteúdo e modelo de lifestyle sustentável, com forte apelo em campanhas ecológicas, cosméticos limpos e viagens.",
-    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-    coverUrl: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1600&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80",
+    "id": "model_kenji_sato",
+    "name": "Kenji Sato",
+    "slug": "kenji-sato",
+    "type": "AI",
+    "category": "COMMERCIAL",
+    "bio": "Harmonia entre arte, arquitetura e moda contemporânea. Perfil sereno e intelectual para campanhas sofisticadas e marcas de design.",
+    "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1480429370139-e0132c086e2a?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1480429370139-e0132c086e2a?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
     ],
-    tags: ["Eco-friendly", "Viagens", "Lifestyle", "Influenciadora", "Sustentável"],
-    promptTrigger: null,
-    referenceFaceUrl: null,
-    loraModelId: null,
-    instagramHandle: "@bea.nogueira.eco",
-    location: "Belo Horizonte, MG - Brasil",
-    contactEmail: "assessoria@beatriznogueira.com.br",
-    bookingPriceCents: 320000,
-    creditsPricePerGen: 5,
-    status: true,
-    isFeatured: false,
-    isHot18: false,
-    _count: { bookings: 12 },
+    "tags": [
+      "Arquitetura",
+      "Design",
+      "Tóquio",
+      "Smart Casual",
+      "Comercial"
+    ],
+    "promptTrigger": "architectural smart casual commercial 8k, Kenji Sato, Japanese male model, modern horn-rimmed glasses, minimalist beige cashmere sweater, concrete brutalist gallery background, soft diffused natural daylight, 8k crisp details",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_kenji_sato_v1",
+    "instagramHandle": "@kenjisato.design",
+    "location": "Tóquio / Berlim",
+    "contactEmail": "studio@kenjisato.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 22
+    }
   },
+  {
+    "id": "model_rodrigo_paiva",
+    "name": "Rodrigo Paiva",
+    "slug": "rodrigo-paiva",
+    "type": "AI",
+    "category": "FITNESS",
+    "bio": "Força, resistência e estética atlética pura. Especialista em campanhas esportivas intensas, crossfit, nutrição e suplementação de ponta.",
+    "avatarUrl": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "Crossfit",
+      "Atleta",
+      "Treino Pesado",
+      "Musculação",
+      "Sports"
+    ],
+    "promptTrigger": "intense sports conditioning 8k, Rodrigo Paiva, muscular athletic build, sweat glistening under industrial gym spotlights, chalk on hands, aggressive motivated expression, high action commercial photography, Sony A1, 85mm f/1.4",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_rodrigo_paiva_v1",
+    "instagramHandle": "@rodrigopaiva.pro",
+    "location": "Belo Horizonte, Brasil",
+    "contactEmail": "performance@rodrigopaiva.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": true,
+    "isHot18": false,
+    "_count": {
+      "bookings": 35
+    }
+  },
+  {
+    "id": "model_julian_thorne",
+    "name": "Julian Thorne",
+    "slug": "julian-thorne",
+    "type": "AI",
+    "category": "CORPORATE",
+    "bio": "Liderança executiva de Wall Street. Firmeza e sofisticação em ternos risca de giz para campanhas de finanças globais e tecnologia B2B.",
+    "avatarUrl": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "Wall Street",
+      "Finanças",
+      "Fintech",
+      "Executivo",
+      "Nova York"
+    ],
+    "promptTrigger": "Wall street modern financier 8k, Julian Thorne, charismatic corporate executive, charcoal pinstripe tailored suit with silk tie, high-rise glass skyscraper overlooking Manhattan skyline, golden dusk light, premium Forbes magazine cover",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_julian_thorne_v1",
+    "instagramHandle": "@julianthorne.exec",
+    "location": "Nova York, EUA",
+    "contactEmail": "contact@julianthorne.com",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 19
+    }
+  },
+  {
+    "id": "model_kofi_mensah",
+    "name": "Kofi Mensah",
+    "slug": "kofi-mensah",
+    "type": "AI",
+    "category": "FASHION",
+    "bio": "Porte régio e traços esculturais. Vanguarda da alta costura masculina contemporânea em casacos arquitetônicos e cores marcantes.",
+    "avatarUrl": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "Alta Costura",
+      "Vogue",
+      "Londres",
+      "Cores",
+      "Escultural"
+    ],
+    "promptTrigger": "avant-garde luxury menswear 8k, Kofi Mensah, statuesque West African male model, sculptured features, wearing royal cobalt blue tailored coat with bold architectural lapels, minimalist white cyclorama, studio strobe rim light, Vogue Hommes cover",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_kofi_mensah_v1",
+    "instagramHandle": "@kofimensah.vogue",
+    "location": "Londres / Paris",
+    "contactEmail": "mgmt@kofimensah.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": true,
+    "isHot18": false,
+    "_count": {
+      "bookings": 40
+    }
+  },
+  {
+    "id": "model_diego_morales",
+    "name": "Diego Morales",
+    "slug": "diego-morales",
+    "type": "AI",
+    "category": "LIFESTYLE",
+    "bio": "O charme descomplicado do litoral sul-americano. Camisas de linho, dunas de areia branca e estilo resort para marcas de praia elegantes.",
+    "avatarUrl": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1495366691023-cc4eadcc2d7e?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1495366691023-cc4eadcc2d7e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "Resort",
+      "Linho",
+      "Verão",
+      "Praia",
+      "Natural"
+    ],
+    "promptTrigger": "relaxed summer coastal editorial 8k, Diego Morales, sun-bronzed skin, wavy dark hair, untucked light linen shirt, walking on white sand dunes, ocean breeze, soft warm afternoon light, Leica Q2, 28mm f/1.7, authentic lifestyle elegance",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_diego_morales_v1",
+    "instagramHandle": "@diegomorales.resort",
+    "location": "Florianópolis, Brasil",
+    "contactEmail": "contato@diegomorales.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 17
+    }
+  },
+  {
+    "id": "model_alexandre_dumas",
+    "name": "Alexandre Dumas",
+    "slug": "alexandre-dumas",
+    "type": "AI",
+    "category": "FASHION",
+    "bio": "Glamour noturno, smoking de veludo e mistério aristocrático europeu. Especializado em campanhas de perfumes e noites de gala.",
+    "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1516826957135-700dedea698c?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1516826957135-700dedea698c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "Smoking",
+      "Noite",
+      "Gala",
+      "Perfumaria",
+      "Aristocrático"
+    ],
+    "promptTrigger": "luxury cologne campaign 8k, Alexandre Dumas, refined European features, piercing dark eyes, midnight black velvet tuxedo jacket, crystal whiskey glass in hand, luxury penthouse bar at night, dramatic chiaroscuro lighting, 8k master quality",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_alexandre_dumas_v1",
+    "instagramHandle": "@alexandredumas.noir",
+    "location": "Genebra, Suíça",
+    "contactEmail": "dumas@luxurymodels.ch",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 24
+    }
+  },
+  {
+    "id": "model_thiago_rocha",
+    "name": "Thiago Rocha",
+    "slug": "thiago-rocha",
+    "type": "AI",
+    "category": "LIFESTYLE",
+    "bio": "Explorador e aventureiro das montanhas. Roupa técnica, jaqueta impermeável encerada e autenticidade para marcas de aventura e 4x4.",
+    "avatarUrl": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "Aventura",
+      "Outdoor",
+      "Montanha",
+      "Expedição",
+      "Natureza"
+    ],
+    "promptTrigger": "outdoor wilderness expedition 8k, Thiago Rocha, rugged adventurer, short trimmed beard, heavy-duty waxed canvas jacket, alpine mountain trail summit, misty dramatic mountain peaks, natural morning mist and god rays, Canon 1D X Mark III",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_thiago_rocha_v1",
+    "instagramHandle": "@thiagorocha.wild",
+    "location": "Chapada Diamantina, Brasil",
+    "contactEmail": "expedition@thiagorocha.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 16
+    }
+  },
+  {
+    "id": "model_marcus_sterling",
+    "name": "Marcus Sterling",
+    "slug": "marcus-sterling",
+    "type": "AI",
+    "category": "CORPORATE",
+    "bio": "Conselheiro de grandes patrimônios e finanças privadas. Estética imponente para family offices, bancos suíços e advocacia corporativa.",
+    "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "Private Banking",
+      "Family Office",
+      "Advocacia",
+      "Corporativo",
+      "Ternos"
+    ],
+    "promptTrigger": "elite private wealth advisor 8k, Marcus Sterling, distinguished corporate presence, crisp tailored dark navy bespoke suit, luxurious library boardroom with dark mahogany and leather books, warm incandescent lamps, 85mm f/1.4 portrait",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_marcus_sterling_v1",
+    "instagramHandle": "@marcus.sterling.ai",
+    "location": "Milão / Londres",
+    "contactEmail": "advisory@marcussterling.com",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 20
+    }
+  },
+  {
+    "id": "model_helena_vasconcelos",
+    "name": "Dona Helena Vasconcelos",
+    "slug": "helena-vasconcelos",
+    "type": "AI",
+    "category": "FASHION",
+    "bio": "65 anos. A consagração da elegância madura. Cabelos prateados reluzentes e alfaiataria em linho claro para moda atemporal e marcas consagradas.",
+    "avatarUrl": "https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "60+",
+      "Sênior",
+      "Cabelo Prateado",
+      "Elegância",
+      "Atemporal"
+    ],
+    "promptTrigger": "sophisticated 65-year-old senior Brazilian woman 8k, Dona Helena Vasconcelos, graceful natural silver hair, elegant expressive smile, authentic mature skin texture with dignity, wearing tailored cream linen pantsuit, sunlit art gallery backdrop, soft warm daylight, Hasselblad portrait 85mm",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_helena_vasconcelos_v1",
+    "instagramHandle": "@helena.vasconcelos.elegance",
+    "location": "São Paulo, Brasil",
+    "contactEmail": "contato@helenavasconcelos.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": true,
+    "isHot18": false,
+    "_count": {
+      "bookings": 46
+    }
+  },
+  {
+    "id": "model_beatrix_von_berg",
+    "name": "Beatrix Von Berg",
+    "slug": "beatrix-von-berg",
+    "type": "AI",
+    "category": "FASHION",
+    "bio": "68 anos. Aristocracia austríaca, colar de pérolas e casaco de cashmere azul marinho. Destaque em campanhas de alta joalheria ageless.",
+    "avatarUrl": "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "60+",
+      "Viena",
+      "Haute Couture",
+      "Joias",
+      "Ageless"
+    ],
+    "promptTrigger": "high jewelry senior model campaign 8k, Beatrix Von Berg, 68 years old, striking silver platinum coiffure, dignified poise, wearing royal navy cashmere coat and pearl choker, historic Viennese grand hall, soft directional studio light, Vogue Ageless cover style",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_beatrix_vonberg_v1",
+    "instagramHandle": "@beatrix.vonberg",
+    "location": "Viena, Áustria",
+    "contactEmail": "concierge@beatrixvonberg.com",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": true,
+    "isHot18": false,
+    "_count": {
+      "bookings": 39
+    }
+  },
+  {
+    "id": "model_carmen_almodovar",
+    "name": "Carmen Almodóvar",
+    "slug": "carmen-almodovar",
+    "type": "AI",
+    "category": "LIFESTYLE",
+    "bio": "62 anos. Alma artística e boêmia mediterrânea. Ceramista e artista plástica de Barcelona, perfeita para marcas artesanais e turismo cultural.",
+    "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "60+",
+      "Artesã",
+      "Boêmia",
+      "Barcelona",
+      "Criativa"
+    ],
+    "promptTrigger": "bohemian artistic senior woman 8k, Carmen Almodóvar, 62 years old, Spanish ceramicist and artist, bold terracotta statement necklace, colorful flowing linen artisan smock, sun-drenched Mediterranean pottery atelier, warm clay textures, cinematic natural window light",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_carmen_almodovar_v1",
+    "instagramHandle": "@carmen.almodovar.arte",
+    "location": "Barcelona, Espanha",
+    "contactEmail": "atelier@carmenalmodovar.es",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 23
+    }
+  },
+  {
+    "id": "model_soraia_guimaraes",
+    "name": "Soraia Guimarães",
+    "slug": "soraia-guimaraes",
+    "type": "AI",
+    "category": "COMMERCIAL",
+    "bio": "64 anos. A referência do envelhecimento ativo e saudável. Sorriso contagiante para cosméticos pro-aging, planos de saúde e marcas de bem-estar.",
+    "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "60+",
+      "Skincare Madura",
+      "Pro-Aging",
+      "Saúde",
+      "Bem-Estar"
+    ],
+    "promptTrigger": "pro-aging skincare commercial 8k, Soraia Guimarães, 64 years old, radiant dewy mature skin, joyful sparkling eyes, wearing breathable white athletic top, botanical garden veranda, soft morning rim glow, clean commercial beauty style, Sony A7R IV",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_soraia_guimaraes_v1",
+    "instagramHandle": "@soraia.guimaraes.vida",
+    "location": "Rio de Janeiro, Brasil",
+    "contactEmail": "comercial@soraiaguimaraes.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": true,
+    "isHot18": false,
+    "_count": {
+      "bookings": 31
+    }
+  },
+  {
+    "id": "model_evelyn_montgomery",
+    "name": "Evelyn Montgomery",
+    "slug": "evelyn-montgomery",
+    "type": "AI",
+    "category": "CORPORATE",
+    "bio": "71 anos. Presidente de conselho e filantropa internacional. Respeito, solidez e autoridade inquestionável para grandes instituições e governança.",
+    "avatarUrl": "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "70+",
+      "Conselheira",
+      "Governança",
+      "Corporativo",
+      "Liderança"
+    ],
+    "promptTrigger": "distinguished senior executive board chair 8k, Evelyn Montgomery, 71 years old, sharp intellect, styled silver bob, custom midnight blue velvet blazer, university boardroom with grand architectural windows, commanding trustworthy aura, 8k crisp details",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_evelyn_montgomery_v1",
+    "instagramHandle": "@evelyn.montgomery.lead",
+    "location": "Boston, EUA",
+    "contactEmail": "office@evelynmontgomery.org",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 18
+    }
+  },
+  {
+    "id": "model_alvaro_prado",
+    "name": "Dr. Álvaro Prado",
+    "slug": "alvaro-prado",
+    "type": "AI",
+    "category": "CORPORATE",
+    "bio": "66 anos. O cavalheiro intelectual. Barba grisalha aparada, paletó de tweed com colete e relógio de bolso para medicina, advocacia e alta cultura.",
+    "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "60+",
+      "Tweed",
+      "Intelectual",
+      "Médico",
+      "Advogado"
+    ],
+    "promptTrigger": "distinguished senior gentleman 8k, Dr. Álvaro Prado, 66 years old, trimmed salt-and-pepper full beard, tailored brown herringbone tweed suit with vest, vintage Swiss wristwatch, classic intellectual study room, soft amber library light, Leica SL2 75mm f/2",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_alvaro_prado_v1",
+    "instagramHandle": "@dr.alvaroprado",
+    "location": "Porto Alegre, Brasil",
+    "contactEmail": "contato@alvaroprado.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": true,
+    "isHot18": false,
+    "_count": {
+      "bookings": 36
+    }
+  },
+  {
+    "id": "model_arthur_kingsley",
+    "name": "Arthur Kingsley",
+    "slug": "arthur-kingsley",
+    "type": "AI",
+    "category": "FASHION",
+    "bio": "70 anos. O lorde escocês de Mayfair. Sobretudo de lã de cashmere cinza chumbo, charuto e clube privado britânico para marcas de prestígio centenário.",
+    "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "70+",
+      "Gentleman",
+      "Savile Row",
+      "Mayfair",
+      "Whisky"
+    ],
+    "promptTrigger": "Savile Row senior luxury tailoring 8k, Arthur Kingsley, 70 years old, aristocratic English gentleman, bespoke double-breasted charcoal overcoat, silk pocket square, historic club room in Mayfair, polished mahogany reflections, cinematic chiaroscuro",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_arthur_kingsley_v1",
+    "instagramHandle": "@arthurkingsley.gent",
+    "location": "Edimburgo / Londres",
+    "contactEmail": "estate@arthurkingsley.co.uk",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": true,
+    "isHot18": false,
+    "_count": {
+      "bookings": 44
+    }
+  },
+  {
+    "id": "model_helio_taniguchi",
+    "name": "Hélio Taniguchi",
+    "slug": "helio-taniguchi",
+    "type": "AI",
+    "category": "COMMERCIAL",
+    "bio": "65 anos. Mestre da arquitetura sustentável nipo-brasileira. Óculos redondos de titânio, jaqueta noragi escura e serenidade zen.",
+    "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1480429370139-e0132c086e2a?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1480429370139-e0132c086e2a?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "60+",
+      "Arquiteto",
+      "Zen",
+      "Minimalismo",
+      "Design Japonês"
+    ],
+    "promptTrigger": "senior Japanese architect master 8k, Hélio Taniguchi, 65 years old, round titanium designer glasses, pure white hair, dark indigo minimalist noragi jacket, modern wooden minimalist pavilion, zen garden background, diffuse overcast daylight, Monocle magazine feature",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_helio_taniguchi_v1",
+    "instagramHandle": "@helio.taniguchi.arch",
+    "location": "Curitiba, Brasil",
+    "contactEmail": "studio@heliotaniguchi.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 25
+    }
+  },
+  {
+    "id": "model_cadu_fontes",
+    "name": "Carlos Eduardo Fontes (Cadu)",
+    "slug": "cadu-fontes",
+    "type": "AI",
+    "category": "LIFESTYLE",
+    "bio": "63 anos. Velejador experiente, cabelos prateados ao vento e pele curtida pelo sol do mar. O lifestyle náutico definitivo para marcas oceânicas.",
+    "avatarUrl": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1495366691023-cc4eadcc2d7e?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1495366691023-cc4eadcc2d7e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "60+",
+      "Velejador",
+      "Náutico",
+      "Barco",
+      "Mar"
+    ],
+    "promptTrigger": "nautical lifestyle senior sailor 8k, Carlos Eduardo Fontes, 63 years old, weathered tanned skin, windblown silver hair, navy windbreaker and white deck shorts, standing at the helm of classic sailboat, sparkling ocean waves, golden sunset backlight, Nikon Z9 85mm",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_cadu_fontes_v1",
+    "instagramHandle": "@cadu.velejador",
+    "location": "Ilhabela, Brasil",
+    "contactEmail": "mar@cadufontes.ai",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": false,
+    "isHot18": false,
+    "_count": {
+      "bookings": 19
+    }
+  },
+  {
+    "id": "model_giancarlo_moretti",
+    "name": "Giancarlo Moretti",
+    "slug": "giancarlo-moretti",
+    "type": "AI",
+    "category": "FASHION",
+    "bio": "67 anos. Mestre alfaiate de Florença. Bigode prateado perfeito, fita métrica no pescoço e colete de lã riscado feito à mão para marcas artesanais de elite.",
+    "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+    "coverUrl": "https://images.unsplash.com/photo-1516826957135-700dedea698c?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1516826957135-700dedea698c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80"
+    ],
+    "tags": [
+      "60+",
+      "Mestre Alfaiate",
+      "Florença",
+      "Sartorial",
+      "Artesanal"
+    ],
+    "promptTrigger": "Florentine master tailor 8k, Giancarlo Moretti, 67 years old, immaculate silver mustache, tape measure around neck, handmade chalk-striped wool waistcoat, artisan tailoring workshop in Florence, rolls of cashmere fabric, warm vintage European daylight, 8k hyper-detail",
+    "referenceFaceUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+    "loraModelId": "lora_giancarlo_moretti_v1",
+    "instagramHandle": "@giancarlo.moretti.sarto",
+    "location": "Florença, Itália",
+    "contactEmail": "bottega@giancarlomoretti.it",
+    "bookingPriceCents": null,
+    "creditsPricePerGen": 5,
+    "status": true,
+    "isFeatured": true,
+    "isHot18": false,
+    "_count": {
+      "bookings": 41
+    }
+  }
 ];

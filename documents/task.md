@@ -8,6 +8,40 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Expansão da Vitrine de Modelos (30 Novos Perfis IA), Comercialização de Master Prompts & Lookbook Duplo (Corpo Todo / Perfil)**:
+  - Criação de 30 modelos fotográficos ultra-realistas com fichas técnicas e prompts 8K em `lib/marketplace-models.ts`:
+    * 10 modelos mulheres, 10 modelos homens, 5 modelos mulheres idosas (60+) e 5 modelos homens idosos (60+).
+    * Para cada modelo: foto de corpo todo (`coverUrl`/`gallery`), foto de perfil (`avatarUrl`), bio editorial, tags de nicho, localização global e master prompt de altíssima fidelidade.
+  - **Comercialização de Master Prompts como Itens da Vitrine**:
+    * Cards da vitrine (`components/models/ModelCard.tsx`): badge luminosa `💎 Prompt: X cr`, ações táteis de acesso rápido e aspecto fotográfico 3:4 sem CLS.
+    * Modal de detalhes e lookbook (`components/models/ModelDetailModal.tsx`):
+      - Seletor tátil de fotos: alternância fluida entre "📸 Foto de Corpo Todo" e "👤 Foto de Perfil".
+      - Módulo "Master Prompt à Venda": prévia borrada, preço de aquisição em créditos e botão protagonista "Desbloquear Master Prompt" com touch target >= 48px.
+      - Estado desbloqueado: badge verde esmeralda, prompt legível, botão de 1 toque para copiar com Sonner toast e botão "Usar no Studio CREATE".
+  - **Backend Seguro & Débito Atômico**:
+    * Rota `POST /api/models/purchase-prompt` com autoridade do servidor (preço travado no backend, sem risco de manipulação pelo cliente), autenticação NextAuth via `auth()` e liberação gratuita para ADMIN / `isUnlimited: true`.
+    * Método `CreditService.deduct()` com bloqueio de linha pessimista (`SELECT 1 ... FOR UPDATE`) e gravação auditável no histórico de transações.
+  - Suíte de testes `__tests__/models-prompt-purchase.test.ts` com 6 testes cobrindo todos os cenários (401, 400, 404, saldo insuficiente, débito atômico e isenção ilimitada).
+  - 100% de aprovação na suíte completa do Vitest (30 arquivos, 218 testes) e 0 erros de compilação em `tsc --noEmit`.
+- [x] **Página Dedicada "Minha Conta" (`/dashboard/account`) com Link de Afiliado & Gestão de Perfil**:
+  - Implementação da página `/dashboard/account` com layout Dark Obsidian de alta definição, integrando gestão de identidade, avatar, papel na plataforma, plano ativo, saldo de créditos em tempo real e atalho para recarga.
+  - **Card de Destaque para o Link de Afiliado & Parcerias**:
+    * Exibição proeminente do link oficial de indicação (`https://vortixia.com.br/register?ref=CODIGO`) e do código de afiliado ativo.
+    * Botões de 1 clique para "Copiar Link" e "Copiar Código" com feedbacks táteis e toasts Sonner.
+    * Botões de compartilhamento direto no **WhatsApp** e **Telegram** com mensagem convidativa.
+    * Mini-painel com métricas de desempenho: comissão de 15% em dinheiro via Pix, contagem de indicados e compras, e saldo disponível com link para o painel completo de afiliados (`/dashboard/affiliates`).
+  - Formulário para atualização do Nome de exibição com validação e feedback tátil, visualização de e-mail e status de segurança da senha.
+  - Criação do endpoint seguro `GET/PATCH /api/user/profile` para consolidação dos dados de perfil e do perfil de afiliados.
+  - Atualização dos links de navegação global em `DashboardShell.tsx` (popover do avatar no topbar, item "Minha Conta" na sidebar e card de rodapé clicável) e banner na página de configurações (`/dashboard/settings`).
+  - Suíte de testes dedicada `__tests__/account-profile.test.ts` com 100% de aprovação (5/5 testes) e 212/212 testes aprovados no Vitest. Zero erros de compilação em `tsc --noEmit`.
+- [x] **Remoção da Barra de Rolagem Nativa & Layout Adaptativo nas Pílulas de Categoria da Vitrine de Modelos**:
+  - Resolução definitiva da barra de rolagem horizontal branca nativa com setas (`<` `>`) que surgia no Windows sob a lista de categorias em `/dashboard/models`.
+  - Configuração do motor CSS global em `app/globals.css` para padronizar qualquer scrollbar em tema Dark Obsidian (6px, `#1E202E`) e implementação das classes `.no-scrollbar` e `.scrollbar-none` com supressão total (`display: none !important`, `scrollbar-width: none !important`).
+  - Refatoração de `components/models/ModelFilterPills.tsx`:
+    * Habilitação de `sm:flex-wrap` no container de pílulas: em desktop e tablets, as categorias quebram confortavelmente em fluxo contínuo sem rolagem lateral.
+    * No mobile (<640px), rolagem touch suave e invisível sem scrollbars nativas.
+    * Remoção dos gradientes de fade escuro nas pontas e das setas desktop que obscureciam o botão ativo "Todas as Categorias".
+  - 100% de testes aprovados (207/207) no Vitest e 0 erros em `tsc --noEmit`.
 - [x] **Rebranding Integral da Plataforma para "VORTIXIA", Novas Logos Oficiais & Refatoração de Créditos**:
   - Atualização completa do nome da marca de VORIXA para **VORTIXIA** em todas as páginas públicas (Home, Landing, Home2), autenticação (Login, Cadastro, Recuperação de Senha), área logada (Dashboard, Studio Create, Flow Canvas, Ferramentas de Imagem, Vídeo, Motion, LipSync, Upscale, Vitrine de Modelos, Galeria, Afiliados, Configurações, Admin), e serviços de backend (e-mail, afiliados, provedores de pagamento Vorexpay, Mercado Pago, Stripe, prompt engine).
   - Instalação dos novos logotipos oficiais fornecidos pelo usuário em `public/logos/` (`logo principal.png`, `vortixia_logo_dark.png`, `vortixia_logo_light.png`), integrados na navegação flutuante, rodapé, telas de autenticação e barra lateral do Dashboard.

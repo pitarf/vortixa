@@ -109,6 +109,95 @@ export class CreditService {
   }
 
   /**
+   * Realiza o débito atômico de créditos do usuário com bloqueio de linha pessimista (FOR UPDATE).
+   * Utilizado para aquisição de prompts, serviços pontuais e operações fora do ciclo de jobs de IA.
+   */
+  static async deduct(params: {
+    userId: string;
+    amount: number;
+    type?: CreditTransactionType;
+    description: string;
+    jobId?: string;
+  }): Promise<number> {
+    const { userId, amount, type = "GENERATION_DEBIT", description, jobId } = params;
+
+    if (!userId) {
+      throw new Error("userId é obrigatório para debitar créditos.");
+    }
+    if (amount <= 0) {
+      throw new Error("O valor de débito deve ser estritamente positivo.");
+    }
+
+    return await prisma.$transaction(async (tx) => {
+      // 1. Obter informações de limite do usuário
+      const user = await tx.user.findUnique({
+        where: { id: userId },
+        select: { isUnlimited: true },
+      });
+
+      if (!user) {
+        throw new Error("Usuário não encontrado.");
+      }
+
+      // Se for usuário ilimitado, registra a transação com custo 0 (auditoria/isenção)
+      if (user.isUnlimited) {
+        await tx.creditTransaction.create({
+          data: {
+            userId,
+            amount: 0,
+            type,
+            description: `[Acesso Ilimitado] ${description}`,
+          },
+        });
+        const currentBal = await tx.creditBalance.findUnique({ where: { userId } });
+        return currentBal?.balance || 0;
+      }
+
+      // 2. Bloqueio pessimista de concorrência na linha de saldo
+      await tx.$executeRaw`SELECT 1 FROM "CreditBalance" WHERE "userId" = ${userId} FOR UPDATE`;
+
+      const balanceRecord = await tx.creditBalance.findUnique({
+        where: { userId },
+      });
+
+      const currentBalance = balanceRecord?.balance || 0;
+
+      if (currentBalance < amount) {
+        throw new Error("Saldo insuficiente de créditos.");
+      }
+
+      // 3. Atualizar saldo
+      const newBalance = currentBalance - amount;
+      await tx.creditBalance.update({
+        where: { userId },
+        data: { balance: newBalance },
+      });
+
+      // 4. Validar jobId opcional antes de vincular FK
+      let validJobId: string | null = null;
+      if (jobId) {
+        const jobExists = await tx.aIJob.findUnique({ where: { id: jobId } });
+        if (jobExists) {
+          validJobId = jobId;
+        }
+      }
+
+      // 5. Gravar transação de histórico
+      await tx.creditTransaction.create({
+        data: {
+          userId,
+          amount: -amount,
+          type,
+          description,
+          jobId: validJobId,
+        },
+      });
+
+      return newBalance;
+    });
+  }
+
+  /**
    * Reembolsa créditos por falhas em geração de IA.
    */
   static async refundCredits(userId: string, amount: number, jobId: string): Promise<number> {

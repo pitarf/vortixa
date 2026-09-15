@@ -5,6 +5,86 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.6.0] - 2026-09-15
+### Expansão da Vitrine de Modelos (30 Novos Perfis IA), Comercialização de Master Prompts & Lookbook Duplo (Corpo Todo / Perfil)
+- **Criação e Inclusão de 30 Novos Modelos Fotográficos de IA (`lib/marketplace-models.ts`)**:
+  - Geração de 30 perfis completos e ultra-realistas categorizados com precisão:
+    * **10 Modelos Mulheres**: Isabella Fiore, Camila Duarte, Yuki Tanaka, Zara Al-Mansoor, Beatriz Lima, Sophie Laurent, Aisha Bello, Mia Chen, Valentina Rossi, Clara Mendes.
+    * **10 Modelos Homens**: Matheus Becker, Liam Gallagher, Kenji Sato, Rodrigo Paiva, Julian Thorne, Kofi Mensah, Diego Morales, Alexandre Dumas, Thiago Rocha, Marcus Sterling.
+    * **5 Modelos Idosas (60+)**: Dona Helena Vasconcelos, Beatrix Von Berg, Carmen Almodóvar, Soraia Guimarães, Evelyn Montgomery.
+    * **5 Modelos Idosos (60+)**: Dr. Álvaro Prado, Arthur Kingsley, Hélio Taniguchi, Carlos Eduardo Fontes (Cadu), Giancarlo Moretti.
+  - Para cada um dos 30 modelos:
+    * Foto de Perfil em alta resolução (`avatarUrl`).
+    * Foto de Corpo Todo em alta resolução (`coverUrl` e item principal da `gallery`).
+    * Ficha técnica editorial: bio de alta fidelidade, tags de estilo/nicho, localizações globais e handles sociais.
+    * Master Prompts fotográficos em 8K cinematográfico com especificação de lentes (85mm, 50mm, 35mm f/1.4), iluminação de estúdio (key light, rim light), simetria facial e texturas de pele ultradetalhadas.
+- **Comercialização dos Master Prompts como Itens da Vitrine**:
+  - **Cards da Vitrine (`components/models/ModelCard.tsx`)**:
+    * Badge luminosa com efeito neon gradiente exibindo `💎 Prompt: X cr`.
+    * Ações rápidas táteis: "Ver Lookbook & Prompt" e "Adquirir Prompt / Usar" para modelos de IA.
+    * Touch targets rigorosamente `>= 44px` e aspecto fotográfico 3:4 com eliminação de saltos de layout (Zero CLS).
+  - **Lookbook e Modal de Detalhes (`components/models/ModelDetailModal.tsx`)**:
+    * **Seletor Tátil de Enquadramento**: Abas de 1 toque no topo da galeria permitindo alternar instantaneamente entre **"📸 Foto de Corpo Todo"** e **"👤 Foto de Perfil"**.
+    * **Módulo "Master Prompt de IA à Venda"**:
+      - *Estado Bloqueado*: Caixa escura obsidian com borda violeta, ícone de cadeado, badge de exclusividade, prévia do texto com blur protegido (`blur-sm select-none pointer-events-none opacity-40`) e preço em destaque.
+      - *Botão de Compra Protagonista*: "Desbloquear Master Prompt (X créditos)" com touch target `>= 48px`, feedback sonoro visual e estado de carregamento com spinner.
+      - *Estado Desbloqueado*: Badge esmeralda "Prompt Desbloqueado ✅", revelação do prompt na íntegra, botão de 1 toque "Copiar Prompt" com Sonner toast e botão "Usar no Studio CREATE" pré-carregando o prompt e a face de referência.
+- **Infraestrutura Backend & Segurança Transacional**:
+  - **Novo Endpoint `POST /api/models/purchase-prompt` (`app/api/models/purchase-prompt/route.ts`)**:
+    * **Autoridade do Servidor**: Preço resolvido exclusivamente pelo backend via banco ou catálogo fixo (impossibilitando manipulação de valor pelo cliente).
+    * **Sessão Segura**: Autenticação via `auth()` do NextAuth com prevenção absoluta a IDOR.
+    * **Acesso Livre para Assinantes Ilimitados**: Usuários `ADMIN` ou com `isUnlimited: true` recebem acesso imediato sem débito de créditos.
+    * **Validação de Saldo & Bloqueio Concorrente**: Bloqueio de linha pessimista (`SELECT 1 FROM "CreditBalance" WHERE "userId" = ... FOR UPDATE`) e gravação auditável no histórico de transações (`CreditTransaction`).
+  - **Extensão do `CreditService` (`services/credit.service.ts`)**:
+    * Novo método estático `CreditService.deduct()` com suporte a débitos atômicos pontuais, transações ACID e isolamento pessimista.
+- **Suíte de Testes Automatizados (`__tests__/models-prompt-purchase.test.ts`)**:
+  - 6 testes unitários e de integração validando 401 para não autenticados, 400 para payloads inválidos, 404 para modelos inexistentes, 400 para saldo insuficiente, 200 com débito atômico e 200 isento para usuários ilimitados.
+  - 100% de aprovação no Vitest (30 arquivos, 218 testes aprovados).
+  - 0 erros de compilação com `tsc --noEmit`.
+
+## [2.5.9] - 2026-09-15
+### Página Dedicada "Minha Conta" (`/dashboard/account`) com Integração do Link de Afiliado & Gestão de Perfil
+- **Criação da Página Minha Conta (`app/dashboard/account/page.tsx`)**:
+  - Nova interface Dark Obsidian que centraliza a identidade do criador, status da conta, plano ativo, saldo de créditos e preferências de segurança.
+  - **Card Protagonista "Seu Link de Indicação & Afiliado"**:
+    * Exibição destacada em gradiente esmeralda com código exclusivo e link completo (`https://vortixia.com.br/register?ref=CODIGO`).
+    * Botão de 1 toque **"Copiar Link"** com feedback tátil e sonoro visual via Sonner toast em PT-BR.
+    * Botão de cópia rápida do código de afiliado e atalhos diretos para compartilhamento instantâneo no **WhatsApp** e **Telegram** com mensagem pré-formatada.
+    * Resumo das métricas do programa de parceiros: comissão ativa (15% em dinheiro via Pix), total de indicados e compras convertidas, e saldo disponível para resgate com atalho para o painel de afiliados completo (`/dashboard/affiliates`).
+  - **Gestão de Perfil & Segurança**:
+    * Formulário para atualização do Nome de exibição com validação em tempo real.
+    * Exibição do e-mail da conta com selo de verificação de autenticidade.
+    * Atalho seguro para Redefinição/Alteração de Senha (`/recovery-password`).
+    * Toggles para preferências de notificações por e-mail (recargas/comissões e alertas de segurança).
+- **Endpoint de Perfil & Afiliados (`app/api/user/profile/route.ts`)**:
+  - `GET`: Retorna dados consolidados da conta com validação de sessão, cálculo de créditos, plano ativo e garantia de criação/consulta de perfil de afiliado via `AffiliateService`.
+  - `PATCH`: Permite atualização atômica do nome de exibição (Zod schema 2-60 chars) e código customizado de afiliado.
+- **Navegação Global e Acessibilidade (`DashboardShell.tsx` e `settings/page.tsx`)**:
+  - Adicionado atalho direto "Minha Conta" no menu popover do avatar no cabeçalho superior.
+  - Adicionado item "Minha Conta" com ícone `User` na seção "Sistema" da barra lateral.
+  - Card de perfil no rodapé da Sidebar transformado em link direto e clicável para `/dashboard/account`.
+  - Adicionado banner de destaque na página de configurações (`/dashboard/settings`) direcionando para a nova central da conta.
+- **Suíte de Testes Automatizados (`__tests__/account-profile.test.ts`)**:
+  - Implementação de 5 testes unitários e de integração cobrindo autenticação (401), integridade de dados (200), validação de nomes via PATCH e geração de links de afiliados.
+  - 100% de aprovação na suíte completa do Vitest (29 arquivos, 212 testes aprovados).
+  - 0 erros de compilação em `tsc --noEmit`.
+
+## [2.5.8] - 2026-09-15
+### Remoção da Barra de Rolagem Nativa & Layout Adaptativo nas Pílulas de Categoria da Vitrine de Modelos
+- **Diagnóstico do Scrollbar Nativo em Vitrine de Modelos (`/dashboard/models`)**:
+  - Em sistemas Windows, elementos com `overflow-x-auto` sem supressão de scrollbar via CSS sofrem fallback para barras de rolagem nativas brancas espessas com setas laterais (`<` `>`), quebrando a imersão do tema Dark Obsidian.
+  - O Tailwind CSS v4 não inclui nativamente classes utilitárias `.no-scrollbar` ou `.scrollbar-none` sem declaração explícita em CSS global.
+  - A linha de pílulas de categorias (`ModelFilterPills.tsx`) possuía máscaras de gradiente escuro sobrepostas nas extremidades que causavam sombreamento indesejado sobre o botão ativo "Todas as Categorias" e setas de navegação desktop flutuantes desnecessárias.
+- **Motor Global de Scrollbar Dark Obsidian & Utilitários de Supressão (`app/globals.css`)**:
+  - Implementação de regras globais de estilização para navegadores WebKit/Chromium (`::-webkit-scrollbar` com 6px, trilho transparente e thumb `#1E202E` com hover `#3B3F58`).
+  - Criação dos utilitários de alta prioridade `.no-scrollbar` e `.scrollbar-none` com `display: none !important`, `-ms-overflow-style: none !important` e `scrollbar-width: none !important` para supressão 100% garantida de qualquer barra nativa em elementos deslizantes.
+- **Refatoração Adaptativa das Pílulas de Filtro (`components/models/ModelFilterPills.tsx`)**:
+  - No Desktop e Tablets (`sm:` em diante): Aplicação de `sm:flex-wrap`, permitindo que as categorias se distribuam em fluxo natural e contínuo, sem exigir rolagem horizontal.
+  - No Mobile (<640px): Rolagem touch suave com `overscroll-behavior-x: contain` e supressão visual de barra via estilos inline e classes `.no-scrollbar .scrollbar-none`.
+  - Remoção dos gradientes de fade escuro nas pontas e das setas de scroll redundantes, restaurando a clareza e contraste do botão ativo.
+- **Validação**:
+  - 100% de testes aprovados (207/207) no Vitest e 0 erros de tipagem em `tsc --noEmit`.
+
 ## [2.5.7] - 2026-09-15
 ### Rebranding Geral para "VORTIXIA", Novas Logos Oficiais & Refatoração dos Cards de Créditos
 - **Rebranding Completo para VORTIXIA**:

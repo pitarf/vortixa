@@ -39,7 +39,7 @@ export function ModelCard({ model, onOpenDetails, onBookModel }: ModelCardProps)
     }).format(cents / 100);
   };
 
-  const handlePrimaryAction = (e: React.MouseEvent) => {
+  const handleStudioDirect = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (isAi) {
       const query = new URLSearchParams();
@@ -48,8 +48,8 @@ export function ModelCard({ model, onOpenDetails, onBookModel }: ModelCardProps)
       if (model.promptTrigger) {
         query.set("prompt", model.promptTrigger);
       }
-      if (model.referenceFaceUrl) {
-        query.set("refImg", model.referenceFaceUrl);
+      if (model.referenceFaceUrl || model.avatarUrl) {
+        query.set("refImg", model.referenceFaceUrl || model.avatarUrl);
       }
       router.push(`/dashboard/create?${query.toString()}`);
     } else {
@@ -59,7 +59,7 @@ export function ModelCard({ model, onOpenDetails, onBookModel }: ModelCardProps)
 
   return (
     <article
-      className="group relative rounded-3xl bg-[#0D0E12] border border-[#1E202E] hover:border-violet-500/40 hover:shadow-[0_16px_48px_rgba(139,92,246,0.12)] transition-all duration-300 flex flex-col overflow-hidden focus-within:ring-2 focus-within:ring-violet-500/50"
+      className="group relative rounded-3xl bg-[#0D0E12] border border-[#1E202E] hover:border-violet-500/40 hover:shadow-[0_16px_48px_rgba(139,92,246,0.14)] transition-all duration-300 flex flex-col overflow-hidden focus-within:ring-2 focus-within:ring-violet-500/50"
       aria-labelledby={`model-title-${model.id}`}
     >
       {/* Moldura Fotográfica Contida (Aspect Ratio 3:4) para Eliminar CLS */}
@@ -96,14 +96,22 @@ export function ModelCard({ model, onOpenDetails, onBookModel }: ModelCardProps)
         <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/90 via-black/40 to-transparent pointer-events-none" />
         <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#0D0E12] via-[#0D0E12]/85 via-50% to-transparent pointer-events-none" />
 
-        {/* Badges de Topo Adaptativas */}
+        {/* Badges de Topo Adaptativas com Badge Luminosa do Prompt */}
         <div className="absolute top-3 inset-x-3 flex items-start justify-between gap-1.5 z-10 pointer-events-none">
-          <div className="flex items-center gap-1 flex-wrap max-w-[65%]">
+          <div className="flex items-center gap-1.5 flex-wrap max-w-[70%]">
             {isAi ? (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider bg-violet-950/80 text-violet-200 border border-violet-500/40 backdrop-blur-md shadow-lg shadow-violet-950/40">
-                <Sparkles className="w-3 h-3 text-violet-400 shrink-0" />
-                <span>IA</span>
-              </span>
+              <>
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider bg-violet-950/85 text-violet-200 border border-violet-500/40 backdrop-blur-md shadow-lg shadow-violet-950/40">
+                  <Sparkles className="w-3 h-3 text-violet-400 shrink-0" />
+                  <span>IA</span>
+                </span>
+
+                {/* Badge Luminosa do Item: Prompt à Venda */}
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider bg-gradient-to-r from-violet-900/90 via-fuchsia-950/90 to-violet-950/90 text-violet-200 border border-violet-400/50 backdrop-blur-md shadow-[0_0_14px_rgba(168,85,247,0.4)]">
+                  <span>💎</span>
+                  <span>Prompt: {model.creditsPricePerGen} cr</span>
+                </span>
+              </>
             ) : (
               <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider bg-cyan-950/80 text-cyan-200 border border-cyan-500/40 backdrop-blur-md shadow-lg shadow-cyan-950/40">
                 <User className="w-3 h-3 text-cyan-400 shrink-0" />
@@ -131,11 +139,11 @@ export function ModelCard({ model, onOpenDetails, onBookModel }: ModelCardProps)
           </span>
         </div>
 
-        {/* Revelação Cinematográfica no Hover: Botão Flutuante de Ver Lookbook */}
+        {/* Revelação Cinematográfica no Hover: Botão Flutuante Lookbook & Prompt */}
         <div className="absolute inset-0 hidden sm:flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-10 pointer-events-none">
           <span className="px-4 py-2.5 rounded-2xl bg-black/85 backdrop-blur-xl border border-white/20 text-xs font-bold text-white shadow-2xl flex items-center gap-2">
             <Eye className="w-3.5 h-3.5 text-violet-400" />
-            <span>Ver Lookbook</span>
+            <span>{isAi ? "Ver Lookbook & Prompt" : "Ver Lookbook"}</span>
             <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
           </span>
         </div>
@@ -177,8 +185,9 @@ export function ModelCard({ model, onOpenDetails, onBookModel }: ModelCardProps)
             </button>
 
             {isAi ? (
-              <span className="text-[10px] sm:text-[11px] font-mono font-bold text-violet-300 bg-violet-500/15 border border-violet-500/25 px-2 py-0.5 rounded-lg shrink-0 flex items-center gap-1">
-                ⚡ {model.creditsPricePerGen} cr
+              <span className="text-[10px] sm:text-[11px] font-mono font-black text-violet-200 bg-gradient-to-r from-violet-600/30 via-fuchsia-600/20 to-violet-600/30 border border-violet-400/40 px-2 py-0.5 rounded-lg shrink-0 flex items-center gap-1 shadow-[0_0_10px_rgba(168,85,247,0.25)]">
+                <span>💎</span>
+                <span>Prompt: {model.creditsPricePerGen} cr</span>
               </span>
             ) : (
               <span className="text-[10px] sm:text-[11px] font-mono font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-500/25 px-2 py-0.5 rounded-lg shrink-0 flex items-center gap-1">
@@ -212,18 +221,31 @@ export function ModelCard({ model, onOpenDetails, onBookModel }: ModelCardProps)
         {/* Botão de Ação Primária com Touch Target Rigorosamente >= 44px */}
         <div className="pt-2.5 border-t border-[#1E202E]">
           {isAi ? (
-            <button
-              type="button"
-              onClick={handlePrimaryAction}
-              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:to-indigo-500 active:scale-[0.98] text-white text-xs font-bold shadow-lg shadow-violet-600/25 transition-all cursor-pointer min-h-[44px]"
-            >
-              <Zap className="w-3.5 h-3.5 fill-current text-violet-200 shrink-0" />
-              <span className="truncate">Usar no Studio CREATE</span>
-            </button>
+            <div className="grid grid-cols-1 xs:grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => onOpenDetails(model)}
+                className="w-full flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] hover:bg-violet-950/60 text-slate-200 hover:text-white border border-[#1E202E] hover:border-violet-500/40 text-xs font-bold transition-all cursor-pointer min-h-[44px] active:scale-[0.98]"
+                aria-label={`Ver lookbook e prompt de ${model.name}`}
+              >
+                <Eye className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+                <span className="truncate">Ver Lookbook & Prompt</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onOpenDetails(model)}
+                className="w-full flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-fuchsia-600 hover:from-violet-500 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-violet-600/30 transition-all cursor-pointer min-h-[44px] active:scale-[0.98]"
+                aria-label={`Adquirir prompt de ${model.name}`}
+              >
+                <Sparkles className="w-3.5 h-3.5 fill-current text-violet-200 shrink-0" />
+                <span className="truncate">Adquirir Prompt / Usar</span>
+              </button>
+            </div>
           ) : (
             <button
               type="button"
-              onClick={handlePrimaryAction}
+              onClick={handleStudioDirect}
               className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#13141B] hover:bg-cyan-600 hover:text-white active:scale-[0.98] text-cyan-300 text-xs font-bold border border-cyan-500/30 hover:border-cyan-400 shadow-md transition-all cursor-pointer min-h-[44px]"
             >
               <Calendar className="w-3.5 h-3.5 shrink-0" />

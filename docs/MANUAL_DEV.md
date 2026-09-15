@@ -432,4 +432,72 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
   - Endpoint `GET /api/payments/qrcode?text=<EMV>` que entrega diretamente o buffer PNG binário com cabeçalho `Cache-Control: public, max-age=86400, immutable`.
   - Permite que o frontend renderize o QR Code como uma simples tag `<img src="/api/payments/qrcode?text=..." />` em caso de ausência de Data URL pré-compilada, garantindo tolerância a falhas.
 
+---
 
+## 20. Motor Global de Scrollbar Dark Obsidian & Filtros Adaptativos
+
+### 1. Eliminação de Barras de Rolagem Nativas no Windows
+* **Engine Global (`app/globals.css`)**:
+  - Configuração global de pseudo-elementos `::-webkit-scrollbar` para garantir que qualquer barra de rolagem obrigatória adote a paleta Dark Obsidian (largura de 6px, trilho transparente, thumb `#1E202E` e hover `#3B3F58`).
+  - Previne a renderização de barras de rolagem nativas brancas do sistema operacional Windows com botões de setas (`<` e `>`).
+* **Utilitários de Supressão Absoluta (`.no-scrollbar`, `.scrollbar-none`)**:
+  - Definição com precedência `!important` para `display: none`, `scrollbar-width: none` e `-ms-overflow-style: none`.
+  - Aplicado a seletores e trilhos deslizantes táteis como `ModelFilterPills.tsx`, `ImageWorkflowTabs.tsx` e `DashboardShell.tsx`.
+
+### 2. Pílulas de Categoria Adaptativas na Vitrine de Modelos (`components/models/ModelFilterPills.tsx`)
+* **Wrap Fluido no Desktop**:
+  - Utilização de `sm:flex-wrap`, permitindo que as categorias quebrem naturalmente em fluxo contínuo quando exibidas em telas médias ou amplas, eliminando completamente a necessidade de rolagem horizontal.
+* **Touch-Scroll Invisível no Mobile**:
+  - Em smartphones (< 640px), o container mantém rolagem horizontal suave com gestos táteis (`overscrollBehaviorX: "contain"`) e ausência total de indicadores visuais intrusivos.
+
+---
+
+## 21. Arquitetura da Página Minha Conta & Integração com Afiliados
+
+### 1. Endpoint Unificado de Perfil (`/api/user/profile`)
+* **Consolidação de Entidades (User + CreditBalance + Order + AffiliateProfile)**:
+  - O endpoint `GET /api/user/profile` resolve em uma única viagem de rede (single round-trip) todos os dados necessários para o dashboard do usuário: identificação cadastral, status administrativo (`isUnlimited` ou `ADMIN`), plano comercial ativo (avaliando o histórico de compras em `Order`), saldo em tempo real via `CreditService` e o perfil de parceiro via `AffiliateService.getAffiliateStats()`.
+  - Garante a criação resiliente e transparente do código de indicação único caso o usuário nunca tenha acessado o painel de afiliados anteriormente.
+* **Validação de Atualização via Schema Zod (PATCH)**:
+  - O endpoint `PATCH /api/user/profile` aceita `name` (2 a 60 caracteres) e `customCode` (3 a 20 caracteres alfanuméricos com hífen/underline).
+  - Atualizações de nome refletem diretamente na tabela `User`, enquanto alterações de código de afiliado são delegadas ao `AffiliateService.updateCustomCode()` garantindo unicidade no banco de dados.
+
+### 2. Acessibilidade e Pontos de Entrada no Sistema
+* **Topbar**: Inserção de link direto "Minha Conta" no popover acionado pelo clique no avatar do usuário (`DashboardShell.tsx`).
+* **Sidebar**: Inclusão de atalho dedicado com ícone `User` e transformação do card de perfil no rodapé em elemento âncora clicável para navegação fluida.
+* **Settings**: Banner dinâmico direcionando para a nova central de conta e links de afiliados.
+
+---
+
+## 22. Arquitetura de Desbloqueio e Venda de Master Prompts & Catálogo de 30 Modelos IA
+
+### 1. Catálogo Expandido de Modelos Fotográficos (`lib/marketplace-models.ts`)
+* **Estrutura de Dados**: Cada perfil no catálogo possui:
+  - `id` e `slug`: Identificadores únicos padronizados.
+  - `avatarUrl`: Retrato editorial de perfil (headshot/close-up em alta definição).
+  - `coverUrl` e `gallery`: Foto de corpo todo (full body) destacando enquadramento, vestimenta e proporções físicas.
+  - `promptTrigger`: Master Prompt de alta fidelidade cinematográfica em 8K, especificando iluminação de estúdio (key light, rim light), lentes (85mm, 50mm f/1.4), texturas de pele e acabamento editorial.
+  - `creditsPricePerGen`: Preço de aquisição do prompt em créditos internos (padrão: 5 créditos).
+* **Segmentação dos 30 Modelos**:
+  - 10 Modelos Mulheres: Moda, editorial e alta costura internacional.
+  - 10 Modelos Homens: Streetwear, alfaiataria e campanhas corporativas.
+  - 5 Modelos Idosas (60+): Elegância madura, beleza natural e campanhas de luxo.
+  - 5 Modelos Idosos (60+): Autoridade profissional, editorial sofisticado e estilo clássico.
+
+### 2. Endpoint de Aquisição Segura (`/api/models/purchase-prompt`)
+* **Autoridade do Servidor**: O valor em créditos é extraído estritamente do banco de dados ou do catálogo fixo no servidor. Nenhuma informação de custo vinda do payload do cliente é aceita.
+* **Prevenção a IDOR & Sessão**: Validação de autenticação via `auth()` do NextAuth. O débito ocorre única e exclusivamente na conta do usuário autenticado na sessão.
+* **Isenção para Assinantes Ilimitados e Administradores**: Usuários com `role === 'ADMIN'` ou `isUnlimited: true` recebem acesso imediato ao prompt sem débito de créditos (`freeAccess: true`).
+* **Débito Atômico Concorrente (`CreditService.deduct`)**:
+  - Bloqueio pessimista de linha no PostgreSQL (`SELECT 1 FROM "CreditBalance" WHERE "userId" = ... FOR UPDATE`).
+  - Atualização do saldo do usuário de forma indivisível dentro de uma transação Prisma (`prisma.$transaction`).
+  - Registro de auditoria imutável na tabela `CreditTransaction` com tipo `GENERATION_DEBIT` e descrição identificando o modelo adquirido.
+
+### 3. Interface da Vitrine e Lookbook
+* **ModelCard (`components/models/ModelCard.tsx`)**:
+  - Badge luminosa no topo do card: `💎 Prompt: X cr` com sombra volumétrica violeta/fuchsia.
+  - Botão de ação dupla para modelos de IA: "Ver Lookbook & Prompt" e "Adquirir Prompt / Usar".
+* **ModelDetailModal (`components/models/ModelDetailModal.tsx`)**:
+  - Seletor de abas dedicado: "📸 Foto de Corpo Todo" vs "👤 Foto de Perfil".
+  - Módulo protegido com prévia borrada (`blur-sm select-none pointer-events-none opacity-40`) e preço em créditos.
+  - Ao adquirir: atualização em tempo real do estado visual para "Prompt Desbloqueado ✅", persistência em `localStorage` para acesso instantâneo na sessão, botão de 1 toque para cópia e atalho "Usar no Studio CREATE".

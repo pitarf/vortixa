@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { MarketplaceModelItem, CATEGORY_LABELS } from "./types";
 import {
   X,
@@ -18,6 +18,9 @@ import {
   Layers,
   Flame,
   ShieldCheck,
+  Lock,
+  Unlock,
+  Loader2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -38,9 +41,32 @@ export function ModelDetailModal({
   const router = useRouter();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [unlockedPrompt, setUnlockedPrompt] = useState<string | null>(null);
+  const [isPurchasing, setIsPurchasing] = useState(false);
 
+  // Inicialização e persistência local do status de desbloqueio
   useEffect(() => {
     setActiveImageIndex(0);
+    setCopiedPrompt(false);
+    setIsPurchasing(false);
+
+    if (!model) return;
+
+    try {
+      const stored = localStorage.getItem("vorixa_unlocked_prompts");
+      if (stored) {
+        const unlockedMap = JSON.parse(stored);
+        if (unlockedMap[model.id]) {
+          setIsUnlocked(true);
+          setUnlockedPrompt(unlockedMap[model.id]);
+          return;
+        }
+      }
+    } catch {}
+
+    setIsUnlocked(false);
+    setUnlockedPrompt(null);
   }, [model]);
 
   // Trava de Scroll do Body para Prevenir Scroll Chaining
@@ -64,16 +90,51 @@ export function ModelDetailModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
+  // Montagem e separação tátil de Foto de Corpo Todo vs Foto de Perfil
+  const { galleryImages, fullBodyIndex, profileIndex } = useMemo(() => {
+    if (!model) {
+      return { galleryImages: [], fullBodyIndex: 0, profileIndex: 0 };
+    }
+
+    const fullBodyUrl = model.coverUrl || (model.gallery && model.gallery[0]) || model.avatarUrl;
+    const profileUrl = model.avatarUrl || model.referenceFaceUrl || (model.gallery && model.gallery[1]) || fullBodyUrl;
+
+    const list: { url: string; label: string; kind: "FULL_BODY" | "PROFILE" | "EXTRA" }[] = [];
+
+    if (fullBodyUrl) {
+      list.push({ url: fullBodyUrl, label: "Foto de Corpo Todo", kind: "FULL_BODY" });
+    }
+
+    if (profileUrl && profileUrl !== fullBodyUrl) {
+      list.push({ url: profileUrl, label: "Foto de Perfil", kind: "PROFILE" });
+    }
+
+    if (model.gallery && Array.isArray(model.gallery)) {
+      model.gallery.forEach((url, i) => {
+        if (url && !list.some((item) => item.url === url)) {
+          list.push({ url, label: `Editorial #${i + 1}`, kind: "EXTRA" });
+        }
+      });
+    }
+
+    if (list.length === 0 && model.avatarUrl) {
+      list.push({ url: model.avatarUrl, label: "Foto Principal", kind: "PROFILE" });
+    }
+
+    const fIdx = list.findIndex((img) => img.kind === "FULL_BODY");
+    const pIdx = list.findIndex((img) => img.kind === "PROFILE");
+
+    return {
+      galleryImages: list,
+      fullBodyIndex: fIdx >= 0 ? fIdx : 0,
+      profileIndex: pIdx >= 0 ? pIdx : (list.length > 1 ? 1 : 0),
+    };
+  }, [model]);
+
   if (!isOpen || !model) return null;
 
   const isAi = model.type === "AI";
   const categoryMeta = CATEGORY_LABELS[model.category] || { label: model.category, icon: "✨" };
-
-  const images = [
-    ...(model.avatarUrl ? [model.avatarUrl] : []),
-    ...(model.coverUrl ? [model.coverUrl] : []),
-    ...(model.gallery || []),
-  ].filter((url, index, self) => self.indexOf(url) === index);
 
   const formatPrice = (cents?: number | null) => {
     if (!cents) return "Sob Consulta";
@@ -85,10 +146,11 @@ export function ModelDetailModal({
   };
 
   const handleCopyPrompt = () => {
-    if (!model.promptTrigger) return;
-    navigator.clipboard.writeText(model.promptTrigger);
+    const text = unlockedPrompt || model.promptTrigger;
+    if (!text) return;
+    navigator.clipboard.writeText(text);
     setCopiedPrompt(true);
-    toast.success("Prompt trigger copiado para a área de transferência!");
+    toast.success("Master Prompt copiado para a área de transferência!");
     setTimeout(() => setCopiedPrompt(false), 2000);
   };
 
@@ -96,23 +158,61 @@ export function ModelDetailModal({
     const query = new URLSearchParams();
     query.set("modelRef", model.id);
     query.set("modelName", model.name);
-    if (model.promptTrigger) {
-      query.set("prompt", model.promptTrigger);
+    const text = unlockedPrompt || model.promptTrigger;
+    if (text) {
+      query.set("prompt", text);
     }
-    if (model.referenceFaceUrl) {
-      query.set("refImg", model.referenceFaceUrl);
+    const face = model.referenceFaceUrl || model.avatarUrl;
+    if (face) {
+      query.set("refImg", face);
     }
     router.push(`/dashboard/create?${query.toString()}`);
   };
 
+  const handleUnlockPrompt = async () => {
+    if (isPurchasing) return;
+    try {
+      setIsPurchasing(true);
+      const res = await fetch("/api/models/purchase-prompt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ modelId: model.id }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error || "Não foi possível desbloquear o Master Prompt. Verifique seu saldo de créditos.");
+        return;
+      }
+
+      const promptText = data.prompt || model.promptTrigger || "";
+      setIsUnlocked(true);
+      setUnlockedPrompt(promptText);
+
+      try {
+        const stored = localStorage.getItem("vorixa_unlocked_prompts");
+        const map = stored ? JSON.parse(stored) : {};
+        map[model.id] = promptText;
+        localStorage.setItem("vorixa_unlocked_prompts", JSON.stringify(map));
+      } catch {}
+
+      toast.success("Master Prompt desbloqueado com sucesso!");
+    } catch (error) {
+      toast.error("Erro de conexão ao processar o desbloqueio. Tente novamente.");
+    } finally {
+      setIsPurchasing(false);
+    }
+  };
+
   const nextImage = () => {
-    if (images.length <= 1) return;
-    setActiveImageIndex((prev) => (prev + 1) % images.length);
+    if (galleryImages.length <= 1) return;
+    setActiveImageIndex((prev) => (prev + 1) % galleryImages.length);
   };
 
   const prevImage = () => {
-    if (images.length <= 1) return;
-    setActiveImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    if (galleryImages.length <= 1) return;
+    setActiveImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
   };
 
   return (
@@ -142,73 +242,111 @@ export function ModelDetailModal({
 
         {/* COLUNA ESQUERDA: Lookbook Fotográfico (Comp-Card Gallery) */}
         <div className="w-full lg:w-1/2 bg-black/40 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#1E202E] p-4 sm:p-6 shrink-0">
-          <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden bg-black flex items-center justify-center border border-[#1E202E]">
-            {images.length > 0 ? (
-              <img
-                src={images[activeImageIndex]}
-                alt={`${model.name} foto ${activeImageIndex + 1}`}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div className="text-slate-500 text-xs font-mono">Sem imagens disponíveis</div>
-            )}
+          <div>
+            {/* Seletor Tátil / Pílulas: Foto de Corpo Todo vs Foto de Perfil */}
+            <div className="flex items-center gap-2 mb-3 w-full">
+              <button
+                type="button"
+                onClick={() => setActiveImageIndex(fullBodyIndex)}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer min-h-[44px] ${
+                  activeImageIndex === fullBodyIndex
+                    ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30 border border-violet-400/50 scale-[1.01]"
+                    : "bg-[#070709] text-slate-300 hover:text-white border border-[#1E202E] hover:border-slate-700"
+                }`}
+                aria-label="Selecionar Foto de Corpo Todo"
+              >
+                <span className="text-sm">📸</span>
+                <span className="truncate">Foto de Corpo Todo</span>
+              </button>
 
-            {/* Contador Flutuante de Fotos */}
-            {images.length > 0 && (
-              <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/10 text-[10px] font-mono text-white">
-                {String(activeImageIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
-              </div>
-            )}
+              <button
+                type="button"
+                onClick={() => setActiveImageIndex(profileIndex)}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer min-h-[44px] ${
+                  activeImageIndex === profileIndex
+                    ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30 border border-violet-400/50 scale-[1.01]"
+                    : "bg-[#070709] text-slate-300 hover:text-white border border-[#1E202E] hover:border-slate-700"
+                }`}
+                aria-label="Selecionar Foto de Perfil"
+              >
+                <span className="text-sm">👤</span>
+                <span className="truncate">Foto de Perfil</span>
+              </button>
+            </div>
 
-            {/* Controles de Navegação Touch-Friendly (>= 44px) */}
-            {images.length > 1 && (
-              <>
-                <button
-                  type="button"
-                  onClick={prevImage}
-                  className="absolute left-2.5 top-1/2 -translate-y-1/2 p-2.5 rounded-xl bg-black/80 hover:bg-black text-white backdrop-blur-md border border-white/15 transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center shadow-lg active:scale-95"
-                  aria-label="Foto anterior"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={nextImage}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-2.5 rounded-xl bg-black/80 hover:bg-black text-white backdrop-blur-md border border-white/15 transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center shadow-lg active:scale-95"
-                  aria-label="Próxima foto"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </>
-            )}
+            {/* Visualizador Principal com Transição Suave e Moldura Fixa 3:4 */}
+            <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden bg-black flex items-center justify-center border border-[#1E202E]">
+              {galleryImages.length > 0 ? (
+                <img
+                  key={galleryImages[activeImageIndex]?.url}
+                  src={galleryImages[activeImageIndex]?.url}
+                  alt={`${model.name} - ${galleryImages[activeImageIndex]?.label}`}
+                  className="h-full w-full object-cover animate-in fade-in duration-300"
+                />
+              ) : (
+                <div className="text-slate-500 text-xs font-mono">Sem imagens disponíveis</div>
+              )}
+
+              {/* Contador Flutuante de Fotos */}
+              {galleryImages.length > 0 && (
+                <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/10 text-[10px] font-mono text-white">
+                  {String(activeImageIndex + 1).padStart(2, "0")} / {String(galleryImages.length).padStart(2, "0")} • {galleryImages[activeImageIndex]?.label}
+                </div>
+              )}
+
+              {/* Controles de Navegação Touch-Friendly (>= 44px) */}
+              {galleryImages.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={prevImage}
+                    className="absolute left-2.5 top-1/2 -translate-y-1/2 p-2.5 rounded-xl bg-black/80 hover:bg-black text-white backdrop-blur-md border border-white/15 transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center shadow-lg active:scale-95"
+                    aria-label="Foto anterior"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={nextImage}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-2.5 rounded-xl bg-black/80 hover:bg-black text-white backdrop-blur-md border border-white/15 transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center shadow-lg active:scale-95"
+                    aria-label="Próxima foto"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </>
+              )}
+            </div>
           </div>
 
-          {/* Miniaturas Inferiores com Scroll Tátil Suave */}
-          {images.length > 1 && (
+          {/* Miniaturas Inferiores com Identificação de Tipo e Scroll Tátil Suave */}
+          {galleryImages.length > 1 && (
             <div
               className="flex items-center gap-2.5 overflow-x-auto pt-3.5 no-scrollbar"
               style={{ WebkitOverflowScrolling: "touch" }}
             >
-              {images.map((imgUrl, idx) => (
+              {galleryImages.map((img, idx) => (
                 <button
                   key={idx}
                   type="button"
                   onClick={() => setActiveImageIndex(idx)}
-                  className={`h-16 w-16 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
+                  className={`relative h-16 w-16 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer min-h-[44px] min-w-[44px] ${
                     idx === activeImageIndex
-                      ? "border-violet-500 ring-2 ring-violet-500/30 scale-105"
+                      ? "border-violet-500 ring-2 ring-violet-500/40 scale-105"
                       : "border-[#1E202E] opacity-60 hover:opacity-100"
                   }`}
-                  aria-label={`Visualizar foto ${idx + 1}`}
+                  aria-label={`Visualizar ${img.label}`}
                 >
-                  <img src={imgUrl} alt="" className="h-full w-full object-cover" />
+                  <img src={img.url} alt="" className="h-full w-full object-cover" />
+                  <span className="absolute bottom-0 inset-x-0 bg-black/80 text-[8px] font-mono text-center text-slate-300 truncate px-1 py-0.5">
+                    {img.kind === "FULL_BODY" ? "Corpo" : img.kind === "PROFILE" ? "Perfil" : `#${idx + 1}`}
+                  </span>
                 </button>
               ))}
             </div>
           )}
         </div>
 
-        {/* COLUNA DIREITA: Ficha Técnica, Informações e Ações */}
+        {/* COLUNA DIREITA: Ficha Técnica, Master Prompt à Venda e Ações */}
         <div className="w-full lg:w-1/2 p-5 sm:p-7 md:p-8 flex flex-col justify-between overflow-y-auto flex-1 lg:max-h-[92vh] space-y-6 overscroll-contain pb-[max(1.5rem,env(safe-area-inset-bottom))]">
           <div className="space-y-5">
             {/* Header: Badges e Nome */}
@@ -275,38 +413,139 @@ export function ModelDetailModal({
               </p>
             </div>
 
-            {/* Parâmetros Neurais para Modelos de IA */}
-            {isAi && model.promptTrigger && (
-              <div className="space-y-2 p-4 rounded-2xl bg-[#070709] border border-[#1E202E]">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-[10px] font-mono font-bold uppercase text-violet-400 tracking-wider flex items-center gap-1.5">
-                    <Zap className="w-3.5 h-3.5 shrink-0" />
-                    <span>Trigger Prompt Recomendado</span>
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleCopyPrompt}
-                    className="flex items-center gap-1.5 text-xs font-mono text-slate-300 hover:text-white transition-colors cursor-pointer min-h-[44px] px-3 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/40"
-                    aria-label="Copiar prompt trigger"
-                  >
-                    {copiedPrompt ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-400 font-bold">Copiado</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        <span>Copiar</span>
-                      </>
-                    )}
-                  </button>
+            {/* SEÇÃO PRINCIPAL: Master Prompt de IA à Venda */}
+            {isAi && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-[11px] font-mono uppercase font-bold text-slate-300 tracking-wider flex items-center gap-2">
+                    <span>Master Prompt de IA à Venda</span>
+                  </h4>
+                  {isUnlocked ? (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.2)]">
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Prompt Desbloqueado ✅</span>
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-gradient-to-r from-violet-600/30 to-fuchsia-600/30 text-violet-200 border border-violet-400/40 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
+                      <Sparkles className="w-3 h-3 text-violet-300" />
+                      <span>Item Exclusivo à Venda</span>
+                    </span>
+                  )}
                 </div>
-                <p className="text-xs font-mono text-slate-300 bg-black/50 p-3 rounded-xl border border-white/5 break-all select-all leading-relaxed">
-                  {model.promptTrigger}
-                </p>
+
+                {!isUnlocked ? (
+                  /* ESTADO BLOQUEADO */
+                  <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#13141B] via-[#0D0E12] to-[#070709] border border-violet-500/30 hover:border-violet-400/50 shadow-[0_8px_32px_rgba(139,92,246,0.12)] p-4 sm:p-5 space-y-4 transition-all">
+                    {/* Header com Ícone de Cadeado e Preço em Destaque */}
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2.5">
+                        <div className="p-2.5 rounded-xl bg-violet-950/80 border border-violet-500/40 text-violet-300 shadow-inner">
+                          <Lock className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="text-xs font-bold text-white">Engenharia de Prompt Protegida</div>
+                          <div className="text-[10px] text-slate-400 font-mono">Desbloqueio definitivo para sua conta</div>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="text-[10px] uppercase font-mono text-slate-400 block">Preço de Aquisição</span>
+                        <span className="text-sm sm:text-base font-mono font-black text-violet-200 bg-violet-600/20 px-2.5 py-0.5 rounded-lg border border-violet-400/30 inline-flex items-center gap-1 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
+                          <span>💎</span>
+                          <span>{model.creditsPricePerGen} créditos</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Prévia borrada para instigar curiosidade e proteger o prompt */}
+                    <div className="relative rounded-xl p-3.5 bg-black/70 border border-white/5 overflow-hidden">
+                      <p className="text-xs font-mono text-slate-400 blur-sm select-none pointer-events-none opacity-40 leading-relaxed break-words">
+                        {model.promptTrigger || "ultra photorealistic 8k full body and portrait master prompt cinematic lighting, 85mm f/1.4, perfect facial symmetry, hyperdetailed skin, luxury editorial aesthetic award winning photography"}
+                      </p>
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+                        <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#070709]/95 border border-violet-500/40 text-xs font-mono text-violet-200 shadow-2xl">
+                          <Lock className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+                          <span>Prompt Bloqueado • Adquira para Revelar</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Botão de Compra Protagonista com touch target >= 48px */}
+                    <button
+                      type="button"
+                      onClick={handleUnlockPrompt}
+                      disabled={isPurchasing}
+                      className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-emerald-600 hover:from-violet-500 hover:to-emerald-500 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed text-white text-xs sm:text-sm font-bold shadow-xl shadow-violet-600/30 transition-all cursor-pointer min-h-[48px]"
+                    >
+                      {isPurchasing ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin text-white shrink-0" />
+                          <span>Processando Desbloqueio...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="w-4 h-4 text-violet-200 shrink-0" />
+                          <span>Desbloquear Master Prompt ({model.creditsPricePerGen} créditos)</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                ) : (
+                  /* ESTADO DESBLOQUEADO */
+                  <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-emerald-950/25 via-[#0D0E12] to-[#070709] border border-emerald-500/40 shadow-[0_8px_32px_rgba(16,185,129,0.15)] p-4 sm:p-5 space-y-4 animate-in fade-in-50 duration-300">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <div className="p-2 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300">
+                          <Unlock className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="text-xs font-bold text-white">Master Prompt Revelado</div>
+                          <div className="text-[10px] text-emerald-400/80 font-mono">Disponível para cópia e uso direto no Studio</div>
+                        </div>
+                      </div>
+
+                      {/* Botão de 1 toque Copiar Prompt com Sonner toast */}
+                      <button
+                        type="button"
+                        onClick={handleCopyPrompt}
+                        className="flex items-center gap-1.5 text-xs font-mono text-slate-200 hover:text-white transition-colors cursor-pointer min-h-[44px] px-3.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/40 shadow-sm"
+                        aria-label="Copiar prompt completo"
+                      >
+                        {copiedPrompt ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            <span className="text-emerald-300 font-bold">Copiado!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>Copiar Prompt</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Prompt Limpo e Legível */}
+                    <div className="p-3.5 rounded-xl bg-black/80 border border-emerald-500/25">
+                      <p className="text-xs font-mono text-slate-200 break-words select-all leading-relaxed">
+                        {unlockedPrompt || model.promptTrigger}
+                      </p>
+                    </div>
+
+                    {/* Botão Primário "Usar no Studio CREATE" com touch target >= 48px */}
+                    <button
+                      type="button"
+                      onClick={handleUseInStudio}
+                      className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-xl shadow-emerald-600/25 transition-all cursor-pointer min-h-[48px]"
+                    >
+                      <Zap className="w-4 h-4 fill-current text-emerald-200 shrink-0" />
+                      <span>Usar no Studio CREATE</span>
+                    </button>
+                  </div>
+                )}
+
                 {model.loraModelId && (
-                  <div className="text-[10px] font-mono text-slate-500 flex items-center gap-1.5 pt-1">
+                  <div className="text-[10px] font-mono text-slate-500 flex items-center gap-1.5 pt-1 px-1">
                     <Layers className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
                     <span>LoRA ID: <strong className="text-slate-300">{model.loraModelId}</strong></span>
                   </div>
@@ -346,10 +585,10 @@ export function ModelDetailModal({
           <div className="pt-5 border-t border-[#1E202E] space-y-3.5">
             <div className="flex items-center justify-between">
               <span className="text-xs text-slate-400 font-mono">
-                {isAi ? "Consumo por Geração:" : "Valor Base por Diária:"}
+                {isAi ? "Preço do Item na Vitrine:" : "Valor Base por Diária:"}
               </span>
               <span className="text-base sm:text-lg font-black font-mono text-white">
-                {isAi ? `⚡ ${model.creditsPricePerGen} créditos` : formatPrice(model.bookingPriceCents)}
+                {isAi ? `💎 ${model.creditsPricePerGen} créditos` : formatPrice(model.bookingPriceCents)}
               </span>
             </div>
 
@@ -360,7 +599,7 @@ export function ModelDetailModal({
                 className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-xl shadow-violet-600/30 transition-all cursor-pointer min-h-[44px]"
               >
                 <Zap className="w-4 h-4 fill-current shrink-0" />
-                <span>Iniciar Criação no Studio com este Modelo</span>
+                <span>{isUnlocked ? "Abrir Studio CREATE com este Modelo" : "Iniciar Criação no Studio com este Modelo"}</span>
               </button>
             ) : (
               <button

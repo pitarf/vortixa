@@ -58,6 +58,44 @@ body {
 }
 
 /* ==========================================================================
+   SCROLLBAR ENGINE GLOBAL (Zero Native White Scrollbars)
+   ========================================================================== */
+
+/* Custom Scrollbar Dark Obsidian para áreas onde a rolagem é necessária */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1E202E;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3B3F58;
+}
+
+/* Ocultação total de barras nativas para utilitários no-scrollbar e scrollbar-none */
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* ==========================================================================
    ARQUIVO MESTRE CENTRAL DE TEMA CLARO (GLOBAL THEME OVERRIDE)
    Controla de forma UNIFICADA todas as telas do Dashboard, Ferramentas, Flow e Landing.
    ========================================================================== */
