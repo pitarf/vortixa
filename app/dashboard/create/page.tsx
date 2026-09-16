@@ -394,9 +394,15 @@ export default function StudioCreatePage() {
       inputs.character_image_url = characterImageUrl || referenceImageUrl;
       inputs.reference_video_url = referenceVideoUrl;
     } else if (activeTool === "upscale") {
-      inputs.video_url = sourceVideoUrl || resultMediaUrl;
-      inputs.image_url = referenceImageUrl || resultMediaUrl;
+      const mediaSource = referenceImageUrl || resultMediaUrl || sourceVideoUrl;
+      const isVideoMedia = mediaSource.endsWith(".mp4") || mediaSource.includes("video") || mediaSource.includes(".mov");
+      if (isVideoMedia) {
+        inputs.video_url = mediaSource;
+      } else {
+        inputs.image_url = mediaSource;
+      }
       inputs.scale_factor = 2;
+      inputs.creativity = 0.0;
     }
 
     try {
@@ -429,7 +435,12 @@ export default function StudioCreatePage() {
       const job = await res.json();
       setActiveJob(job);
       setStepText("Processando inferência no motor...");
-      pollJob(job.id, activeTool === "image" ? "image" : "video");
+      const expectedMediaType = activeTool === "image" 
+        ? "image" 
+        : activeTool === "upscale" 
+          ? (inputs.video_url ? "video" : "image") 
+          : "video";
+      pollJob(job.id, expectedMediaType);
     } catch (err: any) {
       setIsGenerating(false);
       setErrorMsg(err.message || "Erro no disparo da geração.");
@@ -999,8 +1010,9 @@ export default function StudioCreatePage() {
             onSelectRecentCreation={(url, mediaType) => {
               setResultMediaUrl(url);
               setResultMediaType(mediaType);
-              toast.success("Carregado no player!");
+              toast.info("Mídia selecionada do histórico!");
             }}
+            imageSize={imageSize}
           />
 
           {/* Histórico Integrado na Coluna de Saída Visual */}

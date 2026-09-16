@@ -5,6 +5,27 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.7.5] - 2026-09-15
+### Enquadramento Sem Corte de Modelos/Gerações e Opção de Upscale Fiel de Imagem (Preservação de Integridade)
+- **Visualização Exclusiva de Foto de Corpo Todo (`components/models/ModelDetailModal.tsx` & `ModelCard.tsx`)**:
+  - Removida a exibição e os seletores da foto de perfil: agora é exibida exclusivamente a **Foto de Corpo Todo** em alta definição.
+  - Implementada alternância de exibição `fitMode`: "Completa (Sem Corte)" (`object-contain`) vs "Preenchida" (`object-cover object-top`) com botão toggle de 1 toque no Lookbook.
+  - Imagens verticais (proporção 9:16) exibidas em sua plenitude sem degolar cabeças ou cortar pés em smartphones e desktops.
+  - Efeito visual cinematográfico com backdrop blur suave (`blur-2xl opacity-35 scale-110`) projetado da própria fotografia para eliminar barras pretas vazias nas bordas.
+  - Nos cards da vitrine de modelos (`ModelCard.tsx`), a foto principal agora carrega a foto de corpo inteiro (`coverUrl`) com alinhamento `object-top`.
+- **Visualização de Mídias e Gerações no Studio & Canvas (`components/studio/StudioPreviewPlayer.tsx` & `components/ai/generation-layout.tsx`)**:
+  - Removida limitação fixa de `aspect-video` no visualizador de gerações. O container agora acomoda proporções verticais (9:16, 4:5), quadradas (1:1) e horizontais (16:9) em `object-contain` sem nenhum corte.
+  - Adicionado backdrop blur ambiental da própria mídia gerada.
+- **Biblioteca de Mídias (`app/dashboard/library/page.tsx`)**:
+  - Cards de galeria e Lightbox em tela cheia atualizados com `object-contain` e blur ambiental, preservando a imagem completa e vídeos verticais sem crop central.
+- **Opção de Super-Resolução & Upscale de Imagem com Preservação de Integridade**:
+  - Nova funcionalidade em `app/dashboard/tools/upscale/page.tsx`: seletor de mídia no topo permitindo alternar entre **🖼️ Upscale de Imagem** e **🎬 Upscale de Vídeo**.
+  - O modo de imagem aceita arquivos JPG, PNG e WEBP com fatores de escala 2x (2K QHD) e 4x (4K Ultra), operando com criatividade zero (`creativity: 0.0`) para preservar 100% dos traços faciais, fisionomia e proporções anatômicas sem alucinações.
+  - No Studio Create (`app/dashboard/create/page.tsx`), a aba de Upscale agora detecta dinamicamente se a mídia de origem é imagem ou vídeo e envia os inputs corretos de escala e super-resolução.
+- **Validação**:
+  - `tsc --noEmit`: 0 erros de compilação.
+  - Vitest: 31 arquivos de teste e 222 testes aprovados (100% de aprovação).
+
 ## [2.7.4] - 2026-09-15
 ### Resolução Integral de Pontas Soltas: Motores de IA, Studio Create, Vitrine, Checkout e Segurança
 - **Motores de IA & Provedor Fal.ai (`services/ai/providers/fal-ai.provider.ts`)**:

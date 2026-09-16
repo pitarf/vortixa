@@ -37,6 +37,7 @@ interface StudioPreviewPlayerProps {
   defaultIcon?: React.ComponentType<{ className?: string }>;
   recentCreations?: StudioHistoryItem[];
   onSelectRecentCreation?: (url: string, mediaType: "image" | "video") => void;
+  imageSize?: string;
 }
 
 export function StudioPreviewPlayer({
@@ -58,6 +59,7 @@ export function StudioPreviewPlayer({
   defaultIcon: DefaultIcon,
   recentCreations = [],
   onSelectRecentCreation,
+  imageSize = "landscape_16_9",
 }: StudioPreviewPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -140,8 +142,8 @@ export function StudioPreviewPlayer({
           </button>
         </div>
 
-        {/* Visualizador Central com Aspect-Ratio Fixo 16:9 Estável (Zero CLS) */}
-        <div className="relative rounded-2xl overflow-hidden bg-black border border-[#1E202E] aspect-video w-full flex items-center justify-center group shadow-inner">
+        {/* Visualizador Central com Enquadramento Dinâmico sem Cortes (Zero CLS) */}
+        <div className="relative rounded-2xl overflow-hidden bg-black border border-[#1E202E] w-full min-h-[300px] sm:min-h-[420px] max-h-[650px] flex items-center justify-center group shadow-inner">
           {isGenerating ? (
             <div className="p-6 text-center space-y-4 max-w-sm">
               <div className="relative h-16 w-16 sm:h-20 sm:w-20 mx-auto">
@@ -155,26 +157,32 @@ export function StudioPreviewPlayer({
               </div>
             </div>
           ) : previewTab === "compare" && referenceImageUrl ? (
-            <div className="grid grid-cols-2 w-full h-full aspect-video">
-              <div className="relative h-full border-r border-[#1E202E] bg-[#070709]">
-                <img src={referenceImageUrl} alt="Original" className="w-full h-full object-cover aspect-video" />
-                <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-slate-300">
+            <div className="grid grid-cols-2 w-full h-full min-h-[300px] sm:min-h-[420px]">
+              <div className="relative h-full border-r border-[#1E202E] bg-[#070709] flex items-center justify-center overflow-hidden">
+                <img src={referenceImageUrl} alt="Original" className="w-full h-full object-contain" />
+                <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-slate-300 z-10">
                   Referência
                 </span>
               </div>
-              <div className="relative h-full bg-[#070709]">
+              <div className="relative h-full bg-[#070709] flex items-center justify-center overflow-hidden">
                 {resultMediaType === "video" && resultMediaUrl ? (
-                  <video src={resultMediaUrl} autoPlay loop muted className="w-full h-full object-cover aspect-video" />
+                  <video src={resultMediaUrl} autoPlay loop muted playsInline className="w-full h-full object-contain" />
                 ) : (
-                  <img src={resultMediaUrl || referenceImageUrl} alt="Gerado" className="w-full h-full object-cover aspect-video" />
+                  <img src={resultMediaUrl || referenceImageUrl} alt="Gerado" className="w-full h-full object-contain" />
                 )}
-                <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-emerald-400">
+                <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-emerald-400 z-10">
                   Gerado
                 </span>
               </div>
             </div>
           ) : resultMediaUrl ? (
-            <div className="relative w-full h-full aspect-video flex items-center justify-center bg-[#070709]">
+            <div className="relative w-full h-full min-h-[300px] sm:min-h-[420px] flex items-center justify-center bg-[#070709] overflow-hidden">
+              {/* Blur de Fundo Ambiental Suave da Própria Mídia */}
+              <div
+                className="absolute inset-0 bg-cover bg-center filter blur-2xl opacity-25 scale-110 pointer-events-none"
+                style={{ backgroundImage: `url(${resultMediaUrl})` }}
+              />
+
               {resultMediaType === "video" ? (
                 <>
                   <video
@@ -183,7 +191,7 @@ export function StudioPreviewPlayer({
                     loop
                     playsInline
                     onTimeUpdate={handleTimeUpdate}
-                    className="w-full h-full object-contain aspect-video"
+                    className="relative z-10 max-h-[620px] w-auto max-w-full object-contain shadow-2xl"
                   />
 
                   {/* Botão Play Central com Touch Target Amplo */}
@@ -252,7 +260,11 @@ export function StudioPreviewPlayer({
                   </div>
                 </>
               ) : (
-                <img src={resultMediaUrl} alt="Obra de IA" className="w-full h-full object-contain aspect-video" />
+                <img
+                  src={resultMediaUrl}
+                  alt="Obra de IA"
+                  className="relative z-10 max-h-[620px] w-auto max-w-full object-contain shadow-2xl animate-in fade-in duration-300"
+                />
               )}
             </div>
           ) : (

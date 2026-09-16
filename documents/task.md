@@ -8,6 +8,16 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Enquadramento Sem Corte de Modelos/Gerações, Foto de Corpo Inteiro Exclusiva e Opção de Upscale Fiel de Imagem**:
+  - Removidas as abas/seletores da foto de perfil no Lookbook (`components/models/ModelDetailModal.tsx`): exibição focada exclusivamente na **Foto de Corpo Todo**.
+  - Nos cards da vitrine (`components/models/ModelCard.tsx`): imagem principal alterada para a foto de corpo inteiro (`coverUrl`) com alinhamento `object-top`.
+  - Implementada alternância `fitMode`: "Completa (Sem Corte)" (`object-contain`) vs "Preenchida" (`object-cover object-top`) com botão toggle de 1 toque no Lookbook.
+  - Mídias verticais (9:16) exibidas em sua plenitude sem degolar cabeças ou cortar pés no celular e computador, com blur de fundo suave (`blur-2xl opacity-35 scale-110`).
+  - Cards da vitrine (`components/models/ModelCard.tsx`) com `object-top` para preservar rostos e penteados.
+  - Studio Create (`components/studio/StudioPreviewPlayer.tsx`), Generation Layout (`components/ai/generation-layout.tsx`) e Biblioteca (`app/dashboard/library/page.tsx`) com proporções adaptativas e `object-contain` sem corte para mídias verticais e horizontais.
+  - Nova funcionalidade em `app/dashboard/tools/upscale/page.tsx`: seletor entre **🖼️ Upscale de Imagem** e **🎬 Upscale de Vídeo** com modo de fidelidade 100% (zero distorção fisionômica).
+  - Suporte dinâmico no Studio Create para detectar se a mídia de upscale é imagem ou vídeo.
+  - 100% de aprovação no Vitest (31 arquivos, 222 testes) e 0 erros em `tsc --noEmit`.
 - [x] **Resolução Integral de Pontas Soltas (Motores, Studio Create, Vitrine, Checkout e Segurança)**:
   - Adicionado fallback para Kling 2.1 Pro (`fal-ai/kling-video/v2.1/pro/text-to-video`) quando sem imagem no `fal-ai.provider.ts`.
   - Normalização de `camera_movement` e `camera_motion` com injeção automática de diretivas de câmera cinematográfica.

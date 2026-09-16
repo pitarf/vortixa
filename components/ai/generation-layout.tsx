@@ -418,8 +418,8 @@ export function GenerationLayout({
               <span className="text-[10px] font-mono text-slate-500">Alta Fidelidade</span>
             </div>
 
-            {/* Visualizador Digital / Canvas Central com Aspect Ratio Fixo (Zero CLS) */}
-            <div className="relative rounded-2xl overflow-hidden border border-[#1E202E] bg-[#070709] w-full aspect-video min-h-[280px] sm:min-h-[360px] max-h-[460px] flex flex-col items-center justify-center p-3 text-center group">
+            {/* Visualizador Digital / Canvas Central com Enquadramento Dinâmico sem Cortes */}
+            <div className="relative rounded-2xl overflow-hidden border border-[#1E202E] bg-[#070709] w-full min-h-[320px] sm:min-h-[400px] max-h-[580px] flex flex-col items-center justify-center p-2 sm:p-3 text-center group">
               {generating ? (
                 /* Stepper Elegante com Animação de Pulso Suave */
                 <div className="w-full max-w-sm space-y-5 p-4 animate-in fade-in duration-300">

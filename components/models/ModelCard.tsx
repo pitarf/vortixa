@@ -78,9 +78,9 @@ export function ModelCard({ model, onOpenDetails, onBookModel }: ModelCardProps)
       >
         {!imageError ? (
           <img
-            src={model.avatarUrl}
-            alt={`Retrato editorial de ${model.name}`}
-            className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transform-none"
+            src={model.coverUrl || (model.gallery && model.gallery[0]) || model.avatarUrl}
+            alt={`Foto de corpo inteiro de ${model.name}`}
+            className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transform-none"
             loading="lazy"
             decoding="async"
             onError={() => setImageError(true)}

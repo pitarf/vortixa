@@ -299,27 +299,36 @@ export default function LibraryPage() {
                       <span className="text-[9px] text-slate-500 line-clamp-2">{item.error || "Erro de renderização"}</span>
                     </div>
                   ) : hasSafeUrl ? (
-                    item.mediaType === "video" ? (
-                      <video
-                        src={item.url}
-                        muted
-                        loop
-                        playsInline
-                        preload="metadata"
-                        onMouseOver={(e) => (e.target as HTMLVideoElement).play().catch(() => {})}
-                        onMouseOut={(e) => (e.target as HTMLVideoElement).pause()}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
-                        onClick={() => setSelectedItem(item)}
-                      />
-                    ) : (
+                    <div className="relative w-full h-full flex items-center justify-center bg-black overflow-hidden">
+                      {/* Blur ambiental da própria mídia para preencher bordas sem faixas secas */}
                       <img
                         src={item.url}
-                        alt={item.prompt || "Ativo VORIXA"}
-                        onClick={() => setSelectedItem(item)}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
-                        loading="lazy"
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 w-full h-full object-cover blur-xl opacity-35 scale-125 pointer-events-none select-none"
                       />
-                    )
+                      {item.mediaType === "video" ? (
+                        <video
+                          src={item.url}
+                          muted
+                          loop
+                          playsInline
+                          preload="metadata"
+                          onMouseOver={(e) => (e.target as HTMLVideoElement).play().catch(() => {})}
+                          onMouseOut={(e) => (e.target as HTMLVideoElement).pause()}
+                          className="relative z-10 w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+                          onClick={() => setSelectedItem(item)}
+                        />
+                      ) : (
+                        <img
+                          src={item.url}
+                          alt={item.prompt || "Ativo VORIXA"}
+                          onClick={() => setSelectedItem(item)}
+                          className="relative z-10 w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+                          loading="lazy"
+                        />
+                      )}
+                    </div>
                   ) : (
                     <div className="text-[10px] font-mono text-slate-500">Mídia protegida</div>
                   )}

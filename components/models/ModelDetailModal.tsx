@@ -22,6 +22,8 @@ import {
   Lock,
   Unlock,
   Loader2,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -41,6 +43,7 @@ export function ModelDetailModal({
 }: ModelDetailModalProps) {
   const router = useRouter();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [fitMode, setFitMode] = useState<"contain" | "cover">("contain");
   const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [unlockedPrompt, setUnlockedPrompt] = useState<string | null>(null);
@@ -112,44 +115,23 @@ export function ModelDetailModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Montagem e separação tátil de Foto de Corpo Todo vs Foto de Perfil
-  const { galleryImages, fullBodyIndex, profileIndex } = useMemo(() => {
+  // Montagem exclusiva com a Foto de Corpo Todo (ocultando a foto de perfil conforme solicitado)
+  const { galleryImages, fullBodyIndex } = useMemo(() => {
     if (!model) {
-      return { galleryImages: [], fullBodyIndex: 0, profileIndex: 0 };
+      return { galleryImages: [], fullBodyIndex: 0 };
     }
 
     const fullBodyUrl = model.coverUrl || (model.gallery && model.gallery[0]) || model.avatarUrl;
-    const profileUrl = model.avatarUrl || model.referenceFaceUrl || (model.gallery && model.gallery[1]) || fullBodyUrl;
 
-    const list: { url: string; label: string; kind: "FULL_BODY" | "PROFILE" | "EXTRA" }[] = [];
+    const list: { url: string; label: string; kind: "FULL_BODY" }[] = [];
 
     if (fullBodyUrl) {
       list.push({ url: fullBodyUrl, label: "Foto de Corpo Todo", kind: "FULL_BODY" });
     }
 
-    if (profileUrl && profileUrl !== fullBodyUrl) {
-      list.push({ url: profileUrl, label: "Foto de Perfil", kind: "PROFILE" });
-    }
-
-    if (model.gallery && Array.isArray(model.gallery)) {
-      model.gallery.forEach((url, i) => {
-        if (url && !list.some((item) => item.url === url)) {
-          list.push({ url, label: `Editorial #${i + 1}`, kind: "EXTRA" });
-        }
-      });
-    }
-
-    if (list.length === 0 && model.avatarUrl) {
-      list.push({ url: model.avatarUrl, label: "Foto Principal", kind: "PROFILE" });
-    }
-
-    const fIdx = list.findIndex((img) => img.kind === "FULL_BODY");
-    const pIdx = list.findIndex((img) => img.kind === "PROFILE");
-
     return {
       galleryImages: list,
-      fullBodyIndex: fIdx >= 0 ? fIdx : 0,
-      profileIndex: pIdx >= 0 ? pIdx : (list.length > 1 ? 1 : 0),
+      fullBodyIndex: 0,
     };
   }, [model]);
 
@@ -265,56 +247,59 @@ export function ModelDetailModal({
         {/* COLUNA ESQUERDA: Lookbook Fotográfico (Comp-Card Gallery) */}
         <div className="w-full lg:w-1/2 bg-black/40 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#1E202E] p-4 sm:p-6 shrink-0">
           <div>
-            {/* Seletor Tátil / Pílulas: Foto de Corpo Todo vs Foto de Perfil */}
-            <div className="flex items-center gap-2 mb-3 w-full">
-              <button
-                type="button"
-                onClick={() => setActiveImageIndex(fullBodyIndex)}
-                className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer min-h-[44px] ${
-                  activeImageIndex === fullBodyIndex
-                    ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30 border border-violet-400/50 scale-[1.01]"
-                    : "bg-[#070709] text-slate-300 hover:text-white border border-[#1E202E] hover:border-slate-700"
-                }`}
-                aria-label="Selecionar Foto de Corpo Todo"
-              >
-                <span className="text-sm">📸</span>
-                <span className="truncate">Foto de Corpo Todo</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveImageIndex(profileIndex)}
-                className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer min-h-[44px] ${
-                  activeImageIndex === profileIndex
-                    ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30 border border-violet-400/50 scale-[1.01]"
-                    : "bg-[#070709] text-slate-300 hover:text-white border border-[#1E202E] hover:border-slate-700"
-                }`}
-                aria-label="Selecionar Foto de Perfil"
-              >
-                <span className="text-sm">👤</span>
-                <span className="truncate">Foto de Perfil</span>
-              </button>
-            </div>
-
-            {/* Visualizador Principal com Transição Suave e Moldura Fixa 3:4 */}
-            <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden bg-black flex items-center justify-center border border-[#1E202E]">
+            {/* Visualizador Principal sem Cortes com Suporte a 9:16 e Botão de Enquadramento */}
+            <div className="relative aspect-[3/4] sm:aspect-[9/16] max-h-[62vh] sm:max-h-[70vh] w-full rounded-2xl overflow-hidden bg-black flex items-center justify-center border border-[#1E202E] shadow-2xl">
               {galleryImages.length > 0 ? (
-                <img
-                  key={galleryImages[activeImageIndex]?.url}
-                  src={galleryImages[activeImageIndex]?.url}
-                  alt={`${model.name} - ${galleryImages[activeImageIndex]?.label}`}
-                  className="h-full w-full object-cover animate-in fade-in duration-300"
-                />
+                <>
+                  {/* Fundo com Blur Suave da Própria Foto para Preenchimento Elegante */}
+                  {fitMode === "contain" && (
+                    <div
+                      className="absolute inset-0 bg-cover bg-center filter blur-2xl opacity-35 scale-110 pointer-events-none"
+                      style={{ backgroundImage: `url(${galleryImages[activeImageIndex]?.url})` }}
+                    />
+                  )}
+
+                  <img
+                    key={galleryImages[activeImageIndex]?.url}
+                    src={galleryImages[activeImageIndex]?.url}
+                    alt={`${model.name} - ${galleryImages[activeImageIndex]?.label}`}
+                    className={`relative z-10 h-full w-full ${
+                      fitMode === "contain"
+                        ? "object-contain"
+                        : "object-cover object-top"
+                    } animate-in fade-in duration-300 select-none`}
+                  />
+                </>
               ) : (
                 <div className="text-slate-500 text-xs font-mono">Sem imagens disponíveis</div>
               )}
 
               {/* Contador Flutuante de Fotos */}
               {galleryImages.length > 0 && (
-                <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/10 text-[10px] font-mono text-white">
+                <div className="absolute top-3 left-3 z-20 px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/15 text-[10px] font-mono text-white shadow-md">
                   {String(activeImageIndex + 1).padStart(2, "0")} / {String(galleryImages.length).padStart(2, "0")} • {galleryImages[activeImageIndex]?.label}
                 </div>
               )}
+
+              {/* Botão de Alternar Enquadramento: Sem Cortes (Contain) vs Preencher (Cover) */}
+              <button
+                type="button"
+                onClick={() => setFitMode(fitMode === "contain" ? "cover" : "contain")}
+                className="absolute top-3 right-3 z-20 px-2.5 py-1 rounded-full bg-black/80 hover:bg-black/95 text-white backdrop-blur-md border border-white/15 text-[10px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-md min-h-[36px]"
+                title={fitMode === "contain" ? "Alternar para preenchimento" : "Alternar para imagem completa sem corte"}
+              >
+                {fitMode === "contain" ? (
+                  <>
+                    <Maximize2 className="w-3.5 h-3.5 text-cyan-400" />
+                    <span className="hidden sm:inline">Completa (Sem Corte)</span>
+                  </>
+                ) : (
+                  <>
+                    <Minimize2 className="w-3.5 h-3.5 text-amber-400" />
+                    <span className="hidden sm:inline">Preenchida</span>
+                  </>
+                )}
+              </button>
 
               {/* Controles de Navegação Touch-Friendly (>= 44px) */}
               {galleryImages.length > 1 && (
@@ -322,7 +307,7 @@ export function ModelDetailModal({
                   <button
                     type="button"
                     onClick={prevImage}
-                    className="absolute left-2.5 top-1/2 -translate-y-1/2 p-2.5 rounded-xl bg-black/80 hover:bg-black text-white backdrop-blur-md border border-white/15 transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center shadow-lg active:scale-95"
+                    className="absolute left-2.5 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-xl bg-black/85 hover:bg-black text-white backdrop-blur-md border border-white/20 transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center shadow-xl active:scale-95"
                     aria-label="Foto anterior"
                   >
                     <ChevronLeft className="w-5 h-5" />
@@ -330,7 +315,7 @@ export function ModelDetailModal({
                   <button
                     type="button"
                     onClick={nextImage}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-2.5 rounded-xl bg-black/80 hover:bg-black text-white backdrop-blur-md border border-white/15 transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center shadow-lg active:scale-95"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-xl bg-black/85 hover:bg-black text-white backdrop-blur-md border border-white/20 transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center shadow-xl active:scale-95"
                     aria-label="Próxima foto"
                   >
                     <ChevronRight className="w-5 h-5" />
