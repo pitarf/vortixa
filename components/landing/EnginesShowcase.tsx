@@ -56,10 +56,10 @@ export function EnginesShowcase() {
                 <span>WORKFLOW AUTOMÁTICO • GRAPH ENGINE</span>
               </div>
               <h3 className="text-xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-snug">
-                Conecte +20 IAs em <span className="font-serif italic font-normal text-slate-300">1 workflow contínuo</span>
+                Conecte várias IAs em <span className="font-serif italic font-normal text-slate-300">um fluxo único</span>
               </h3>
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-md">
-                O prompt neural gera o quadro estático em 8K. A imagem alimenta o motor de animação. O áudio sincroniza a musculatura facial e a master final é upscalada para 4K. Sem downloads intermediários.
+                Você cria a imagem, gera a animação, sincroniza a voz e exporta tudo em alta resolução direto na plataforma. Sem precisar baixar arquivos intermediários ou trocar de tela.
               </p>
             </div>
 

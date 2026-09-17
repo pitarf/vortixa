@@ -8,6 +8,25 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Humanização Geral de Textos e Copy da Plataforma (Diretrizes Humanizer)**:
+  - Instalação e integração da skill `humanizer` do GitHub (`blader/humanizer v3.0.0`).
+  - Varredura em toda a plataforma com subagentes por área (Landing Page, Studio & Ferramentas, Vitrine de Modelos, Checkout & Fintech).
+  - Remoção de vícios de linguagem de IA: oposições artificiais ("não apenas X, mas Y"), superlativos inflados ("motores neurais", "física ultra-realista", "cluster multi-motor", "obra renderizada"), travessões excessivos e clichês vazios.
+  - Substituição por redação humana, acolhedora, confiante e direta em Português do Brasil (PT-BR).
+  - Atualização dos textos da Landing Page (`HeroCinematic.tsx`, `EnginesShowcase.tsx`, `MotionProofShowcase.tsx`, `PricingSection.tsx`, `FinalCtaSection.tsx`, `LandingFooter.tsx`).
+  - Atualização de textos e resumos de pacotes em `credits/page.tsx` e `PaymentCheckoutModal.tsx`.
+  - Atualização do cabeçalho da Vitrine de Modelos (`ModelsShowcaseHeader.tsx`).
+  - Sincronização do banco PostgreSQL local via `scripts/seed-models.ts` com 30 modelos cadastrados.
+  - Verificação de tipos: 0 erros em `tsc --noEmit`.
+  - Suíte de testes automatizados: 100% de aprovação no Vitest (31 arquivos, 222 testes).
+- [x] **Automação Headless com Playwright, Auditoria Visual Multi-Dispositivo e Consolidação dos 30 Modelos**:
+  - Script headless Playwright Chromium executado cobrindo Desktop (1440x900) e Mobile (375x812).
+  - 42 screenshots em alta definição capturados e armazenados em `public/test-screenshots/clean/`.
+  - Zero overflow horizontal em todas as páginas (`horizontalOverflow: false`).
+  - Consolidação oficial de 30 personas no banco PostgreSQL local e migração de URLs para caminhos locais otimizados (`/uploads/models/*-body.webp`).
+  - 100% dos 30 modelos com fotos de corpo inteiro renderizando perfeitamente no DOM (768x1344) sem falhas.
+  - Validação estática: 0 erros em `tsc --noEmit`.
+  - Validação automatizada: 100% de aprovação no Vitest (31 arquivos, 222 testes).
 - [x] **Enquadramento Sem Corte de Modelos/Gerações, Foto de Corpo Inteiro Exclusiva e Opção de Upscale Fiel de Imagem**:
   - Removidas as abas/seletores da foto de perfil no Lookbook (`components/models/ModelDetailModal.tsx`): exibição focada exclusivamente na **Foto de Corpo Todo**.
   - Nos cards da vitrine (`components/models/ModelCard.tsx`): imagem principal alterada para a foto de corpo inteiro (`coverUrl`) com alinhamento `object-top`.

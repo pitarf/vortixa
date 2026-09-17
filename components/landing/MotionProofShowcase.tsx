@@ -70,20 +70,18 @@ export function MotionProofShowcase() {
           <div className="space-y-2.5 sm:space-y-3 max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-[10px] sm:text-[11px] font-mono font-bold text-emerald-400 tracking-wider uppercase">
               <Flame className="w-3.5 h-3.5 text-emerald-400 animate-pulse shrink-0" />
-              <span>VORIXA MOTION LAB • BENCHMARK REAL KLING V3</span>
+              <span>Controle de Movimento Real • Kling v3</span>
             </div>
             
             <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
-              Da coreografia do TikTok ao personagem IA:{" "}
+              Grave uma dança no celular e passe para o{" "}
               <span className="font-serif italic font-normal text-emerald-300">
-                transferência cinética sem distorção.
+                seu personagem virtual.
               </span>
             </h2>
             
             <p className="text-xs sm:text-sm md:text-base text-slate-400 leading-relaxed">
-              Veja um benchmark executado em nossa infraestrutura oficial: gravamos uma dança real com celular no TikTok,
-              combinamos com uma personagem gerada por IA e o motor <strong>Kling Video v3 Motion Control</strong> transferiu
-              toda a coreografia com física realista, dinâmica muscular e o áudio da batida original.
+              Veja um exemplo prático: pegamos um vídeo gravado no celular para o TikTok, escolhemos uma personagem e usamos o <strong>Kling Video v3</strong>. O movimento do corpo, o ritmo dos passos e o áudio da música são preservados no resultado final.
             </p>
           </div>
 

@@ -36,25 +36,25 @@ export function HeroCinematic() {
         {/* Pílula de Prestígio Superior */}
         <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.1] shadow-inner text-slate-200 text-[10px] sm:text-xs font-mono font-medium backdrop-blur-xl">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-          <span className="tracking-wide uppercase">AI CREATIVE SUITE • CLUSTER MULTI-MOTOR V2.6</span>
+          <span className="tracking-wide uppercase">Criação Audiovisual • IAs Integradas v2.6</span>
         </div>
 
         {/* Headline de Alto Impacto com Tipografia Fluida */}
         <div className="max-w-4xl mx-auto space-y-3 sm:space-y-4 px-1">
           <h1 className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold text-white tracking-tight leading-[1.14] break-words">
-            Gere seu{" "}
+            Crie seu{" "}
             <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-indigo-200 to-cyan-300">
-              Influencer IA
+              modelo virtual
             </span>{" "}
-            ultra-realista em{" "}
-            <span className="font-serif italic font-normal text-white">1 minuto</span> e faça vendas{" "}
+            com aparência humana em{" "}
+            <span className="font-serif italic font-normal text-white">poucos cliques</span> e publique vídeos{" "}
             <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-200">
-              24/7
-            </span>{" "}
-            com vídeos virais.
+              todos os dias
+            </span>
+            .
           </h1>
           <p className="text-xs sm:text-sm md:text-base text-slate-400 max-w-2xl mx-auto leading-relaxed font-normal">
-            Copie workflows que funcionam como uma máquina de conteúdos 24 horas por dia, 7 dias por semana. Crie vídeos para TikTok, Reels, Anúncios e Comerciais em 4K sem mostrar seu rosto e sem equipamentos caros.
+            Use modelos prontos para produzir campanhas e vídeos de alta conversão para TikTok, Reels e anúncios. Você cria conteúdos profissionais em minutos, sem precisar aparecer e sem câmeras caras.
           </p>
         </div>
 
@@ -126,7 +126,7 @@ export function HeroCinematic() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-600 hover:opacity-95 text-white text-sm sm:text-base font-bold shadow-[0_0_35px_rgba(139,92,246,0.35)] transition-all active:scale-95 min-h-[48px] sm:min-h-[52px] cursor-pointer"
             >
               <Zap className="w-4 h-4 text-white fill-current shrink-0" />
-              <span>Gerar vídeos com IA agora</span>
+              <span>Começar a criar vídeos</span>
               <ArrowRight className="w-4 h-4 shrink-0" />
             </Link>
 
@@ -135,7 +135,7 @@ export function HeroCinematic() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 sm:py-4 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 text-xs sm:text-sm font-semibold border border-white/[0.1] transition-all active:scale-95 min-h-[48px] sm:min-h-[52px] cursor-pointer"
             >
               <Film className="w-4 h-4 text-slate-400 shrink-0" />
-              <span>Ver demonstração interativa</span>
+              <span>Ver como funciona na prática</span>
             </a>
           </div>
 
@@ -143,19 +143,19 @@ export function HeroCinematic() {
           <div className="pt-6 border-t border-white/[0.08] grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-center">
             <div className="space-y-0.5 p-2 rounded-xl bg-white/[0.02]">
               <div className="text-lg sm:text-2xl font-extrabold text-white font-mono">+1.2M</div>
-              <div className="text-[10px] sm:text-[11px] text-slate-400">Vídeos & Imagens</div>
+              <div className="text-[10px] sm:text-[11px] text-slate-400">Criações finalizadas</div>
             </div>
             <div className="space-y-0.5 p-2 rounded-xl bg-white/[0.02]">
               <div className="text-lg sm:text-2xl font-extrabold text-emerald-400 font-mono">99.8%</div>
-              <div className="text-[10px] sm:text-[11px] text-slate-400">Consistência Facial</div>
+              <div className="text-[10px] sm:text-[11px] text-slate-400">Rosto sempre idêntico</div>
             </div>
             <div className="space-y-0.5 p-2 rounded-xl bg-white/[0.02]">
               <div className="text-lg sm:text-2xl font-extrabold text-cyan-400 font-mono">+20 IAs</div>
-              <div className="text-[10px] sm:text-[11px] text-slate-400">Motores de Elite</div>
+              <div className="text-[10px] sm:text-[11px] text-slate-400">Principais tecnologias</div>
             </div>
             <div className="space-y-0.5 p-2 rounded-xl bg-white/[0.02]">
               <div className="text-lg sm:text-2xl font-extrabold text-amber-400 font-mono">4.9 / 5</div>
-              <div className="text-[10px] sm:text-[11px] text-slate-400">+8.500 Criadores</div>
+              <div className="text-[10px] sm:text-[11px] text-slate-400">Avaliação da comunidade</div>
             </div>
           </div>
         </div>

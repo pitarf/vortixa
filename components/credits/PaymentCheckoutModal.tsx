@@ -217,7 +217,7 @@ export function PaymentCheckoutModal({
                   Pacote {packageData.name}
                 </h4>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  {packageData.description || "Acesso completo a todos os motores criativos neurais."}
+                  {packageData.description || "Acesso completo a todas as ferramentas da plataforma."}
                 </p>
               </div>
 

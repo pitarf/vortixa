@@ -599,7 +599,7 @@ function CreditsContent() {
                   </div>
 
                   <p className="text-xs text-slate-400 mt-2 min-h-[32px] sm:min-h-[36px] leading-relaxed">
-                    {pkg.description || "Gerações liberadas em todos os motores criativos."}
+                    {pkg.description || "Créditos válidos para todas as ferramentas de criação."}
                   </p>
 
                   {/* Preço em Destaque */}
@@ -629,19 +629,19 @@ function CreditsContent() {
                   <div className="mt-5 sm:mt-6 space-y-2.5 text-xs text-slate-300">
                     <div className="flex items-center gap-2.5">
                       <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                      <span className="leading-snug">{totalCredits} imagens com FLUX Schnell</span>
+                      <span className="leading-snug">{totalCredits} imagens em alta qualidade</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                      <span className="leading-snug">Até {Math.floor(totalCredits / 10)} vídeos cinemáticos Kling</span>
+                      <span className="leading-snug">Até {Math.floor(totalCredits / 10)} vídeos gerados por IA</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                      <span className="leading-snug">{Math.floor(totalCredits / 8)} gerações de Lip Sync</span>
+                      <span className="leading-snug">{Math.floor(totalCredits / 8)} vídeos com voz e dublagem</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                      <span className="leading-snug">Acesso total ao VORTIXIA FLOW Canvas</span>
+                      <span className="leading-snug">Acesso livre a todas as ferramentas</span>
                     </div>
                   </div>
                 </div>

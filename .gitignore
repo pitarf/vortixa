@@ -43,3 +43,6 @@ yarn-error.log*
 # local uploads
 /public/uploads/
 
+# test artifacts
+/playwright-report/
+/public/test-screenshots/

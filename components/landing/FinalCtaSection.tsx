@@ -36,11 +36,11 @@ export function FinalCtaSection() {
         {/* Título de Alto Impacto com Tipografia Fluida */}
         <div className="relative z-10 max-w-3xl mx-auto space-y-3 sm:space-y-4">
           <h2 className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
-            Transforme qualquer ideia em{" "}
-            <span className="font-serif italic font-normal text-slate-200">produção audiovisual</span> real.
+            Tire suas ideias do papel e crie{" "}
+            <span className="font-serif italic font-normal text-slate-200">conteúdos que vendem</span>.
           </h2>
           <p className="text-xs sm:text-sm md:text-base text-slate-400 max-w-xl mx-auto leading-relaxed">
-            Sem câmeras, sem equipes caras e sem 5 assinaturas separadas. Centralize todo o seu poder de criação com as melhores IAs do mundo.
+            Você não precisa de estúdio nem de câmeras profissionais. Comece com créditos de teste e veja na prática a qualidade das gerações.
           </p>
         </div>
 

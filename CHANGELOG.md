@@ -5,6 +5,45 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.7.7] - 2026-09-17
+### Humanização Geral de Textos e Copy da Plataforma (Diretrizes Humanizer)
+- **Instalação e Integração da Skill Humanizer**:
+  - Clonado e configurado o repositório oficial `blader/humanizer` v3.0.0 em `C:\Users\rfpit\.gemini\config\skills\humanizer\SKILL.md`.
+  - Remoção sistemática de padrões típicos de IA (construções "não apenas X, mas Y", superlativos inflados, travessões excessivos e clichês vazios).
+- **Varredura e Refatoração de Redação com Subagentes Especializados**:
+  - **Landing Page**:
+    - `HeroCinematic.tsx`: Headline e badges reescritos com comunicação clara e focada no benefício do criador ("modelo virtual", "todos os dias", "aparência humana").
+    - `EnginesShowcase.tsx`: Simplificação do fluxo de criação sem termos pomposos como "prompt neural" ou "cluster".
+    - `MotionProofShowcase.tsx`: Substituição de "transferência cinética" e "dinâmica muscular" por demonstração prática da transferência de movimentos de dança.
+    - `PricingSection.tsx`: Comparativo "Aqui no VORIXA" com linguagem acolhedora e garantia de 7 dias sem complicação.
+    - `FinalCtaSection.tsx` & `LandingFooter.tsx`: Chamada final direta e indicadores de status em linguagem natural.
+  - **Vitrine de Modelos & Casting**:
+    - `ModelsShowcaseHeader.tsx`: Apresentação acessível e clara dos talentos reais e digitais.
+    - `lib/marketplace-models.ts`: Biografias contemporâneas e críveis para os 30 modelos de catálogo.
+  - **Planos, Créditos & Checkout**:
+    - `credits/page.tsx` & `PaymentCheckoutModal.tsx`: Descrição transparente dos pacotes e das mídias estimadas sem jargões de engenharia.
+- **Validação e Testes**:
+  - Sincronização do PostgreSQL local via `scripts/seed-models.ts` com 30 modelos atualizados.
+  - `tsc --noEmit`: 0 erros de compilação estática.
+  - Vitest: 31 arquivos de teste e 222 testes aprovados (100% de sucesso).
+
+## [2.7.6] - 2026-09-17
+### Automação Headless com Playwright, Auditoria Visual Multi-Dispositivo e Consolidação do Catálogo Oficial
+- **Automação Headless com Playwright (`scripts/run_headless_qa_clean.mjs`)**:
+  - Implementada suíte automatizada headless via Playwright Chromium para validação visual e estrutural ponta a ponta.
+  - Auditoria realizada em duas resoluções críticas: Desktop (1440x900) e Mobile (375x812 / iPhone Viewport).
+  - Captura automatizada de 42 screenshots em alta definição (viewport e página inteira) de todas as rotas e abas: Landing (`/`), Login (`/login`), Studio Create (`/dashboard/create`), Vitrine de Modelos (`/dashboard/models`), Galeria (`/dashboard/library`), Planos & Créditos (`/dashboard/credits`), Ferramentas Dedicadas (`/dashboard/tools/*`) e Painel Administrativo (`/dashboard/admin`).
+  - Verificação de ausência de overflow horizontal (`horizontalOverflow: false`), integridade de layouts responsivos em 1 coluna no mobile e 2 colunas no desktop.
+- **Consolidação & Sincronização do Catálogo Oficial de Modelos (`scripts/seed-models.ts` & `lib/marketplace-models.ts`)**:
+  - Unificação completa do catálogo oficial de 30 personas hiper-realistas (20 modelos femininos e 10 modelos masculinos).
+  - Remoção de registros legados duplicados e placeholders antigos do banco de dados local PostgreSQL.
+  - Migração de URLs absolutas de CDN externa para caminhos locais otimizados em `/uploads/models/*-body.webp` e `*-profile.webp`, garantindo carregamento instantâneo, offline-friendly e sem bloqueios por Content Security Policy ou CORP.
+  - Validação no DOM comprovando 30 de 30 modelos carregando com sucesso com resolução nativa integral (768x1344) e sem caixas de erro.
+- **Qualidade, Tipos & Segurança**:
+  - `tsc --noEmit`: 0 erros de compilação estática de tipos TypeScript.
+  - `vitest run --fileParallelism=false`: 31 arquivos de teste e 222 testes unitários/integração aprovados (100% de sucesso).
+  - Cabeçalhos de segurança HTTP mantidos em conformidade estrita (A+ Snyk / CSP / COOP / CORP).
+
 ## [2.7.5] - 2026-09-15
 ### Enquadramento Sem Corte de Modelos/Gerações e Opção de Upscale Fiel de Imagem (Preservação de Integridade)
 - **Visualização Exclusiva de Foto de Corpo Todo (`components/models/ModelDetailModal.tsx` & `ModelCard.tsx`)**:

@@ -82,16 +82,16 @@ export function PricingSection() {
               </div>
             </div>
 
-            {/* Com o VORTIXIA FLOW */}
+            {/* Com o VORTIXIA */}
             <div className="space-y-3 p-4 sm:p-5 rounded-2xl bg-[#0D0E14] text-white border border-violet-500/40 shadow-xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/10 rounded-full blur-[40px] pointer-events-none" />
               
               <div className="flex items-center gap-2 text-violet-300 font-bold font-mono text-xs uppercase">
                 <Zap className="w-4 h-4 text-cyan-400 fill-current shrink-0" />
-                <span>Com o VORTIXIA All-in-One:</span>
+                <span>Aqui no VORIXA:</span>
               </div>
               <p className="text-slate-300 text-xs leading-relaxed">
-                Todas as IAs integradas com créditos flexíveis, sem desperdício de assinaturas paradas e com pipelines automáticos.
+                Você tem acesso às melhores ferramentas usando créditos que não vencem de surpresa. Paga apenas pelo que produzir, sem mensalidades duplicadas.
               </p>
               <div className="pt-2 border-t border-white/[0.08] flex items-baseline justify-between gap-2">
                 <div>
@@ -240,9 +240,9 @@ export function PricingSection() {
         {/* Selo de Blindagem & Garantia de 7 Dias */}
         <div className="p-5 sm:p-6 rounded-2xl bg-[#07080B] border border-emerald-500/30 max-w-2xl mx-auto text-center space-y-2 flex flex-col items-center shadow-md">
           <ShieldCheck className="w-8 h-8 text-emerald-400 mb-1 shrink-0" />
-          <h4 className="text-sm font-bold text-white">Garantia Incondicional de 7 Dias</h4>
+          <h4 className="text-sm font-bold text-white">Garantia sem complicação de 7 dias</h4>
           <p className="text-xs text-slate-400 max-w-lg leading-relaxed">
-            Experimente o VORTIXIA sem risco algum. Se por qualquer motivo você não ficar 100% satisfeito com a qualidade dos vídeos e imagens gerados, devolvemos seu dinheiro integralmente, sem burocracia.
+            Teste a plataforma com tranquilidade. Se achar que não fez sentido para o seu momento, basta nos avisar em até 7 dias que estornamos o valor pago.
           </p>
         </div>
       </div>

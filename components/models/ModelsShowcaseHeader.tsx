@@ -34,22 +34,22 @@ export function ModelsShowcaseHeader({
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-mono font-bold bg-violet-500/15 text-violet-300 border border-violet-500/30 backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5 text-violet-400 animate-pulse" />
-              <span>VORTIXIA TALENT & CASTING 2026</span>
+              <span>Catálogo de Modelos & Casting</span>
             </span>
             <span className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 font-semibold backdrop-blur-md">
-              Alta Fidelidade & Agenciamento Oficial
+              Fotos Reais & Personagens Digitais
             </span>
           </div>
 
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white font-heading tracking-tight leading-tight">
-            Vitrine & Casting de{" "}
+            Vitrine de{" "}
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-300">
-              Modelos de Elite
+              Modelos e Talentos
             </span>
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
-            Selecione personas de IA com consistência fisionômica milimétrica para geração no Studio CREATE ou contrate modelos reais verificados para gravações comerciais, publicidade física e produções audiovisuais.
+            Escolha personagens virtuais para usar nas suas criações ou encontre modelos reais para sessões de fotos e vídeos da sua marca.
           </p>
 
           {/* Ribbon de Métricas com Grid Adaptativo sem Estouro */}

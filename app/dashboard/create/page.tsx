@@ -210,7 +210,7 @@ export default function StudioCreatePage() {
             slug: modelRefParam,
             type: "AI",
             category: "FASHION",
-            avatarUrl: refImgParam || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+            avatarUrl: refImgParam || "/uploads/models/isabella-fiore-body.webp",
             gallery: [],
             tags: ["Casting", "Vitrine"],
             promptTrigger: promptParam || null,

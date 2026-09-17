@@ -25,11 +25,11 @@ export function LandingFooter() {
               />
             </Link>
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-              Plataforma all-in-one para síntese audiovisual cinematográfica com inteligência artificial generativa. Workflows visuais, motion control corporal, dublagem em português e upscale 4K.
+              Plataforma completa para você criar imagens, vídeos com modelos virtuais, sincronizar dublagens e animar movimentos em alta definição.
             </p>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-mono text-emerald-400">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-              <span>Sistemas 100% Operacionais • Latência 42ms</span>
+              <span>Servidores operando normalmente</span>
             </div>
           </div>
 
