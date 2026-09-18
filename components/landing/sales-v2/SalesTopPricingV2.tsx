@@ -2,371 +2,385 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Check, Zap, XCircle, Sparkles, ShieldCheck, Flame, ArrowRight, QrCode, Lock } from "lucide-react";
+import { Check, ArrowRight, ShieldCheck, HelpCircle } from "lucide-react";
 
 /**
- * Seção de Preços & Oferta Principal — Posicionada no TOPO da Home V2.
- * Dá resposta imediata ao desejo do dono: apresentar a oferta comercial logo após o Hero.
- * Inclui:
- * 1. Choque de Economia (R$ 850/mês separado vs. a partir de R$ 9,90 / R$ 39 no VORIXA).
- * 2. Toggle Mensal/Anual e Pacotes Avulsos rápidos.
- * 3. 3 Planos Estratégicos com destaque para o Plano Creator Pro.
- * 4. Garantia Incondicional de 7 dias e selos de segurança.
+ * Seção de Preços & Oferta de Elite — Estilo Octuz AI (Clean & Luxury).
+ * Posicionada logo após o Hero.
+ * Design sóbrio com cards refinados, comparativo objetivo de economia e planos transparentes.
  */
 export function SalesTopPricingV2() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
   const [pricingTab, setPricingTab] = useState<"subscription" | "credits">("subscription");
 
   return (
-    <section id="planos-topo" className="py-8 sm:py-12 md:py-16 px-3 sm:px-6 max-w-7xl mx-auto space-y-8 sm:space-y-10 w-full scroll-mt-32">
-      {/* Container Monumental Dark Obsidian de Oferta */}
-      <div className="bg-gradient-to-b from-[#0F111A] via-[#0A0B10] to-[#07080B] border-2 border-emerald-500/30 rounded-[28px] sm:rounded-[40px] md:rounded-[48px] p-4 sm:p-8 md:p-12 shadow-[0_25px_80px_rgba(0,0,0,0.9)] space-y-8 sm:space-y-10 relative overflow-hidden">
-        
-        {/* Glow Superior de Atração */}
-        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500" />
-        <div className="absolute top-10 right-10 w-72 h-72 bg-emerald-500/10 rounded-full blur-[90px] pointer-events-none" />
+    <section id="planos-topo" className="py-10 sm:py-16 px-3 sm:px-6 max-w-7xl mx-auto space-y-10 sm:space-y-14 w-full scroll-mt-28">
+      {/* Cabeçalho da Seção */}
+      <div className="text-center space-y-3.5 max-w-3xl mx-auto">
+        <span className="text-xs font-sans tracking-widest text-cyan-400 uppercase font-medium">
+          Investimento Transparente
+        </span>
 
-        {/* Cabeçalho da Oferta */}
-        <div className="text-center space-y-3 max-w-3xl mx-auto relative z-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs font-mono font-bold">
-            <Flame className="w-3.5 h-3.5 text-emerald-400 fill-current animate-pulse shrink-0" />
-            <span>ESCOLHA SEU PLANO E COMECE A PRODUZIR HOJE</span>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-white tracking-tight leading-tight">
+          Quanto você pagaria por{" "}
+          <span className="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400">
+            tudo isso separado?
+          </span>
+        </h2>
+
+        <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto leading-relaxed font-light">
+          Em vez de acumular 5 assinaturas em dólar que pesam no cartão, você centraliza sua produção em um único lugar com créditos que rendem de verdade.
+        </p>
+      </div>
+
+      {/* Comparativo de Custos: Formato Cartão Elegante Octuz AI */}
+      <div className="max-w-2xl mx-auto bg-[#0C0D12]/90 backdrop-blur-xl border border-white/[0.1] hover:border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 transition-all duration-300">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between text-xs text-slate-400 pb-2 border-b border-white/[0.08]">
+            <span className="font-medium">Ferramentas separadas no mercado</span>
+            <span className="font-medium">Média de mercado</span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Tudo o que você precisa em <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-200 to-cyan-300">um só plano acessível</span>.
-          </h2>
-
-          <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
-            Tenha acesso instantâneo a todos os modelos de IA, geração de vídeos, sincronização labial, clonagem de movimentos e upscale 4K sem pagar 5 ferramentas separadas.
-          </p>
-
-          {/* Abas: Assinatura Mensal vs Pacotes de Créditos Sem Mensalidade */}
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-2 text-xs font-bold">
-            <button
-              type="button"
-              onClick={() => setPricingTab("subscription")}
-              className={`px-4 sm:px-5 py-2.5 rounded-xl transition-all cursor-pointer min-h-[44px] flex items-center justify-center gap-2 ${
-                pricingTab === "subscription"
-                  ? "bg-emerald-500 text-slate-950 font-extrabold shadow-lg shadow-emerald-500/30"
-                  : "bg-white/[0.04] text-slate-300 hover:text-white border border-white/[0.08]"
-              }`}
-            >
-              <Zap className="w-4 h-4 fill-current shrink-0" />
-              <span>Planos Mensais Recorrentes</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setPricingTab("credits")}
-              className={`px-4 sm:px-5 py-2.5 rounded-xl transition-all cursor-pointer min-h-[44px] flex items-center justify-center gap-2 ${
-                pricingTab === "credits"
-                  ? "bg-emerald-500 text-slate-950 font-extrabold shadow-lg shadow-emerald-500/30"
-                  : "bg-white/[0.04] text-slate-300 hover:text-white border border-white/[0.08]"
-              }`}
-            >
-              <Sparkles className="w-4 h-4 shrink-0" />
-              <span>Pacotes Avulsos (Sem Assinatura)</span>
-            </button>
+          <div className="flex items-center justify-between text-sm text-slate-300 py-1.5 hover:text-white transition-colors">
+            <span className="flex items-center gap-2.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+              Gerador de Imagens Fotorrealistas
+            </span>
+            <span className="font-mono text-slate-400">R$ 180 / mês</span>
           </div>
 
-          {/* Toggle de Ciclo de Faturamento para Assinaturas */}
-          {pricingTab === "subscription" && (
-            <div className="pt-1 flex items-center justify-center gap-2 text-xs font-semibold">
-              <button
-                type="button"
-                onClick={() => setBillingCycle("monthly")}
-                className={`px-4 py-2 rounded-xl transition-all cursor-pointer min-h-[40px] flex items-center justify-center active:scale-95 ${
-                  billingCycle === "monthly"
-                    ? "bg-white text-slate-950 font-bold shadow-md"
-                    : "text-slate-400 hover:text-white bg-white/[0.03]"
-                }`}
-              >
-                Cobrança Mensal
-              </button>
-              <button
-                type="button"
-                onClick={() => setBillingCycle("yearly")}
-                className={`px-4 py-2 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 min-h-[40px] active:scale-95 ${
-                  billingCycle === "yearly"
-                    ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-extrabold shadow-lg shadow-emerald-500/30"
-                    : "text-slate-400 hover:text-white bg-white/[0.03]"
-                }`}
-              >
-                <span>Cobrança Anual</span>
-                <span className="bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold">
-                  20% OFF
-                </span>
-              </button>
-            </div>
-          )}
-        </div>
+          <div className="flex items-center justify-between text-sm text-slate-300 py-1.5 hover:text-white transition-colors">
+            <span className="flex items-center gap-2.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+              Gerador de Vídeos em Alta Resolução
+            </span>
+            <span className="font-mono text-slate-400">R$ 190 / mês</span>
+          </div>
 
-        {/* Comparador de Choque de Gastos (Direct Response / Vendas) */}
-        <div className="bg-[#07080B] border border-white/[0.08] rounded-3xl p-4 sm:p-6 md:p-8 max-w-4xl mx-auto shadow-xl relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-center">
-            {/* Gastando Separado */}
-            <div className="space-y-3 p-4 sm:p-5 rounded-2xl bg-rose-950/20 border border-rose-500/25 text-xs text-slate-300">
-              <div className="flex items-center gap-2 text-rose-400 font-bold font-mono uppercase">
-                <XCircle className="w-4 h-4 text-rose-400 shrink-0" />
-                <span>Assinando Ferramentas Separadas:</span>
-              </div>
-              <div className="space-y-1.5 text-slate-400">
-                <div className="flex justify-between gap-2"><span>Midjourney (Fotos)</span><span className="font-mono text-slate-300 shrink-0">R$ 180/mês</span></div>
-                <div className="flex justify-between gap-2"><span>Runway Gen-3 (Vídeos)</span><span className="font-mono text-slate-300 shrink-0">R$ 190/mês</span></div>
-                <div className="flex justify-between gap-2"><span>Kling AI (Motion Control)</span><span className="font-mono text-slate-300 shrink-0">R$ 160/mês</span></div>
-                <div className="flex justify-between gap-2"><span>ElevenLabs (Locução)</span><span className="font-mono text-slate-300 shrink-0">R$ 120/mês</span></div>
-                <div className="flex justify-between gap-2"><span>Topaz Video (Upscale 4K)</span><span className="font-mono text-slate-300 shrink-0">R$ 200/mês</span></div>
-              </div>
-              <div className="pt-2.5 border-t border-rose-500/20 flex justify-between font-bold text-rose-300">
-                <span>Custo Médio Mensal:</span>
-                <span className="font-mono text-sm line-through text-rose-400">~R$ 850/mês</span>
-              </div>
-            </div>
+          <div className="flex items-center justify-between text-sm text-slate-300 py-1.5 hover:text-white transition-colors">
+            <span className="flex items-center gap-2.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+              Clonagem de Movimentos (Motion Control)
+            </span>
+            <span className="font-mono text-slate-400">R$ 160 / mês</span>
+          </div>
 
-            {/* Com o VORIXA */}
-            <div className="space-y-3 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#12141F] to-[#0D0E14] text-white border-2 border-emerald-500/40 shadow-xl relative overflow-hidden">
-              <div className="flex items-center gap-2 text-emerald-300 font-bold font-mono text-xs uppercase">
-                <Zap className="w-4 h-4 text-emerald-400 fill-current shrink-0" />
-                <span>Tudo Unificado no VORIXA:</span>
-              </div>
-              <p className="text-slate-300 text-xs leading-relaxed">
-                Você acessa os mesmos motores de ponta em um estúdio centralizado. Economize tempo e mais de 80% em dinheiro com créditos transparentes.
-              </p>
-              <div className="pt-2 border-t border-white/[0.08] flex items-baseline justify-between gap-2">
-                <div>
-                  <span className="text-[10px] text-slate-400 uppercase font-mono block">Planos a partir de</span>
-                  <span className="text-3xl sm:text-4xl font-black text-white">R$ 39</span>
-                  <span className="text-xs text-slate-400 font-mono"> / mês</span>
-                </div>
-                <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono text-[11px] font-bold shrink-0">
-                  Economia Real
-                </span>
-              </div>
-            </div>
+          <div className="flex items-center justify-between text-sm text-slate-300 py-1.5 hover:text-white transition-colors">
+            <span className="flex items-center gap-2.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+              Dublagem e Sincronia Labial em Português
+            </span>
+            <span className="font-mono text-slate-400">R$ 120 / mês</span>
+          </div>
+
+          <div className="flex items-center justify-between text-sm text-slate-300 py-1.5 hover:text-white transition-colors">
+            <span className="flex items-center gap-2.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+              Melhoria de Resolução para 4K
+            </span>
+            <span className="font-mono text-slate-400">R$ 200 / mês</span>
           </div>
         </div>
 
-        {/* Conteúdo Dinâmico por Aba: Assinaturas ou Pacotes Avulsos */}
-        {pricingTab === "subscription" ? (
-          /* Grid com os 3 Planos Mensais/Anuais */
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 max-w-6xl mx-auto items-stretch relative z-10">
-            {/* Starter Pack */}
-            <div className="bg-[#07080B] border border-white/[0.08] hover:border-white/20 rounded-3xl p-5 sm:p-7 flex flex-col justify-between space-y-6 shadow-xl transition-all">
-              <div className="space-y-4">
-                <div className="text-xs font-mono text-slate-400 uppercase font-bold">Plano Inicial</div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-white">
-                    {billingCycle === "yearly" ? "R$ 31" : "R$ 39"}
-                  </span>
-                  <span className="text-xs text-slate-500 font-mono">/ mês</span>
-                </div>
-                <p className="text-xs text-slate-400 leading-relaxed">Ideal para testar e criar seus primeiros vídeos e avatares com IA.</p>
-
-                <div className="pt-4 border-t border-white/[0.06] space-y-2.5 text-xs text-slate-300">
-                  <div className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span><strong>150 Créditos</strong> todo mês</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Acesso ao VORIXA FLOW & Estúdio</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>FLUX.1 Schnell & Kling AI</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Download sem marca d'água</span>
-                  </div>
-                </div>
-              </div>
-
-              <Link
-                href="/register?plan=starter"
-                className="w-full py-3.5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.12] text-white font-bold text-xs text-center transition-all min-h-[44px] flex items-center justify-center cursor-pointer active:scale-95"
-              >
-                Assinar Plano Inicial
-              </Link>
-            </div>
-
-            {/* Creator Pro (Mais Vendido com Destaque Especial) */}
-            <div className="bg-gradient-to-b from-[#12141F] to-[#0A0B10] text-white border-2 border-emerald-500 rounded-3xl p-5 sm:p-8 flex flex-col justify-between space-y-6 shadow-[0_0_50px_rgba(16,185,129,0.3)] relative scale-100 lg:scale-105 z-10">
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 text-[10px] font-mono font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-lg">
-                ✦ MAIS VENDIDO & RECOMENDADO
-              </div>
-
-              <div className="space-y-4">
-                <div className="text-xs font-mono text-emerald-400 uppercase font-bold">Creator Pro</div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-white">
-                    {billingCycle === "yearly" ? "R$ 79" : "R$ 99"}
-                  </span>
-                  <span className="text-xs text-slate-400 font-mono">/ mês</span>
-                </div>
-                <p className="text-xs text-slate-300 leading-relaxed">Perfeito para criadores de conteúdo, afiliados, agências e canais dark.</p>
-
-                <div className="pt-4 border-t border-white/[0.08] space-y-2.5 text-xs text-slate-200">
-                  <div className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span><strong>500 Créditos</strong> renovados mensalmente</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Fila de renderização ultra-rápida</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>LipSync em Português e Motion Dança</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Creative Upscale 4K Ultra HD</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Direito de uso comercial 100% livre</span>
-                  </div>
-                </div>
-              </div>
-
-              <Link
-                href="/register?plan=creator_pro"
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:opacity-95 text-slate-950 font-black text-sm text-center shadow-lg shadow-emerald-500/40 transition-all min-h-[48px] flex items-center justify-center cursor-pointer active:scale-95"
-              >
-                Garantir Plano Creator Pro
-              </Link>
-            </div>
-
-            {/* Studio Ultra */}
-            <div className="bg-[#07080B] border border-white/[0.08] hover:border-white/20 rounded-3xl p-5 sm:p-7 flex flex-col justify-between space-y-6 shadow-xl transition-all">
-              <div className="space-y-4">
-                <div className="text-xs font-mono text-cyan-400 uppercase font-bold">Studio & Produtoras</div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-white">
-                    {billingCycle === "yearly" ? "R$ 199" : "R$ 249"}
-                  </span>
-                  <span className="text-xs text-slate-500 font-mono">/ mês</span>
-                </div>
-                <p className="text-xs text-slate-400 leading-relaxed">Para times e agências com alto volume diário de campanhas e clientes.</p>
-
-                <div className="pt-4 border-t border-white/[0.06] space-y-2.5 text-xs text-slate-300">
-                  <div className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span><strong>1.500 Créditos</strong> mensais dedicados</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Renderização em lote e paralela</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Suporte prioritário via WhatsApp</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Acesso a novos modelos antes de todos</span>
-                  </div>
-                </div>
-              </div>
-
-              <Link
-                href="/register?plan=studio"
-                className="w-full py-3.5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.12] text-white font-bold text-xs text-center transition-all min-h-[44px] flex items-center justify-center cursor-pointer active:scale-95"
-              >
-                Assinar Plano Studio
-              </Link>
-            </div>
+        {/* Linha de Fechamento de Valor */}
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-white/[0.04] to-white/[0.01] border border-white/[0.08] flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <span className="text-xs text-slate-400 block font-light">Total contratando avulso:</span>
+            <span className="text-base sm:text-lg line-through text-slate-500 font-mono">~R$ 850 / mês</span>
           </div>
-        ) : (
-          /* Grid com Pacotes Avulsos (Sem Mensalidade, a partir de R$ 9,90) */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 max-w-6xl mx-auto items-stretch relative z-10">
-            {/* Pacote Teste R$ 9,90 */}
-            <div className="bg-[#07080B] border border-white/[0.08] hover:border-emerald-500/40 rounded-3xl p-5 flex flex-col justify-between space-y-4 shadow-lg transition-all">
-              <div className="space-y-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 font-bold">
-                  TESTE R$ 9,90
-                </span>
-                <h4 className="text-base font-bold text-white">Pacote Teste</h4>
-                <div className="text-2xl font-extrabold text-white">R$ 9,90</div>
-                <p className="text-xs text-slate-400">50 Créditos para testar imediatamente.</p>
-              </div>
-              <Link
-                href="/register?package=pkg-test"
-                className="w-full py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white font-bold text-xs text-center transition-all min-h-[44px] flex items-center justify-center"
-              >
-                Comprar R$ 9,90
-              </Link>
-            </div>
+          <div className="text-right">
+            <span className="text-xs text-cyan-400 block font-medium tracking-wide">No VORIXA a partir de:</span>
+            <span className="text-2xl sm:text-3xl font-normal text-white font-serif">R$ 39 <span className="text-xs font-sans text-slate-400">/ mês</span></span>
+          </div>
+        </div>
+      </div>
 
-            {/* Pacote Iniciante R$ 19,90 */}
-            <div className="bg-[#07080B] border border-white/[0.08] hover:border-emerald-500/40 rounded-3xl p-5 flex flex-col justify-between space-y-4 shadow-lg transition-all">
-              <div className="space-y-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold">
-                  100 CRÉDITOS
-                </span>
-                <h4 className="text-base font-bold text-white">Iniciante</h4>
-                <div className="text-2xl font-extrabold text-white">R$ 19,90</div>
-                <p className="text-xs text-slate-400">Ideal para gerar suas primeiras fotos e vídeos.</p>
-              </div>
-              <Link
-                href="/register?package=pkg-100"
-                className="w-full py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white font-bold text-xs text-center transition-all min-h-[44px] flex items-center justify-center"
-              >
-                Comprar R$ 19,90
-              </Link>
-            </div>
+      {/* Controles de Seleção de Plano (Abas e Ciclo de Faturamento) */}
+      <div className="flex flex-col items-center space-y-4 pt-2">
+        <div className="inline-flex items-center p-1.5 rounded-full bg-[#0C0D12] border border-white/[0.1] shadow-lg">
+          <button
+            type="button"
+            onClick={() => setPricingTab("subscription")}
+            className={`px-6 py-2.5 rounded-full text-xs font-medium transition-all cursor-pointer min-h-[44px] flex items-center justify-center ${
+              pricingTab === "subscription"
+                ? "bg-white text-slate-950 shadow-md font-semibold"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            Assinaturas Mensais
+          </button>
+          <button
+            type="button"
+            onClick={() => setPricingTab("credits")}
+            className={`px-6 py-2.5 rounded-full text-xs font-medium transition-all cursor-pointer min-h-[44px] flex items-center justify-center ${
+              pricingTab === "credits"
+                ? "bg-white text-slate-950 shadow-md font-semibold"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            Pacotes de Créditos Avulsos
+          </button>
+        </div>
 
-            {/* Pacote Profissional R$ 79,90 (Destaque) */}
-            <div className="bg-[#12141F] border-2 border-emerald-500 rounded-3xl p-5 flex flex-col justify-between space-y-4 shadow-[0_0_30px_rgba(16,185,129,0.25)] relative">
-              <span className="absolute -top-2.5 right-4 text-[9px] font-mono font-bold bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-full uppercase">
-                Mais Vendido
-              </span>
-              <div className="space-y-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">
-                  500 + 50 BÔNUS
-                </span>
-                <h4 className="text-base font-bold text-white">Profissional</h4>
-                <div className="text-2xl font-extrabold text-white">R$ 79,90</div>
-                <p className="text-xs text-slate-300">Excelente para quem quer produzir com frequência sem mensalidade fixa.</p>
-              </div>
-              <Link
-                href="/register?package=pkg-500"
-                className="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs text-center transition-all min-h-[44px] flex items-center justify-center shadow-md shadow-emerald-500/30"
-              >
-                Comprar R$ 79,90
-              </Link>
-            </div>
-
-            {/* Pacote Criador Pro R$ 149,90 */}
-            <div className="bg-[#07080B] border border-white/[0.08] hover:border-emerald-500/40 rounded-3xl p-5 flex flex-col justify-between space-y-4 shadow-lg transition-all">
-              <div className="space-y-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-violet-500/20 text-violet-300 font-bold">
-                  1000 + 150 BÔNUS
-                </span>
-                <h4 className="text-base font-bold text-white">Criador Pro</h4>
-                <div className="text-2xl font-extrabold text-white">R$ 149,90</div>
-                <p className="text-xs text-slate-400">Máximo retorno em créditos para campanhas intensivas.</p>
-              </div>
-              <Link
-                href="/register?package=pkg-1000"
-                className="w-full py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white font-bold text-xs text-center transition-all min-h-[44px] flex items-center justify-center"
-              >
-                Comprar R$ 149,90
-              </Link>
-            </div>
+        {pricingTab === "subscription" && (
+          <div className="flex items-center gap-3 text-xs font-sans text-slate-400">
+            <button
+              type="button"
+              onClick={() => setBillingCycle("monthly")}
+              className={`py-1.5 px-2 rounded-lg transition-colors cursor-pointer ${billingCycle === "monthly" ? "text-white font-medium underline underline-offset-4" : "hover:text-slate-200"}`}
+            >
+              Cobrança mensal
+            </button>
+            <span className="text-slate-600">•</span>
+            <button
+              type="button"
+              onClick={() => setBillingCycle("yearly")}
+              className={`py-1.5 px-2 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer ${billingCycle === "yearly" ? "text-cyan-400 font-medium underline underline-offset-4" : "hover:text-slate-200"}`}
+            >
+              <span>Cobrança anual</span>
+              <span className="px-1.5 py-0.5 rounded text-[10px] bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 font-semibold shadow-[0_0_10px_rgba(6,182,212,0.2)]">20% off</span>
+            </button>
           </div>
         )}
+      </div>
 
-        {/* Bloco de Blindagem e Garantia Sem Risco */}
-        <div className="p-4 sm:p-6 rounded-2xl bg-[#07080B] border border-emerald-500/30 max-w-2xl mx-auto text-center space-y-2 flex flex-col items-center shadow-md relative z-10">
-          <ShieldCheck className="w-7 h-7 text-emerald-400 mb-0.5 shrink-0" />
-          <h4 className="text-sm font-bold text-white">Garantia Incondicional de 7 Dias</h4>
-          <p className="text-xs text-slate-400 max-w-lg leading-relaxed">
-            Se por qualquer motivo você não ficar 100% satisfeito com o VORIXA nos primeiros 7 dias, solicite o cancelamento e estornamos seu investimento sem perguntas ou burocracia.
-          </p>
+      {/* Grid de Planos */}
+      {pricingTab === "subscription" ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
+          {/* Plano Inicial */}
+          <div className="bg-[#0C0D12] border border-white/[0.08] hover:border-white/20 hover:-translate-y-1.5 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 transition-all duration-300 shadow-xl reveal-on-scroll reveal-delay-1">
+            <div className="space-y-4">
+              <div>
+                <span className="text-xs font-sans text-slate-400 uppercase tracking-wider block">Para experimentar</span>
+                <h3 className="text-xl font-medium text-white">Plano Inicial</h3>
+              </div>
+
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-3xl sm:text-4xl font-normal text-white font-serif">
+                  {billingCycle === "yearly" ? "R$ 31" : "R$ 39"}
+                </span>
+                <span className="text-xs text-slate-400 font-sans">/ mês</span>
+              </div>
+
+              <p className="text-xs text-slate-400 leading-relaxed font-light">
+                Perfeito para validar a plataforma e gerar seus primeiros vídeos e influenciadores.
+              </p>
+
+              <div className="pt-4 border-t border-white/[0.06] space-y-2.5 text-xs text-slate-300 font-light">
+                <div className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+                  <span><strong>150 Créditos</strong> renovados todo mês</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+                  <span>Acesso aos modelos de imagem e vídeo</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+                  <span>Download direto em alta qualidade</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+                  <span>Sem marca d'água</span>
+                </div>
+              </div>
+            </div>
+
+            <Link
+              href="/register?plan=starter"
+              className="w-full py-3.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:scale-98 border border-white/[0.12] text-white text-xs font-medium text-center transition-all min-h-[48px] flex items-center justify-center cursor-pointer shadow-sm"
+            >
+              Começar com o Inicial
+            </Link>
+          </div>
+
+          {/* Plano Creator Pro (Destaque Principal em Azul Neon) */}
+          <div className="bg-[#111219] border-2 border-cyan-500/60 hover:border-cyan-400 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-[0_12px_45px_rgba(6,182,212,0.22)] relative scale-100 lg:scale-105 z-10 hover:-translate-y-2 transition-all duration-300 reveal-scale reveal-delay-2">
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-cyan-400 text-slate-950 text-[10px] font-sans font-bold px-4 py-1 rounded-full uppercase tracking-wider shadow-[0_0_15px_rgba(34,211,238,0.6)]">
+              Mais Escolhido
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <span className="text-xs font-sans text-cyan-400 uppercase tracking-wider block font-medium">Criadores & Produtores</span>
+                <h3 className="text-xl font-medium text-white">Creator Pro</h3>
+              </div>
+
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-3xl sm:text-4xl font-normal text-white font-serif">
+                  {billingCycle === "yearly" ? "R$ 79" : "R$ 99"}
+                </span>
+                <span className="text-xs text-slate-400 font-sans">/ mês</span>
+              </div>
+
+              <p className="text-xs text-slate-300 leading-relaxed font-light">
+                Para quem produz conteúdos recorrentes para TikTok, Instagram Reels, anúncios e canais dark.
+              </p>
+
+              <div className="pt-4 border-t border-white/[0.08] space-y-2.5 text-xs text-slate-200 font-light">
+                <div className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+                  <span><strong>500 Créditos</strong> renovados mensalmente</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+                  <span>Sincronia labial (LipSync) e Motion Dança</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+                  <span>Aumento de resolução para 4K Ultra HD</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+                  <span>Prioridade na fila de renderização</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+                  <span>Direito de uso comercial liberado</span>
+                </div>
+              </div>
+            </div>
+
+            <Link
+              href="/register?plan=creator_pro"
+              className="w-full py-3.5 rounded-full bg-white hover:bg-slate-100 active:scale-98 text-slate-950 text-xs font-bold text-center transition-all min-h-[48px] flex items-center justify-center cursor-pointer shadow-lg hover:shadow-xl"
+            >
+              Assinar Creator Pro
+            </Link>
+          </div>
+
+          {/* Plano Studio */}
+          <div className="bg-[#0C0D12] border border-white/[0.08] hover:border-white/20 hover:-translate-y-1.5 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 transition-all duration-300 shadow-xl reveal-on-scroll reveal-delay-3">
+            <div className="space-y-4">
+              <div>
+                <span className="text-xs font-sans text-slate-400 uppercase tracking-wider block">Agências & Equipes</span>
+                <h3 className="text-lg font-medium text-white">Studio & Agências</h3>
+              </div>
+
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl sm:text-4xl font-normal text-white font-serif">
+                  {billingCycle === "yearly" ? "R$ 199" : "R$ 249"}
+                </span>
+                <span className="text-xs text-slate-400 font-sans">/ mês</span>
+              </div>
+
+              <p className="text-xs text-slate-400 leading-relaxed font-light">
+                Para quem gerencia múltiplas contas, clientes de agência e precisa de renderizações paralelas.
+              </p>
+
+              <div className="pt-4 border-t border-white/[0.06] space-y-2.5 text-xs text-slate-300 font-light">
+                <div className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+                  <span><strong>1.500 Créditos</strong> mensais dedicados</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+                  <span>Renderização paralela de múltiplos nós</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+                  <span>Suporte prioritário via WhatsApp</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+                  <span>Acesso antecipado a novos modelos</span>
+                </div>
+              </div>
+            </div>
+
+            <Link
+              href="/register?plan=studio"
+              className="w-full py-3.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:scale-98 border border-white/[0.12] text-white text-xs font-medium text-center transition-all min-h-[48px] flex items-center justify-center cursor-pointer shadow-sm"
+            >
+              Assinar Plano Studio
+            </Link>
+          </div>
         </div>
+      ) : (
+        /* Pacotes Avulsos (Sem Mensalidade, a partir de R$ 9,90) */
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto items-stretch">
+          <div className="bg-[#0C0D12] border border-white/[0.08] hover:border-white/20 hover:-translate-y-1 rounded-3xl p-6 flex flex-col justify-between space-y-4 transition-all duration-300 shadow-lg">
+            <div className="space-y-2.5">
+              <span className="text-[11px] font-sans px-3 py-1 rounded-full bg-white/[0.05] text-slate-300 inline-block">
+                50 Créditos
+              </span>
+              <h4 className="text-base font-medium text-white">Pacote Teste</h4>
+              <div className="text-2xl sm:text-3xl font-serif text-white">R$ 9,90</div>
+              <p className="text-xs text-slate-400 font-light leading-relaxed">Para quem quer fazer uma geração rápida de teste.</p>
+            </div>
+            <Link
+              href="/register?package=pkg-test"
+              className="w-full py-3 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:scale-98 text-white text-xs text-center border border-white/[0.12] min-h-[44px] flex items-center justify-center transition-all cursor-pointer font-medium"
+            >
+              Comprar por R$ 9,90
+            </Link>
+          </div>
+
+          <div className="bg-[#0C0D12] border border-white/[0.08] hover:border-white/20 hover:-translate-y-1 rounded-3xl p-6 flex flex-col justify-between space-y-4 transition-all duration-300 shadow-lg">
+            <div className="space-y-2.5">
+              <span className="text-[11px] font-sans px-3 py-1 rounded-full bg-white/[0.05] text-slate-300 inline-block">
+                100 Créditos
+              </span>
+              <h4 className="text-base font-medium text-white">Iniciante</h4>
+              <div className="text-2xl sm:text-3xl font-serif text-white">R$ 19,90</div>
+              <p className="text-xs text-slate-400 font-light leading-relaxed">Ideal para criar um primeiro lote de imagens ou vídeo.</p>
+            </div>
+            <Link
+              href="/register?package=pkg-100"
+              className="w-full py-3 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:scale-98 text-white text-xs text-center border border-white/[0.12] min-h-[44px] flex items-center justify-center transition-all cursor-pointer font-medium"
+            >
+              Comprar por R$ 19,90
+            </Link>
+          </div>
+
+          <div className="bg-[#111219] border border-cyan-500/50 hover:border-cyan-400 hover:-translate-y-1.5 rounded-3xl p-6 flex flex-col justify-between space-y-4 relative transition-all duration-300 shadow-[0_8px_30px_rgba(6,182,212,0.18)]">
+            <span className="absolute -top-3 right-5 text-[10px] font-sans bg-cyan-400 text-slate-950 font-bold px-3 py-0.5 rounded-full shadow-[0_0_10px_rgba(34,211,238,0.5)]">
+              Recomendado
+            </span>
+            <div className="space-y-2.5">
+              <span className="text-[11px] font-sans px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-medium inline-block">
+                500 + 50 Bônus
+              </span>
+              <h4 className="text-base font-medium text-white">Profissional</h4>
+              <div className="text-2xl sm:text-3xl font-serif text-white">R$ 79,90</div>
+              <p className="text-xs text-slate-300 font-light leading-relaxed">Ótimo volume para produzir sem compromisso mensal.</p>
+            </div>
+            <Link
+              href="/register?package=pkg-500"
+              className="w-full py-3 rounded-full bg-white hover:bg-slate-100 active:scale-98 text-slate-950 font-bold text-xs text-center min-h-[44px] flex items-center justify-center shadow transition-all cursor-pointer"
+            >
+              Comprar por R$ 79,90
+            </Link>
+          </div>
+
+          <div className="bg-[#0C0D12] border border-white/[0.08] hover:border-white/20 hover:-translate-y-1 rounded-3xl p-6 flex flex-col justify-between space-y-4 transition-all duration-300 shadow-lg">
+            <div className="space-y-2.5">
+              <span className="text-[11px] font-sans px-3 py-1 rounded-full bg-white/[0.05] text-slate-300 inline-block">
+                1000 + 150 Bônus
+              </span>
+              <h4 className="text-base font-medium text-white">Criador Pro</h4>
+              <div className="text-2xl sm:text-3xl font-serif text-white">R$ 149,90</div>
+              <p className="text-xs text-slate-400 font-light leading-relaxed">Para produções completas com dublagem e render em 4K.</p>
+            </div>
+            <Link
+              href="/register?package=pkg-1000"
+              className="w-full py-3 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:scale-98 text-white text-xs text-center border border-white/[0.12] min-h-[44px] flex items-center justify-center transition-all cursor-pointer font-medium"
+            >
+              Comprar por R$ 149,90
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Selo de Garantia Sem Risco */}
+      <div className="max-w-xl mx-auto text-center space-y-2 pt-2">
+        <div className="inline-flex items-center gap-2 text-xs font-sans text-slate-300">
+          <ShieldCheck className="w-4 h-4 text-cyan-400 shrink-0" />
+          <span>7 dias de garantia incondicional</span>
+        </div>
+        <p className="text-xs text-slate-400 leading-relaxed font-light">
+          Experimente a plataforma com segurança. Se não atender suas expectativas na primeira semana, basta solicitar o estorno diretamente pelo painel.
+        </p>
       </div>
     </section>
   );

@@ -5,6 +5,53 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.8.6] - 2026-09-18
+### Promoção da Home V2 (Sales-First) como Página Principal (`/`)
+- **Promoção da Home V2 para a Rota Raiz (`/`)**:
+  - A nova versão editorial de vendas (com planos no topo, vídeo da mulher do Carnaval com áudio em português, estilo Octuz AI e azul neon) agora é a Home oficial da plataforma em `app/page.tsx`.
+  - A Home institucional antiga foi preservada integralmente em `app/home-legacy/page.tsx` para fins de histórico e consulta interna.
+  - Links de navegação e logotipo ajustados para apontar diretamente para a raiz (`/`).
+- **Validação e Integridade**:
+  - Verificação de tipos TypeScript via `tsc --noEmit` (**0 erros**).
+
+## [2.8.5] - 2026-09-18
+### Atualização Cromática: Adoção do Azul Neon na Home V2
+- **Harmonização Visual com Azul Neon (Electric Cyan & Neon Blue)**:
+  - Substituídos todos os elementos de destaque que utilizavam verde esmeralda por azul neon elétrico (`cyan-400`, `cyan-500`, `sky-300`, `blue-400`).
+  - Atualizada a headline do Hero: gradiente luminoso `from-cyan-300 via-sky-300 to-blue-400`.
+  - Atualizado o cartão de destaque comercial (**Creator Pro**): borda `border-cyan-500/60`, badge luminosa `bg-cyan-400 text-slate-950` com glow `shadow-[0_0_15px_rgba(34,211,238,0.6)]` e sombra difusa `shadow-[0_12px_45px_rgba(6,182,212,0.22)]`.
+  - Atualizados os controles de áudio, tags de prova real do Motion Control, status do rodapé e links de navegação ativa.
+- **Validação e Integridade**:
+  - Compilação estática TypeScript validada com `tsc --noEmit` (0 erros).
+  - Capturas de tela Playwright atualizadas e validadas em Desktop e Mobile.
+
+## [2.8.4] - 2026-09-18
+### Animações de Entrada ao Scroll (Scroll Reveal) e Polimento da Home V2
+- **Animações Fluidas de Scroll (IntersectionObserver & CSS)**:
+  - Implementadas classes de revelação e escala suave `.reveal-on-scroll` e `.reveal-scale` com suporte a blur progressivo e transição ergonômica (`cubic-bezier(0.16, 1, 0.3, 1)`).
+  - Delays escalonados em cascata (`.reveal-delay-1` até `.reveal-delay-4`) para efeito natural entre cartões de planos, casos de uso e itens da galeria.
+  - Ativação automática ao rolar a página via `IntersectionObserver` de alto desempenho sem travar a thread de renderização.
+- **Validação Headless com Playwright**:
+  - Script de auditoria atualizado com rolagem progressiva (`scripts/audit_home2.mjs`) garantindo renderização e captura de todos os elementos animados em Desktop e Mobile.
+  - Tipagem verificada com `tsc --noEmit` (0 erros).
+
+## [2.8.3] - 2026-09-18
+### Redesign Editorial de Luxo da Home V2 (Padrão Octuz AI com Tipografia Sofisticada)
+- **Eliminação de Estética Futurista de IA & Aplicação da Skill Humanizer**:
+  - Removidos termos exagerados de ficção científica ("motores neurais", "cluster", "super bento", etc.).
+  - Redação transformada em tom humano, elegante, direto e focado em negócios e ROI.
+- **Tipografia Editorial Sofisticada**:
+  - Aplicação de `Instrument Serif` (`font-serif italic`) e `Inter` contemporâneo, combinando o visual de estúdio de luxo do Octuz AI.
+  - Cartões com cantos arredondados generosos (`rounded-3xl`), bordas finas translúcidas (`border-white/[0.08]`) e contraste impecável.
+- **Preservação e População com Mídias Reais Autorizadas**:
+  - **Hero Principal**: Preservado o vídeo da mulher do Carnaval com áudio e fala em português (`/uploads/87cf520d-8277-4f00-9644-26f4584735a6.mp4`).
+  - **Motion Control**: Seção de comparação em 3 cartões limpos (vídeo TikTok do celular -> personagem de IA -> vídeo final com passos clonados).
+  - **Galeria Editorial**: Populada exclusivamente com mídias reais de testes e do banco de dados (lookbook de moda, comercial de perfume, apresentadora em português e ensaios fotográficos), **com exclusão rigorosa de qualquer mídia do nicho hot**.
+- **Oferta & Planos no Topo**:
+  - Comparativo refinado de choque de custos no estilo Octuz AI com alternância entre Assinaturas Mensais/Anuais e Pacotes Avulsos (a partir de R$ 9,90).
+- **Validação Completa**:
+  - Capturas de tela Playwright atualizadas e `tsc --noEmit` validado com 0 erros.
+
 ## [2.8.2] - 2026-09-18
 ### Criação da Home V2 (Página de Vendas de Alta Conversão com Planos no Topo)
 - **Implementação da Nova Rota `/home-2` (Home V2 Sales-First)**:

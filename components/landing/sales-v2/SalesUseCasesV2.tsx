@@ -1,94 +1,98 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { Sparkles, Video, UserCheck, Mic, Wand2, ArrowRight } from "lucide-react";
+import { UserCheck, Video, Wand2, Mic } from "lucide-react";
 
 /**
- * Seção "O que você pode criar com o VORIXA" focada em casos de uso de venda.
+ * Seção de Casos de Uso com Estética Editorial Elegante (Estilo Octuz AI).
+ * Redação 100% humanizada sem termos de IA futurista ou exageros.
  */
 export function SalesUseCasesV2() {
-  const useCases = [
+  const cases = [
     {
       icon: UserCheck,
-      badge: "Influenciador Virtual",
-      title: "Crie personas que não existem na vida real",
-      desc: "Desenvolva modelos masculinos ou femininos com rosto e estilo consistente. Eles viram o rosto da sua marca para gravar centenas de criativos sem cachê de ator.",
-      accent: "text-emerald-400 border-emerald-500/30 bg-emerald-950/20",
-      gradient: "from-emerald-500/20 to-transparent",
+      tag: "Influenciador Virtual",
+      title: "Um rosto exclusivo para a sua marca",
+      desc: "Crie personagens com consistência fotográfica que viram a cara da sua empresa ou de canais de conteúdo. Você tem controle total sobre roupas, cenário e tom de voz.",
     },
     {
       icon: Video,
-      badge: "Vídeos Virais & TikTok Ads",
-      title: "Anúncios em vídeo com roteiro de alta conversão",
-      desc: "Transforme qualquer roteiro de vendas em vídeo vertical em 9:16. O modelo fala em português do Brasil com expressões naturais e sincronia labial perfeita.",
-      accent: "text-cyan-400 border-cyan-500/30 bg-cyan-950/20",
-      gradient: "from-cyan-500/20 to-transparent",
+      tag: "Vídeos em 9:16",
+      title: "Criativos para TikTok, Reels e Anúncios",
+      desc: "Gere vídeos no formato vertical prontos para veiculação em campanhas. O personagem fala seu texto de forma fluida, olhando diretamente para a câmera.",
     },
     {
       icon: Wand2,
-      badge: "Clonagem de Movimentos (Motion)",
-      title: "Copie coreografias e gestos de vídeos do TikTok",
-      desc: "Grave um vídeo qualquer dançando ou gesticulando com o celular e transfira todos os movimentos para o seu modelo de IA com física e roupas realistas.",
-      accent: "text-violet-400 border-violet-500/30 bg-violet-950/20",
-      gradient: "from-violet-500/20 to-transparent",
+      tag: "Clonagem de Movimentos",
+      title: "Copie passos e danças de vídeos reais",
+      desc: "Envie um vídeo gravado no celular com uma coreografia ou movimento específico e transfira a movimentação inteira para o seu modelo de forma suave.",
     },
     {
       icon: Mic,
-      badge: "Dublagem & LipSync Nativo",
-      title: "Locução convincente sem estúdio de gravação",
-      desc: "Escolha vozes ultra-humanizadas em português ou envie seu próprio áudio gravado. A boca do modelo virtual se move no tempo exato das palavras.",
-      accent: "text-amber-400 border-amber-500/30 bg-amber-950/20",
-      gradient: "from-amber-500/20 to-transparent",
+      tag: "Sincronia Labial",
+      title: "Dublagem natural em português",
+      desc: "Basta digitar o texto ou enviar um áudio de voz. A boca e as expressões faciais do modelo se movem no tempo exato das palavras faladas.",
     },
   ];
 
   return (
-    <section className="py-10 sm:py-16 md:py-20 px-3 sm:px-6 max-w-7xl mx-auto space-y-8 sm:space-y-12">
-      <div className="text-center space-y-3 max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold">
-          <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-          <span>APLICAÇÕES PRÁTICAS PARA FATURAR MAIS</span>
-        </div>
-        <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
-          O que você consegue criar em <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-200 to-cyan-300">poucos minutos</span>:
+    <section className="py-12 sm:py-16 px-3 sm:px-6 max-w-7xl mx-auto space-y-10 sm:space-y-14 w-full">
+      {/* Cabeçalho */}
+      <div className="text-center space-y-3 max-w-2xl mx-auto">
+        <span className="text-xs font-sans tracking-widest text-cyan-400 uppercase font-medium">
+          Aplicações Reais
+        </span>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-white tracking-tight leading-tight">
+          O que você pode criar{" "}
+          <span className="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400">
+            na prática
+          </span>
         </h2>
-        <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
-          Tudo desenhado para quem precisa de agilidade comercial, múltiplos criativos para testar em campanhas e zero dependência técnica.
+        <p className="text-sm sm:text-base text-slate-400 leading-relaxed font-light">
+          Soluções práticas para quem quer produzir vídeos de alta conversão sem complicação.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 max-w-6xl mx-auto">
-        {useCases.map((uc, idx) => {
-          const IconComponent = uc.icon;
+      {/* Grid de 4 Cards Elegantes */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        {cases.map((c, idx) => {
+          const IconComp = c.icon;
+          const delayClass =
+            idx === 0
+              ? "reveal-delay-1"
+              : idx === 1
+              ? "reveal-delay-2"
+              : idx === 2
+              ? "reveal-delay-3"
+              : "reveal-delay-4";
+
           return (
             <div
               key={idx}
-              className="bg-[#0D0E14] border border-white/[0.08] hover:border-white/20 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-5 shadow-xl relative overflow-hidden transition-all group"
+              className={`bg-[#0C0D12] border border-white/[0.08] hover:border-white/20 hover:-translate-y-1 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-5 transition-all duration-300 shadow-xl reveal-on-scroll ${delayClass}`}
             >
-              <div className={`absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl ${uc.gradient} blur-[60px] pointer-events-none group-hover:scale-125 transition-transform duration-700`} />
-              
-              <div className="space-y-4 relative z-10">
-                <div className="flex items-center justify-between gap-2">
-                  <div className={`p-3 rounded-2xl border ${uc.accent} w-fit`}>
-                    <IconComponent className="w-6 h-6 shrink-0" />
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-11 h-11 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-slate-200">
+                    <IconComp className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.1] text-slate-300">
-                    {uc.badge}
+                  <span className="text-[11px] font-sans px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-200 whitespace-nowrap font-medium">
+                    {c.tag}
                   </span>
                 </div>
 
-                <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight leading-snug">
-                  {uc.title}
+                <h3 className="text-lg sm:text-xl font-medium text-white tracking-tight">
+                  {c.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                  {uc.desc}
+
+                <p className="text-sm text-slate-400 leading-relaxed font-light">
+                  {c.desc}
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-white/[0.06] relative z-10 flex items-center justify-between text-xs font-semibold">
-                <span className="text-slate-400">Tempo médio de render:</span>
-                <span className="font-mono text-emerald-400 font-bold">~15 a 45 segundos</span>
+              <div className="pt-3 border-t border-white/[0.06] text-xs text-slate-400 flex items-center justify-between">
+                <span className="font-light">Tempo médio de produção:</span>
+                <span className="font-mono text-cyan-400 font-medium">~15 a 45 segundos</span>
               </div>
             </div>
           );

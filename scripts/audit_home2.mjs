@@ -21,6 +21,21 @@ async function runAudit() {
     // Testar /home-2
     console.log(`Auditing /home-2 on ${vp.name}...`);
     await page.goto('http://localhost:3005/home-2', { waitUntil: 'networkidle', timeout: 30000 });
+
+    // Rolar a página suavemente para baixo para acionar o IntersectionObserver de todas as seções
+    await page.evaluate(async () => {
+      const distance = 400;
+      const delay = 60;
+      while (document.scrollingElement.scrollTop + window.innerHeight < document.scrollingElement.scrollHeight) {
+        document.scrollingElement.scrollBy(0, distance);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+      // Rola de volta para o topo para screenshots
+      document.scrollingElement.scrollTo(0, 0);
+      await new Promise((resolve) => setTimeout(resolve, 200));
+    });
+
+    await page.waitForTimeout(600);
     await page.screenshot({ path: path.join(outDir, `home2_${vp.name}_full.png`), fullPage: true });
 
     // Tirar print específico do topo com Hero + Planos

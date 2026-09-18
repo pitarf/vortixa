@@ -8,6 +8,32 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Promoção da Home V2 (Sales-First) como Página Principal (`/`)**:
+  - A nova versão com estética de luxo editorial, planos no primeiro terço de rolagem, vídeo da mulher do Carnaval com áudio em português, estilo Octuz AI e azul neon foi promovida como a página principal (`app/page.tsx`).
+  - A Home institucional anterior foi mantida e preservada com segurança em `app/home-legacy/page.tsx`.
+  - Links do logo e rotas de menu atualizados para apontar para `/`.
+  - Compilação estática TypeScript validada com `tsc --noEmit` (**0 erros**).
+- [x] **Substituição Cromática para Azul Neon (Electric Cyan) na Home V2**:
+  - Removido todo o verde esmeralda e substituído por azul neon elétrico (`cyan-400`, `cyan-500`, `sky-300`, `blue-400`).
+  - Atualização cromática aplicada no Hero (gradiente de destaque na headline, pílula de estúdio e badges de garantias).
+  - Atualização aplicada na seção de Preços (bordas de destaque, pílula "Mais Escolhido" com glow neon, selos de desconto anual e checks).
+  - Atualização aplicada nos Casos de Uso, Motion Control, Galeria Editorial e Rodapé.
+  - Verificação estática com `tsc --noEmit` (0 erros) e screenshots Playwright atualizadas.
+- [x] **Animações de Entrada ao Scroll (Scroll Reveal) e Fluidez da Home V2**:
+  - Implementadas classes `.reveal-on-scroll` e `.reveal-scale` em `app/globals.css` com dissipação de desfoque (`filter: blur(4px) -> blur(0)`), elevação suave de 36px e curva de aceleração de luxo (`cubic-bezier(0.16, 1, 0.3, 1)`).
+  - Delays escalonados em cascata (`.reveal-delay-1` até `.reveal-delay-4`) nos cartões de planos de preços, casos de uso comercial e galeria de mídias.
+  - IntersectionObserver de alta fidelidade configurado em `app/home-2/page.tsx` para revelar dinamicamente os elementos conforme o usuário rola a tela.
+  - Auditoria Playwright atualizada com rolagem programada e capturas completas em Desktop (1440x900) e Mobile (375x812) geradas com sucesso.
+  - Verificação de tipos TypeScript validada via `tsc --noEmit` (0 erros).
+- [x] **Redesign Editorial de Luxo da Home V2 (Padrão Octuz AI com Tipografia Sofisticada)**:
+  - Eliminação de qualquer estética de ficção científica ("motores neurais", jargões de IA) substituída por redação humana e direta conforme diretrizes do `humanizer`.
+  - Tipografia sofisticada aplicando a fonte serifada `Instrument Serif` em itálico de luxo combinada com `Inter` limpo.
+  - Formatação e acabamento dos cartões no padrão do Octuz AI (`bg-[#0C0D12]`, bordas `border-white/[0.08]` e cantos arredondados generosos `rounded-3xl`).
+  - Mídia principal do Hero mantida com o vídeo da mulher do Carnaval falando em português com controle de som.
+  - Seção do **Motion Control** simplificada e limpa em 3 cartões de demonstração real (celular -> modelo -> resultado final).
+  - Vitrine de resultados populada com criações reais (lookbook de moda, comercial de perfume, apresentadora em português e ensaios fotográficos), **com exclusão rigorosa de qualquer conteúdo do nicho hot**.
+  - Tabela comparativa de custos estilo cartão elegante do Octuz AI com planos e pacotes no topo.
+  - Validação estática executada com `tsc --noEmit` (0 erros) e capturas de tela Playwright atualizadas.
 - [x] **Criação da Home V2 (Página de Vendas de Alta Conversão com Planos no Topo)**:
   - Preservada 100% a Home atual na rota raiz (`/`).
   - Desenvolvida a página alternativa `/home-2` estruturada com técnicas modernas de Direct Response / SaaS Sales.
