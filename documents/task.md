@@ -8,6 +8,12 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Adição da Transformação de Foto em Vídeo & Fala (Festa da Virginia) na Home**:
+  - Resgatado o vídeo de teste original (`7a8abe32-afbb-42f6-9c7a-e77a9aadec60.mp4`) e a imagem estática de origem (`6ea5aba0-f0a5-4be8-985e-09da93fb0630.jpg`) diretamente do banco de dados e armazenamento da VPS.
+  - Desenvolvido o componente dedicado `components/landing/sales-v2/SalesImageToVideoV2.tsx` com comparativo lado a lado ("Antes: Imagem Estática" vs "Depois: Vídeo com Fala e Movimento"), controles de reprodução e áudio com fala nativa em português brasileiro (*"Estou pronta para a Festa da Virginia, Você também vai?"*).
+  - Vídeo inserido como destaque na Galeria Editorial (`components/landing/sales-v2/SalesGalleryV2.tsx`) com a tag `Foto para Vídeo & Fala`.
+  - Links de navegação atualizados no menu Desktop e gaveta Mobile.
+  - Verificação de tipos TypeScript validada via `tsc --noEmit` (**0 erros**).
 - [x] **Promoção da Home V2 (Sales-First) como Página Principal (`/`)**:
   - A nova versão com estética de luxo editorial, planos no primeiro terço de rolagem, vídeo da mulher do Carnaval com áudio em português, estilo Octuz AI e azul neon foi promovida como a página principal (`app/page.tsx`).
   - A Home institucional anterior foi mantida e preservada com segurança em `app/home-legacy/page.tsx`.

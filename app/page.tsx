@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { SalesHeroV2 } from "@/components/landing/sales-v2/SalesHeroV2";
 import { SalesTopPricingV2 } from "@/components/landing/sales-v2/SalesTopPricingV2";
 import { SalesUseCasesV2 } from "@/components/landing/sales-v2/SalesUseCasesV2";
+import { SalesImageToVideoV2 } from "@/components/landing/sales-v2/SalesImageToVideoV2";
 import { SalesMotionV2 } from "@/components/landing/sales-v2/SalesMotionV2";
 import { SalesGalleryV2 } from "@/components/landing/sales-v2/SalesGalleryV2";
 import { TestimonialsTrust } from "@/components/landing/TestimonialsTrust";
@@ -89,6 +90,9 @@ export default function HomeV2Page() {
             <a href="#use-cases" className="hover:text-white transition-colors py-2">
               Recursos
             </a>
+            <a href="#image-to-video" className="hover:text-white transition-colors py-2">
+              Foto para Vídeo
+            </a>
             <a href="#motion-proof" className="hover:text-white transition-colors py-2">
               Dança & Movimento
             </a>
@@ -146,6 +150,13 @@ export default function HomeV2Page() {
                 className="px-4 py-2.5 rounded-xl hover:bg-white/[0.05]"
               >
                 O Que Você Cria
+              </a>
+              <a
+                href="#image-to-video"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-4 py-2.5 rounded-xl hover:bg-white/[0.05]"
+              >
+                Foto para Vídeo & Fala
               </a>
               <a
                 href="#motion-proof"
@@ -214,12 +225,17 @@ export default function HomeV2Page() {
           <SalesUseCasesV2 />
         </div>
 
-        {/* 4. MOTION CONTROL (Dança TikTok -> Modelo -> Vídeo Final) */}
+        {/* 4. TRANSFORMAÇÃO DE FOTO PARA VÍDEO & FALA NATIVA (Festa da Virginia) */}
+        <div id="image-to-video" className="reveal-scale">
+          <SalesImageToVideoV2 />
+        </div>
+
+        {/* 5. MOTION CONTROL (Dança TikTok -> Modelo -> Vídeo Final) */}
         <div id="motion-proof" className="reveal-scale">
           <SalesMotionV2 />
         </div>
 
-        {/* 5. GALERIA DE MÍDIAS GERADAS NO BANCO E TESTES (Sem Nicho Hot) */}
+        {/* 6. GALERIA DE MÍDIAS GERADAS NO BANCO E TESTES (Sem Nicho Hot) */}
         <div id="gallery" className="reveal-on-scroll">
           <SalesGalleryV2 />
         </div>

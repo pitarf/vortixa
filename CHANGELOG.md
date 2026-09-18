@@ -5,6 +5,18 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.8.7] - 2026-09-18
+### Adição de Vídeo de Imagem Animada (Festa da Virginia) na Home
+- **Seção Comparativa "Foto para Vídeo & Fala Nativa" (`SalesImageToVideoV2`)**:
+  - Comparativo visual entre a fotografia estática original (`/uploads/6ea5aba0-f0a5-4be8-985e-09da93fb0630.jpg`) e o vídeo animado com fala em português (`/uploads/7a8abe32-afbb-42f6-9c7a-e77a9aadec60.mp4`).
+  - Demonstração da tecnologia Kling 2.6 Pro com fala: *"Estou pronta para a Festa da Virginia, Você também vai?"*, movimentação fluida e áudio sincronizado.
+  - Controles de reprodução e áudio integrados com botão de ativação de voz.
+- **Inserção na Galeria Editorial (`SalesGalleryV2`)**:
+  - Vídeo adicionado com a tag `Foto para Vídeo & Fala` na categoria UGC / Fala Nativa.
+- **Integridade e Validação**:
+  - Arquivos de mídia sincronizados entre VPS e ambiente local.
+  - Verificação rigorosa com `tsc --noEmit` (0 erros).
+
 ## [2.8.6] - 2026-09-18
 ### Promoção da Home V2 (Sales-First) como Página Principal (`/`)
 - **Promoção da Home V2 para a Rota Raiz (`/`)**:
