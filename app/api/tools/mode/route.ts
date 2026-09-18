@@ -9,6 +9,15 @@ export async function GET() {
       return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
     }
 
+    const admin = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true },
+    });
+
+    if (!admin || admin.role !== "ADMIN") {
+      return NextResponse.json({ error: "Acesso restrito a administradores." }, { status: 403 });
+    }
+
     const setting = await prisma.systemSetting.findUnique({
       where: { key: "ai_provider_mode" },
     });
@@ -26,6 +35,15 @@ export async function POST(req: Request) {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+    }
+
+    const admin = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true },
+    });
+
+    if (!admin || admin.role !== "ADMIN") {
+      return NextResponse.json({ error: "Acesso restrito a administradores." }, { status: 403 });
     }
 
     const body = await req.json();

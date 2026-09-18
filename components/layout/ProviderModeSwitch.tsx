@@ -7,16 +7,27 @@ import { toast } from "sonner";
 export function ProviderModeSwitch() {
   const [mode, setMode] = useState<"live" | "mock">("live");
   const [loading, setLoading] = useState(true);
+  const [authorized, setAuthorized] = useState(true);
 
   useEffect(() => {
     fetch("/api/tools/mode")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          setAuthorized(false);
+          throw new Error("Não autorizado");
+        }
+        return res.json();
+      })
       .then((data) => {
         if (data.mode) setMode(data.mode);
       })
-      .catch(() => {})
+      .catch(() => {
+        setAuthorized(false);
+      })
       .finally(() => setLoading(false));
   }, []);
+
+  if (!authorized) return null;
 
   const toggleMode = async () => {
     const nextMode = mode === "live" ? "mock" : "live";

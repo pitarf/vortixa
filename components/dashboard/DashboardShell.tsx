@@ -510,10 +510,12 @@ export function DashboardShell({
             <span className="text-slate-300 font-semibold text-[11px]">Motores Online</span>
           </div>
 
-          {/* Switch de Modo Turbo vs Simulação */}
-          <div className="hidden md:block">
-            <ProviderModeSwitch />
-          </div>
+          {/* Switch de Modo Turbo vs Simulação (Exclusivo para Administradores) */}
+          {user?.role === "ADMIN" && (
+            <div className="hidden md:block">
+              <ProviderModeSwitch />
+            </div>
+          )}
 
           {/* Badge de Créditos Dourado Elegante */}
           <Link
