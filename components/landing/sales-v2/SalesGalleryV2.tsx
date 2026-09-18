@@ -149,6 +149,26 @@ export function SalesGalleryV2() {
       desc: "Aproximação da câmera com entonação coloquial brasileira e sorriso natural.",
     },
     {
+      id: 15,
+      category: "t2i",
+      type: "image",
+      title: "Influenciadora em Live Stream (TikTok/Insta)",
+      tag: "Texto para Imagem • Realismo",
+      url: "/uploads/influencer_live_stream.jpg",
+      poster: "/uploads/influencer_live_stream.jpg",
+      desc: "Simulação de live streaming com interface de chat, reações, iluminação de ring light e naturalidade fotográfica absoluta.",
+    },
+    {
+      id: 16,
+      category: "t2i",
+      type: "image",
+      title: "Noiva na Bateria em Casamento ao Pôr do Sol",
+      tag: "Texto para Imagem • Fotografia",
+      url: "/uploads/bride_drums_editorial.jpg",
+      poster: "/uploads/bride_drums_editorial.jpg",
+      desc: "Composição fotográfica dinâmica com convidados surpresos, bateria Pearl com acabamento glitter e iluminação dourada.",
+    },
+    {
       id: 8,
       category: "commercial",
       type: "image",
@@ -180,7 +200,7 @@ export function SalesGalleryV2() {
             </span>
           </h2>
           <p className="text-sm text-slate-400 leading-relaxed font-light">
-            Vídeos verticais e ensaios prontos para você veicular no TikTok, Instagram ou anúncios.
+            Vídeos verticais, ensaios fotográficos e imagens realistas prontos para veiculação.
           </p>
         </div>
 
@@ -188,6 +208,7 @@ export function SalesGalleryV2() {
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
           {[
             { key: "all", label: "Tudo" },
+            { key: "t2i", label: "Texto para Imagem" },
             { key: "ugc", label: "Influenciadores & Fala" },
             { key: "motion", label: "Motion & Dança" },
             { key: "commercial", label: "Comerciais & Produtos" },

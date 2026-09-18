@@ -6,7 +6,11 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 ## [2.8.8] - 2026-09-18
-### Renomeação Global da Marca para VORTIXIA, Vídeos Seedance 2.5 & Comercial One Million
+### Renomeação Global da Marca para VORTIXIA, Texto para Imagem, Vídeos Seedance 2.5 & Comercial One Million
+- **Gerações de Texto para Imagem (Filtro 't2i' na Galeria)**:
+  - Adicionada a fotografia hiper-realista da influenciadora em live streaming com interface e comentários integrados (`/uploads/influencer_live_stream.jpg`).
+  - Adicionada a fotografia editorial de casamento ao ar livre da noiva tocando bateria (`/uploads/bride_drums_editorial.jpg`).
+  - Criada a categoria e filtro dedicado **Texto para Imagem** na galeria editorial (`SalesGalleryV2.tsx`).
 - **Mídias Cinemáticas Seedance 2.5 (WaveSpeed)**:
   - Adicionados 3 novos vídeos de demonstração de ponta da arquitetura ByteDance Seedance 2.5:
     - *Coreografia & Fluidez:* Dinâmica em 60fps com alta retenção anatômica (`/uploads/seedance_showcase_1.mp4`).
