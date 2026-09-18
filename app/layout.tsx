@@ -76,9 +76,12 @@ export async function generateMetadata(): Promise<Metadata> {
     creator: "VORTIXIA",
     publisher: "VORTIXIA",
     icons: {
-      icon: faviconUrl,
-      shortcut: faviconUrl,
-      apple: faviconUrl,
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: faviconUrl || "/favicon.png", type: "image/png" },
+      ],
+      shortcut: ["/favicon.ico", faviconUrl || "/favicon.png"],
+      apple: [{ url: "/favicon.png", sizes: "180x180", type: "image/png" }],
     },
     openGraph: {
       type: "website",
