@@ -19,6 +19,16 @@ export function SalesGalleryV2() {
 
   const gallery = [
     {
+      id: 11,
+      category: "ugc",
+      type: "video",
+      title: "Geração de Vídeo Ultra-Realista",
+      tag: "Hiper-Realismo • WaveSpeed",
+      url: "/uploads/wavespeed_realism_showcase.mp4",
+      poster: "/uploads/wavespeed_realism_showcase_poster.jpg",
+      desc: "Microexpressões faciais orgânicas, iluminação de cinema e física de movimento indistinguível do mundo real.",
+    },
+    {
       id: 1,
       category: "ugc",
       type: "video",
