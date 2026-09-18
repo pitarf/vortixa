@@ -6,7 +6,9 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 ## [2.8.7] - 2026-09-18
-### Adição de Vídeo de Imagem Animada (Festa da Virginia) na Home
+### Adição de Vídeo da Virginia e Retratos Ultra-Realistas da Modelo Brasileira
+- **Retratos Ultra-Realistas (Recraft V3 & Hasselblad 85mm)**:
+  - Adicionado o ensaio fotográfico de alta fidelidade da modelo brasileira com pele real, microporos, cabelos cacheados definidos e iluminação de estúdio (`/uploads/3edfbb77-e69f-4ab7-8298-696549bf49a3.jpg` e `/uploads/36c7aff2-166d-4bdc-a002-032243d98196.jpg`) na galeria editorial (`SalesGalleryV2.tsx`).
 - **Seção Comparativa "Foto para Vídeo & Fala Nativa" (`SalesImageToVideoV2`)**:
   - Comparativo visual entre a fotografia estática original (`/uploads/6ea5aba0-f0a5-4be8-985e-09da93fb0630.jpg`) e o vídeo animado com fala em português (`/uploads/7a8abe32-afbb-42f6-9c7a-e77a9aadec60.mp4`).
   - Demonstração da tecnologia Kling 2.6 Pro com fala: *"Estou pronta para a Festa da Virginia, Você também vai?"*, movimentação fluida e áudio sincronizado.
