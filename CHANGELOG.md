@@ -6,7 +6,10 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 ## [2.8.8] - 2026-09-18
-### Renomeação Global da Marca: Transição de VORIXA para VORTIXIA
+### Renomeação Global da Marca para VORTIXIA & Comercial One Million Paco Rabanne (WaveSpeed AI)
+- **Comercial One Million Paco Rabanne**:
+  - Imagem estática do perfume One Million convertida em vídeo cinematográfico no **WaveSpeed AI** (`kwaivgi/kling-v3-turbo-std/image-to-video`).
+  - Substituição do antigo comercial da galeria pelo novo vídeo animado em alta definição com reflexos dourados e rotação de câmera fluida (`/uploads/one_million_commercial.mp4`).
 - **Atualização Abrangente de Nomenclatura**:
   - Atualização completa de títulos, textos de interface, documentação, metadados SEO e referências visuais de `VORIXA` para `VORTIXIA`.
   - Renomeação do serviço central de IA para `VortixiaIAService` (`services/ai/vortixia-ia.service.ts`) com aliases retrocompatíveis.
