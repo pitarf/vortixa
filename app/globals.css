@@ -111,40 +111,64 @@ body {
 
 /* 1. MAPEAMENTO UNIVERSAL DE SUPERFÍCIES ESCURAS -> CLARAS */
 .light .bg-\[\#070709\],
+.light .bg-\[\#07080B\],
 .light .bg-\[\#08080A\],
+.light .bg-\[\#0D0E12\],
+.light .bg-\[\#0D0E12\]\/60,
+.light .bg-\[\#0D0E14\],
+.light .bg-\[\#0E0F17\],
+.light .bg-\[\#0E1017\],
+.light .bg-\[\#0E1017\]\/85,
+.light .bg-\[\#12141F\],
+.light .bg-\[\#12141F\]\/90,
+.light .bg-\[\#13141B\],
+.light .bg-\[\#13141B\]\/80,
+.light .bg-\[\#1A1B26\],
+.light .bg-\[\#1B1D28\],
+.light .bg-\[\#1E202E\],
 .light .bg-black,
+.light .bg-black\/95,
+.light .bg-black\/90,
+.light .bg-black\/85,
 .light .bg-black\/80,
 .light .bg-black\/70,
 .light .bg-black\/60,
 .light .bg-black\/50,
+.light .bg-black\/40,
+.light .bg-black\/30,
 .light .bg-slate-950,
-.light .bg-slate-950\/40,
-.light .bg-slate-950\/50,
-.light .bg-slate-950\/60,
+.light .bg-slate-950\/90,
 .light .bg-slate-950\/80,
+.light .bg-slate-950\/60,
+.light .bg-slate-950\/50,
+.light .bg-slate-950\/40,
 .light .bg-slate-900,
-.light .bg-slate-900\/50,
+.light .bg-slate-900\/80,
 .light .bg-slate-900\/60,
-.light .bg-slate-900\/80 {
+.light .bg-slate-900\/50 {
   background-color: #FFFFFF !important;
   border-color: #E2E8F0 !important;
+  color: #0F172A !important;
   box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03) !important;
 }
 
-/* Painéis e Cards Centrais */
-.light .bg-\[\#0D0E12\],
-.light .bg-\[\#0E0F17\],
-.light .bg-\[\#13141B\] {
-  background-color: #FFFFFF !important;
+/* Efeito Gradiente Dark em Cards Principais convertido para Gradiente Claro Neutro */
+.light .bg-gradient-to-r.from-violet-950\/40,
+.light .bg-gradient-to-r.from-violet-950\/20,
+.light .bg-gradient-to-b.from-\[\#12141F\]\/90,
+.light .bg-gradient-to-b.from-\[\#1E202E\] {
+  background: #FFFFFF !important;
   border-color: #E2E8F0 !important;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03) !important;
+  color: #0F172A !important;
 }
 
 /* Inputs, Textareas e Caixas de Busca */
 .light input,
 .light textarea,
+.light select,
 .light .bg-slate-900 input,
-.light .bg-slate-950 input {
+.light .bg-slate-950 input,
+.light .bg-\[\#070709\] input {
   background-color: #F8FAFC !important;
   border-color: #CBD5E1 !important;
   color: #0F172A !important;
@@ -162,7 +186,12 @@ body {
 .light .border-slate-700,
 .light .border-\[\#1E202E\],
 .light .border-\[\#1E202E\]\/80,
-.light .border-\[\#1E202E\]\/60 {
+.light .border-\[\#1E202E\]\/60,
+.light .border-white\/\[0\.08\],
+.light .border-white\/\[0\.06\],
+.light .border-white\/\[0\.1\],
+.light .border-white\/\[0\.12\],
+.light .border-white\/\[0\.15\] {
   border-color: #E2E8F0 !important;
 }
 
@@ -192,11 +221,13 @@ body {
   color: #475569 !important;
 }
 
-/* 4. BOTÕES E SELETORES DE OPÇÃO (ex: Aspect Ratio, Duração, etc.) */
+/* 4. BOTÕES E SELETORES DE OPÇÃO (ex: Aspect Ratio, Duração, Qualidade, etc.) */
 .light button.bg-slate-900,
 .light button.bg-slate-950,
+.light button.bg-\[\#070709\],
 .light button.bg-\[\#0D0E12\],
-.light button.bg-\[\#13141B\] {
+.light button.bg-\[\#13141B\],
+.light button.bg-\[\#1B1D28\] {
   background-color: #F1F5F9 !important;
   border-color: #CBD5E1 !important;
   color: #334155 !important;
@@ -204,16 +235,39 @@ body {
 
 .light button.bg-slate-900:hover,
 .light button.bg-slate-950:hover,
+.light button.bg-\[\#070709\]:hover,
 .light button.bg-\[\#0D0E12\]:hover,
-.light button.bg-\[\#13141B\]:hover {
+.light button.bg-\[\#13141B\]:hover,
+.light button.bg-\[\#1B1D28\]:hover {
   background-color: #E2E8F0 !important;
   color: #0F172A !important;
+}
+
+/* Hover em itens e cards no tema claro */
+.light .hover\:bg-\[\#13141B\]:hover,
+.light .hover\:bg-\[\#1E202E\]:hover,
+.light .hover\:bg-\[\#1A1B26\]:hover,
+.light .hover\:bg-white\/5:hover,
+.light .hover\:bg-white\/10:hover,
+.light .hover\:bg-violet-950\/60:hover {
+  background-color: #EDE9FE !important;
+  color: #5B21B6 !important;
+  border-color: #C4B5FD !important;
+}
+
+/* Tags de Modelo (#tag) em Modo Claro */
+.light span.bg-\[\#070709\] {
+  background-color: #F1F5F9 !important;
+  border-color: #E2E8F0 !important;
+  color: #475569 !important;
 }
 
 /* Botões com seleção ativa */
 .light .bg-violet-600\/10,
 .light .bg-violet-600\/20,
-.light .bg-violet-500\/10 {
+.light .bg-violet-500\/10,
+.light .bg-violet-500\/15,
+.light .bg-violet-500\/20 {
   background-color: #EDE9FE !important;
   border-color: #A78BFA !important;
   color: #6D28D9 !important;
@@ -241,18 +295,18 @@ body {
   background-color: #F1F5F9 !important;
 }
 
-/* 6. PRESERVAÇÃO DE BOTÕES PRIMÁRIOS E GRADIENTES */
+/* 6. PRESERVAÇÃO DE BOTÕES PRIMÁRIOS E GRADIENTES VIOLETA */
 .light .bg-violet-600,
-.light .bg-gradient-to-r,
+.light .bg-gradient-to-r.from-violet-600,
 .light a.bg-violet-600,
 .light button.bg-violet-600,
-.light a.bg-gradient-to-r,
-.light button.bg-gradient-to-r {
+.light a.from-violet-600,
+.light button.from-violet-600 {
   color: #FFFFFF !important;
 }
 
 .light .bg-violet-600 *,
-.light .bg-gradient-to-r * {
+.light .from-violet-600 * {
   color: #FFFFFF !important;
 }
 
@@ -260,6 +314,47 @@ body {
 .light .bg-gradient-to-t *,
 .light .bg-gradient-to-b * {
   color: #FFFFFF !important;
+}
+
+/* Hero Dashboard no Modo Claro - Contraste e Legibilidade */
+.light .bg-gradient-to-r.from-\[\#070709\] {
+  background: linear-gradient(to right, rgba(255,255,255,0.98), rgba(255,255,255,0.9), transparent) !important;
+}
+
+.light .bg-gradient-to-t.from-\[\#0D0E12\] {
+  background: linear-gradient(to top, rgba(255,255,255,0.95), transparent) !important;
+}
+
+/* Banners Principais (Créditos, Afiliados, Modelos) em Modo Claro */
+.light .bg-gradient-to-b.from-\[\#13141B\],
+.light .bg-gradient-to-br.from-emerald-950\/40,
+.light .bg-gradient-to-br.from-\[\#1E202E\]\/90 {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #0F172A !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Cartão Fintech no Modo Claro */
+.light .bg-gradient-to-br.from-\[\#1E202E\]\/90 {
+  background: linear-gradient(135deg, #F8FAFC 0%, #FFFFFF 100%) !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+.light .bg-gradient-to-br.from-\[\#1E202E\]\/90 span.text-transparent {
+  color: #0F172A !important;
+  -webkit-text-fill-color: #0F172A !important;
+}
+
+/* Badge de Créditos no Tema Claro */
+.light .border-amber-500\/30 {
+  background: #FEF3C7 !important;
+  border-color: #FCD34D !important;
+}
+
+.light .border-amber-500\/30 span {
+  color: #B45309 !important;
 }
 
 /* Manter Player de Vídeo Preto para Cinema */
