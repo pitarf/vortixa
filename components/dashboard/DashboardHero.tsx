@@ -115,44 +115,44 @@ export function DashboardHero({
           {/* Grid de 4 Métricas Rápidas */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 w-full lg:w-auto">
             {/* Projetos Criados */}
-            <div className="px-3.5 py-2 rounded-2xl bg-[#070709]/80 border border-[#1E202E] flex flex-col">
-              <span className="text-base sm:text-lg font-black font-heading text-white">
+            <div className="px-3.5 py-2 rounded-2xl bg-white/90 dark:bg-[#070709]/80 border border-slate-200 dark:border-[#1E202E] shadow-sm dark:shadow-none flex flex-col">
+              <span className="text-base sm:text-lg font-black font-heading text-slate-900 dark:text-white">
                 {stats.projectsCount}
               </span>
-              <span className="text-[10px] font-mono text-slate-400 uppercase">
+              <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase font-semibold">
                 Projetos criados
               </span>
             </div>
 
             {/* Ativos na Biblioteca */}
-            <div className="px-3.5 py-2 rounded-2xl bg-[#070709]/80 border border-[#1E202E] flex flex-col">
-              <span className="text-base sm:text-lg font-black font-heading text-white">
+            <div className="px-3.5 py-2 rounded-2xl bg-white/90 dark:bg-[#070709]/80 border border-slate-200 dark:border-[#1E202E] shadow-sm dark:shadow-none flex flex-col">
+              <span className="text-base sm:text-lg font-black font-heading text-slate-900 dark:text-white">
                 {stats.assetsCount}
               </span>
-              <span className="text-[10px] font-mono text-slate-400 uppercase">
+              <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase font-semibold">
                 Ativos na biblioteca
               </span>
             </div>
 
             {/* Créditos Disponíveis */}
-            <div className="px-3.5 py-2 rounded-2xl bg-[#070709]/80 border border-amber-500/20 flex flex-col">
-              <span className="text-base sm:text-lg font-black font-heading text-amber-300">
+            <div className="px-3.5 py-2 rounded-2xl bg-amber-50/80 dark:bg-[#070709]/80 border border-amber-300 dark:border-amber-500/20 shadow-sm dark:shadow-none flex flex-col">
+              <span className="text-base sm:text-lg font-black font-heading text-amber-700 dark:text-amber-300">
                 {isUnlimited ? "∞" : stats.creditsAvailable.toLocaleString("pt-BR")}
               </span>
-              <span className="text-[10px] font-mono text-amber-400/70 uppercase">
+              <span className="text-[10px] font-mono text-amber-600 dark:text-amber-400/70 uppercase font-semibold">
                 Créditos disponíveis
               </span>
             </div>
 
             {/* Uptime Operacional */}
-            <div className="px-3.5 py-2 rounded-2xl bg-[#070709]/80 border border-emerald-500/20 flex flex-col">
+            <div className="px-3.5 py-2 rounded-2xl bg-emerald-50/80 dark:bg-[#070709]/80 border border-emerald-300 dark:border-emerald-500/20 shadow-sm dark:shadow-none flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-base sm:text-lg font-black font-heading text-emerald-400">
+                <span className="text-base sm:text-lg font-black font-heading text-emerald-700 dark:text-emerald-400">
                   {stats.uptime}
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-slate-400 uppercase">
+              <span className="text-[10px] font-mono text-emerald-600 dark:text-slate-400 uppercase font-semibold">
                 Uptime operacional
               </span>
             </div>

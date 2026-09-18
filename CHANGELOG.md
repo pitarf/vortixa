@@ -5,6 +5,63 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.8.2] - 2026-09-18
+### Criação da Home V2 (Página de Vendas de Alta Conversão com Planos no Topo)
+- **Implementação da Nova Rota `/home-2` (Home V2 Sales-First)**:
+  - Mantida 100% íntegra e inalterada a Home atual na raiz (`/`).
+  - Desenvolvida a versão `/home-2` estruturada estrategicamente para conversão direta (Direct Response / SaaS Sales).
+- **Planos e Oferta Principal no Topo (`components/landing/sales-v2/SalesTopPricingV2.tsx`)**:
+  - Seção de preços reposicionada logo no primeiro terço de rolagem (abaixo do Hero de entrada).
+  - Tabela de choque de economia (Assinaturas Separadas de ~R$ 850/mês vs. VORIXA unificado a partir de R$ 39/mês).
+  - Suporte a abas de **Assinatura Mensal/Anual (com 20% OFF)** e **Pacotes de Créditos Avulsos (a partir de R$ 9,90)**.
+  - Destaque comercial luminoso para o plano mais vendido (**Creator Pro**).
+- **Hero de Vendas Focado em Negócios (`components/landing/sales-v2/SalesHeroV2.tsx`)**:
+  - Headline direta voltada ao ROI: criação de anúncios e vídeos com modelos virtuais que vendem sem precisar aparecer.
+  - Player de vídeo com demonstração em áudio PT-BR e CTA direto para salto nos planos.
+  - Microgarantias em destaque (Ativação imediata, Pix instantâneo, Cartão em 12x e Garantia incondicional de 7 dias).
+- **Casos de Uso Comerciais (`components/landing/sales-v2/SalesUseCasesV2.tsx`)**:
+  - Apresentação visual focada nas maiores dores de criadores e agências: Influenciadores Virtuais, Comerciais para TikTok/Reels, Clonagem de Coreografia (Motion) e Dublagem/LipSync.
+- **Barra de Alternância Inteligente**:
+  - Adicionado banner superior sutil permitindo ao cliente e ao proprietário alternar com 1 clique entre a **Home V1 (Institucional)** e a **Home V2 (Vendas)**.
+- **Auditoria de Responsividade e Integridade**:
+  - Executada auditoria automatizada via Playwright em Desktop (1440px) e Mobile (375px) com capturas de tela geradas com sucesso.
+  - Compilação estática TypeScript validada com `tsc --noEmit` (0 erros).
+
+## [2.8.1] - 2026-09-18
+### Correção de Sobreposição de Imagem em Hover e Contraste na Biblioteca de Mídias
+- **Correção de Z-Index e Camada de Ações (`app/dashboard/library/page.tsx` e `components/dashboard/DashboardRecentProjects.tsx`)**:
+  - Solucionada falha visual onde a imagem com `relative z-10` sobrepunha o container de ações rápidas em hover que não possuía índice de camada (`z-auto`).
+  - Adicionado `z-20` explícito com suporte a `pointer-events-auto` e backdrop translúcido no container de ações rápidas da biblioteca (`/dashboard/library`) e no play button de hover em `DashboardRecentProjects.tsx`.
+  - Atualizados botões de ação rápida (Visualizar em Tela Cheia, Download e Abrir no VORIXA FLOW) com ícones brancos explícitos e fundos translúcidos elegantes de alto contraste.
+- **Preservação de Overlays de Mídia no Tema Claro (`app/globals.css`)**:
+  - Criada regra de exceção para que overlays de mídia (`group-hover:opacity-100.bg-black/75`, `.bg-black/70`, `.bg-black/40`) preservem o fundo escuro translúcido e ícones brancos no tema claro, garantindo nitidez e contraste perfeitos sobre qualquer imagem ou vídeo gerado.
+
+## [2.8.0] - 2026-09-18
+### Correção Completa de Falhas de Contraste no Tema Claro e Eliminação de Redundâncias de Motores
+- **Remoção de Redundância no Gerador de Vídeo (`components/tools/video/VideoModelSection.tsx`)**:
+  - Removida a barra redundante "Motores de Vídeo Rápidos" que duplicava opções truncadas no card de motor. Agora o card exibe exclusivamente o modelo ativo de forma limpa, com botão "Alterar modelo >" que abre o catálogo modal completo.
+  - Aplicadas classes Tailwind adaptativas (`bg-slate-50 dark:bg-[#070709]`, `border-slate-200 dark:border-[#1E202E]`, `text-slate-900 dark:text-white`).
+- **Harmonização do Gerador Hot & Sensual (+18) (`app/dashboard/tools/hot/HotGenerationClient.tsx` e `globals.css`)**:
+  - Cabeçalho transformado com fundo claro `bg-rose-50/80` no tema claro e gradiente no escuro, textos em alto contraste (`text-slate-900 dark:text-white`, `text-slate-600 dark:text-slate-300`).
+  - Card de Saldo e cards de seleção com fundos claros adaptativos `bg-white dark:bg-[#0D0E12]` e `bg-slate-50 dark:bg-[#070709]`.
+  - Badges coloridas (Requer Imagem, Só Geração) ajustadas para contraste acessível WCAG AA com fundos âmbar/roxo suaves e textos escuros legíveis no tema claro.
+  - Card de Foto de Referência e aviso de base de vídeo atualizados com fundos e bordas suaves no tema claro.
+- **Harmonização da Ferramenta de LipSync (`app/dashboard/tools/lipsync/page.tsx` e `globals.css`)**:
+  - Cards de seleção de motores de sincronia labial adaptados para `bg-white dark:bg-[#070709]`, borda `border-slate-200 dark:border-[#1E202E]` e textos de alta legibilidade.
+  - Selects e caixas de descrição de voz sincronizados no tema claro.
+
+## [2.7.9] - 2026-09-18
+### Correção de Contraste no Tema Claro e Tratamento de Imagens Quebradas
+- **Ajustes de Contraste e Harmonia no Tema Claro**:
+  - `components/dashboard/DashboardHero.tsx`: Métricas rápidas (Projetos criados, Ativos na biblioteca, Créditos disponíveis, Uptime) atualizadas com fundo claro `bg-white/90 dark:bg-[#070709]/80`, bordas suaves e tipografia em contraste ótimo (`text-slate-900 dark:text-white`).
+  - `components/dashboard/DashboardShell.tsx`: Item ativo "Início (Dashboard)" e links de navegação com estados ativos claros elegantes (`bg-violet-100 dark:bg-violet-600/15`, `text-violet-950 dark:text-white`), eliminando caixas escuras residuais.
+  - `components/models/ModelsShowcaseHeader.tsx`: Banner de cabeçalho da Vitrine de Modelos atualizado para fundo branco limpo no tema claro com textos em alto contraste e input de busca refinado.
+  - `components/models/ModelCard.tsx`: Cards de modelos, tags e botões de ação ("Ver Lookbook & Prompt", "Adquirir Prompt") com fundos brancos e cinzas claros adaptativos.
+  - `components/flow/toolbar/NodePicker.tsx`: Modal "Adicionar Nó ao Fluxo" completamente redesenhado para suporte a tema claro (`bg-white dark:bg-slate-950/95`) com busca, abas de categoria e cards de ferramentas em contraste impecável.
+- **Tratamento Resiliente de Imagens Quebradas no Gerador**:
+  - `components/tools/image/ImagePreviewArea.tsx`: Adicionado tratamento de erro nativo `onError` em cada thumbnail de variação recente e filtro `validVariations`, ocultando o carrossel se nenhuma URL válida for encontrada ou se o carregamento falhar.
+  - `app/dashboard/tools/image/page.tsx`: Sanitização estrita em `loadRealHistory()` garantindo que apenas URLs válidas (`http`, `https` ou `/`) sejam injetadas no estado de variações.
+
 ## [2.7.8] - 2026-09-17
 ### Correção Estrutural do Studio Flow, Persistência Atômica do Grafo e Validação Headless
 - **Causa Raiz do Erro no Flow Diagnosticada e Solucionada**:

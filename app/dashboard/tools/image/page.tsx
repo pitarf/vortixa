@@ -82,9 +82,13 @@ export default function ImageGenerationPage() {
         if (res.ok) {
           const data = await res.json();
           if (data.items && data.items.length > 0) {
-            const urls = data.items.map((it: any) => it.url).filter(Boolean);
-            setVariations(urls);
-            if (urls[0]) setActiveResultUrl(urls[0]);
+            const urls = data.items
+              .map((it: any) => it.url)
+              .filter((url: any) => typeof url === "string" && (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/")));
+            if (urls.length > 0) {
+              setVariations(urls);
+              if (urls[0]) setActiveResultUrl(urls[0]);
+            }
           }
         }
       } catch (err) {

@@ -276,11 +276,11 @@ export function DashboardShell({
             onClick={() => setIsMobileMenuOpen(false)}
             className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px] ${
               pathname === "/dashboard"
-                ? "bg-gradient-to-r from-violet-600/20 via-indigo-600/20 to-transparent text-white border-l-2 border-violet-500 shadow-[inset_0_0_12px_rgba(99,102,241,0.15)]"
-                : "text-slate-400 hover:text-white hover:bg-[#13141B]/80"
+                ? "bg-violet-100 dark:bg-gradient-to-r dark:from-violet-600/20 dark:via-indigo-600/20 dark:to-transparent text-violet-950 dark:text-white border-l-2 border-violet-600 dark:border-violet-500 shadow-sm dark:shadow-[inset_0_0_12px_rgba(99,102,241,0.15)]"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#13141B]/80"
             }`}
           >
-            <div className="h-7 w-7 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-400">
+            <div className="h-7 w-7 rounded-lg bg-violet-600/15 dark:bg-violet-500/10 flex items-center justify-center text-violet-700 dark:text-violet-400 font-bold">
               <Zap className="h-4 w-4" />
             </div>
             <span>Início (Dashboard)</span>
@@ -289,7 +289,7 @@ export function DashboardShell({
 
         {/* Seção: Creative Suite */}
         <div>
-          <div className="text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-widest px-3 mb-2">
+          <div className="text-[10px] font-mono font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest px-3 mb-2">
             Creative Suite
           </div>
           <nav className="space-y-1">
@@ -302,8 +302,8 @@ export function DashboardShell({
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all group min-h-[44px] ${
                     isActive
-                      ? "bg-violet-600/15 text-white border border-violet-500/30"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-[#13141B]/70"
+                      ? "bg-violet-100 dark:bg-violet-600/15 text-violet-950 dark:text-white border border-violet-300 dark:border-violet-500/30"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#13141B]/70"
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -311,7 +311,7 @@ export function DashboardShell({
                     <span>{item.name}</span>
                   </div>
                   {item.badge && (
-                    <span className="px-2 py-0.5 rounded-md bg-violet-500/10 border border-violet-500/20 text-[9px] font-mono font-bold text-violet-300">
+                    <span className="px-2 py-0.5 rounded-md bg-violet-100 dark:bg-violet-500/10 border border-violet-300 dark:border-violet-500/20 text-[9px] font-mono font-bold text-violet-700 dark:text-violet-300">
                       {item.badge}
                     </span>
                   )}
@@ -323,7 +323,7 @@ export function DashboardShell({
 
         {/* Seção: Motores de IA */}
         <div>
-          <div className="text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-widest px-3 mb-2">
+          <div className="text-[10px] font-mono font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest px-3 mb-2">
             Motores de IA
           </div>
           <nav className="space-y-1">
@@ -336,8 +336,8 @@ export function DashboardShell({
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-medium transition-all group min-h-[44px] ${
                     isActive
-                      ? "bg-[#13141B] text-white border border-[#1E202E]"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-[#13141B]/50"
+                      ? "bg-violet-100 dark:bg-[#13141B] text-violet-950 dark:text-white border border-violet-300 dark:border-[#1E202E]"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#13141B]/50"
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -345,7 +345,7 @@ export function DashboardShell({
                     <span>{item.name}</span>
                   </div>
                   {item.badge && (
-                    <span className="px-2 py-0.5 rounded-md bg-rose-500/20 border border-rose-500/40 text-[9px] font-mono font-bold text-rose-300 animate-pulse">
+                    <span className="px-2 py-0.5 rounded-md bg-rose-500/20 border border-rose-500/40 text-[9px] font-mono font-bold text-rose-500 dark:text-rose-300 animate-pulse">
                       {item.badge}
                     </span>
                   )}
@@ -357,7 +357,7 @@ export function DashboardShell({
 
         {/* Seção: Biblioteca */}
         <div>
-          <div className="text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-widest px-3 mb-2">
+          <div className="text-[10px] font-mono font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest px-3 mb-2">
             Biblioteca
           </div>
           <nav className="space-y-1">
@@ -370,11 +370,11 @@ export function DashboardShell({
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-medium transition-all min-h-[44px] ${
                     isActive
-                      ? "bg-[#13141B] text-white border border-[#1E202E]"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-[#13141B]/50"
+                      ? "bg-violet-100 dark:bg-[#13141B] text-violet-950 dark:text-white border border-violet-300 dark:border-[#1E202E]"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#13141B]/50"
                   }`}
                 >
-                  <item.icon className="h-4 w-4 text-emerald-400" />
+                  <item.icon className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                   <span>{item.name}</span>
                 </Link>
               );

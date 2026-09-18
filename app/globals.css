@@ -363,6 +363,20 @@ body {
   background-color: #000000 !important;
 }
 
+/* Preservar Overlays de Ações Rápidas (Hover) de Mídia Escuros no Tema Claro */
+.light .group:hover .group-hover\:opacity-100.bg-black\/75,
+.light .group:hover .group-hover\:opacity-100.bg-black\/70,
+.light .group:hover .group-hover\:opacity-100.bg-black\/40 {
+  background-color: rgba(0, 0, 0, 0.75) !important;
+  color: #FFFFFF !important;
+}
+
+.light .group:hover .group-hover\:opacity-100.bg-black\/75 *,
+.light .group:hover .group-hover\:opacity-100.bg-black\/70 *,
+.light .group:hover .group-hover\:opacity-100.bg-black\/40 * {
+  color: #FFFFFF !important;
+}
+
 /* Badges e Tags Coloridas */
 .light .bg-violet-950\/80,
 .light .bg-violet-950\/60,
@@ -391,6 +405,82 @@ body {
   background-color: #FEE2E2 !important;
   border-color: #FECACA !important;
   color: #B91C1C !important;
+}
+
+/* Badges e Gradientes Rose / Hot (+18) e Roxo no Modo Claro */
+.light .bg-rose-950\/40,
+.light .bg-rose-950\/30,
+.light .bg-rose-950\/20,
+.light .bg-rose-950\/15,
+.light .bg-gradient-to-r.from-rose-950\/40 {
+  background: #FFFFFF !important;
+  border-color: #FECDD3 !important;
+  color: #0F172A !important;
+  box-shadow: 0 4px 20px -2px rgba(225, 29, 72, 0.06) !important;
+}
+
+.light .bg-rose-500\/10,
+.light .bg-rose-500\/15,
+.light .bg-rose-500\/20 {
+  background-color: #FFE4E6 !important;
+  border-color: #FDA4AF !important;
+  color: #E11D48 !important;
+}
+
+.light .bg-purple-500\/20,
+.light .bg-purple-500\/10 {
+  background-color: #F3E8FF !important;
+  border-color: #D8B4FE !important;
+  color: #7E22CE !important;
+}
+
+.light .bg-amber-500\/20,
+.light .bg-amber-500\/15,
+.light .bg-amber-500\/10 {
+  background-color: #FEF3C7 !important;
+  border-color: #FCD34D !important;
+  color: #B45309 !important;
+}
+
+.light .bg-amber-950\/20,
+.light .bg-amber-950\/15 {
+  background-color: #FFFBEB !important;
+  border-color: #FDE68A !important;
+  color: #92400E !important;
+}
+
+/* Container de Referência do Modo Hot no Tema Claro */
+.light #hot-reference-section {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+.light #hot-reference-section.border-amber-500\/50 {
+  border-color: #FCD34D !important;
+}
+
+.light #hot-reference-section.border-rose-500\/50 {
+  border-color: #FDA4AF !important;
+}
+
+/* Select de Voz do Dublador e Textarea */
+.light select.bg-\[\#13141B\] {
+  background-color: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+.light select.bg-\[\#13141B\] option {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+}
+
+/* Parágrafos explicativos em caixas de código/áudio */
+.light p.bg-\[\#13141B\]\/60 {
+  background-color: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+  color: #334155 !important;
 }
 
 /* Animações Cinematográficas */

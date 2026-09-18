@@ -520,29 +520,29 @@ export default function HotGenerationClient() {
 
       <div className="space-y-6 max-w-7xl mx-auto pb-16">
         {/* Cabeçalho Visual da Ferramenta */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-rose-950/40 via-[#0D0E12] to-purple-950/30 border border-rose-500/30 p-6 sm:p-8 shadow-2xl">
+        <div className="relative overflow-hidden rounded-3xl bg-rose-50/80 dark:bg-gradient-to-r dark:from-rose-950/40 dark:via-[#0D0E12] dark:to-purple-950/30 border border-rose-200 dark:border-rose-500/30 p-6 sm:p-8 shadow-2xl">
           <div className="absolute top-0 right-0 w-80 h-80 bg-rose-600/10 rounded-full blur-3xl pointer-events-none" />
           
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-mono font-bold">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-500/15 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-400 text-xs font-mono font-bold">
                 <Flame className="w-3.5 h-3.5 fill-rose-500 text-rose-500 animate-pulse" />
                 <span>VORIXA NEURAL • MODO SEM CENSURA (+18)</span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2">
+              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
                 Gerador Hot & Sensual
               </h1>
-              <p className="text-xs sm:text-sm text-slate-300 max-w-2xl">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl">
                 Crie ensaios sensuais, fotos boudoir e animações realistas sem censura com motores treinados em anatomia humana precisa.
               </p>
             </div>
 
             {/* Saldo de Créditos */}
-            <div className="flex items-center gap-3 bg-[#13141B]/90 border border-rose-500/20 px-4 py-2.5 rounded-2xl shrink-0">
-              <Coins className="w-5 h-5 text-rose-400" />
+            <div className="flex items-center gap-3 bg-white/90 dark:bg-[#13141B]/90 border border-rose-200 dark:border-rose-500/20 px-4 py-2.5 rounded-2xl shrink-0 shadow-sm">
+              <Coins className="w-5 h-5 text-rose-500 dark:text-rose-400" />
               <div>
-                <span className="text-[10px] text-slate-400 block font-bold uppercase">Seu Saldo</span>
-                <span className="text-sm font-black text-white font-mono">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block font-bold uppercase">Seu Saldo</span>
+                <span className="text-sm font-black text-slate-900 dark:text-white font-mono">
                   {creditMode === "UNLIMITED" ? "Ilimitado 👑" : `${balance} créditos`}
                 </span>
               </div>
@@ -555,9 +555,9 @@ export default function HotGenerationClient() {
           {/* Coluna Esquerda (Controles) */}
           <div className="lg:col-span-7 space-y-4">
             {/* Card 1: Tipo de Mídia (Foto vs Vídeo) */}
-            <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl">
-              <label className="text-xs font-bold text-slate-300 block">1. Formato de Conteúdo</label>
-              <div className="grid grid-cols-2 gap-2 p-1 bg-[#070709] border border-[#1E202E] rounded-xl">
+            <div className="bg-white dark:bg-[#0D0E12] border border-slate-200 dark:border-[#1E202E] rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">1. Formato de Conteúdo</label>
+              <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 dark:bg-[#070709] border border-slate-200 dark:border-[#1E202E] rounded-xl">
                 <button
                   type="button"
                   onClick={() => {
@@ -570,7 +570,7 @@ export default function HotGenerationClient() {
                   className={`py-2.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     mediaType === "image"
                       ? "bg-rose-600 text-white shadow-md shadow-rose-600/30"
-                      : "text-slate-400 hover:text-white"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
                   <ImageIcon className="w-4 h-4" />
@@ -586,7 +586,7 @@ export default function HotGenerationClient() {
                   className={`py-2.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     mediaType === "video"
                       ? "bg-rose-600 text-white shadow-md shadow-rose-600/30"
-                      : "text-slate-400 hover:text-white"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
                   <Video className="w-4 h-4" />
@@ -596,8 +596,8 @@ export default function HotGenerationClient() {
             </div>
 
             {/* Card 2: Seleção do Modelo Neural */}
-            <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl">
-              <label className="text-xs font-bold text-slate-300 block">2. Motor VORIXA Neural</label>
+            <div className="bg-white dark:bg-[#0D0E12] border border-slate-200 dark:border-[#1E202E] rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">2. Motor VORIXA Neural</label>
               <div className="grid grid-cols-1 gap-2.5">
                 {HOT_MODELS.filter((m) => m.type === mediaType).map((model) => {
                   const isSelected = selectedModel.id === model.id;
@@ -612,32 +612,32 @@ export default function HotGenerationClient() {
                       }}
                       className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
                         isSelected
-                          ? "bg-rose-950/20 border-rose-500/50 shadow-sm"
-                          : "bg-[#070709] border-[#1E202E] hover:border-slate-700"
+                          ? "bg-rose-50 dark:bg-rose-950/20 border-rose-500 shadow-sm"
+                          : "bg-slate-50 dark:bg-[#070709] border-slate-200 dark:border-[#1E202E] hover:border-slate-400 dark:hover:border-slate-700"
                       }`}
                     >
                       <div className="space-y-1 flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-xs font-bold text-white">{model.name}</span>
-                          <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/20">
+                          <span className="text-xs font-bold text-slate-900 dark:text-white">{model.name}</span>
+                          <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-rose-100 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/20 font-bold">
                             {model.badge}
                           </span>
                           {model.requiresImage && (
-                            <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase tracking-wider flex items-center gap-1 shadow-xs">
+                            <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 uppercase tracking-wider flex items-center gap-1 shadow-xs">
                               📷 Requer Imagem
                             </span>
                           )}
                           {!model.supportsReferenceImage && (
-                            <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/40 uppercase tracking-wider flex items-center gap-1 shadow-xs">
+                            <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-md bg-purple-100 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 border border-purple-300 dark:border-purple-500/40 uppercase tracking-wider flex items-center gap-1 shadow-xs">
                               ✍️ Só Geração
                             </span>
                           )}
                         </div>
-                        <p className="text-[11px] text-slate-400">{model.description}</p>
+                        <p className="text-[11px] text-slate-600 dark:text-slate-400">{model.description}</p>
                       </div>
 
                       <div className="text-right shrink-0">
-                        <span className="text-xs font-mono font-bold text-rose-400 block">
+                        <span className="text-xs font-mono font-bold text-rose-600 dark:text-rose-400 block">
                           {model.cost} cr
                         </span>
                         <span className="text-[10px] text-slate-500 font-mono">{model.speed}</span>
@@ -652,12 +652,12 @@ export default function HotGenerationClient() {
             {selectedModel.supportsReferenceImage !== false && (
               <div
                 id="hot-reference-section"
-              className={`bg-[#0D0E12] border rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl transition-all ${
+              className={`bg-white dark:bg-[#0D0E12] border rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl transition-all ${
                 referenceImageUrl
-                  ? "border-rose-500/50 bg-gradient-to-b from-rose-950/20 to-[#0D0E12]"
+                  ? "border-rose-500/50 bg-rose-50/40 dark:bg-gradient-to-b dark:from-rose-950/20 dark:to-[#0D0E12]"
                   : selectedModel.type === "video"
-                  ? "border-amber-500/50 bg-gradient-to-b from-amber-950/15 to-[#0D0E12]"
-                  : "border-[#1E202E]"
+                  ? "border-amber-400 dark:border-amber-500/50 bg-amber-50/40 dark:bg-gradient-to-b dark:from-amber-950/15 dark:to-[#0D0E12]"
+                  : "border-slate-200 dark:border-[#1E202E]"
               }`}
             >
               <div className="flex items-center justify-between">
@@ -762,8 +762,8 @@ export default function HotGenerationClient() {
                 /* Estado Vazio: Slot de Upload ou Selecionar Recente */
                 <div className="space-y-2.5">
                   {selectedModel.requiresImage && (
-                    <div className="p-2.5 rounded-xl bg-amber-950/20 border border-amber-500/30 text-amber-200 text-xs flex items-center gap-2">
-                      <Lock className="w-4 h-4 text-amber-400 shrink-0" />
+                    <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-300 dark:border-amber-500/30 text-amber-900 dark:text-amber-200 text-xs flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                       <span>
                         {selectedModel.type === "video"
                           ? "Vídeos sem censura animam uma foto de base. Carregue uma imagem ou clique em \"Usar como Referência\" em qualquer foto recente ao lado."
@@ -773,14 +773,14 @@ export default function HotGenerationClient() {
                   )}
 
                   <div className="flex flex-col sm:flex-row gap-2">
-                    <label className="flex-1 border-2 border-dashed border-[#1E202E] hover:border-rose-500/60 rounded-xl p-3 sm:p-4 flex items-center justify-center gap-2.5 text-slate-400 hover:text-slate-200 transition-all cursor-pointer min-h-[56px] bg-[#070709] group">
+                    <label className="flex-1 border-2 border-dashed border-slate-300 dark:border-[#1E202E] hover:border-rose-500 rounded-xl p-3 sm:p-4 flex items-center justify-center gap-2.5 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-all cursor-pointer min-h-[56px] bg-slate-50 dark:bg-[#070709] group">
                       {isUploadingRef ? (
-                        <RefreshCw className="w-4 h-4 animate-spin text-rose-400 shrink-0" />
+                        <RefreshCw className="w-4 h-4 animate-spin text-rose-500 dark:text-rose-400 shrink-0" />
                       ) : (
-                        <Upload className="w-4 h-4 text-rose-400 group-hover:scale-110 transition-transform shrink-0" />
+                        <Upload className="w-4 h-4 text-rose-500 dark:text-rose-400 group-hover:scale-110 transition-transform shrink-0" />
                       )}
                       <div className="text-left">
-                        <span className="text-xs font-bold block text-slate-300 group-hover:text-white">
+                        <span className="text-xs font-bold block text-slate-800 dark:text-slate-300 group-hover:text-rose-600 dark:group-hover:text-white">
                           Carregar Foto do Seu Dispositivo
                         </span>
                         <span className="text-[10px] text-slate-500 font-mono">PNG, JPG ou WebP até 50MB</span>
@@ -803,10 +803,10 @@ export default function HotGenerationClient() {
                             handleSetReference(lastImg.url);
                           }
                         }}
-                        className="px-3 py-2.5 rounded-xl bg-[#13141B] hover:bg-rose-950/30 border border-[#1E202E] hover:border-rose-500/40 text-slate-300 hover:text-rose-200 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 min-h-[56px]"
+                        className="px-3 py-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 dark:bg-[#13141B] dark:hover:bg-rose-950/30 border border-slate-200 hover:border-rose-300 dark:border-[#1E202E] dark:hover:border-rose-500/40 text-slate-700 hover:text-rose-700 dark:text-slate-300 dark:hover:text-rose-200 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 min-h-[56px]"
                         title="Usar a imagem gerada mais recente como referência"
                       >
-                        <Sparkles className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                        <Sparkles className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400 shrink-0" />
                         <span className="text-left">
                           <span className="block text-[11px]">Usar Última Foto</span>
                           <span className="block text-[9px] font-mono text-slate-500">Geração Recente</span>
@@ -820,9 +820,9 @@ export default function HotGenerationClient() {
           )}
 
             {/* Card: Descrição e Prompt */}
-            <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl">
+            <div className="bg-white dark:bg-[#0D0E12] border border-slate-200 dark:border-[#1E202E] rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
                   <span>{selectedModel.supportsReferenceImage !== false ? "4" : "3"}. Prompt & Estética Desejada</span>
                 </label>
                 <div className="flex items-center gap-2 flex-wrap justify-between sm:justify-end">
@@ -832,7 +832,7 @@ export default function HotGenerationClient() {
                         key={i}
                         type="button"
                         onClick={() => setPrompt(HOT_PROMPT_SUGGESTIONS[i])}
-                        className="px-2 py-1 text-[10px] font-mono rounded-lg bg-[#13141B] text-slate-400 hover:text-rose-300 border border-[#1E202E] cursor-pointer"
+                        className="px-2 py-1 text-[10px] font-mono rounded-lg bg-slate-100 dark:bg-[#13141B] text-slate-600 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-300 border border-slate-200 dark:border-[#1E202E] cursor-pointer"
                         title="Carregar sugestão rápida de cena"
                       >
                         Ideia #{i + 1}

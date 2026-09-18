@@ -99,7 +99,7 @@ export function DashboardRecentProjects({ projects }: DashboardRecentProjectsPro
               )}
 
               {/* Botão de Play Central em Hover */}
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+              <div className="absolute inset-0 z-20 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                 <div className="h-11 w-11 rounded-full bg-violet-600/90 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
                   <Play className="h-5 w-5 fill-current ml-0.5" />
                 </div>

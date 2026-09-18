@@ -345,32 +345,32 @@ export default function LibraryPage() {
 
                   {/* Overlay de Ações Rápidas em Desktop */}
                   {hasSafeUrl && item.status === "COMPLETED" && (
-                    <div className="absolute inset-0 bg-black/70 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity hidden md:flex items-center justify-center gap-2 p-2">
+                    <div className="absolute inset-0 z-20 bg-black/75 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity hidden md:flex items-center justify-center gap-2 p-2 pointer-events-auto">
                       <button
                         type="button"
                         onClick={() => setSelectedItem(item)}
-                        className="p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+                        className="p-3 rounded-xl bg-white/20 hover:bg-white/30 text-white transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center backdrop-blur-sm"
                         title="Visualizar em Tela Cheia"
                       >
-                        <Maximize2 className="h-4 w-4" />
+                        <Maximize2 className="h-4 w-4 text-white" />
                       </button>
                       <a
                         href={item.url}
                         download="vortixia-asset"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+                        className="p-3 rounded-xl bg-white/20 hover:bg-white/30 text-white transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center backdrop-blur-sm"
                         title="Baixar arquivo"
                       >
-                        <Download className="h-4 w-4" />
+                        <Download className="h-4 w-4 text-white" />
                       </a>
                       <button
                         type="button"
                         onClick={() => handleOpenInFlow(item)}
-                        className="p-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center shadow-lg shadow-violet-600/30"
+                        className="p-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center shadow-lg shadow-violet-600/40"
                         title="Abrir no VORIXA FLOW"
                       >
-                        <Boxes className="h-4 w-4" />
+                        <Boxes className="h-4 w-4 text-white" />
                       </button>
                     </div>
                   )}

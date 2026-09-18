@@ -67,6 +67,23 @@ export default function LandingPage() {
       <div className="fixed top-[45%] -right-[15%] sm:-right-[5%] w-[320px] sm:w-[500px] h-[320px] sm:h-[500px] bg-emerald-500/10 blur-[130px] sm:blur-[150px] pointer-events-none -z-10" />
       <div className="fixed bottom-[15%] -left-[15%] sm:-left-[5%] w-[320px] sm:w-[500px] h-[320px] sm:h-[500px] bg-cyan-500/10 blur-[130px] sm:blur-[150px] pointer-events-none -z-10" />
 
+      {/* Banner de Alternância Rápida: Home V1 vs Home V2 (Vendas) */}
+      <div className="bg-gradient-to-r from-violet-950/80 via-[#0D0E14] to-emerald-950/80 border-b border-white/[0.08] px-3 py-2 text-center text-xs text-slate-300 flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-violet-500/20 text-violet-300 font-mono font-bold text-[10px]">
+          NOVA VERSÃO DE VENDAS
+        </span>
+        <span className="hidden xs:inline text-slate-300">
+          Deseja ver a página focada em vendas com os planos no topo?
+        </span>
+        <Link
+          href="/home-2"
+          className="text-emerald-400 hover:text-emerald-300 font-bold underline transition-colors flex items-center gap-1"
+        >
+          <span>Acessar Home V2 (Vendas)</span>
+          <ArrowRight className="w-3 h-3" />
+        </Link>
+      </div>
+
       {/* Floating Navigation Island (Padrão Apple / Awwwards) */}
       <header className="sticky top-3 sm:top-4 z-50 px-3 sm:px-6 w-full max-w-7xl mx-auto">
         <div className="backdrop-blur-2xl bg-[#0D0E14]/85 border border-white/[0.08] shadow-[0_16px_40px_rgba(0,0,0,0.6)] rounded-2xl md:rounded-full px-3.5 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between transition-all duration-300">

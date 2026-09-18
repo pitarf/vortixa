@@ -8,6 +8,34 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Criação da Home V2 (Página de Vendas de Alta Conversão com Planos no Topo)**:
+  - Preservada 100% a Home atual na rota raiz (`/`).
+  - Desenvolvida a página alternativa `/home-2` estruturada com técnicas modernas de Direct Response / SaaS Sales.
+  - Seção de preços e planos reposicionada no primeiro terço de rolagem com comparativo visual de choque de economia (Assinaturas separadas de R$ 850/mês vs VORIXA a partir de R$ 39/mês).
+  - Suporte a abas de assinaturas e pacotes avulsos com compra facilitada.
+  - Headline direta orientada a resultados e criação de vídeos/modelos virtuais de alta conversão sem aparecer.
+  - Casos de uso comerciais destacados e prova real em vídeo com física realista e dança TikTok.
+  - Banners sutis de alternância entre Home 1 e Home 2 implementados para avaliação do cliente.
+  - Verificação visual automatizada com Playwright em Desktop e Mobile e compilação `tsc --noEmit` com 0 erros.
+- [x] **Correção de Sobreposição de Imagem em Hover e Contraste na Biblioteca de Mídias**:
+  - Solucionada a sobreposição onde a imagem com `relative z-10` cobria os botões de ação rápida em hover que estavam em camada não indexada (`z-auto`).
+  - Adicionado `z-20` explícito com `pointer-events-auto` em `app/dashboard/library/page.tsx` e `components/dashboard/DashboardRecentProjects.tsx`.
+  - Inclusa exceção CSS no tema claro em `app/globals.css` para manter o overlay escuro translúcido e ícones brancos legíveis em hover.
+  - Validação estática executada com TypeScript `tsc --noEmit` resultando em 0 erros.
+- [x] **Correção Completa de Falhas de Contraste no Tema Claro e Eliminação de Redundâncias de Motores**:
+  - `components/tools/video/VideoModelSection.tsx`: Removida a barra redundante "Motores de Vídeo Rápidos" que duplicava botões truncados no card de motor de vídeo. O card agora exibe unicamente o modelo selecionado de forma limpa e harmônica, com acionamento do catálogo modal completo via "Alterar modelo >".
+  - `app/dashboard/tools/hot/HotGenerationClient.tsx`: Cabeçalho superior atualizado com fundo suave `bg-rose-50/80` no tema claro e gradiente no escuro, textos em alto contraste (`text-slate-900 dark:text-white`), saldo em caixa adaptativa e badges "Requer Imagem" e "Só Geração" com contraste adequado WCAG AA. Seção de foto de referência e alertas estilizados com superfícies limpas no modo claro.
+  - `app/dashboard/tools/lipsync/page.tsx`: Cards dos motores de sincronia labial adaptados com classes Tailwind adaptativas `bg-white dark:bg-[#070709]`, borda `border-slate-200 dark:border-[#1E202E]` e textos de alta legibilidade.
+  - `app/globals.css`: Regras globais de suporte a tema claro refinadas para seletores, badges coloridas e gradientes.
+  - Verificação com `tsc --noEmit`: 0 erros de tipagem.
+- [x] **Correção Pontual de Contraste no Tema Claro e Tratamento de Imagens Quebradas**:
+  - `components/dashboard/DashboardHero.tsx`: Ajustado o grid de métricas rápidas (Projetos criados, Ativos na biblioteca, Créditos disponíveis, Uptime) para uso de superfícies claras elegantes `bg-white/90 dark:bg-[#070709]/80`, bordas suaves e tipografia em alto contraste.
+  - `components/dashboard/DashboardShell.tsx`: Item ativo "Início (Dashboard)" e links da sidebar atualizados com fundo violeta sutil no tema claro (`bg-violet-100 dark:bg-violet-600/15 text-violet-950 dark:text-white`), eliminando caixas cinza chumbo ilegíveis.
+  - `components/models/ModelsShowcaseHeader.tsx`: Banner de topo da Vitrine de Modelos adaptado para fundo branco suave no tema claro com textos em alto contraste e input de busca refinado.
+  - `components/models/ModelCard.tsx`: Cards de modelos, tags e botões de ação ("Ver Lookbook & Prompt", "Adquirir Prompt") com superfícies brancas e cinzas adaptativas.
+  - `components/flow/toolbar/NodePicker.tsx`: Modal "Adicionar Nó ao Fluxo" atualizado com suporte completo a tema claro (`bg-white dark:bg-slate-950/95`) e cartões de ferramentas em tons legíveis.
+  - `components/tools/image/ImagePreviewArea.tsx` & `app/dashboard/tools/image/page.tsx`: Adicionado tratamento de erro nativo `onError` em cada thumbnail e filtro `validVariations`, além de sanitização estrita no `loadRealHistory()`, eliminando qualquer exibição de imagem quebrada com `alt="Variação X"`.
+  - Validação completa com TypeScript `tsc --noEmit` (0 erros) e auditoria fotográfica Playwright em todas as 14 rotas.
 - [x] **Correção Estrutural do Studio Flow, Persistência Atômica do Grafo e Validação Headless**:
   - Diagnóstico da causa raiz: o frontend (`useFlowStore`) mantinha nós e edges apenas no estado React local e o endpoint de execução `POST /api/flows/[id]/execute` lia do PostgreSQL (`FlowNode` e `FlowConnection`), falhando com `"O fluxo não possui nós para execução."`.
   - Implementação do método `FlowService.syncGraph` com `prisma.$transaction` atômica para salvar simultaneamente metadados, nós e conexões com unicidade e integridade referencial.

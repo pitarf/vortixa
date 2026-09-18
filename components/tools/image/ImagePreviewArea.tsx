@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   Wand2,
   Maximize2,
@@ -51,6 +51,19 @@ export function ImagePreviewArea({
   onUpscale,
   onSendToFlow,
 }: ImagePreviewAreaProps) {
+  // Rastreia URLs de variações que falharam ao carregar para não poluir o carrossel
+  const [failedVariationUrls, setFailedVariationUrls] = useState<Record<string, boolean>>({});
+
+  const validVariations = useMemo(() => {
+    return variations.filter((url) => {
+      if (!url || typeof url !== "string") return false;
+      const clean = url.trim();
+      if (!clean.startsWith("http://") && !clean.startsWith("https://") && !clean.startsWith("/")) return false;
+      if (failedVariationUrls[clean]) return false;
+      return true;
+    });
+  }, [variations, failedVariationUrls]);
+
   // Trava scroll de fundo quando modal fullscreen estiver ativo
   useEffect(() => {
     if (isFullscreen) {
@@ -143,15 +156,15 @@ export function ImagePreviewArea({
         </div>
 
         {/* Carrossel Inferior com Gerações Recentes e Touch Confortável */}
-        {variations.length > 0 && (
+        {validVariations.length > 0 && (
           <div className="space-y-2 pt-1">
-            <div className="flex items-center justify-between text-xs text-slate-400">
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
               <span className="font-semibold font-mono">Gerações Recentes</span>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={onPrevVariation}
-                  className="p-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
+                  className="p-2 rounded-xl bg-slate-100 dark:bg-[#070709] border border-slate-200 dark:border-[#1E202E] hover:border-slate-300 dark:hover:border-slate-700 text-slate-700 dark:text-slate-300 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
                   title="Anterior"
                   aria-label="Variação anterior"
                 >
@@ -160,7 +173,7 @@ export function ImagePreviewArea({
                 <button
                   type="button"
                   onClick={onNextVariation}
-                  className="p-2 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-700 text-slate-300 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
+                  className="p-2 rounded-xl bg-slate-100 dark:bg-[#070709] border border-slate-200 dark:border-[#1E202E] hover:border-slate-300 dark:hover:border-slate-700 text-slate-700 dark:text-slate-300 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
                   title="Próxima"
                   aria-label="Próxima variação"
                 >
@@ -170,20 +183,27 @@ export function ImagePreviewArea({
             </div>
 
             <div className="flex overflow-x-auto no-scrollbar overscroll-x-contain touch-pan-x gap-2 pb-1">
-              {variations.map((url, idx) => {
+              {validVariations.map((url: string, idx: number) => {
                 const isActive = activeResultUrl === url;
                 return (
                   <button
-                    key={idx}
+                    key={url + idx}
                     type="button"
                     onClick={() => onSelectVariation(url, idx)}
                     className={`relative rounded-xl overflow-hidden border aspect-square cursor-pointer transition-all min-h-[56px] min-w-[56px] shrink-0 touch-manipulation active:scale-[0.98] ${
                       isActive
-                        ? "border-cyan-400 shadow-md shadow-cyan-400/30 ring-1 ring-cyan-400 scale-[1.02]"
-                        : "border-[#1E202E] hover:border-slate-600 opacity-70 hover:opacity-100"
+                        ? "border-cyan-500 dark:border-cyan-400 shadow-md shadow-cyan-500/20 ring-1 ring-cyan-500 dark:ring-cyan-400 scale-[1.02]"
+                        : "border-slate-200 dark:border-[#1E202E] hover:border-slate-400 dark:hover:border-slate-600 opacity-80 hover:opacity-100 bg-slate-100 dark:bg-[#070709]"
                     }`}
                   >
-                    <img src={url} alt={`Variação ${idx + 1}`} className="w-full h-full object-cover" />
+                    <img
+                      src={url}
+                      alt={`Variação ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                      onError={() => {
+                        setFailedVariationUrls((prev: Record<string, boolean>) => ({ ...prev, [url]: true }));
+                      }}
+                    />
                   </button>
                 );
               })}

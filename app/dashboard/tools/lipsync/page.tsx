@@ -57,23 +57,23 @@ export default function LipSyncToolPage() {
                     onClick={() => setSelectedModelId(model.id)}
                     className={`p-3.5 rounded-2xl border text-left transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[96px] select-none active:scale-[0.98] touch-manipulation ${
                       isSelected
-                        ? "bg-[#13141B] border-violet-500 shadow-[0_0_20px_rgba(139,92,246,0.25)] ring-1 ring-violet-500/50"
-                        : "bg-[#070709] border-[#1E202E] hover:border-slate-700 opacity-85 hover:opacity-100"
+                        ? "bg-violet-50 dark:bg-[#13141B] border-violet-500 shadow-[0_0_20px_rgba(139,92,246,0.15)] ring-1 ring-violet-500"
+                        : "bg-white dark:bg-[#070709] border-slate-200 dark:border-[#1E202E] hover:border-slate-400 dark:hover:border-slate-700"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-1">
-                      <span className="text-xs font-bold text-white truncate font-heading">
+                      <span className="text-xs font-bold text-slate-900 dark:text-white truncate font-heading">
                         {model.name}
                       </span>
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-300 border border-violet-500/20 whitespace-nowrap">
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-500/15 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-500/20 whitespace-nowrap">
                         {model.cost} cr
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-300 leading-tight my-1.5">
+                    <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-tight my-1.5">
                       {model.description}
                     </p>
-                    <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono pt-1.5 border-t border-[#1E202E]/60">
-                      <span className="text-cyan-400 font-semibold">{model.badge}</span>
+                    <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 font-mono pt-1.5 border-t border-slate-200 dark:border-[#1E202E]/60">
+                      <span className="text-cyan-600 dark:text-cyan-400 font-semibold">{model.badge}</span>
                       <span className="text-slate-500">{model.speed}</span>
                     </div>
                   </button>

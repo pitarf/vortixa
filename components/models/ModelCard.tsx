@@ -59,13 +59,13 @@ export function ModelCard({ model, onOpenDetails, onBookModel }: ModelCardProps)
 
   return (
     <article
-      className="group relative rounded-3xl bg-[#0D0E12] border border-[#1E202E] hover:border-violet-500/40 hover:shadow-[0_16px_48px_rgba(139,92,246,0.14)] transition-all duration-300 flex flex-col overflow-hidden focus-within:ring-2 focus-within:ring-violet-500/50"
+      className="group relative rounded-3xl bg-white dark:bg-[#0D0E12] border border-slate-200 dark:border-[#1E202E] hover:border-violet-400 dark:hover:border-violet-500/40 hover:shadow-[0_16px_48px_rgba(139,92,246,0.14)] transition-all duration-300 flex flex-col overflow-hidden focus-within:ring-2 focus-within:ring-violet-500/50 shadow-sm dark:shadow-none"
       aria-labelledby={`model-title-${model.id}`}
     >
       {/* Moldura Fotográfica Contida (Aspect Ratio 3:4) para Eliminar CLS */}
       <div
         onClick={() => onOpenDetails(model)}
-        className="relative aspect-[3/4] w-full overflow-hidden bg-[#070709] cursor-pointer select-none"
+        className="relative aspect-[3/4] w-full overflow-hidden bg-slate-100 dark:bg-[#070709] cursor-pointer select-none"
         role="button"
         tabIndex={0}
         aria-label={`Ver lookbook de ${model.name}`}
@@ -172,31 +172,31 @@ export function ModelCard({ model, onOpenDetails, onBookModel }: ModelCardProps)
       </div>
 
       {/* Conteúdo Descritivo & Informações do Casting */}
-      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3.5 bg-[#0D0E12]">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3.5 bg-white dark:bg-[#0D0E12]">
         <div className="space-y-1.5">
           <div className="flex items-center justify-between gap-2">
             <button
               type="button"
               onClick={() => onOpenDetails(model)}
-              className="text-left font-bold text-white hover:text-violet-300 transition-colors truncate font-heading tracking-tight text-sm sm:text-base cursor-pointer focus-visible:outline-none focus-visible:underline"
+              className="text-left font-bold text-slate-900 dark:text-white hover:text-violet-600 dark:hover:text-violet-300 transition-colors truncate font-heading tracking-tight text-sm sm:text-base cursor-pointer focus-visible:outline-none focus-visible:underline"
               id={`model-title-${model.id}`}
             >
               {model.name}
             </button>
 
             {isAi ? (
-              <span className="text-[10px] sm:text-[11px] font-mono font-black text-violet-200 bg-gradient-to-r from-violet-600/30 via-fuchsia-600/20 to-violet-600/30 border border-violet-400/40 px-2 py-0.5 rounded-lg shrink-0 flex items-center gap-1 shadow-[0_0_10px_rgba(168,85,247,0.25)]">
+              <span className="text-[10px] sm:text-[11px] font-mono font-black text-violet-700 dark:text-violet-200 bg-violet-50 dark:bg-gradient-to-r dark:from-violet-600/30 dark:via-fuchsia-600/20 dark:to-violet-600/30 border border-violet-300 dark:border-violet-400/40 px-2 py-0.5 rounded-lg shrink-0 flex items-center gap-1 shadow-sm dark:shadow-[0_0_10px_rgba(168,85,247,0.25)]">
                 <span>💎</span>
                 <span>Prompt: {model.creditsPricePerGen} cr</span>
               </span>
             ) : (
-              <span className="text-[10px] sm:text-[11px] font-mono font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-500/25 px-2 py-0.5 rounded-lg shrink-0 flex items-center gap-1">
+              <span className="text-[10px] sm:text-[11px] font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-300 dark:border-emerald-500/25 px-2 py-0.5 rounded-lg shrink-0 flex items-center gap-1">
                 🏷️ {formatPrice(model.bookingPriceCents)}/dia
               </span>
             )}
           </div>
 
-          <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed font-sans">
+          <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed font-sans">
             {model.bio || "Modelo visual disponível para produções digitais e físicas."}
           </p>
         </div>
@@ -206,50 +206,51 @@ export function ModelCard({ model, onOpenDetails, onBookModel }: ModelCardProps)
           {model.tags.slice(0, 3).map((tag, idx) => (
             <span
               key={idx}
-              className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#070709] text-slate-400 border border-[#1E202E]"
+              className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-100 dark:bg-[#070709] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-[#1E202E]"
             >
               #{tag}
             </span>
           ))}
           {model.tags.length > 3 && (
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-[#070709] text-slate-500 border border-[#1E202E]">
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-[#070709] text-slate-500 border border-slate-200 dark:border-[#1E202E]">
               +{model.tags.length - 3}
             </span>
           )}
         </div>
 
         {/* Botão de Ação Primária com Touch Target Rigorosamente >= 44px */}
-        <div className="pt-2.5 border-t border-[#1E202E]">
+        <div className="pt-2.5 border-t border-slate-200 dark:border-[#1E202E]">
           {isAi ? (
             <div className="grid grid-cols-1 xs:grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => onOpenDetails(model)}
-                className="w-full flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] hover:bg-violet-950/60 text-slate-200 hover:text-white border border-[#1E202E] hover:border-violet-500/40 text-xs font-bold transition-all cursor-pointer min-h-[44px] active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-[#13141B] hover:bg-slate-200 dark:hover:bg-violet-950/60 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-[#1E202E] hover:border-violet-300 dark:hover:border-violet-500/40 text-xs font-bold transition-all cursor-pointer min-h-[44px] active:scale-[0.98]"
                 aria-label={`Ver lookbook e prompt de ${model.name}`}
               >
-                <Eye className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+                <Eye className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400 shrink-0" />
                 <span className="truncate">Ver Lookbook & Prompt</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => onOpenDetails(model)}
-                className="w-full flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-fuchsia-600 hover:from-violet-500 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-violet-600/30 transition-all cursor-pointer min-h-[44px] active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-fuchsia-600 hover:from-violet-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md dark:shadow-lg dark:shadow-violet-600/30 transition-all cursor-pointer min-h-[44px] active:scale-[0.98]"
                 aria-label={`Adquirir prompt de ${model.name}`}
               >
-                <Sparkles className="w-3.5 h-3.5 fill-current text-violet-200 shrink-0" />
-                <span className="truncate">Adquirir Prompt / Usar</span>
+                <Zap className="w-3.5 h-3.5 fill-current shrink-0" />
+                <span className="truncate">Adquirir Prompt</span>
               </button>
             </div>
           ) : (
             <button
               type="button"
-              onClick={handleStudioDirect}
-              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#13141B] hover:bg-cyan-600 hover:text-white active:scale-[0.98] text-cyan-300 text-xs font-bold border border-cyan-500/30 hover:border-cyan-400 shadow-md transition-all cursor-pointer min-h-[44px]"
+              onClick={() => onBookModel(model)}
+              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md dark:shadow-lg dark:shadow-emerald-600/30 transition-all cursor-pointer min-h-[44px] active:scale-[0.98]"
+              aria-label={`Solicitar contratação de ${model.name}`}
             >
               <Calendar className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate">Contratar / Reservar</span>
+              <span>Solicitar Contratação</span>
             </button>
           )}
         </div>

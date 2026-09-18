@@ -147,41 +147,41 @@ export function NodePicker() {
       role="dialog"
       aria-modal="true"
       aria-label="Adicionar Nó ao Fluxo"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-in fade-in duration-150"
     >
-      <div className="relative w-full max-w-xl rounded-3xl bg-slate-950/95 border border-slate-800/90 shadow-[0_0_60px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col max-h-[85vh]">
+      <div className="relative w-full max-w-xl rounded-3xl bg-white dark:bg-slate-950/95 border border-slate-200 dark:border-slate-800/90 shadow-2xl dark:shadow-[0_0_60px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col max-h-[85vh]">
         {/* Header do Picker */}
-        <div className="flex items-center justify-between p-4 border-b border-slate-800/80 bg-slate-900/40">
+        <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800/80 bg-slate-50/80 dark:bg-slate-900/40">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-400">
+            <div className="w-8 h-8 rounded-xl bg-violet-600/10 dark:bg-violet-600/20 border border-violet-500/20 dark:border-violet-500/30 flex items-center justify-center text-violet-600 dark:text-violet-400">
               <Boxes className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-100">Adicionar Nó ao Fluxo</h3>
-              <p className="text-[11px] text-slate-400">Escolha uma ferramenta generativa ou controle de fluxo</p>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">Adicionar Nó ao Fluxo</h3>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">Escolha uma ferramenta generativa ou controle de fluxo</p>
             </div>
           </div>
 
           <button
             onClick={() => setNodePickerOpen(false)}
             aria-label="Fechar seletor"
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Barra de Busca & Categorias */}
-        <div className="p-4 border-b border-slate-800/80 space-y-3">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-800/80 space-y-3 bg-white dark:bg-slate-950">
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar nós (ex: Imagem, Kling, Sincronização, Upscale)..."
               autoFocus
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all font-sans"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all font-sans"
             />
           </div>
 
@@ -193,7 +193,7 @@ export function NodePicker() {
                 className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
                   selectedCategory === cat.id
                     ? "bg-violet-600 text-white shadow-sm"
-                    : "bg-slate-900 text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                    : "bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
                 }`}
               >
                 {cat.label}
@@ -203,7 +203,7 @@ export function NodePicker() {
         </div>
 
         {/* Lista de Ferramentas */}
-        <div className="p-4 overflow-y-auto space-y-2 flex-1">
+        <div className="p-4 overflow-y-auto space-y-2 flex-1 bg-white dark:bg-slate-950">
           {filteredNodes.length === 0 ? (
             <div className="py-12 text-center text-slate-500 text-xs">
               Nenhuma ferramenta encontrada para a busca realizada.
@@ -216,7 +216,7 @@ export function NodePicker() {
                   <button
                     key={node.type}
                     onClick={() => handleSelectNode(node.type)}
-                    className="flex items-start gap-3 p-3 rounded-2xl bg-slate-900/40 hover:bg-slate-900/90 border border-slate-800/80 hover:border-violet-500/50 text-left transition-all group hover:scale-[1.01] hover:shadow-lg cursor-pointer"
+                    className="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/40 hover:bg-violet-50/80 dark:hover:bg-slate-900/90 border border-slate-200 dark:border-slate-800/80 hover:border-violet-400 dark:hover:border-violet-500/50 text-left transition-all group hover:scale-[1.01] hover:shadow-md dark:hover:shadow-lg cursor-pointer"
                   >
                     <div
                       className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105"
@@ -230,18 +230,18 @@ export function NodePicker() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-1">
-                        <span className="text-xs font-semibold text-slate-100 group-hover:text-violet-300 transition-colors truncate">
+                        <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 group-hover:text-violet-700 dark:group-hover:text-violet-300 transition-colors truncate">
                           {node.title}
                         </span>
                         {node.creditCost > 0 ? (
-                          <span className="text-[10px] font-mono text-amber-400 font-bold flex-shrink-0 flex items-center gap-0.5">
+                          <span className="text-[10px] font-mono text-amber-600 dark:text-amber-400 font-bold flex-shrink-0 flex items-center gap-0.5">
                             <Zap className="w-2.5 h-2.5 fill-current" /> {node.creditCost}
                           </span>
                         ) : (
                           <span className="text-[10px] text-slate-500 font-medium flex-shrink-0">Grátis</span>
                         )}
                       </div>
-                      <p className="text-[11px] text-slate-400 line-clamp-2 mt-0.5 leading-relaxed">
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5 leading-relaxed">
                         {node.description}
                       </p>
                     </div>
