@@ -39,6 +39,32 @@ export interface UpdateFlowInput {
   status?: FlowStatus;
 }
 
+export interface SyncNodeItem {
+  id?: string;
+  nodeType: string;
+  toolSlug?: string | null;
+  title: string;
+  positionX: number;
+  positionY: number;
+  config?: Record<string, any> | null;
+}
+
+export interface SyncConnectionItem {
+  sourceNodeId: string;
+  sourceHandle: string;
+  targetNodeId: string;
+  targetHandle: string;
+}
+
+export interface SyncGraphInput {
+  name?: string;
+  description?: string | null;
+  viewport?: Record<string, any> | null;
+  status?: FlowStatus;
+  nodes?: SyncNodeItem[];
+  connections?: SyncConnectionItem[];
+}
+
 export interface ListFlowsParams {
   status?: FlowStatus;
   search?: string;
@@ -207,6 +233,112 @@ export class FlowService {
     return await prisma.flow.update({
       where: { id: flowId },
       data: updateData,
+    });
+  }
+
+  /**
+   * Sincroniza atomicamente todo o grafo do Flow (metadados, nós e conexões).
+   * Substitui nós e conexões antigos mantendo integridade com prisma.$transaction.
+   */
+  static async syncGraph(userId: string, flowId: string, input: SyncGraphInput) {
+    const existing = await prisma.flow.findFirst({
+      where: { id: flowId, userId },
+      include: { executions: { where: { status: "RUNNING" }, take: 1 } },
+    });
+
+    if (!existing) {
+      throw new FlowNotFoundError();
+    }
+
+    if (existing.executions.length > 0) {
+      throw new FlowValidationError("Não é possível alterar nós enquanto uma execução estiver em andamento.");
+    }
+
+    return await prisma.$transaction(async (tx) => {
+      // 1. Atualiza metadados do Flow
+      const updateData: any = {};
+      if (input.name !== undefined) {
+        if (!input.name || input.name.trim().length === 0) {
+          throw new FlowValidationError("O nome do fluxo não pode ser vazio.");
+        }
+        updateData.name = input.name.trim();
+      }
+      if (input.description !== undefined) {
+        updateData.description = input.description ? input.description.trim() : null;
+      }
+      if (input.viewport !== undefined) {
+        updateData.viewport = input.viewport;
+      }
+      if (input.status !== undefined) {
+        updateData.status = input.status;
+      }
+
+      await tx.flow.update({
+        where: { id: flowId },
+        data: updateData,
+      });
+
+      // Se nós foram fornecidos no payload de sincronização
+      if (input.nodes !== undefined) {
+        // Remover conexões antigas primeiro (devido à FK com FlowNode)
+        await tx.flowConnection.deleteMany({
+          where: { flowId },
+        });
+
+        // Remover nós antigos do fluxo
+        await tx.flowNode.deleteMany({
+          where: { flowId },
+        });
+
+        // Inserir novos nós preservando IDs informados pelo cliente (ou gerando caso ausente)
+        const nodeMap = new Map<string, string>(); // clientId -> dbId
+        for (const n of input.nodes) {
+          const createdNode = await tx.flowNode.create({
+            data: {
+              ...(n.id ? { id: n.id } : {}),
+              flowId,
+              nodeType: n.nodeType,
+              toolSlug: n.toolSlug || null,
+              title: n.title?.trim() || "Nó",
+              positionX: Number(n.positionX) || 0,
+              positionY: Number(n.positionY) || 0,
+              config: n.config ?? undefined,
+            },
+          });
+          if (n.id) {
+            nodeMap.set(n.id, createdNode.id);
+          }
+        }
+
+        // Se conexões foram fornecidas, recria todas validando existência dos nós
+        if (input.connections && input.connections.length > 0) {
+          for (const c of input.connections) {
+            const resolvedSource = nodeMap.get(c.sourceNodeId) || c.sourceNodeId;
+            const resolvedTarget = nodeMap.get(c.targetNodeId) || c.targetNodeId;
+
+            if (resolvedSource && resolvedTarget && resolvedSource !== resolvedTarget) {
+              await tx.flowConnection.create({
+                data: {
+                  flowId,
+                  sourceNodeId: resolvedSource,
+                  sourceHandle: c.sourceHandle,
+                  targetNodeId: resolvedTarget,
+                  targetHandle: c.targetHandle,
+                },
+              });
+            }
+          }
+        }
+      }
+
+      // Retornar o flow atualizado com nós e conexões
+      return await tx.flow.findUnique({
+        where: { id: flowId },
+        include: {
+          nodes: { orderBy: { createdAt: "asc" } },
+          connections: { orderBy: { createdAt: "asc" } },
+        },
+      });
     });
   }
 

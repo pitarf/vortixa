@@ -50,7 +50,7 @@ export function NodeInspector() {
     <aside
       role="complementary"
       aria-label="Inspetor de propriedades do nó"
-      className="fixed inset-x-3 bottom-3 top-20 sm:top-20 sm:right-4 sm:left-auto sm:bottom-4 sm:w-96 rounded-3xl bg-slate-950/95 backdrop-blur-2xl border border-slate-800/90 shadow-[0_0_50px_rgba(0,0,0,0.85)] flex flex-col z-30 overflow-hidden animate-in slide-in-from-right-5 duration-200"
+      className="fixed inset-x-3 bottom-3 top-24 sm:top-24 sm:right-4 sm:left-auto sm:bottom-4 sm:w-96 rounded-3xl bg-slate-950/95 backdrop-blur-2xl border border-slate-800/90 shadow-[0_0_50px_rgba(0,0,0,0.85)] flex flex-col z-30 overflow-hidden animate-in slide-in-from-right-5 duration-200"
     >
       {/* Header do Inspector */}
       <div className="flex items-center justify-between p-4 border-b border-slate-800/80 bg-slate-900/40">

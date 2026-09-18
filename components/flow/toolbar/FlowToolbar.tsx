@@ -41,7 +41,7 @@ export const FlowToolbar = memo(function FlowToolbar({ onFitView }: { onFitView?
   } = useFlowStore();
 
   return (
-    <header className="absolute top-4 left-4 right-4 z-30 flex flex-wrap items-center justify-between gap-3 pointer-events-none select-none">
+    <header className="absolute top-4 left-4 right-4 z-40 flex flex-wrap items-center justify-between gap-3 pointer-events-none select-none">
       {/* Bloco Esquerdo: Título & Status */}
       <div className="flex items-center gap-3 px-3.5 py-2 rounded-2xl bg-slate-950/80 backdrop-blur-xl border border-slate-800/80 shadow-2xl pointer-events-auto">
         <input

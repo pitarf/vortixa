@@ -8,6 +8,14 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Correção Estrutural do Studio Flow, Persistência Atômica do Grafo e Validação Headless**:
+  - Diagnóstico da causa raiz: o frontend (`useFlowStore`) mantinha nós e edges apenas no estado React local e o endpoint de execução `POST /api/flows/[id]/execute` lia do PostgreSQL (`FlowNode` e `FlowConnection`), falhando com `"O fluxo não possui nós para execução."`.
+  - Implementação do método `FlowService.syncGraph` com `prisma.$transaction` atômica para salvar simultaneamente metadados, nós e conexões com unicidade e integridade referencial.
+  - Atualização do endpoint `PATCH /api/flows/[id]` para aceitar `nodes` e `connections` no schema Zod.
+  - Sincronização automática no `flow-store.ts` acionada no botão "Salvar" e preventivamente antes de "Run Flow".
+  - Normalização dos handles no motor DAG (`FlowExecutionService`): mapeamento automático de `input_prompt` para `prompt`, `input_image` para `image_url`/`image`, `input_video` para `video_url`/`video`, `input_motion` para `motion_video_url` e `input_audio` para `audio_url`.
+  - Correção ergonômica de layout: `FlowToolbar` com `z-40` e `NodeInspector` com `top-24`, eliminando bloqueios de clique em "Salvar" e "Run Flow".
+  - Validação automatizada via Playwright Headless (`scripts/test_flow_headless.mjs`): login real, criação de flow, inserção de 3 nós (Prompt, FLUX Imagem, Kling Vídeo), salvamento no banco e disparo de execução com 100% de sucesso.
 - [x] **Humanização Geral de Textos e Copy da Plataforma (Diretrizes Humanizer)**:
   - Instalação e integração da skill `humanizer` do GitHub (`blader/humanizer v3.0.0`).
   - Varredura em toda a plataforma com subagentes por área (Landing Page, Studio & Ferramentas, Vitrine de Modelos, Checkout & Fintech).

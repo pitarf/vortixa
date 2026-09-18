@@ -512,11 +512,30 @@ export const useFlowStore = create<FlowStoreState>((set, get) => ({
   },
 
   saveFlow: async () => {
-    const { flowId, flowName, flowDescription, status, viewport, isSaving } = get();
+    const { flowId, flowName, flowDescription, status, viewport, nodes, edges, isSaving } = get();
     if (!flowId || isSaving) return false;
 
     set({ isSaving: true });
     try {
+      // Mapear nós do estado Zustand para o schema de persistência
+      const payloadNodes = nodes.map((n) => ({
+        id: n.id,
+        nodeType: n.data.nodeType || n.type || "prompt",
+        toolSlug: n.data.toolSlug || null,
+        title: n.data.title || "Nó",
+        positionX: n.position.x,
+        positionY: n.position.y,
+        config: n.data.config || {},
+      }));
+
+      // Mapear conexões (edges)
+      const payloadConnections = edges.map((e) => ({
+        sourceNodeId: e.source,
+        sourceHandle: e.sourceHandle || "output_text",
+        targetNodeId: e.target,
+        targetHandle: e.targetHandle || "input_prompt",
+      }));
+
       const flowRes = await fetch(`/api/flows/${flowId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -525,12 +544,14 @@ export const useFlowStore = create<FlowStoreState>((set, get) => ({
           description: flowDescription,
           status,
           viewport,
+          nodes: payloadNodes,
+          connections: payloadConnections,
         }),
       });
 
       if (!flowRes.ok) {
         const errorData = await flowRes.json();
-        throw new Error(errorData.error || "Falha ao salvar metadados do fluxo.");
+        throw new Error(errorData.error || "Falha ao salvar metadados e nós do fluxo.");
       }
 
       set({
@@ -549,8 +570,14 @@ export const useFlowStore = create<FlowStoreState>((set, get) => ({
   },
 
   executeFlow: async () => {
-    const { flowId, isExecuting } = get();
+    const { flowId, isExecuting, isDirty } = get();
     if (!flowId || isExecuting) return null;
+
+    // Se houver alterações não salvas no canvas, salva automaticamente antes de disparar
+    if (isDirty) {
+      const saved = await get().saveFlow();
+      if (!saved) return null;
+    }
 
     set({ isExecuting: true });
     try {

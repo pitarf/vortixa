@@ -5,6 +5,28 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.7.8] - 2026-09-17
+### Correção Estrutural do Studio Flow, Persistência Atômica do Grafo e Validação Headless
+- **Causa Raiz do Erro no Flow Diagnosticada e Solucionada**:
+  - O estado do frontend (`useFlowStore`) mantinha nós e edges apenas em memória local. Ao salvar ou executar, os nós não eram sincronizados com o banco relacional PostgreSQL (`FlowNode` e `FlowConnection`).
+  - Como resultado, a API `POST /api/flows/[id]/execute` buscava os nós no banco, encontrava lista vazia e bloqueava a execução com a exceção `"O fluxo não possui nós para execução."`.
+- **Implementação do Método `FlowService.syncGraph` & Rota `PATCH /api/flows/[id]`**:
+  - Criada sincronização atômica completa encapsulada em `prisma.$transaction`: atualização de metadados, remoção idempotente e recriação consistente de nós (`FlowNode`) e conexões (`FlowConnection`).
+  - Atualizado `updateFlowSchema` com Zod para validar `nodes` e `connections` de forma estrita.
+  - No `flow-store.ts`, implementada persistência automática no `saveFlow()` e salvamento preventivo automático antes de `executeFlow()`.
+- **Normalização de Handles de Conexão no Motor DAG (`FlowExecutionService`)**:
+  - Mapeamento transparente dos handles do canvas React Flow para os schemas de inferência dos provedores:
+    - `input_prompt` -> `prompt`.
+    - `input_image` -> `image_url`, `image`, `prompt_image_url`.
+    - `input_video` -> `video_url`, `video`.
+    - `input_motion` -> `motion_video_url`, `driving_video_url`.
+    - `input_audio` -> `audio_url`, `audio`.
+- **Ajuste de Camadas Visuais (Z-Index / Ergonomia)**:
+  - Elevado z-index da `FlowToolbar` para `z-40` e reposicionado o `NodeInspector` para `top-24`, evitando que a barra de ferramentas ficasse sobreposta ou bloqueasse cliques em "Salvar" e "Run Flow".
+- **Auditoria Headless Automatizada com Playwright (`scripts/test_flow_headless.mjs`)**:
+  - Executado teste ponta a ponta com navegador real Chromium: login com `qa-tester@vorixa.com`, abertura do editor `/dashboard/flow/[id]`, adição de nós (Prompt, FLUX Imagem, Kling Vídeo), salvamento no banco e disparo de execução real no modal.
+  - Status: Concluído com sucesso (100% sem erros de rede ou console, jobs colocados em fila no backend).
+
 ## [2.7.7] - 2026-09-17
 ### Humanização Geral de Textos e Copy da Plataforma (Diretrizes Humanizer)
 - **Instalação e Integração da Skill Humanizer**:

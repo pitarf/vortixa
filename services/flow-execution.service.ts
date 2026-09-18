@@ -347,11 +347,36 @@ export class FlowExecutionService {
             parentOutputs.text;
 
           resolvedInputs[edge.targetHandle] = mappedValue;
+
+          // Normalização de chaves para compatibilidade com os schemas de inferência dos provedores (fal.ai / wavespeed)
+          if (edge.targetHandle === "input_prompt") {
+            resolvedInputs.prompt = mappedValue;
+          } else if (edge.targetHandle === "input_image") {
+            resolvedInputs.image_url = mappedValue;
+            resolvedInputs.image = mappedValue;
+            resolvedInputs.prompt_image_url = mappedValue;
+          } else if (edge.targetHandle === "input_video") {
+            resolvedInputs.video_url = mappedValue;
+            resolvedInputs.video = mappedValue;
+          } else if (edge.targetHandle === "input_motion") {
+            resolvedInputs.motion_video_url = mappedValue;
+            resolvedInputs.driving_video_url = mappedValue;
+          } else if (edge.targetHandle === "input_audio") {
+            resolvedInputs.audio_url = mappedValue;
+            resolvedInputs.audio = mappedValue;
+          } else if (edge.targetHandle === "input_media") {
+            resolvedInputs.media_url = mappedValue;
+          }
         }
       }
 
       if (incomingEdges.length === 0 && initialInputs) {
         Object.assign(resolvedInputs, initialInputs);
+      }
+
+      // Se o nó tiver um prompt local no config e não tiver sido sobrescrito por edge
+      if (!resolvedInputs.prompt && node.config && typeof node.config === "object" && (node.config as any).prompt) {
+        resolvedInputs.prompt = (node.config as any).prompt;
       }
 
       if (!node.toolSlug) {

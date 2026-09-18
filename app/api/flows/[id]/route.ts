@@ -3,11 +3,30 @@ import { auth } from "@/auth";
 import { FlowService, FlowError } from "@/services/flow.service";
 import { z } from "zod";
 
+const syncNodeSchema = z.object({
+  id: z.string().optional(),
+  nodeType: z.string().min(1),
+  toolSlug: z.string().nullable().optional(),
+  title: z.string().min(1),
+  positionX: z.number(),
+  positionY: z.number(),
+  config: z.record(z.string(), z.any()).nullable().optional(),
+});
+
+const syncConnectionSchema = z.object({
+  sourceNodeId: z.string().min(1),
+  sourceHandle: z.string().min(1),
+  targetNodeId: z.string().min(1),
+  targetHandle: z.string().min(1),
+});
+
 const updateFlowSchema = z.object({
   name: z.string().min(1).max(100).optional(),
   description: z.string().max(500).optional().nullable(),
   viewport: z.record(z.string(), z.any()).optional().nullable(),
   status: z.enum(["DRAFT", "ACTIVE", "ARCHIVED"]).optional(),
+  nodes: z.array(syncNodeSchema).optional(),
+  connections: z.array(syncConnectionSchema).optional(),
 }).strict();
 
 export async function GET(
@@ -50,7 +69,14 @@ export async function PATCH(
       );
     }
 
-    const updated = await FlowService.updateFlow(session.user.id, id, parsed.data);
+    // Se nós ou conexões foram enviados, usa syncGraph para sincronização atômica completa
+    let updated;
+    if (parsed.data.nodes !== undefined || parsed.data.connections !== undefined) {
+      updated = await FlowService.syncGraph(session.user.id, id, parsed.data);
+    } else {
+      updated = await FlowService.updateFlow(session.user.id, id, parsed.data);
+    }
+
     return NextResponse.json(updated);
   } catch (err: any) {
     const statusCode = err instanceof FlowError ? err.statusCode : 400;
