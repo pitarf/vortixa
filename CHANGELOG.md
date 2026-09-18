@@ -6,7 +6,11 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 ## [2.8.8] - 2026-09-18
-### Renomeação Global da Marca para VORTIXIA, Texto para Imagem, Vídeos Seedance 2.5 & Comercial One Million
+### Renomeação Global da Marca para VORTIXIA, Motion Control WaveSpeed, Texto para Imagem & Seedance 2.5
+- **Motion Control Avançado (Dançarina & Coreografia Profissional)**:
+  - Adicionado novo caso de uso na seção `SalesMotionV2.tsx` com alternador por abas discretas:
+    - *Exemplo 1:* Vídeo de dança guia (`motion_ref_wavespeed.mp4`), foto de corpo todo da dançarina (`motion_dancer_model.png`) e vídeo final com coreografia e balanço de figurino impecável (`motion_out_wavespeed.mp4`).
+    - *Exemplo 2:* Demonstração viral do TikTok preservada.
 - **Gerações de Texto para Imagem (Filtro 't2i' na Galeria)**:
   - Adicionada a fotografia hiper-realista da influenciadora em live streaming com interface e comentários integrados (`/uploads/influencer_live_stream.jpg`).
   - Adicionada a fotografia editorial de casamento ao ar livre da noiva tocando bateria (`/uploads/bride_drums_editorial.jpg`).
