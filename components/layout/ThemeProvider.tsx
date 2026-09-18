@@ -18,7 +18,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // 1. Ler preferência persistida no localStorage ou preferência do sistema
-    const stored = localStorage.getItem("vorixa_theme") as Theme | null;
+    const stored = localStorage.getItem("vortixia_theme") as Theme | null;
     if (stored === "light" || stored === "dark") {
       setThemeState(stored);
       applyTheme(stored);
@@ -43,7 +43,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const setTheme = (t: Theme) => {
     setThemeState(t);
-    localStorage.setItem("vorixa_theme", t);
+    localStorage.setItem("vortixia_theme", t);
     applyTheme(t);
   };
 

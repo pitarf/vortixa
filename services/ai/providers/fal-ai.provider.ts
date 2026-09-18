@@ -124,7 +124,7 @@ export class FalAIProvider implements IAIProvider {
         delete modelInputs.aspect_ratio;
       }
 
-      // Remover metadados internos da VORIXA que não fazem parte do schema da fal.ai
+      // Remover metadados internos da VORTIXIA que não fazem parte do schema da fal.ai
       delete modelInputs.style;
       delete modelInputs.resolution;
 
@@ -620,11 +620,11 @@ export class FalAIProvider implements IAIProvider {
                 const file = await tx.file.create({
                   data: {
                     userId: job.userId,
-                    name: `vorixa-render-${job.id.slice(0, 8)}.${isVideo ? "mp4" : "jpg"}`,
+                    name: `vortixia-render-${job.id.slice(0, 8)}.${isVideo ? "mp4" : "jpg"}`,
                     mimeType: isVideo ? "video/mp4" : "image/jpeg",
                     sizeBytes: isVideo ? 1024 * 1024 * 8 : 1024 * 1024 * 2,
                     url: finalUrl,
-                    storageKey: `outputs/${job.userId}/vorixa-${job.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}.${isVideo ? "mp4" : "jpg"}`,
+                    storageKey: `outputs/${job.userId}/vortixia-${job.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}.${isVideo ? "mp4" : "jpg"}`,
                   },
                 });
 

@@ -43,7 +43,7 @@ interface HotModel {
 const HOT_MODELS: HotModel[] = [
   {
     id: "wavespeed/wan-2.2/text-to-image-realism",
-    name: "VORIXA HyperReal (Foto Realista 8K)",
+    name: "VORTIXIA HyperReal (Foto Realista 8K)",
     badge: "Máximo Fotorrealismo 👑",
     type: "image",
     cost: 4,
@@ -54,7 +54,7 @@ const HOT_MODELS: HotModel[] = [
   },
   {
     id: "wavespeed/chroma",
-    name: "VORIXA Chroma (Personagem / Game 3D)",
+    name: "VORTIXIA Chroma (Personagem / Game 3D)",
     badge: "Estilo Videogame / 3D 🎮",
     type: "image",
     cost: 3,
@@ -65,7 +65,7 @@ const HOT_MODELS: HotModel[] = [
   },
   {
     id: "wavespeed/minimax-h3/image-edit",
-    name: "VORIXA MiniMax Edit (Alta Fidelidade)",
+    name: "VORTIXIA MiniMax Edit (Alta Fidelidade)",
     badge: "Preservação Facial 👤",
     type: "image",
     cost: 3,
@@ -76,7 +76,7 @@ const HOT_MODELS: HotModel[] = [
   },
   {
     id: "wavespeed/qwen-image/edit-plus",
-    name: "VORIXA Qwen Edit Plus (Ultra Detalhes)",
+    name: "VORTIXIA Qwen Edit Plus (Ultra Detalhes)",
     badge: "🏆 Ultra Remoção & Detalhes 🔞",
     type: "image",
     cost: 4,
@@ -87,7 +87,7 @@ const HOT_MODELS: HotModel[] = [
   },
   {
     id: "wavespeed/hidream-o1-image/edit",
-    name: "VORIXA HiDream Edit (Fotorrealista)",
+    name: "VORTIXIA HiDream Edit (Fotorrealista)",
     badge: "✨ Remoção Fotorrealista 🌿",
     type: "image",
     cost: 3,
@@ -98,7 +98,7 @@ const HOT_MODELS: HotModel[] = [
   },
   {
     id: "wavespeed/qwen-image/edit",
-    name: "VORIXA Qwen Edit (Instrução Semântica)",
+    name: "VORTIXIA Qwen Edit (Instrução Semântica)",
     badge: "⚡ Remoção Rápida & Ágil 🎯",
     type: "image",
     cost: 3,
@@ -109,7 +109,7 @@ const HOT_MODELS: HotModel[] = [
   },
   {
     id: "wavespeed/wan-2.2-spicy",
-    name: "VORIXA Motion Hot (Vídeo +18 Fluido)",
+    name: "VORTIXIA Motion Hot (Vídeo +18 Fluido)",
     badge: "Alta Eficiência 🎥",
     type: "video",
     cost: 15,
@@ -120,7 +120,7 @@ const HOT_MODELS: HotModel[] = [
   },
   {
     id: "wavespeed/minimax-h3-spicy",
-    name: "VORIXA Live Voice Hot (Vídeo com Áudio)",
+    name: "VORTIXIA Live Voice Hot (Vídeo com Áudio)",
     badge: "Com Áudio Nativo 🔊",
     type: "video",
     cost: 18,
@@ -131,7 +131,7 @@ const HOT_MODELS: HotModel[] = [
   },
   {
     id: "wavespeed/seedance-2.5-spicy",
-    name: "VORIXA Ultra Cinema Hot (Vídeo 4K)",
+    name: "VORTIXIA Ultra Cinema Hot (Vídeo 4K)",
     badge: "Qualidade Máxima 👑",
     type: "video",
     cost: 30,
@@ -230,7 +230,7 @@ export default function HotGenerationClient() {
   };
 
   useEffect(() => {
-    const verified = localStorage.getItem("vorixa_age_verified_18");
+    const verified = localStorage.getItem("vortixia_age_verified_18");
     if (verified === "true") {
       setHasVerifiedAge(true);
     }
@@ -258,7 +258,7 @@ export default function HotGenerationClient() {
       const a = document.createElement("a");
       a.href = blobUrl;
       const ext = resultMediaUrl.endsWith(".mp4") ? "mp4" : "jpg";
-      a.download = `vorixa-hot-${Date.now()}.${ext}`;
+      a.download = `vortixia-hot-${Date.now()}.${ext}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -306,7 +306,7 @@ export default function HotGenerationClient() {
   };
 
   const handleConfirmAge = () => {
-    localStorage.setItem("vorixa_age_verified_18", "true");
+    localStorage.setItem("vortixia_age_verified_18", "true");
     setHasVerifiedAge(true);
     toast.success("Acesso confirmado. Bem-vindo ao Gerador Hot (+18).");
   };
@@ -424,7 +424,7 @@ export default function HotGenerationClient() {
 
     try {
       setIsGenerating(true);
-      setActiveStepText("Conectando ao cluster neural VORIXA sem censura");
+      setActiveStepText("Conectando ao cluster neural VORTIXIA sem censura");
 
       const inputs: Record<string, any> = {
         prompt,
@@ -456,7 +456,7 @@ export default function HotGenerationClient() {
       }
 
       const job = await res.json();
-      toast.info("Processando nos servidores neurais VORIXA...");
+      toast.info("Processando nos servidores neurais VORTIXIA...");
 
       // Polling de acompanhamento do Job
       let attempts = 0;
@@ -527,7 +527,7 @@ export default function HotGenerationClient() {
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-500/15 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-400 text-xs font-mono font-bold">
                 <Flame className="w-3.5 h-3.5 fill-rose-500 text-rose-500 animate-pulse" />
-                <span>VORIXA NEURAL • MODO SEM CENSURA (+18)</span>
+                <span>VORTIXIA NEURAL • MODO SEM CENSURA (+18)</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
                 Gerador Hot & Sensual
@@ -597,7 +597,7 @@ export default function HotGenerationClient() {
 
             {/* Card 2: Seleção do Modelo Neural */}
             <div className="bg-white dark:bg-[#0D0E12] border border-slate-200 dark:border-[#1E202E] rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">2. Motor VORIXA Neural</label>
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">2. Motor VORTIXIA Neural</label>
               <div className="grid grid-cols-1 gap-2.5">
                 {HOT_MODELS.filter((m) => m.type === mediaType).map((model) => {
                   const isSelected = selectedModel.id === model.id;
@@ -1144,7 +1144,7 @@ export default function HotGenerationClient() {
                     type="button"
                     onClick={handleSendToFlow}
                     className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#070709] border border-[#1E202E] hover:border-slate-600 text-slate-200 text-xs font-semibold transition-all cursor-pointer min-h-[44px] touch-manipulation active:scale-[0.98]"
-                    title="Abrir no Canvas VORIXA FLOW"
+                    title="Abrir no Canvas VORTIXIA FLOW"
                   >
                     <Boxes className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                     <span className="truncate">No Canvas</span>

@@ -36,7 +36,7 @@ export function PageTipsModal({ isOpen: controlledIsOpen, onClose: controlledOnC
   useEffect(() => {
     if (!pathname || typeof window === "undefined") return;
 
-    const storageKey = `vorixa_tip_seen_${pathname}`;
+    const storageKey = `vortixia_tip_seen_${pathname}`;
     const alreadySeen = localStorage.getItem(storageKey);
 
     if (!alreadySeen && tipData) {

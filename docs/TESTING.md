@@ -1,6 +1,6 @@
-# TESTING STRATEGY - VORIXA
+# TESTING STRATEGY - VORTIXIA
 
-Este documento define os objetivos, estrutura de pastas e cenários de testes obrigatórios para garantir a integridade da plataforma VORIXA.
+Este documento define os objetivos, estrutura de pastas e cenários de testes obrigatórios para garantir a integridade da plataforma VORTIXIA.
 
 ## 1. Ferramentas e Frameworks
 

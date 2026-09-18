@@ -19,11 +19,11 @@ import {
 } from "lucide-react";
 
 /**
- * Seção de Prova Real do VORIXA — Laboratório / Showroom Audiovisual Futurista.
+ * Seção de Prova Real do VORTIXIA — Laboratório / Showroom Audiovisual Futurista.
  * PRESERVAÇÃO ESTRITA DOS ARQUIVOS REAIS SOLICITADOS PELO USUÁRIO:
  * 1. Guia TikTok: /videos/dance_ref_camila.mp4 (com fallback para /uploads/danca_tiktok_motion.mp4)
  * 2. Imagem Personagem: /videos/ai_character_ref.png (com fallback para /uploads/motion_personagem_base.png)
- * 3. Vídeo Final VORIXA: /videos/kling_motion_result.mp4 (com fallback para /uploads/motion_gerado_vorixa.mp4)
+ * 3. Vídeo Final VORTIXIA: /videos/kling_motion_result.mp4 (com fallback para /uploads/motion_gerado_vortixia.mp4)
  *
  * Responsividade: 1 coluna vertical no smartphone e 3 colunas harmoniosas no desktop.
  * Touch targets >= 44px e zero CLS.
@@ -182,7 +182,7 @@ export function MotionProofShowcase() {
                   onError={(e) => {
                     e.currentTarget.src = "/uploads/motion_personagem_base.png";
                   }}
-                  alt="Personagem estática criada com IA no VORIXA"
+                  alt="Personagem estática criada com IA no VORTIXIA"
                   className="w-full h-full object-cover"
                 />
                 
@@ -212,7 +212,7 @@ export function MotionProofShowcase() {
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-mono uppercase font-bold tracking-wider px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 flex items-center gap-1.5 shadow-md shadow-emerald-500/20">
                   <Sparkles className="w-3.5 h-3.5 text-emerald-300 animate-spin shrink-0" />
-                  <span>3. Master Final VORIXA (Dança)</span>
+                  <span>3. Master Final VORTIXIA (Dança)</span>
                 </span>
                 <span className="text-[10px] font-mono text-emerald-400 font-bold">Kling v3 Motion</span>
               </div>
@@ -228,7 +228,7 @@ export function MotionProofShowcase() {
                   className="w-full h-full object-cover"
                 >
                   <source src="/videos/kling_motion_result.mp4" type="video/mp4" />
-                  <source src="/uploads/motion_gerado_vorixa.mp4" type="video/mp4" />
+                  <source src="/uploads/motion_gerado_vortixia.mp4" type="video/mp4" />
                 </video>
                 
                 <div className="absolute top-3 left-3 bg-emerald-950/90 border border-emerald-500/50 backdrop-blur-md px-2.5 sm:px-3 py-1 rounded-lg text-[10px] font-mono text-emerald-300 font-bold shadow-lg">

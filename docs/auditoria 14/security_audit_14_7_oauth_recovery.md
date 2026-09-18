@@ -1,6 +1,6 @@
-# VORIXA - Relatório Técnico de Auditoria 14.7 (OAuth e Recuperação de Senha)
+# VORTIXIA - Relatório Técnico de Auditoria 14.7 (OAuth e Recuperação de Senha)
 
-Este relatório descreve a auditoria e as validações técnicas aplicadas à camada de autenticação externa Google OAuth (via Auth.js) e à lógica de Recuperação de Senha no VORIXA.
+Este relatório descreve a auditoria e as validações técnicas aplicadas à camada de autenticação externa Google OAuth (via Auth.js) e à lógica de Recuperação de Senha no VORTIXIA.
 
 ---
 
@@ -18,9 +18,9 @@ Este relatório descreve a auditoria e as validações técnicas aplicadas à ca
 
 ## 2. Ações de Segurança e Constatações
 
-A auditoria confirmou que o VORIXA está blindado contra os principais vetores de **Open Redirect** e **User Enumeration** na camada de autenticação:
+A auditoria confirmou que o VORTIXIA está blindado contra os principais vetores de **Open Redirect** e **User Enumeration** na camada de autenticação:
 - **Redirecionamento**: Auth.js restringe os destinos de callbacks à mesma origem e sanitiza os parâmetros de redirect. Validamos programaticamente no Vitest que as configurações de páginas de erro e login não aceitam URLs absolutas arbitrárias.
-- **Account Linking**: A desativação do linking inseguro impede que um invasor crie uma conta Google com o e-mail de outra pessoa e ganhe controle automático sobre o perfil dela no VORIXA.
+- **Account Linking**: A desativação do linking inseguro impede que um invasor crie uma conta Google com o e-mail de outra pessoa e ganhe controle automático sobre o perfil dela no VORTIXIA.
 - **Username Enumeration**: O fluxo de recuperação de senha foi inspecionado, testado com e-mails inexistentes e atestado como blindado contra varreduras externas de credenciais.
 
 A integração completa com chaves de produção do Google OAuth e o envio real pelo SMTP/Brevo permanecem pendentes e foram devidamente catalogados.

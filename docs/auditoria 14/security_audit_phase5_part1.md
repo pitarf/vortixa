@@ -1,4 +1,4 @@
-# VORIXA - Auditoria 1: Segurança e Controle de Acesso (Fase 5)
+# VORTIXIA - Auditoria 1: Segurança e Controle de Acesso (Fase 5)
 
 Este relatório detalha as descobertas da Auditoria 1 focando em Autenticação, Autorização, RBAC, IDOR, privilégios, injeções (XSS/SQL), CSRF, CORS e secrets.
 

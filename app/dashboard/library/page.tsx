@@ -322,7 +322,7 @@ export default function LibraryPage() {
                       ) : (
                         <img
                           src={item.url}
-                          alt={item.prompt || "Ativo VORIXA"}
+                          alt={item.prompt || "Ativo VORTIXIA"}
                           onClick={() => setSelectedItem(item)}
                           className="relative z-10 w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 cursor-pointer"
                           loading="lazy"
@@ -368,7 +368,7 @@ export default function LibraryPage() {
                         type="button"
                         onClick={() => handleOpenInFlow(item)}
                         className="p-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center shadow-lg shadow-violet-600/40"
-                        title="Abrir no VORIXA FLOW"
+                        title="Abrir no VORTIXIA FLOW"
                       >
                         <Boxes className="h-4 w-4 text-white" />
                       </button>

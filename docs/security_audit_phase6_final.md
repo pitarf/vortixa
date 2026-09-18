@@ -1,6 +1,6 @@
 # Relatório de Auditoria Final Consolidada - Ciclo de Pagamentos (Fase 6)
 
-Este relatório consolida a auditoria de segurança das etapas 6.1 a 6.8 de faturamento, concorrência, idempotência e controle administrativo do projeto VORIXA. 
+Este relatório consolida a auditoria de segurança das etapas 6.1 a 6.8 de faturamento, concorrência, idempotência e controle administrativo do projeto VORTIXIA. 
 
 Diferenciamos a **Segurança Local Consolidada** (verificada contra o PostgreSQL local) da **Homologação Financeira de Produção** (que depende de sandbox e segredos reais).
 
@@ -12,20 +12,20 @@ Diferenciamos a **Segurança Local Consolidada** (verificada contra o PostgreSQL
 
 #### A. Snapshot Comercial e Adulteração Financeira (Fase 6.4 / 6.8)
 * **Descrição**: A criação de checkouts e pedidos ignora ativamente quaisquer campos mutáveis (`price`, `credits`, etc.) enviados pelo cliente HTTP, garantindo que o backend busque as regras e valores oficiais diretamente no banco de dados e os congele como verdade histórica no `Order` e `Payment`.
-* **Teste**: `should strictly ignore client-supplied financial fields and use database values` em [`payment-provider.test.ts`](file:///c:/Git/React/VORIXA/__tests__/payment-provider.test.ts).
+* **Teste**: `should strictly ignore client-supplied financial fields and use database values` em [`payment-provider.test.ts`](file:///c:/Git/React/VORTIXIA/__tests__/payment-provider.test.ts).
 * **Mutação/Falso Positivo**: Caso o backend aceitasse parâmetros do request, as asserções de faturamento falhariam. O teste foi verificado alterando-se as entradas maliciosas e comprovando-se a barreira lógica.
 
 #### B. Duplo Processamento de Webhooks (Race Conditions e Idempotência) (Fase 6.5)
 * **Descrição**: A concorrência de webhooks idênticos disparados em paralelo é bloqueada por constraint de unicidade (`gatewayEventId`) e lock pessimista (`FOR UPDATE`) a nível de transação SQL no `confirmPayment`, garantindo que o saldo seja creditado uma única vez.
-* **Teste**: `should handle concurrent identical webhooks safely with only one transaction applying` em [`payment-webhook.test.ts`](file:///c:/Git/React/VORIXA/__tests__/payment-webhook.test.ts).
+* **Teste**: `should handle concurrent identical webhooks safely with only one transaction applying` em [`payment-webhook.test.ts`](file:///c:/Git/React/VORTIXIA/__tests__/payment-webhook.test.ts).
 
 #### C. Estorno Concorrente e Saldo Negativo (Fase 6.6)
 * **Descrição**: Bloqueia dupla solicitação concorrente de estorno administrativo no banco e garante a gravação atômica da dedução de créditos, permitindo que o saldo final fique abaixo de zero para manter a consistência financeira (no caso do cliente já ter consumido os créditos).
-* **Teste**: `should block double refund and concurrent refund on payment records safely` em [`reconciliation.test.ts`](file:///c:/Git/React/VORIXA/__tests__/reconciliation.test.ts).
+* **Teste**: `should block double refund and concurrent refund on payment records safely` em [`reconciliation.test.ts`](file:///c:/Git/React/VORTIXIA/__tests__/reconciliation.test.ts).
 
 #### D. Ajustes Concorrentes e Mass Assignment no Painel Admin (Fase 6.7)
 * **Descrição**: Protege APIs administrativas de créditos contra mass assignment de entrada e IDOR, ignorando chaves forjadas do request (como promover usuário a `ADMIN` ou atribuir autoria a outro `adminUserId`).
-* **Teste**: `should process concurrent legitimate administrative adjustments distinctly without race conditions` e `should ignore forged fields in admin adjustments to prevent mass assignment` em [`admin-panel.test.ts`](file:///c:/Git/React/VORIXA/__tests__/admin-panel.test.ts).
+* **Teste**: `should process concurrent legitimate administrative adjustments distinctly without race conditions` e `should ignore forged fields in admin adjustments to prevent mass assignment` em [`admin-panel.test.ts`](file:///c:/Git/React/VORTIXIA/__tests__/admin-panel.test.ts).
 
 ---
 
@@ -41,7 +41,7 @@ Diferenciamos a **Segurança Local Consolidada** (verificada contra o PostgreSQL
 
 ### 🔴 PENDENTE (Homologação Financeira de Produção)
 
-Os seguintes itens estão ativamente mapeados e mantidos no arquivo [`docs/PENDING_TESTS.md`](file:///c:/Git/React/VORIXA/docs/PENDING_TESTS.md) como **Pendentes de Staging/Produção**:
+Os seguintes itens estão ativamente mapeados e mantidos no arquivo [`docs/PENDING_TESTS.md`](file:///c:/Git/React/VORTIXIA/docs/PENDING_TESTS.md) como **Pendentes de Staging/Produção**:
 1. **Homologação Sandbox de Provedores Reais**: Mapeado na seção 8 (exige credenciais Stripe/Mercado Pago reais).
 2. **Homologação de Cancelamento Automático de Pedido Expirado**: Mapeado na seção 10 (requer cron de varredura).
 3. **Homologação de Eventos Nativos de Chargeback no Webhook**: Mapeado na seção 11 (exige payload de disputa real).

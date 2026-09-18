@@ -1,4 +1,4 @@
-# VORIXA - Relatório Técnico de Auditoria 14.9 (Git, Dependências e Configuração)
+# VORTIXIA - Relatório Técnico de Auditoria 14.9 (Git, Dependências e Configuração)
 
 Este relatório formaliza os resultados da auditoria de higiene de Git, integridade de segredos versionados, inventário de dependências NPM (e potenciais vulnerabilidades conhecidas) e conformidade de configurações de build/compilação do Next.js.
 
@@ -9,8 +9,8 @@ Este relatório formaliza os resultados da auditoria de higiene de Git, integrid
 Executamos o mapeamento do histórico de commits recentes e arquivos não rastreados no workspace local:
 1. **Status**: O comando `git status` retornou limpo com exceção dos prompts de instrução locais da auditoria (não-produção/untracked).
 2. **Secrets no Histórico**: O histórico recente (20 commits inspecionados) não contém vazamento de credenciais ativas. Todos os commits cobrem atualizações de documentação, refatoração de segurança e novos endpoints sem vazamento de secrets.
-3. **Proteção `.gitignore`**: O arquivo [`.gitignore`](file:///c:/Git/React/VORIXA/.gitignore) protege adequadamente o upload de arquivos locais em `/public/uploads/` e, crucialmente, impede o versionamento de qualquer arquivo `.env` (ex: `.env`, `.env.local`, `.env.development`).
-4. **Remotos**: O repositório aponta para o repositório remoto oficial `https://github.com/pitarf/vorixa.git`.
+3. **Proteção `.gitignore`**: O arquivo [`.gitignore`](file:///c:/Git/React/VORTIXIA/.gitignore) protege adequadamente o upload de arquivos locais em `/public/uploads/` e, crucialmente, impede o versionamento de qualquer arquivo `.env` (ex: `.env`, `.env.local`, `.env.development`).
+4. **Remotos**: O repositório aponta para o repositório remoto oficial `https://github.com/pitarf/vortixia.git`.
 
 ---
 
@@ -31,7 +31,7 @@ Foi executada a análise automatizada sobre as dependências e bibliotecas ativa
 
 Analisamos o comportamento técnico das definições no compilador Next.js e TypeScript:
 1. **Source Maps**: Desativados por padrão no build de produção (Next.js 16), impedindo a exposição do código-fonte typescript compilado para o navegador do cliente.
-2. **Security Headers**: O arquivo [`next.config.ts`](file:///c:/Git/React/VORIXA/next.config.ts) injeta cabeçalhos de segurança restritivos em todas as rotas de rede:
+2. **Security Headers**: O arquivo [`next.config.ts`](file:///c:/Git/React/VORTIXIA/next.config.ts) injeta cabeçalhos de segurança restritivos em todas as rotas de rede:
    * `X-Frame-Options: DENY` e `Content-Security-Policy: frame-ancestors 'none';` (mitigação contra Clickjacking).
    * `Strict-Transport-Security` ativo com diretiva de preload para tráfego seguro HTTPS.
    * `X-Content-Type-Options: nosniff`.

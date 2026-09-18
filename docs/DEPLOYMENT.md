@@ -1,6 +1,6 @@
-# DEPLOYMENT GUIDE - VORIXA
+# DEPLOYMENT GUIDE - VORTIXIA
 
-Este documento descreve as etapas de publicação e a esteira de CI/CD para colocar a plataforma VORIXA em produção.
+Este documento descreve as etapas de publicação e a esteira de CI/CD para colocar a plataforma VORTIXIA em produção.
 
 ## 1. Estratégia de Hospedagem
 

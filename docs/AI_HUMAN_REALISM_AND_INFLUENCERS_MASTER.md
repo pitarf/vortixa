@@ -21,7 +21,7 @@ Após varredura técnica profunda nos bastidores dos líderes globais (**FLUX.1 
 Motores modernos como **Kling 1.5 Pro e MiniMax Hailuo (Video-01)** não processam frames individuais. Eles usam **blocos 3D de espaço e tempo**. A IA sabe exatamente onde o ombro, o olho e o cabelo estão no frame 1 e no frame 120 *simultaneamente*, erradicando o "derretimento" (morphing) e mantendo a consistência anatômica perfeita.
 
 ### B. O Pipeline Mestre de 3 Etapas dos AI Influencers:
-Nenhum influenciador virtual de sucesso é gerado direto em Text-to-Video. O mercado utiliza o fluxo de **3 Etapas do VORIXA FLOW**:
+Nenhum influenciador virtual de sucesso é gerado direto em Text-to-Video. O mercado utiliza o fluxo de **3 Etapas do VORTIXIA FLOW**:
 
 ```
 [ PASSO 1: FOTO ÂNCORA ]
@@ -42,8 +42,8 @@ Sincronização labial hiper-precisa sem deformar o rosto original.
 
 ---
 
-## 4. O que o VORIXA já possui e o que podemos calibrar:
+## 4. O que o VORTIXIA já possui e o que podemos calibrar:
 
-1. **VORIXA FLOW Studio**: Nossa arquitetura de nós (`PromptNode -> ImageNode [FLUX] -> VideoNode [Kling] -> LipSyncNode -> Upscale 4K`) é **exatamente a arquitetura de ponta usada pelos maiores criadores do mundo**.
-2. **Direção Fotográfica Automática no `PromptEngine`**: O motor do VORIXA agora traduz qualquer prompt cru para a física de hardware e lentes reais (*iPhone 15 Pro, Sony A7, micropores, 85mm f/1.4, natural skin blemishes*).
+1. **VORTIXIA FLOW Studio**: Nossa arquitetura de nós (`PromptNode -> ImageNode [FLUX] -> VideoNode [Kling] -> LipSyncNode -> Upscale 4K`) é **exatamente a arquitetura de ponta usada pelos maiores criadores do mundo**.
+2. **Direção Fotográfica Automática no `PromptEngine`**: O motor do VORTIXIA agora traduz qualquer prompt cru para a física de hardware e lentes reais (*iPhone 15 Pro, Sony A7, micropores, 85mm f/1.4, natural skin blemishes*).
 3. **Micro-Movimentos Orgânicos em Vídeo**: Em vídeos de pessoas, o `PromptEngine` injeta comandos de subpixel para respiração torácica e piscadas naturais, trazendo a ilusão de vida completa.

@@ -153,7 +153,7 @@ export function EnginesShowcase() {
         <div className="bg-[#0D0E14] border border-white/[0.08] hover:border-emerald-500/50 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1">
           <div className="relative aspect-[4/5] overflow-hidden bg-black">
             <video
-              src="/uploads/motion_gerado_vorixa.mp4"
+              src="/uploads/motion_gerado_vortixia.mp4"
               poster="/uploads/motion_personagem_base.png"
               autoPlay
               loop

@@ -84,7 +84,7 @@ export function PaymentCheckoutModal({
   useEffect(() => {
     if (isOpen && typeof window !== "undefined") {
       try {
-        const savedCpf = localStorage.getItem("vorixa_user_cpf");
+        const savedCpf = localStorage.getItem("vortixia_user_cpf");
         if (savedCpf) {
           setCpf(formatDocument(savedCpf));
         }
@@ -129,7 +129,7 @@ export function PaymentCheckoutModal({
     // Salva no localStorage para próximas compras
     if (typeof window !== "undefined") {
       try {
-        localStorage.setItem("vorixa_user_cpf", clean);
+        localStorage.setItem("vortixia_user_cpf", clean);
       } catch {
         // Ignora
       }

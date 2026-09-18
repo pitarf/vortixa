@@ -1,4 +1,4 @@
-# VORIXA - Testes e Funcionalidades Pendentes de Segurança
+# VORTIXIA - Testes e Funcionalidades Pendentes de Segurança
 
 Este arquivo rastreia itens de segurança identificados durante as auditorias que requerem validação ou implementação futura, pois dependem de credenciais reais, integração futura, ou ampliariam o escopo da auditoria no momento de sua descoberta.
 

@@ -73,11 +73,11 @@ export default function HomeV2Page() {
       {/* Barra de Navegação Superior Suave */}
       <header className="sticky top-3 z-50 px-3 sm:px-6 w-full max-w-6xl mx-auto">
         <div className="backdrop-blur-xl bg-[#0C0D12]/90 border border-white/[0.08] rounded-full px-5 py-2.5 flex items-center justify-between transition-all">
-          {/* Logo VORIXA */}
+          {/* Logo VORTIXIA */}
           <Link href="/" className="flex items-center gap-3 group shrink-0 min-h-[44px]">
             <img
               src="/logos/logo principal.png"
-              alt="VORIXA"
+              alt="VORTIXIA"
               className="h-7 w-auto object-contain"
             />
           </Link>

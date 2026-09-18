@@ -128,7 +128,7 @@ export const CHANGELOG_ITEMS: ChangelogItem[] = [
       "Velocidade ultra-rápida de renderização (< 2 segundos na nuvem)",
       "Custo ultra-acessível de apenas 1 crédito por imagem gerada",
       "Excelente coerência espacial, contraste cinematográfico e renderização de objetos",
-      "Ideal para exploração inicial de conceitos e conexão no VORIXA FLOW",
+      "Ideal para exploração inicial de conceitos e conexão no VORTIXIA FLOW",
     ],
     metrics: [
       { label: "Latência", value: "< 2.0s" },
@@ -306,8 +306,8 @@ export const CHANGELOG_ITEMS: ChangelogItem[] = [
     costInCredits: 15,
   },
   {
-    id: "vorixa-flow-dag",
-    title: "VORIXA FLOW - Canvas Infinito & DAG Pipeline",
+    id: "vortixia-flow-dag",
+    title: "VORTIXIA FLOW - Canvas Infinito & DAG Pipeline",
     version: "v2.0",
     date: "Setembro 2026",
     category: "Estúdio & Flow",
@@ -320,7 +320,7 @@ export const CHANGELOG_ITEMS: ChangelogItem[] = [
     summary:
       "Espaço de trabalho visual infinito encadeando nós Prompt -> FLUX -> Kling -> LipSync -> 4K.",
     description:
-      "O VORIXA FLOW unifica todos os motores de IA em um canvas sem limites baseado em Grafo Acíclico Direcionado (DAG). Conecte saídas de imagem como entradas de vídeo e execute o pipeline completo com 1 clique.",
+      "O VORTIXIA FLOW unifica todos os motores de IA em um canvas sem limites baseado em Grafo Acíclico Direcionado (DAG). Conecte saídas de imagem como entradas de vídeo e execute o pipeline completo com 1 clique.",
     highlights: [
       "Canvas infinito com zoom, pan, minimap e histórico de Undo/Redo (Ctrl+Z / Ctrl+Y)",
       "Pipeline encadeado de nós de Prompt, FLUX, Kling, LipSync e Upscale 4K",
@@ -333,7 +333,7 @@ export const CHANGELOG_ITEMS: ChangelogItem[] = [
       { label: "Status", value: "100% Funcional" },
     ],
     href: "/dashboard/flow",
-    actionText: "Abrir VORIXA FLOW",
+    actionText: "Abrir VORTIXIA FLOW",
     isHero: true,
   },
   {
@@ -417,7 +417,7 @@ export const CHANGELOG_ITEMS: ChangelogItem[] = [
     highlights: [
       "Login social imediato com 1 clique via conta Google cadastrada",
       "Vinculação inteligente de contas existentes e proteção anti-força bruta",
-      "E-mails transacionais elegantes com identidade VORIXA oficial",
+      "E-mails transacionais elegantes com identidade VORTIXIA oficial",
       "Conexão segura SSL autenticada com smtp.hostinger.com",
     ],
     metrics: [
@@ -487,7 +487,7 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
     quarter: "Q1 2027",
     status: "Mapeado",
     description:
-      "Múltiplos criadores editando e executando o mesmo DAG do VORIXA FLOW simultaneamente com cursores em tempo real.",
+      "Múltiplos criadores editando e executando o mesmo DAG do VORTIXIA FLOW simultaneamente com cursores em tempo real.",
     badge: "Colaboração",
   },
   {

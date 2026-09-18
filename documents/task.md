@@ -1,4 +1,4 @@
-# Roadmap de Tarefas - VORIXA
+# Roadmap de Tarefas - VORTIXIA
 
 ## Pendentes
 - [ ] Nenhuma no momento. Toda a plataforma e infraestrutura foram finalizadas com 100% de cobertura.
@@ -43,7 +43,7 @@
 - [x] **Criação da Home V2 (Página de Vendas de Alta Conversão com Planos no Topo)**:
   - Preservada 100% a Home atual na rota raiz (`/`).
   - Desenvolvida a página alternativa `/home-2` estruturada com técnicas modernas de Direct Response / SaaS Sales.
-  - Seção de preços e planos reposicionada no primeiro terço de rolagem com comparativo visual de choque de economia (Assinaturas separadas de R$ 850/mês vs VORIXA a partir de R$ 39/mês).
+  - Seção de preços e planos reposicionada no primeiro terço de rolagem com comparativo visual de choque de economia (Assinaturas separadas de R$ 850/mês vs VORTIXIA a partir de R$ 39/mês).
   - Suporte a abas de assinaturas e pacotes avulsos com compra facilitada.
   - Headline direta orientada a resultados e criação de vídeos/modelos virtuais de alta conversão sem aparecer.
   - Casos de uso comerciais destacados e prova real em vídeo com física realista e dança TikTok.
@@ -142,7 +142,7 @@
 - [x] **Geração Neural Real (WaveSpeed AI WAN 2.2 Realism) dos 30 Modelos com Fotos WebP & Sincronização PostgreSQL**:
   - Geração completa de 60 imagens fotográficas analógicas em alta definição (30 fotos de perfil close-up 85mm + 30 fotos de corpo inteiro 35mm) utilizando o motor `wavespeed-ai/wan-2.2/text-to-image-realism`.
   - Consistência rigorosa de semente e identidade visual de avatar entre o plano de perfil e o plano de corpo inteiro para os 30 modelos (10 mulheres, 10 homens, 5 idosas 60+ e 5 idosos 60+).
-  - Otimização automática em formato nativo WebP (~100-300 KB por fotografia) com upload e disponibilização imediata na VPS em `/var/www/vorixa-uploads/models/` com cache de 30 dias servido pelo Nginx.
+  - Otimização automática em formato nativo WebP (~100-300 KB por fotografia) com upload e disponibilização imediata na VPS em `/var/www/vortixia-uploads/models/` com cache de 30 dias servido pelo Nginx.
   - Sincronização das URLs em `lib/marketplace-models.ts` e execução do script de atualização no PostgreSQL (`scripts/update_models_webp_urls.sql`) com 30 registros atualizados com sucesso.
   - 100% de aprovação na suíte de testes do Vitest (30 arquivos, 218 testes) e 0 erros em `tsc --noEmit`.
 - [x] **Expansão da Vitrine de Modelos (30 Novos Perfis IA), Comercialização de Master Prompts & Lookbook Duplo (Corpo Todo / Perfil)**:
@@ -180,7 +180,7 @@
     * Remoção dos gradientes de fade escuro nas pontas e das setas desktop que obscureciam o botão ativo "Todas as Categorias".
   - 100% de testes aprovados (207/207) no Vitest e 0 erros em `tsc --noEmit`.
 - [x] **Rebranding Integral da Plataforma para "VORTIXIA", Novas Logos Oficiais & Refatoração de Créditos**:
-  - Atualização completa do nome da marca de VORIXA para **VORTIXIA** em todas as páginas públicas (Home, Landing, Home2), autenticação (Login, Cadastro, Recuperação de Senha), área logada (Dashboard, Studio Create, Flow Canvas, Ferramentas de Imagem, Vídeo, Motion, LipSync, Upscale, Vitrine de Modelos, Galeria, Afiliados, Configurações, Admin), e serviços de backend (e-mail, afiliados, provedores de pagamento Vorexpay, Mercado Pago, Stripe, prompt engine).
+  - Atualização completa do nome da marca de VORTIXIA para **VORTIXIA** em todas as páginas públicas (Home, Landing, Home2), autenticação (Login, Cadastro, Recuperação de Senha), área logada (Dashboard, Studio Create, Flow Canvas, Ferramentas de Imagem, Vídeo, Motion, LipSync, Upscale, Vitrine de Modelos, Galeria, Afiliados, Configurações, Admin), e serviços de backend (e-mail, afiliados, provedores de pagamento Vorexpay, Mercado Pago, Stripe, prompt engine).
   - Instalação dos novos logotipos oficiais fornecidos pelo usuário em `public/logos/` (`logo principal.png`, `vortixia_logo_dark.png`, `vortixia_logo_light.png`), integrados na navegação flutuante, rodapé, telas de autenticação e barra lateral do Dashboard.
   - Refatoração ergonômica da tela de Planos e Créditos (`/dashboard/credits`):
     * Substituição do grid com 5 colunas estáticas por grid adaptativo responsivo (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`) que distribui uniformemente os 4 pacotes em 100% da largura da tela sem colunas vazias ou compressão.
@@ -243,7 +243,7 @@
   - Pipeline visual em 3 etapas com controles interativos de play sincronizado e alternância de áudio:
     1. Vídeo guia de coreografia do TikTok (`/uploads/danca_tiktok_motion.mp4`);
     2. Foto estática da influenciadora IA (`/uploads/motion_personagem_base.png`);
-    3. Vídeo final sintetizado dançando com fluidez anatômica e áudio sincronizado (`/uploads/motion_gerado_vorixa.mp4`).
+    3. Vídeo final sintetizado dançando com fluidez anatômica e áudio sincronizado (`/uploads/motion_gerado_vortixia.mp4`).
   - Atualização do Card 2 em `EnginesShowcase.tsx` e inserção de item com badge e filtro exclusivo de "Motion & Dança 💃" na galeria (`ResultsMasonryGallery.tsx`).
   - Arquivos baixados e servidos diretamente em alta definição pelo Nginx com cache imutável e suporte a range requests.
 - [x] **Blindagem de Webhook e Resiliência de Polling em Background para Vídeos Longos (Fal.ai Motion Control)**:
@@ -272,27 +272,27 @@
   - Suíte de testes unitários e de integração automatizada em `__tests__/vorexpay-provider.test.ts` com 100% de aprovação.
 - [x] **Especialização de Motores de Remoção de Roupas & Presets Rápidos no Gerador Hot (+18)**:
   - Destacado o Trio de Motores de Remoção com calibração de badges e descrições:
-    * `VORIXA Qwen Edit Plus (Ultra Detalhes)` com a badge `🏆 Ultra Remoção & Detalhes 🔞` para máxima retenção de detalhes finos e consistência anatômica.
-    * `VORIXA HiDream Edit (Fotorrealista)` com a badge `✨ Remoção Fotorrealista 🌿` para refinamento orgânico de pele e preservação de sombras naturais e ambiente.
-    * `VORIXA Qwen Edit (Instrução Semântica)` com a badge `⚡ Remoção Rápida & Ágil 🎯` para alta velocidade (~7s) e excelente remoção anatômica e de vestimentas guiada por texto natural.
+    * `VORTIXIA Qwen Edit Plus (Ultra Detalhes)` com a badge `🏆 Ultra Remoção & Detalhes 🔞` para máxima retenção de detalhes finos e consistência anatômica.
+    * `VORTIXIA HiDream Edit (Fotorrealista)` com a badge `✨ Remoção Fotorrealista 🌿` para refinamento orgânico de pele e preservação de sombras naturais e ambiente.
+    * `VORTIXIA Qwen Edit (Instrução Semântica)` com a badge `⚡ Remoção Rápida & Ágil 🎯` para alta velocidade (~7s) e excelente remoção anatômica e de vestimentas guiada por texto natural.
   - Validação prática confirmando que os **3 modelos removem com excelência** a partir de imagem base e prompt em inglês.
   - Criados atalhos de 1-clique `HOT_REMOVAL_PRESETS` (`Remoção Total (Nude)`, `Topless` e `Lingerie de Renda`) com prompts em inglês calibrados para preservação de identidade e cenário.
   - Exibição de banner `💡 Dica Pro: Instrução Clara em Inglês` com badge `Trio de Remoção: Qwen Edit, Plus & HiDream` orientando os usuários sobre a excelência dos 3 modelos e o uso de prompts descritivos em inglês ou o botão `Otimizar com IA ✨`.
   - Mapeamento avançado no `PromptEngine.dynamicVocabulary` e diretiva semântica para converter termos coloquiais de despir em português para instruções estruturadas em inglês sem censura.
-  - Correção de conformidade de schema no `VORIXA MiniMax Edit (Alta Fidelidade)`: ajuste do parâmetro `resolution` para o enum oficial `["1k", "2k"]` (substituindo `"768p"` inválido), injeção da referência `<Picture 1>` no prompt e blindagem contra classificação indevida como vídeo no `ai.service.ts`.
+  - Correção de conformidade de schema no `VORTIXIA MiniMax Edit (Alta Fidelidade)`: ajuste do parâmetro `resolution` para o enum oficial `["1k", "2k"]` (substituindo `"768p"` inválido), injeção da referência `<Picture 1>` no prompt e blindagem contra classificação indevida como vídeo no `ai.service.ts`.
   - Resolução de duplicidade de chaves e validação estática completa com `npx tsc --noEmit` e suíte de testes Vitest (100% de aprovação).
-- [x] **Ocultação de Foto de Referência & Redefinição Estética do VORIXA Chroma (+18)**:
-  - Renomeado para `VORIXA Chroma (Personagem / Game 3D)` com badge `Estilo Videogame / 3D 🎮` e descrição que deixa claro que se trata de estética 3D / personagem de videogame (não fotorrealista).
-  - Adicionada badge visual destacada `✍️ Só Geração` para modelos puramente textuais (`VORIXA HyperReal` e `VORIXA Chroma`).
+- [x] **Ocultação de Foto de Referência & Redefinição Estética do VORTIXIA Chroma (+18)**:
+  - Renomeado para `VORTIXIA Chroma (Personagem / Game 3D)` com badge `Estilo Videogame / 3D 🎮` e descrição que deixa claro que se trata de estética 3D / personagem de videogame (não fotorrealista).
+  - Adicionada badge visual destacada `✍️ Só Geração` para modelos puramente textuais (`VORTIXIA HyperReal` e `VORTIXIA Chroma`).
   - Adicionada flag `supportsReferenceImage: false` nos motores textuais para evitar exibir caixa de upload inútil.
   - Card 3 ("3. Foto de Referência") agora só é renderizado quando o modelo selecionado aceita fotos (`supportsReferenceImage !== false`).
-  - Ocultação imediata do upload ao selecionar `VORIXA HyperReal` ou `VORIXA Chroma`, com renumeração dinâmica para `3. Prompt & Estética Desejada`.
+  - Ocultação imediata do upload ao selecionar `VORTIXIA HyperReal` ou `VORTIXIA Chroma`, com renumeração dinâmica para `3. Prompt & Estética Desejada`.
   - Remoção de injeção de parâmetros fotográficos ("authentic raw photograph... no CGI") no WaveSpeed Provider para o Chroma, evitando conflitos estéticos.
   - Limpeza automática de estado e aviso explicativo em PT-BR para tentativas de "Usar como Referência" em modelos de texto.
 - [x] **Programa de Indicação, Afiliados e Resgates Pix (Fase 15)**:
   - Modelagem relacional completa em PostgreSQL com Prisma: `AffiliateProfile`, `Referral`, `AffiliateCommission` e `AffiliatePayout`.
-  - Geração automática e customização de código único de afiliado (`VORIXA-XXXXXX`).
-  - Atribuição automática de indicação via URL com parâmetro `?ref=...`, cookie seguro `vorixa_ref` (30 dias) ou inserção manual no cadastro.
+  - Geração automática e customização de código único de afiliado (`VORTIXIA-XXXXXX`).
+  - Atribuição automática de indicação via URL com parâmetro `?ref=...`, cookie seguro `vortixia_ref` (30 dias) ou inserção manual no cadastro.
   - Bloqueio estrito de auto-indicação e limite de uma vinculação por cliente indicado.
   - Comissionamento padrão de 15% (comissionamento VIP ajustável individualmente pelo painel de controle).
   - Cálculo e crédito atômico da comissão no `PaymentLedgerService.confirmPayment` com lock pessimista (`SELECT FOR UPDATE`), garantindo idempotência estrita.
@@ -332,21 +332,21 @@
   - Validação estrita para modelos de vídeo sem censura (+18), exigindo foto de referência para animação com toast informativo.
 - [x] **Seção de Gerações Recentes e Ações Rápidas no Gerador Hot (+18)**:
   - Carrossel e grid de miniaturas dinâmico integrado à biblioteca de criações recentes do usuário.
-  - Ações rápidas abaixo da visualização: Baixar, Variar (com reinjeção de prompt), Upscale 4K e No Canvas (VORIXA FLOW).
+  - Ações rápidas abaixo da visualização: Baixar, Variar (com reinjeção de prompt), Upscale 4K e No Canvas (VORTIXIA FLOW).
   - Modal de Tela Cheia (Fullscreen) de alta resolução sem compressão.
   - Suporte completo a fotos e vídeos sem censura com WaveSpeed AI.
-- [x] **Kling 2.6 Pro com Áudio & Fala Nativa (All-in-One) e Descontinuação do VORIXA IA**:
+- [x] **Kling 2.6 Pro com Áudio & Fala Nativa (All-in-One) e Descontinuação do VORTIXIA IA**:
   - Integração do endpoint oficial `fal-ai/kling-video/v2.6/pro/image-to-video` com suporte unificado a `generate_audio: true`.
   - Geração de vídeo e fala orgânica no mesmo espaço latente a partir de prompt com diálogos entre aspas.
   - Eliminação de pipelines manuais encadeados e desalinhamentos de corte abrupto no áudio.
   - Custo de API ultra-econômico (\$0,14/s com áudio nativo) e 18 créditos calibrados por geração de 5s.
-  - Remoção limpa do motor experimental VORIXA IA do Studio CREATE e restauração de regras de cálculo de créditos unificadas.
-- [x] **Motor Proprietário VORIXA IA (Vídeo & Fala 1-Clique - One-Prompt Magic)**:
-  - Desenvolvimento do orquestrador `VorixaIAService` para geração de vídeo com fala a partir de foto ou prompt de texto em linguagem natural.
+  - Remoção limpa do motor experimental VORTIXIA IA do Studio CREATE e restauração de regras de cálculo de créditos unificadas.
+- [x] **Motor Proprietário VORTIXIA IA (Vídeo & Fala 1-Clique - One-Prompt Magic)**:
+  - Desenvolvimento do orquestrador `VortixiaIAService` para geração de vídeo com fala a partir de foto ou prompt de texto em linguagem natural.
   - Script & Tone Engine com roteirização comercial em PT-BR para moda, produtos e institucional.
   - Síntese vocal de alta expressividade via ElevenLabs Turbo v2.5 e animação labial com LatentSync HD e upscale 4K.
   - Tabela dinâmica de precificação por duração e resolução garantindo de 52% a 70% de margem líquida.
-  - Integração no Studio CREATE com badge neon `⚡ EXCLUSIVO VORIXA` e durações de 5s, 10s e 30s.
+  - Integração no Studio CREATE com badge neon `⚡ EXCLUSIVO VORTIXIA` e durações de 5s, 10s e 30s.
   - Suíte de testes unitários automatizada aprovada (169 testes passando).
 - [x] **Animações Cinematográficas com GSAP & ScrollTrigger na Home**:
   - Implementação do hook utilitário `useGsapContext` com `gsap.context()` para cleanup limpo no React 19 / Next.js.
@@ -394,7 +394,7 @@
     * Pílulas deslizantes horizontais (Todos, IA 🤖, Reais 👤, Categorias e Hot +18 com verificação etária).
     * Cards em alta definição com botões de ação dinâmicos ("Usar no Studio" para IA e "Contratar / Reservar" para Reais).
     * Modal expansivo com galeria de fotos, prompt triggers copiáveis e modal de proposta de contratação com Sonner toasts.
-    * Adicionado o atalho "Vitrine de Modelos" na Sidebar do VORIXA.
+    * Adicionado o atalho "Vitrine de Modelos" na Sidebar do VORTIXIA.
   - **Gestão no Painel Administrativo (`/dashboard/admin`)**:
     * 5ª aba "Vitrine de Modelos & Casting" com KPIs consolidados, filtros, ativação rápida e modal de cadastro de novos modelos (IA e Reais).
     * Central de gerenciamento de propostas de contratação/casting com aprovação e recusa.
@@ -443,7 +443,7 @@
   - Blindado o arquivo de testes automatizados `talking-video.test.ts` para nunca reciclar dados de desenvolvimento.
 - [x] **Reformulação Completa do Gerador de Vídeo (`/dashboard/tools/video`) Conforme Mockup**:
   - Reconstrução da tela seguindo estritamente a identidade visual de referência:
-    - **Header**: Título 'Imagem / Texto para Vídeo' e citação '“Da ideia ao movimento.” — VORIXA'.
+    - **Header**: Título 'Imagem / Texto para Vídeo' e citação '“Da ideia ao movimento.” — VORTIXIA'.
     - **Bloco 1 (Entrada)**: Seletor 'Texto para Vídeo' / 'Imagem para Vídeo', prompt estilizado com botões de ação 'Inspirar', 'Prompt Aleatório' e 'Limpar', upload com drag-and-drop e miniatura com botão 'Trocar imagem'.
     - **Bloco 2 (Motor de IA)**: Card do modelo com badge 'RECOMENDADO' para Kling 2.1 Pro, botão 'Alterar modelo >' e modal completo com catálogo de motores e custos unitários.
     - **Bloco 3 (Ajustes)**: Duração (5s / 10s), Proporção (16:9, 9:16, 1:1), Qualidade (Padrão / Alta com ícone de coroa) e acordeão de configurações avançadas (câmera, seed e prompt negativo).
@@ -454,7 +454,7 @@
   - Investigação profunda conduzida por 4 subagentes especializados cobrindo cada modalidade de IA.
   - Modal contextual (`PageTipsModal.tsx`) reestruturado com acordeões expansíveis para dúvidas frequentes e tópicos técnicos sem precisar de suporte.
   - Catálogo (`page-tips-data.ts`) expandido com instruções passo a passo, modelos recomendados reais e dicas especiais de pro.
-  - Mapeamento estrito das 4 abas de imagem, ByteDance Seedance 2.0 (vídeo com áudio nativo), Wan 2.1 e Kling, VORIXA FLOW (cabos, nós e estorno automático em falhas) e latência.
+  - Mapeamento estrito das 4 abas de imagem, ByteDance Seedance 2.0 (vídeo com áudio nativo), Wan 2.1 e Kling, VORTIXIA FLOW (cabos, nós e estorno automático em falhas) e latência.
 - [x] **Sistema de Onboarding & Dicas Contextuais de Ferramenta por Página**:
   - Modal contextual (`PageTipsModal.tsx`) adaptado automaticamente para cada página acessada pelo usuário.
   - Abertura automática apenas na 1ª visita à tela (persistida no `localStorage`).
@@ -515,20 +515,20 @@
   - 100% dos 13 motores cadastrados e ativos no banco de dados (`AIModel` e `AITool`).
   - Mapeamento e sanitização automática de parâmetros para todas as famílias de IA (FLUX, Kling, Luma, Hailuo, LivePortrait Sync e Upscale 4K).
   - Extração de resultados unificada e resiliente de vídeo e imagem no webhook e no safety-net.
-  - Deploy em produção validado no container `vorixa-app` na VPS (`vortixia.com.br`).
+  - Deploy em produção validado no container `vortixia-app` na VPS (`vortixia.com.br`).
 - [x] **Homologação e Correção da Geração de Imagens de IA na VPS (Produção)**:
   - Resolução da divergência de credenciais no banco de dados e liberação das permissões no container.
   - Sanitização de parâmetros da fal.ai para FLUX Schnell (`num_inference_steps` e remoção de `guidance_scale`).
   - Sincronização e cadastro dos 9 modelos de IA na tabela `AIModel` do PostgreSQL de produção.
-  - Mapeamento de volume Docker persistente `vorixa-uploads` para `/app/public/uploads`.
+  - Mapeamento de volume Docker persistente `vortixia-uploads` para `/app/public/uploads`.
   - Teste E2E concluído com 100% de sucesso, débito de créditos e geração com renderização real.
 - [x] Fase 0: Setup de Documentação Técnica e Regras de Desenvolvimento.
 - [x] Fase 1: Setup do Projeto Next.js 16 + Tailwind CSS + Prisma + PostgreSQL + Docker.
 - [x] Fase 2: Autenticação Completa (Credentials + Google OAuth + NextAuth v5 + RBAC).
 - [x] Fase 3: Sistema de Créditos e Ledger Transacional com Isolamento Anti-Race-Condition.
 - [x] Fase 4: Integração de Motores de IA (FLUX.1, Kling AI, LivePortrait LipSync, Upscale 4K).
-- [x] Fase 5: VORIXA FLOW Studio & Visual Canvas (DAG Engine, Kahn Algorithm, Node Inspector).
-- [x] Fase 5.1: Auditoria Adversarial e Homologação de Segurança do VORIXA FLOW (107 testes).
+- [x] Fase 5: VORTIXIA FLOW Studio & Visual Canvas (DAG Engine, Kahn Algorithm, Node Inspector).
+- [x] Fase 5.1: Auditoria Adversarial e Homologação de Segurança do VORTIXIA FLOW (107 testes).
 - [x] Fase 6: Sistema de Pagamentos e Webhooks (Mercado Pago + Stripe + Idempotência).
 - [x] Fase 7: Painel Administrativo de Controle de Créditos e Reconciliação Transacional.
 - [x] Fase 8: Módulos de Frontend (Studio CREATE, Library e Landing Page Cinematográfica).
@@ -551,15 +551,15 @@
   - Faixa "Inspirações para você" com 5 cards e histórico lateral integrado com o backend real.
   - 100% dos 122 testes Vitest verdes e build de produção Next.js 16 validado sem erros.
 - [x] **Central de Novidades & Changelog Dinâmico (Fase 8.3)**:
-  - Widget "Novidades no VORIXA" com fidelidade visual à referência, badges de modelos e link "Testar novos modelos no Flow →".
+  - Widget "Novidades no VORTIXIA" com fidelidade visual à referência, badges de modelos e link "Testar novos modelos no Flow →".
   - Modal interativo (`ChangelogModal.tsx`) com busca instantânea e filtros por categorias (Modelos de IA, Estúdio & Flow, Ferramentas, Plataforma).
-  - Mapeamento completo dos 13 recursos reais disponíveis no ecossistema VORIXA com atalhos de teste com 1 clique.
+  - Mapeamento completo dos 13 recursos reais disponíveis no ecossistema VORTIXIA com atalhos de teste com 1 clique.
   - Página dedicada `/dashboard/changelog` com histórico detalhado e timeline de roadmap.
   - 100% dos 122 testes Vitest verdes e build Next.js 16 validado com sucesso.
-- [x] **Refatoração do Dashboard VORIXA CREATIVE OS (Fase 8.2)**:
+- [x] **Refatoração do Dashboard VORTIXIA CREATIVE OS (Fase 8.2)**:
   - Implementação cirúrgica da interface com base na referência visual: Topbar com busca omnibox `[ ⌘ K ]`, badge de créditos dourado `#F59E0B`, sino com popover, avatar com dropdown e sidebar Dark Obsidian.
   - Hero banner cinematográfico com saudação dinâmica, métricas operacionais (127 projetos, 842 ativos, uptime 99.99%) e botões táteis de ação rápida.
-  - Grid dos 4 cards centrais de criação (Studio CREATE, VORIXA FLOW com pipeline animado, Build with AI e Biblioteca 2x2).
+  - Grid dos 4 cards centrais de criação (Studio CREATE, VORTIXIA FLOW com pipeline animado, Build with AI e Biblioteca 2x2).
   - Seção de projetos recentes widescreen com Lightbox em tela cheia e 3 widgets inferiores (gráfico SVG de consumo 62%, destaque da comunidade e feed de novidades).
   - 100% dos 122 testes Vitest verdes e build Next.js 16 validado com sucesso.
 - [x] **Conexão Direta SMTP Hostinger (E-mail Transacional)**:

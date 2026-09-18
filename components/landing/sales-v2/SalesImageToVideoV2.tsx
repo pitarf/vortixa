@@ -6,7 +6,7 @@ import { Play, Pause, Volume2, VolumeX, Sparkles, ArrowRight, ArrowLeftRight } f
 /**
  * Seção Editorial de Imagem para Vídeo:
  * Demonstração prática do antes (Foto estática de corpo todo) e depois (Vídeo animado com fala em Português).
- * Mídia real gerada no VORIXA com Kling Pro: "Estou pronta para a Festa da Virginia, Você também vai?".
+ * Mídia real gerada no VORTIXIA com Kling Pro: "Estou pronta para a Festa da Virginia, Você também vai?".
  */
 export function SalesImageToVideoV2() {
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
@@ -116,7 +116,7 @@ export function SalesImageToVideoV2() {
           <div className="p-5 space-y-1.5 bg-[#0C0D12]">
             <h4 className="text-sm font-medium text-white">Imagem de Origem</h4>
             <p className="text-xs text-slate-400 font-light leading-relaxed">
-              Você pode começar com qualquer foto gerada no VORIXA ou enviada do seu acervo.
+              Você pode começar com qualquer foto gerada no VORTIXIA ou enviada do seu acervo.
             </p>
           </div>
         </div>

@@ -1,6 +1,6 @@
-# BACKUP & RECOVERY POLICY - VORIXA
+# BACKUP & RECOVERY POLICY - VORTIXIA
 
-Este documento define a estratégia e os procedimentos para a realização de backups e recuperação de dados da plataforma VORIXA.
+Este documento define a estratégia e os procedimentos para a realização de backups e recuperação de dados da plataforma VORTIXIA.
 
 ## 1. Backup do Banco de Dados (PostgreSQL)
 
@@ -17,8 +17,8 @@ O banco de dados PostgreSQL contém toda a lógica de estado da plataforma (usu�
 #!/bin/bash
 # Script de backup do PostgreSQL
 BACKUP_DIR="/var/backups/postgres"
-DB_NAME="vorixa_db"
-DB_USER="vorixa_user"
+DB_NAME="vortixia_db"
+DB_USER="vortixia_user"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 FILENAME="$BACKUP_DIR/${DB_NAME}_backup_$TIMESTAMP.sql.gz"
 
@@ -29,7 +29,7 @@ mkdir -p $BACKUP_DIR
 pg_dump -h localhost -U $DB_USER -d $DB_NAME | gzip > $FILENAME
 
 # Envia para um bucket S3 de backup frio (Archive)
-aws s3 cp $FILENAME s3://vorixa-backups-archive/db/
+aws s3 cp $FILENAME s3://vortixia-backups-archive/db/
 
 # Remove arquivos locais com mais de 7 dias
 find $BACKUP_DIR -type f -mtime +7 -name "*.sql.gz" -exec rm {} \;
@@ -56,13 +56,13 @@ No caso de corrupção ou perda do banco de dados, siga as etapas abaixo para re
 3. **Executar a Restauração**:
    ```bash
    # Descompacta o arquivo
-   gunzip vorixa_db_backup_XXXXXXXX.sql.gz
+   gunzip vortixia_db_backup_XXXXXXXX.sql.gz
    
    # Dropa e recria o banco vazio (CUIDADO!)
-   dropdb -h localhost -U vorixa_user vorixa_db
-   createdb -h localhost -U vorixa_user vorixa_db
+   dropdb -h localhost -U vortixia_user vortixia_db
+   createdb -h localhost -U vortixia_user vortixia_db
    
    # Restaura os dados
-   psql -h localhost -U vorixa_user -d vorixa_db -f vorixa_db_backup_XXXXXXXX.sql
+   psql -h localhost -U vortixia_user -d vortixia_db -f vortixia_db_backup_XXXXXXXX.sql
    ```
 4. **Verificar Integridade**: Conferir contagem de usuários e conciliar saldos consolidados antes de reabrir a plataforma.

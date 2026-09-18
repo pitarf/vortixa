@@ -560,7 +560,7 @@ export function GenerationLayout({
                         href={outputUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        download={`vorixa-${toolSlug}-${Date.now()}.${isVideo ? "mp4" : "jpg"}`}
+                        download={`vortixia-${toolSlug}-${Date.now()}.${isVideo ? "mp4" : "jpg"}`}
                         className="min-h-[44px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-95 text-white transition-all shadow-md shadow-violet-600/20 active:scale-[0.98] touch-manipulation"
                       >
                         <Download className="w-4 h-4" />
@@ -645,7 +645,7 @@ export function GenerationLayout({
               <div className="flex items-center gap-2">
                 <a
                   href={fullscreenMedia.url}
-                  download={`vorixa-render-${Date.now()}.${fullscreenMedia.isVideo ? "mp4" : "jpg"}`}
+                  download={`vortixia-render-${Date.now()}.${fullscreenMedia.isVideo ? "mp4" : "jpg"}`}
                   target="_blank"
                   rel="noreferrer"
                   className="min-h-[44px] flex items-center gap-1.5 px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition-colors shadow-sm touch-manipulation cursor-pointer"

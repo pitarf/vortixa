@@ -1,6 +1,6 @@
-# VORIXA - Auditoria 14.3.1: Complementação de APIs, Inputs e Validação
+# VORTIXIA - Auditoria 14.3.1: Complementação de APIs, Inputs e Validação
 
-Este documento apresenta as evidências técnicas e resultados dos testes complementares aplicados à validação de APIs e tratamento de inputs no VORIXA (Fase 5).
+Este documento apresenta as evidências técnicas e resultados dos testes complementares aplicados à validação de APIs e tratamento de inputs no VORTIXIA (Fase 5).
 
 ---
 
@@ -8,7 +8,7 @@ Este documento apresenta as evidências técnicas e resultados dos testes comple
 
 | ID | Teste | Status | Evidência | Severidade | Correção | Regressão |
 |---|---|---|---|---|---|---|
-| **COMP-VAL-01** | Inputs numéricos das ferramentas | `NÃO APLICÁVEL` | O backend do VORIXA não realiza conversões ou parseamentos de tipos numéricos (ex: `parseInt()`) das inputs de geração. Os parâmetros de inputs são recebidos como um dicionário genérico e encaminhados diretamente ao SDK da fal.ai, que realiza a tipagem em sua própria infraestrutura. | BAIXA | N/A | `NÃO APLICÁVEL` |
+| **COMP-VAL-01** | Inputs numéricos das ferramentas | `NÃO APLICÁVEL` | O backend do VORTIXIA não realiza conversões ou parseamentos de tipos numéricos (ex: `parseInt()`) das inputs de geração. Os parâmetros de inputs são recebidos como um dicionário genérico e encaminhados diretamente ao SDK da fal.ai, que realiza a tipagem em sua própria infraestrutura. | BAIXA | N/A | `NÃO APLICÁVEL` |
 | **COMP-VAL-02** | Objetos e arrays inesperados no corpo | `TESTADO` | Envio de string no campo `inputs` retorna HTTP 400 `{ "error": "Parâmetros inválidos." }` mapeado pelo Zod. Objetos aninhados e tipos válidos são aceitos sob o mapeamento `z.record(z.string(), z.any())`. | ALTA | N/A (Tratamento nativo do Zod schema parser) | `should reject requests with invalid parameter bounds...` |
 | **COMP-VAL-03** | Limite de tamanho de prompt (DoS) | `TESTADO` | Implementado limite estrito de 10.000 caracteres para qualquer parâmetro do tipo string recebido no objeto de `inputs` no endpoint `/api/tools/generate` para evitar abuso e estouro de memória/CPU. | ALTA | Adicionado loop de checagem de tamanho de strings no route handler do Next.js. | `should block generation requests with prompt exceeding 10000 characters` |
 | **COMP-VAL-04** | Inputs grandes em outros campos (toolSlug, etc.) | `TESTADO` | O envio de toolSlug de tamanhos excessivos é rejeitado de forma segura (não localiza a ferramenta e retorna HTTP 400). | MÉDIA | N/A | `should reject requests with invalid parameter bounds...` |

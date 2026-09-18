@@ -96,7 +96,7 @@ export function ChangelogModal({ isOpen, onClose }: ChangelogModalProps) {
                   id="changelog-modal-title"
                   className="text-base sm:text-lg font-bold text-white font-heading tracking-wide"
                 >
-                  Novidades & Versões no VORIXA
+                  Novidades & Versões no VORTIXIA
                 </h2>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                   OS 2.5 Live
@@ -244,7 +244,7 @@ export function ChangelogModal({ isOpen, onClose }: ChangelogModalProps) {
         {/* ================= RODAPÉ DO MODAL ================= */}
         <div className="p-4 border-t border-[#1E202E] bg-[#0D0E12] flex flex-wrap items-center justify-between gap-3 text-xs">
           <span className="text-slate-400 font-mono text-[11px]">
-            Total de <strong>13 recursos ativos</strong> no VORIXA CREATIVE OS.
+            Total de <strong>13 recursos ativos</strong> no VORTIXIA CREATIVE OS.
           </span>
 
           <Link

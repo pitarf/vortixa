@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Mic, Upload, Sparkles, Volume2, Play, Square, Loader2, CheckCircle2, User, Users } from "lucide-react";
 import { toast } from "sonner";
 import { FileUploader } from "@/components/ai/file-uploader";
-import { VORIXA_VOICES, VoiceOption } from "@/lib/voice-catalog";
+import { VORTIXIA_VOICES, VoiceOption } from "@/lib/voice-catalog";
 
 interface AudioSourceSelectorProps {
   label?: string;
@@ -26,12 +26,12 @@ export function AudioSourceSelector({
   const [audioPlayer, setAudioPlayer] = useState<HTMLAudioElement | null>(null);
 
   // Filtrar vozes por gênero
-  const filteredVoices = VORIXA_VOICES.filter((v) => {
+  const filteredVoices = VORTIXIA_VOICES.filter((v) => {
     if (selectedGender !== "all" && v.gender !== selectedGender) return false;
     return true;
   });
 
-  const activeVoiceObj = VORIXA_VOICES.find((v) => v.id === selectedVoice) || VORIXA_VOICES[3];
+  const activeVoiceObj = VORTIXIA_VOICES.find((v) => v.id === selectedVoice) || VORTIXIA_VOICES[3];
 
   const handleGenerateVoice = async () => {
     if (!ttsText.trim()) {

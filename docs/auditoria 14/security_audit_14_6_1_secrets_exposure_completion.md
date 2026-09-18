@@ -1,6 +1,6 @@
-# VORIXA - Auditoria 14.6.1: Complementação de Vazamento de Secrets
+# VORTIXIA - Auditoria 14.6.1: Complementação de Vazamento de Secrets
 
-Este documento formaliza as validações e testes de estresse comportamentais em relação ao vazamento de segredos (secrets) através de canais secundários de infraestrutura no VORIXA, cobrindo:
+Este documento formaliza as validações e testes de estresse comportamentais em relação ao vazamento de segredos (secrets) através de canais secundários de infraestrutura no VORTIXIA, cobrindo:
 1. Respostas HTTP e serialização;
 2. Logs do servidor;
 3. Tratamento e mascaramento de erros;
@@ -10,7 +10,7 @@ Este documento formaliza as validações e testes de estresse comportamentais em
 
 ## 1. Inventário de Credenciais Sensíveis
 
-Fizemos o rastreamento dos segredos atualmente declarados na infraestrutura do VORIXA (com placeholders no `.env.example`):
+Fizemos o rastreamento dos segredos atualmente declarados na infraestrutura do VORTIXIA (com placeholders no `.env.example`):
 - `DATABASE_URL` (Conexão do PostgreSQL)
 - `AUTH_SECRET` (Hash de Criptografia do JWT de Sessão)
 - `FAL_KEY` (Token de Geração de IA da fal.ai)

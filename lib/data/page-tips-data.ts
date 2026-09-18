@@ -56,7 +56,7 @@ export const PAGE_TIPS_DATA: Record<string, PageTipData> = {
       },
       {
         title: "2. Suíte Criativa Unificada",
-        description: "Acesse rapidamente o Studio CREATE para produções guiadas, o VORIXA FLOW para pipelines em canvas, ou ferramentas dedicadas de Imagem, Vídeo e Áudio.",
+        description: "Acesse rapidamente o Studio CREATE para produções guiadas, o VORTIXIA FLOW para pipelines em canvas, ou ferramentas dedicadas de Imagem, Vídeo e Áudio.",
       },
       {
         title: "3. Galeria Recente & Reutilização",
@@ -72,7 +72,7 @@ export const PAGE_TIPS_DATA: Record<string, PageTipData> = {
       {
         id: "dash-refund",
         title: "Como funciona a segurança financeira de saldo?",
-        content: "O VORIXA utiliza um sistema contábil atômico no PostgreSQL. Se qualquer servidor de GPU apresentar timeout ou falha de renderização, seus créditos são automaticamente devolvidos para o seu saldo no mesmo segundo.",
+        content: "O VORTIXIA utiliza um sistema contábil atômico no PostgreSQL. Se qualquer servidor de GPU apresentar timeout ou falha de renderização, seus créditos são automaticamente devolvidos para o seu saldo no mesmo segundo.",
       },
     ],
     proTip: "Dica: Mantenha sempre seus prompts salvos na Biblioteca de Favoritos para reaproveitar estruturas bem-sucedidas em novos projetos.",
@@ -227,7 +227,7 @@ export const PAGE_TIPS_DATA: Record<string, PageTipData> = {
       {
         id: "vid-oneshot",
         title: "Como funciona a Fala Integrada One-Shot nos modelos Wan e Kling?",
-        content: "Ao ativar 'Adicionar Fala com IA ao Vídeo', o VORIXA orquestra 3 etapas em 1 clique: sintetiza a voz do dublador brasileiro em alta fidelidade (ElevenLabs), gera o vídeo do personagem e sincroniza os lábios com precisão milimétrica via LatentSync Pro.",
+        content: "Ao ativar 'Adicionar Fala com IA ao Vídeo', o VORTIXIA orquestra 3 etapas em 1 clique: sintetiza a voz do dublador brasileiro em alta fidelidade (ElevenLabs), gera o vídeo do personagem e sincroniza os lábios com precisão milimétrica via LatentSync Pro.",
       },
       {
         id: "vid-camera",
@@ -345,7 +345,7 @@ export const PAGE_TIPS_DATA: Record<string, PageTipData> = {
 
   "/dashboard/flow": {
     route: "/dashboard/flow",
-    title: "VORIXA FLOW Studio",
+    title: "VORTIXIA FLOW Studio",
     subtitle: "Canvas infinito para encadear múltiplos modelos em sequências criativas completas sem trabalho manual.",
     icon: Boxes,
     color: "from-cyan-500 via-indigo-600 to-violet-600",

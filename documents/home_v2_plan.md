@@ -18,7 +18,7 @@ A Home V2 terá a seguinte sequência estratégica de fechamento de vendas:
    - Barra de confiança: Pix imediato, Cartão em até 12x, Garantia de 7 dias, Ativação instantânea.
 2. **PLANOS & OFERTA PRINCIPAL NO TOPO (Posição Estratégica #2):**
    - Posicionamento logo após o Hero.
-   - Comparativo de Choque de Custos (Midjourney + Runway + Kling + ElevenLabs = R$ 850/mês vs. VORIXA a partir de R$ 39).
+   - Comparativo de Choque de Custos (Midjourney + Runway + Kling + ElevenLabs = R$ 850/mês vs. VORTIXIA a partir de R$ 39).
    - Tabela / Cards de Planos e Pacotes com badge "Mais Vendido" e botão direto de checkout/cadastro.
    - Garantia incondicional de 7 dias e selo de segurança SSL/Pix.
 3. **Showroom de Prova Real (Motion Control & Dança TikTok):**
@@ -31,7 +31,7 @@ A Home V2 terá a seguinte sequência estratégica de fechamento de vendas:
 5. **Galeria de Resultados Reais com Play Direto:**
    - Vídeos e imagens verticais de alta conversão gerados na plataforma.
 6. **Depoimentos & Prova Social de Criadores:**
-   - Resultados de agências e produtores que já faturam com conteúdos do VORIXA.
+   - Resultados de agências e produtores que já faturam com conteúdos do VORTIXIA.
 7. **Perguntas Frequentes (FAQ) de Vendas:**
    - Quebra de objeções (posso usar comercialmente? preciso de PC potente? como funciona o estorno?).
 8. **Banner Final de Escassez e Fechamento:**

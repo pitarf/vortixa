@@ -41,11 +41,11 @@ export async function GET() {
     });
 
     const brandingMap: Record<string, string> = {
-      siteTitle: "VORIXA - Plataforma de Criação de Vídeo e Imagem por IA",
+      siteTitle: "VORTIXIA - Plataforma de Criação de Vídeo e Imagem por IA",
       siteDescription: "Gere imagens, vídeos e animações com inteligência artificial de ponta.",
       siteKeywords: "ia, video generator, motion control, lip sync, imagem ia",
       faviconUrl: "/favicon.ico",
-      ogImageUrl: "https://vorixa.com/og-image.jpg",
+      ogImageUrl: "https://vortixia.com/og-image.jpg",
     };
 
     for (const setting of settings) {

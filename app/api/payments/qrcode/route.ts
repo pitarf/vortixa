@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import QRCode from "qrcode";
 
 /**
- * Endpoint oficial de renderização de QR Code do VORIXA.
+ * Endpoint oficial de renderização de QR Code do VORTIXIA.
  * Gera imagens PNG 512x512 de alta definição e contraste diretamente no Node.js runtime,
  * garantindo compatibilidade universal com todos os aplicativos bancários do Banco Central (Pix)
  * e eliminando dependências pesadas de canvas/fs no cliente.

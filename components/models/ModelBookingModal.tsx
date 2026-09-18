@@ -244,7 +244,7 @@ export function ModelBookingModal({
           <div className="p-3.5 rounded-2xl bg-cyan-950/20 border border-cyan-900/30 text-[11px] text-cyan-300/90 leading-relaxed flex items-start gap-2.5">
             <ShieldCheck className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
             <span>
-              Ao enviar, o coordenador de casting VORIXA validará a agenda do modelo e retornará com minuta de cessão de direitos e alinhamento de produção.
+              Ao enviar, o coordenador de casting VORTIXIA validará a agenda do modelo e retornará com minuta de cessão de direitos e alinhamento de produção.
             </span>
           </div>
 

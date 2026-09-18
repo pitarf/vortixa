@@ -1,6 +1,6 @@
 /**
  * Motor Universal de Hiper-Realismo Contextual e Direção de Cena (PromptEngine v7)
- * "VORIXA Contextual Story Director Engine" com Suporte ao `fal-ai/any-llm`
+ * "VORTIXIA Contextual Story Director Engine" com Suporte ao `fal-ai/any-llm`
  * 
  * Filosofia Híbrida:
  * 1. Se `FAL_KEY` estiver presente e válida no ambiente, envia para a IA Neural da fal.ai (`fal-ai/any-llm`)

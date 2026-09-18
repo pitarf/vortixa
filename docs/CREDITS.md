@@ -1,6 +1,6 @@
-# CREDIT SYSTEM SPECIFICATION - VORIXA
+# CREDIT SYSTEM SPECIFICATION - VORTIXIA
 
-Este documento detalha o funcionamento técnico, regras de negócio e estratégias de concorrência/idempotência do sistema de créditos da plataforma VORIXA.
+Este documento detalha o funcionamento técnico, regras de negócio e estratégias de concorrência/idempotência do sistema de créditos da plataforma VORTIXIA.
 
 ---
 

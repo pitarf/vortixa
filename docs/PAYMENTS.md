@@ -1,4 +1,4 @@
-# PAYMENTS - VORIXA
+# PAYMENTS - VORTIXIA
 
 Este documento detalha o sistema de pagamentos, o fluxo de compras de créditos e a integração com o gateway de pagamento.
 

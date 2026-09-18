@@ -1,6 +1,6 @@
-# VORIXA - Relatório Técnico de Auditoria 14.9.1 (Vulnerabilidade Real do deepmerge-ts e Dependências)
+# VORTIXIA - Relatório Técnico de Auditoria 14.9.1 (Vulnerabilidade Real do deepmerge-ts e Dependências)
 
-Este relatório formaliza a análise de explorabilidade, impacto e caminhos de mitigação da vulnerabilidade de severidade alta do pacote `deepmerge-ts` no monorepo VORIXA.
+Este relatório formaliza a análise de explorabilidade, impacto e caminhos de mitigação da vulnerabilidade de severidade alta do pacote `deepmerge-ts` no monorepo VORTIXIA.
 
 ---
 
@@ -13,7 +13,7 @@ Este relatório formaliza a análise de explorabilidade, impacto e caminhos de m
 | **Severidade** | `ALTA` | Risco de exaustão de recurso computacional / estouro de pilha. |
 | **Versão corrigida** | `deepmerge-ts@8.0.0` (Major Upgrade) | Requer alteração de pacotes dependentes. |
 | **Cadeia de dependência** | `prisma@7.9.1 -> @prisma/config@7.9.1 -> deepmerge-ts@7.1.5` | O pacote Prisma ORM é o único responsável pela introdução do `deepmerge-ts`. |
-| **Uso direto** | `NÃO UTILIZADO` | A base de código local do VORIXA não faz nenhuma chamada ou import ao `deepmerge-ts`. |
+| **Uso direto** | `NÃO UTILIZADO` | A base de código local do VORTIXIA não faz nenhuma chamada ou import ao `deepmerge-ts`. |
 | **Runtime/Build** | `DEVELOPMENT / BUILD / PRISMA INITIALIZATION` | O pacote `@prisma/config` é utilizado internamente pelo CLI do Prisma para ler arquivos de configuração do banco (`prisma.config.ts` ou `.env`) durante o setup de compilação ou inicialização de schema. |
 | **Client bundle** | `NÃO EXPOSTO` | A ferramenta de build (Webpack/Turbopack) não inclui `prisma` ou `deepmerge-ts` no bundle enviado ao navegador do cliente (`.next/static/`). |
 | **Server bundle** | `INSPECIONADO` | Presente no lado do servidor apenas como ferramenta de inicialização do Prisma client, isolado do tratamento de dados diretos de requisições de usuários comuns. |
@@ -27,7 +27,7 @@ Este relatório formaliza a análise de explorabilidade, impacto e caminhos de m
 ## 2. Relação Técnica com o Prisma ORM
 
 * **Versão do Prisma Atual**: `7.9.1`
-* **Explorabilidade Real no VORIXA**: Para que um ataque de DoS por stack exhaustion ocorresse, o atacante precisaria de um canal para enviar grafos recursivos para a API da aplicação, e o VORIXA precisaria repassar esses grafos para a função `deepMerge` do pacote. Como o pacote é usado apenas internamente pelo Prisma para mergear arquivos locais de configuração e o VORIXA não expõe nenhuma funcionalidade relacionada a esses arquivos, a exploração não foi demonstrada no fluxo atual da aplicação. Isso não significa que a vulnerabilidade deixou de existir no pacote em si, mas sim que o caminho para sua exploração no VORIXA não é alcançável nos fluxos analisados.
+* **Explorabilidade Real no VORTIXIA**: Para que um ataque de DoS por stack exhaustion ocorresse, o atacante precisaria de um canal para enviar grafos recursivos para a API da aplicação, e o VORTIXIA precisaria repassar esses grafos para a função `deepMerge` do pacote. Como o pacote é usado apenas internamente pelo Prisma para mergear arquivos locais de configuração e o VORTIXIA não expõe nenhuma funcionalidade relacionada a esses arquivos, a exploração não foi demonstrada no fluxo atual da aplicação. Isso não significa que a vulnerabilidade deixou de existir no pacote em si, mas sim que o caminho para sua exploração no VORTIXIA não é alcançável nos fluxos analisados.
 
 
 ---
@@ -42,4 +42,4 @@ Este relatório formaliza a análise de explorabilidade, impacto e caminhos de m
 
 ### **VULNERABILIDADE CONHECIDA, NÃO EXPLORÁVEL PELO FLUXO ANALISADO**
 
-*(A dependência vulnerável `deepmerge-ts@7.1.5` reside no repositório de forma transitiva pelo Prisma, mas sem qualquer rota ou superfície de ataque exposta a dados externos de usuários no VORIXA).*
+*(A dependência vulnerável `deepmerge-ts@7.1.5` reside no repositório de forma transitiva pelo Prisma, mas sem qualquer rota ou superfície de ataque exposta a dados externos de usuários no VORTIXIA).*

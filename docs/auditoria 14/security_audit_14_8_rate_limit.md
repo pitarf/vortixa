@@ -1,6 +1,6 @@
-# VORIXA - Relatório Técnico de Auditoria 14.8 (Rate Limiting e Abuso)
+# VORTIXIA - Relatório Técnico de Auditoria 14.8 (Rate Limiting e Abuso)
 
-Este relatório apresenta as constatações técnicas da auditoria de segurança focada em **Rate Limiting** e controle de abuso nos endpoints do VORIXA.
+Este relatório apresenta as constatações técnicas da auditoria de segurança focada em **Rate Limiting** e controle de abuso nos endpoints do VORTIXIA.
 
 ---
 
@@ -28,7 +28,7 @@ Analisando a estrutura do backend do Next.js e as decisões arquiteturais:
 
 ## 3. Conclusão e Diretiva Arquitetural (Redis vs Borda)
 
-Conforme a **Diretriz de Escalabilidade** e o arquivo [docs/DECISIONS.md](file:///c:/Git/React/VORIXA/docs/DECISIONS.md), a lógica de controle de concorrência horizontal e rate limiting dinâmico distribuído foi delegada para:
+Conforme a **Diretriz de Escalabilidade** e o arquivo [docs/DECISIONS.md](file:///c:/Git/React/VORTIXIA/docs/DECISIONS.md), a lógica de controle de concorrência horizontal e rate limiting dinâmico distribuído foi delegada para:
 1. **Borda (Imediato)**: Configuração de limites rígidos por IP diretamente no proxy reverso da VPS (ex: diretiva `limit_req` do Nginx) ou regras de WAF da Cloudflare.
 2. **Aplicação (Fase de Crescimento)**: Introdução do banco de cache centralizado Redis utilizando `@upstash/ratelimit` compartilhando contadores entre instâncias horizontais do Next.js.
 

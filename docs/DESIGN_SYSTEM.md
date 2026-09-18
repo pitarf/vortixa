@@ -1,4 +1,4 @@
-# DESIGN SYSTEM & BRANDING - VORIXA
+# DESIGN SYSTEM & BRANDING - VORTIXIA
 
 Este documento define os tokens de design, paleta de cores e tipografia para garantir consistência visual e facilitar mudanças futuras na identidade da marca.
 
@@ -19,10 +19,10 @@ As variáveis são injetadas no arquivo `/app/globals.css` sob o padrão do shad
   --color-popover: hsl(240 10% 2%);
   --color-popover-foreground: hsl(0 0% 98%);
 
-  --color-primary: hsl(224 100% 54%);       /* Azul Elétrico VORIXA */
+  --color-primary: hsl(224 100% 54%);       /* Azul Elétrico VORTIXIA */
   --color-primary-foreground: hsl(0 0% 100%);
 
-  --color-secondary: hsl(262 83% 58%);     /* Violeta VORIXA */
+  --color-secondary: hsl(262 83% 58%);     /* Violeta VORTIXIA */
   --color-secondary-foreground: hsl(0 0% 100%);
 
   --color-accent: hsl(180 100% 50%);        /* Ciano Neon Destaque */

@@ -1,6 +1,6 @@
-# ADMIN PANEL & BRANDING - VORIXA
+# ADMIN PANEL & BRANDING - VORTIXIA
 
-Este documento descreve a estrutura de controle do painel administrativo do VORIXA.
+Este documento descreve a estrutura de controle do painel administrativo do VORTIXIA.
 
 ## 1. Módulos do Painel Admin
 
@@ -23,7 +23,7 @@ O painel de administração é restrito a usuários com `role === 'ADMIN'`.
 
 ## 2. Configurações de Branding e SEO Dinâmico (Regra Obrigatória)
 
-Para possibilitar o gerenciamento de branding pelo cliente final, o VORIXA implementa uma página de configurações no Painel Admin que atualiza a tabela `SystemSetting` no banco de dados.
+Para possibilitar o gerenciamento de branding pelo cliente final, o VORTIXIA implementa uma página de configurações no Painel Admin que atualiza a tabela `SystemSetting` no banco de dados.
 
 ### Configurações Editáveis
 1. **Título do Site (`siteTitle`)**: Nome principal do site injetado na tag `<title>`.
@@ -39,7 +39,7 @@ O frontend Next.js buscará no carregamento das rotas públicas (Landing Page, C
 // Exemplo de busca de SEO dinâmico no Next.js App Router
 export async function generateMetadata() {
   const settings = await prisma.systemSetting.findMany();
-  const siteTitle = settings.find(s => s.key === "siteTitle")?.value || "VORIXA";
+  const siteTitle = settings.find(s => s.key === "siteTitle")?.value || "VORTIXIA";
   const siteDescription = settings.find(s => s.key === "siteDescription")?.value || "Plataforma de IA";
   const faviconUrl = settings.find(s => s.key === "faviconUrl")?.value || "/favicon.ico";
 

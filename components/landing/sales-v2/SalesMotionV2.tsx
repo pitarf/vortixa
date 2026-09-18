@@ -160,7 +160,7 @@ export function SalesMotionV2() {
           <div className="relative aspect-[9/14] bg-black overflow-hidden">
             <video
               ref={outVideoRef}
-              src="/uploads/motion_gerado_vorixa.mp4"
+              src="/uploads/motion_gerado_vortixia.mp4"
               autoPlay
               loop
               muted={isMuted}

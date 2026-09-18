@@ -1,4 +1,4 @@
-# DATABASE - VORIXA
+# DATABASE - VORTIXIA
 
 Este documento detalha o modelo de dados físico e lógico do banco de dados PostgreSQL utilizando o **Prisma ORM**.
 

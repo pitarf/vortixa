@@ -27,7 +27,7 @@ export class SMTPEmailProvider implements IEmailProvider {
     const isSecure = port === 465;
 
     this.senderEmail = process.env.SMTP_FROM || user;
-    this.senderName = process.env.SMTP_SENDER_NAME || "VORIXA AI";
+    this.senderName = process.env.SMTP_SENDER_NAME || "VORTIXIA AI";
 
     this.transporter = nodemailer.createTransport({
       host,
@@ -98,20 +98,20 @@ export class EmailService {
             <td height="4" style="background: linear-gradient(90deg, #7c3aed 0%, #4f46e5 50%, #06b6d4 100%);"></td>
           </tr>
 
-          <!-- Header com Logo VORIXA -->
+          <!-- Header com Logo VORTIXIA -->
           <tr>
             <td style="padding: 36px 36px 20px 36px; text-align: center;">
               <table border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
                 <tr>
                   <td style="vertical-align: middle; padding-right: 12px;">
-                    <!-- Ícone estilizado do VORIXA (Zap/Spark) -->
+                    <!-- Ícone estilizado do VORTIXIA (Zap/Spark) -->
                     <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #7c3aed, #4f46e5, #06b6d4); display: inline-block; text-align: center; line-height: 44px; box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);">
                       <span style="font-size: 22px; color: #ffffff; font-weight: 900;">✦</span>
                     </div>
                   </td>
                   <td style="vertical-align: middle; text-align: left;">
                     <div style="font-size: 22px; font-weight: 900; letter-spacing: 2px; color: #ffffff; text-transform: uppercase; font-family: 'Segoe UI', sans-serif;">
-                      VORIXA
+                      VORTIXIA
                     </div>
                     <div style="font-size: 10px; letter-spacing: 2px; color: #a78bfa; text-transform: uppercase; font-family: monospace; font-weight: 700; margin-top: -2px;">
                       AI Workspace
@@ -133,7 +133,7 @@ export class EmailService {
           <tr>
             <td style="padding: 24px 36px; background-color: #08090c; border-top: 1px solid #161822; text-align: center;">
               <p style="margin: 0 0 8px 0; color: #64748b; font-size: 12px;">
-                © ${new Date().getFullYear()} VORIXA Inc. Todos os direitos reservados.
+                © ${new Date().getFullYear()} VORTIXIA Inc. Todos os direitos reservados.
               </p>
               <p style="margin: 0; color: #475569; font-size: 11px; line-height: 1.5;">
                 Plataforma de criação audiovisual e inteligência artificial generativa.<br>
@@ -154,7 +154,7 @@ export class EmailService {
   static async sendPasswordRecovery(to: string, token: string): Promise<boolean> {
     const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3005";
     const recoveryLink = `${baseUrl}/recovery-password?token=${token}`;
-    const subject = "Recuperação de Senha — VORIXA AI";
+    const subject = "Recuperação de Senha — VORTIXIA AI";
 
     const bodyHtml = `
       <div style="text-align: center; margin-bottom: 24px;">
@@ -166,7 +166,7 @@ export class EmailService {
 
       <div style="background-color: #13141b; border: 1px solid #1e202e; border-radius: 12px; padding: 20px; margin-bottom: 28px; text-align: left;">
         <p style="color: #cbd5e1; font-size: 13px; line-height: 1.6; margin: 0 0 12px 0;">
-          Para cadastrar uma nova senha e continuar criando no <strong>VORIXA</strong>, clique no botão abaixo:
+          Para cadastrar uma nova senha e continuar criando no <strong>VORTIXIA</strong>, clique no botão abaixo:
         </p>
         <div style="text-align: center; margin: 24px 0 12px 0;">
           <a href="${recoveryLink}" style="display: inline-block; background: linear-gradient(135deg, #7c3aed, #4f46e5); color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 20px rgba(124, 58, 237, 0.45); letter-spacing: 0.5px;">
@@ -189,7 +189,7 @@ export class EmailService {
   }
 
   static async sendTestEmail(to: string): Promise<boolean> {
-    const subject = "✦ Bem-vindo ao VORIXA AI — Teste de Conexão Oficial";
+    const subject = "✦ Bem-vindo ao VORTIXIA AI — Teste de Conexão Oficial";
 
     const bodyHtml = `
       <div style="text-align: center; margin-bottom: 24px;">
@@ -198,7 +198,7 @@ export class EmailService {
         </span>
         <h2 style="color: #ffffff; font-size: 22px; font-weight: 800; margin: 0 0 8px 0;">Identidade Visual Validada</h2>
         <p style="color: #94a3b8; font-size: 14px; margin: 0; line-height: 1.6;">
-          Este é um e-mail de teste disparado com a paleta oficial <strong>Dark Obsidian & Purple Cosmic</strong> do VORIXA.
+          Este é um e-mail de teste disparado com a paleta oficial <strong>Dark Obsidian & Purple Cosmic</strong> do VORTIXIA.
         </p>
       </div>
 
@@ -227,7 +227,7 @@ export class EmailService {
 
       <div style="text-align: center; margin: 28px 0 10px 0;">
         <a href="http://localhost:3005/dashboard" style="display: inline-block; background: linear-gradient(135deg, #7c3aed, #4f46e5); color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 20px rgba(124, 58, 237, 0.45); letter-spacing: 0.5px;">
-          Acessar Painel VORIXA
+          Acessar Painel VORTIXIA
         </a>
       </div>
     `;

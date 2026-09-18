@@ -1,11 +1,11 @@
-# VORIXA Contextual Story Director Engine
+# VORTIXIA Contextual Story Director Engine
 ## Pesquisa: Contextual Prompt Enrichment & Anti-Generic Pipeline
 
 ### 1. Visão Geral e Desambiguação Contextual
 Plataformas como Leonardo.ai (Prompt Magic), Runway Gen-3 Alpha, Luma Dream Machine, Kling AI, Midjourney v6 e Higgsfield compartilham um objetivo comum: preencher a "lacuna de intenção" entre o usuário e o modelo generativo.
 
 - **O Problema do "Boneco Genérico":** Um prompt como "Um homem andando" falha porque obriga o modelo a adivinhar os pesos e viéses não declarados. A IA tende a um "meio-termo estatístico", gerando uma cena sem emoção ou contexto.
-- **A Solução (Injeção de Narrativa):** Estas plataformas utilizam LLMs intermediários ou arquiteturas baseadas em slots para forçar a especificação. O VORIXA fará a desambiguação preenchendo as seguintes dimensões:
+- **A Solução (Injeção de Narrativa):** Estas plataformas utilizam LLMs intermediários ou arquiteturas baseadas em slots para forçar a especificação. O VORTIXIA fará a desambiguação preenchendo as seguintes dimensões:
   - **Sujeito:** Substituir "homem" por especificidades fenotípicas, figurino texturizado e estado emocional (micro-expressões).
   - **Ação & Contexto:** Para onde está andando? Qual é a urgência?
   - **Ambiente & Iluminação:** É luz do sol da manhã (golden hour) filtrada pelas árvores ou néon cyberpunk sob chuva?
@@ -13,7 +13,7 @@ Plataformas como Leonardo.ai (Prompt Magic), Runway Gen-3 Alpha, Luma Dream Mach
 
 ### 2. Padrões de Enriquecimento: FOTO vs. VÍDEO
 
-Existem diferenças cruciais na direção de cena dependendo da mídia gerada. O motor do VORIXA deve bifurcar a lógica:
+Existem diferenças cruciais na direção de cena dependendo da mídia gerada. O motor do VORTIXIA deve bifurcar a lógica:
 
 **A. Diretrizes para FOTOGRAFIA (Midjourney v6, Leonardo.ai)**
 - **Composição e Lentes:** Foca em posicionamento espacial e ótica estática. (ex: "lente 85mm f/1.4", "profundidade de campo rasa", "regra dos terços", "macro", "bokeh intenso").
@@ -26,7 +26,7 @@ Existem diferenças cruciais na direção de cena dependendo da mídia gerada. O
 
 ### 3. Taxonomia de Categorias Contextuais
 
-Para evitar um pipeline engessado, o VORIXA utilizará classificadores para injetar "templates de atmosfera" conforme o nicho:
+Para evitar um pipeline engessado, o VORTIXIA utilizará classificadores para injetar "templates de atmosfera" conforme o nicho:
 
 - **a) Publicidade & E-commerce:** Close de produto, iluminação de estúdio comercial (high-key), reflexos controlados em superfícies de vidro/metal, desfoque elegante do fundo para destacar o objeto, cores vibrantes da paleta da marca.
 - **b) UGC (User Generated Content) & Redes Sociais:** Ângulo de câmera frontal de smartphone (selfie style), iluminação de ring light ou luz natural de janela, movimentos levemente tremidos, micro-expressões espontâneas e imperfeições (estética "lo-fi" e autêntica).
@@ -34,9 +34,9 @@ Para evitar um pipeline engessado, o VORIXA utilizará classificadores para inje
 - **d) Gastronomia:** Lentes macro, captura de micro-texturas (vapor saindo de alimentos quentes, gotas de condensação suando no copo, textura crocante detalhada), luz quente e direcional para realçar volume.
 - **e) Ação & Movimento:** Câmera dinâmica (tracking rápido), motion blur realista simulando obturador lento ou gravação em alta velocidade (60 FPS), física de impacto acentuada, partículas e sujeira suspensas no ar.
 
-### 4. Arquitetura: VORIXA Contextual Story Director Engine
+### 4. Arquitetura: VORTIXIA Contextual Story Director Engine
 
-Como implementar esse enriquecimento no `PromptEngine` interno do VORIXA:
+Como implementar esse enriquecimento no `PromptEngine` interno do VORTIXIA:
 
 **Pipeline de Processamento (Fluxo):**
 1. **Intent Parser:** Analisa o input curto do cliente (ex: "hambúrguer suculento"). Classifica a intenção (Neste caso: *Gastronomia*).

@@ -257,7 +257,7 @@ export class WaveSpeedAIProvider implements IAIProvider {
   }
 
   /**
-   * Monitora o status da predição na WaveSpeed e atualiza o banco de dados do VORIXA
+   * Monitora o status da predição na WaveSpeed e atualiza o banco de dados do VORTIXIA
    */
   private async pollTaskResult(taskId: string, jobId: string) {
     const resultUrl = `${this.baseUrl}/predictions/${taskId}/result`;

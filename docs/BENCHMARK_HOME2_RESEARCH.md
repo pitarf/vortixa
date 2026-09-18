@@ -1,6 +1,6 @@
 # Relatório de Benchmarking & Engenharia Reversa de UX/UI: Plataformas Líderes de IA Audiovisual
-**Documento Técnico & Estratégico para Concepção da Nova Home (Home2) — VORIXA**  
-**Data:** 02/09/2026 | **Autor:** @vorixa-benchmark-researcher | **Status:** Aprovado para Implementação
+**Documento Técnico & Estratégico para Concepção da Nova Home (Home2) — VORTIXIA**  
+**Data:** 02/09/2026 | **Autor:** @vortixia-benchmark-researcher | **Status:** Aprovado para Implementação
 
 ---
 
@@ -11,7 +11,7 @@ O mercado de geração de vídeo e imagem com Inteligência Artificial amadurece
 2. **Eficiência de Custo & Consolidação All-in-One:** A dor de pagar 5 a 6 assinaturas separadas (Midjourney, Runway, Kling, ElevenLabs, Upscalers) vs. ter um ecossistema unificado.
 3. **Experiência de Produto Instantânea (Show, Don't Tell):** Zero fricção para entender o fluxo de trabalho antes de se cadastrar, retendo a atenção nos primeiros 3 segundos sem efeitos visuais cansativos ou "scroll-jacking".
 
-Este documento disseca a engenharia reversa das plataformas líderes globais e nacionais — **Octuz AI, Higgsfield AI, RunwayML, Luma Dream Machine, Kling AI e Leonardo AI / Freepik** — fornecendo a arquitetura narrativa, os padrões visuais editoriais e as diretrizes práticas para a construção da nova **Home2 do VORIXA**.
+Este documento disseca a engenharia reversa das plataformas líderes globais e nacionais — **Octuz AI, Higgsfield AI, RunwayML, Luma Dream Machine, Kling AI e Leonardo AI / Freepik** — fornecendo a arquitetura narrativa, os padrões visuais editoriais e as diretrizes práticas para a construção da nova **Home2 do VORTIXIA**.
 
 ---
 
@@ -27,8 +27,8 @@ graph LR
         K[Kling: Consistência de Movimento & Lip Sync]
         F[Leonardo/Freepik: Acessibilidade & Assets Rápidos]
     end
-    subgraph "Síntese VORIXA"
-        V[VORIXA Home2: All-in-One Suite com Controle Cinematográfico e Foco em ROI]
+    subgraph "Síntese VORTIXIA"
+        V[VORTIXIA Home2: All-in-One Suite com Controle Cinematográfico e Foco em ROI]
     end
     O --> V
     H --> V
@@ -49,7 +49,7 @@ graph LR
   - **Exemplos Nacionais Reais:** Vídeos verticais 9:16 nativos para Reels/TikTok, quebrando a barreira de "vídeo conceitual sem aplicação prática".
 * **Gargalos Identificados:**
   - Interface às vezes sobrecarregada com muitos popups ou escassez artificial agressiva.
-* **Lições para o VORIXA:** Incorporar uma seção dedicada a **Criativos de Alta Conversão / UGC** e **Influenciadores Digitais**, demonstrando o potencial de monetização e geração de receita rápida para agências e marcas locais.
+* **Lições para o VORTIXIA:** Incorporar uma seção dedicada a **Criativos de Alta Conversão / UGC** e **Influenciadores Digitais**, demonstrando o potencial de monetização e geração de receita rápida para agências e marcas locais.
 
 ---
 
@@ -60,7 +60,7 @@ graph LR
   - **Hero Minimalista e Cirúrgico:** Vídeo em altíssima resolução com micro-controles interativos simulando um visor de câmera profissional (f/1.8, 50mm, Tracking Shot).
   - **Interatividade Tátil:** Permite que o visitante clique em diferentes movimentos de câmera (ex: "FPV Drone", "Crane Down", "Whip Pan") e veja instantaneamente o mesmo frame reagir àquele comando.
   - **Estética Dark Editorial:** Tons grafite profundos (`#0A0A0C`), tipografia sans-serif precisa e acentos em tons frios que comunicam robustez profissional e cinema.
-* **Lições para o VORIXA:** Destacar o recurso **Motion Control / Câmera 3D** do VORIXA com um componente interativo de "Seletor de Movimento de Câmera", transmitindo autoridade cinematográfica e precisão milimétrica.
+* **Lições para o VORTIXIA:** Destacar o recurso **Motion Control / Câmera 3D** do VORTIXIA com um componente interativo de "Seletor de Movimento de Câmera", transmitindo autoridade cinematográfica e precisão milimétrica.
 
 ---
 
@@ -71,7 +71,7 @@ graph LR
   - **Uso Magistral do Espaço Negativo:** A landing page não é poluída; cada ferramenta possui um bloco expansivo onde o vídeo ocupa 80% do campo de visão, atuando como o verdadeiro herói.
   - **Abas de Casos de Uso Filtráveis:** Filtros por indústria (Publicidade, Entretenimento, Música, Design) com players de vídeo sem som que iniciam com hover suave.
   - **Tipografia Escultural:** Contraste harmonioso entre tipografia técnica (monospace para parâmetros de IA) e serifada/neo-grotesque para manchetes editoriais.
-* **Lições para o VORIXA:** Eliminar o excesso de texto explicativo no Hero; utilizar tags técnicas sutis (`4K UHD`, `60 FPS Motion`, `Sync-1.2`) para dar sofisticação e deixar os vídeos demonstrarem o valor.
+* **Lições para o VORTIXIA:** Eliminar o excesso de texto explicativo no Hero; utilizar tags técnicas sutis (`4K UHD`, `60 FPS Motion`, `Sync-1.2`) para dar sofisticação e deixar os vídeos demonstrarem o valor.
 
 ---
 
@@ -81,7 +81,7 @@ graph LR
 * **Pontos Fortes de Conversão:**
   - **Prompt Sandbox no Hero:** Um campo de input de prompt logo no topo da página que convida o usuário a experimentar imediatamente ou visualizar prompts da comunidade em tempo real.
   - **Carrossel Infinito sem Quebra de Performance:** Grid de vídeos otimizados via streaming H.264 em `video` tags nativas, sem travamentos de GPU ou perda de frames.
-* **Lições para o VORIXA:** Oferecer na Home uma barra de visualização de prompts reais ("Prompt Showcase") onde o visitante clica num botão e vê exatamente o prompt que gerou aquele vídeo com 1 clique.
+* **Lições para o VORTIXIA:** Oferecer na Home uma barra de visualização de prompts reais ("Prompt Showcase") onde o visitante clica num botão e vê exatamente o prompt que gerou aquele vídeo com 1 clique.
 
 ---
 
@@ -91,7 +91,7 @@ graph LR
 * **Pontos Fortes de Conversão:**
   - **Antes e Depois Interativo (Interactive Slider):** Demonstração nítida de uma foto estática transformada em uma performance dinâmica com áudio e lábios sincronizados.
   - **Workflow Passo a Passo Visual:** Divisão simples em 3 etapas: *Upload de Imagem/Texto* ➔ *Configuração de Movimento* ➔ *Exportação em 4K*.
-* **Lições para o VORIXA:** O componente de **Before/After** e **Lip Sync Demo** é crucial para validar que o VORIXA não produz apenas animações estáticas, mas personagens falantes e vivos.
+* **Lições para o VORTIXIA:** O componente de **Before/After** e **Lip Sync Demo** é crucial para validar que o VORTIXIA não produz apenas animações estáticas, mas personagens falantes e vivos.
 
 ---
 
@@ -100,18 +100,18 @@ graph LR
 * **Pontos Fortes de Conversão:**
   - **Calculadora de Créditos / Capacidade dos Planos:** Tabela de preços que esclarece exatamente quantos vídeos, imagens e upsizes cada plano entrega, acabando com a confusão comum de "quantos créditos eu realmente preciso?".
   - **Badges de Prova Social e Comunidade:** Contadores de usuários ativos ("+5M criadores"), galeria de criadores e reviews auditados.
-* **Lições para o VORIXA:** A seção de Preços da Home2 deve incluir o resumo tangível de entregáveis (ex: *"Equivale a ~80 vídeos cinematográficos ou ~400 imagens em 4K"*).
+* **Lições para o VORTIXIA:** A seção de Preços da Home2 deve incluir o resumo tangível de entregáveis (ex: *"Equivale a ~80 vídeos cinematográficos ou ~400 imagens em 4K"*).
 
 ---
 
 ## 3. Matriz Comparativa de Recursos e Estrutura de UX
 
-| Dimensão de Análise | Octuz AI | Higgsfield AI | RunwayML | Kling AI | VORIXA Home2 (Estratégia Recomendada) |
+| Dimensão de Análise | Octuz AI | Higgsfield AI | RunwayML | Kling AI | VORTIXIA Home2 (Estratégia Recomendada) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Primeira Dobra (Hero)** | Foco em ROI & UGC | Câmera & Cinema | Minimalista & Arte | Demo de Prompt | **Hero Duplo: Arte Cinematográfica + Lucratividade Comercial** |
 | **Tempo de Retenção (3s)** | Vídeo vertical viral | Movimento de câmera | Loop 4K horizontal | Slider interativo | **Loop de alta fidelidade sem rotação estranha + Badges táteis** |
-| **Workflow Narrativo** | Foco em escala de ads | Parâmetros de estúdio | Linha do tempo de IA | 1-2-3 Passo a Passo | **Grafo Interativo VORIXA FLOW + 3 Passos Simplificados** |
-| **Solução de Custos** | Mostra economia de ads | Não enfatiza preço | Tier corporativo | Baseado em créditos | **Comparativo: 5 Assinaturas Isoladas vs. VORIXA All-in-One** |
+| **Workflow Narrativo** | Foco em escala de ads | Parâmetros de estúdio | Linha do tempo de IA | 1-2-3 Passo a Passo | **Grafo Interativo VORTIXIA FLOW + 3 Passos Simplificados** |
+| **Solução de Custos** | Mostra economia de ads | Não enfatiza preço | Tier corporativo | Baseado em créditos | **Comparativo: 5 Assinaturas Isoladas vs. VORTIXIA All-in-One** |
 | **Quebra de Objeção** | Direitos autorais & Ads | Controle de movimento | Resolução e consistência | Duração e Lip Sync | **Cards de Garantia: Direitos Comerciais, Sem Marca d'Água, 4K nativo** |
 | **Estética Visual** | Dark Moderno / Roxo | Dark Graphite Cinema | Dark Clean Minimal | Dark High-Tech | **Dark Obsidian (`#08080A`) com acentos Violeta/Indigo e acabamento Off-White** |
 
@@ -142,7 +142,7 @@ A jornada da Home2 foi estruturada para conduzir o visitante do encantamento vis
 flowchart TD
     S1["1. HERO CINEMATOGRÁFICO<br/>(Impacto Visual 3s + H1 Objetivo + CTA Imediato)"] --> S2["2. PROVA VISUAL & FERRAMENTAS<br/>(Showcase de Motores: Flux, Kling, LipSync, Upscale)"]
     S2 --> S3["3. BEFORE & AFTER INTERATIVO<br/>(Slider Comparativo: Foto Estática ➔ Cena Dinâmica 4K)"]
-    S3 --> S4["4. WORKFLOW VISUAL SIMPLIFICADO<br/>(VORIXA Flow: Da ideia ao filme em 3 nós sem complicação)"]
+    S3 --> S4["4. WORKFLOW VISUAL SIMPLIFICADO<br/>(VORTIXIA Flow: Da ideia ao filme em 3 nós sem complicação)"]
     S4 --> S5["5. CASOS DE USO REAIS<br/>(E-commerce UGC, Filmes, Agências de Tráfego, Criadores)"]
     S5 --> S6["6. COMPARATIVO DE CUSTO & CONSOLIDAÇÃO<br/>(Economize R$ 1.200/mês eliminando 5 assinaturas separadas)"]
     S6 --> S7["7. PROVA SOCIAL & DEPOIMENTOS<br/>(Métricas de Gerações + Avaliações de Produtores e Agências)"]
@@ -166,7 +166,7 @@ flowchart TD
 3. **Antes e Depois Interativo (Interactive Proof Slider):**
    - Componente arrastável permitindo que o usuário veja a transformação de uma imagem simples em um vídeo com iluminação de estúdio e movimento fluido.
 
-4. **VORIXA Flow (O Workflow Descomplicado):**
+4. **VORTIXIA Flow (O Workflow Descomplicado):**
    - Visualização de nós simplificados: `Prompt / Referência` ➔ `Direção de Câmera` ➔ `Geração & Lip Sync` ➔ `Master 4K`.
    - Demonstração de que qualquer pessoa pode criar sem conhecimentos prévios de VFX ou programação.
 
@@ -184,7 +184,7 @@ flowchart TD
      - Sincronização Labial: R$ 220/mês
      - Upscaler 4K: R$ 150/mês
      - **Total Isolado:** ~R$ 900 a R$ 1.200/mês.
-     - **VORIXA All-in-One:** A partir de R$ 49/mês (Economia superior a 80%).
+     - **VORTIXIA All-in-One:** A partir de R$ 49/mês (Economia superior a 80%).
 
 7. **Prova Social e Comunidade:**
    - Métricas: *+150.000 mídias renderizadas*, *+12.000 criadores e agências*, *99.8% de tempo de resposta em nuvem*.
@@ -199,7 +199,7 @@ flowchart TD
    - Perguntas estratégicas:
      - *Posso usar os vídeos comercialmente em anúncios e clientes?* (Sim, 100% livres de royalties).
      - *Os vídeos vêm com marca d'água?* (Não, todas as exportações são limpas em alta definição).
-     - *Preciso de uma placa de vídeo potente?* (Não, todo o processamento roda nos servidores de GPU de alta performance do VORIXA).
+     - *Preciso de uma placa de vídeo potente?* (Não, todo o processamento roda nos servidores de GPU de alta performance do VORTIXIA).
      - *Como funciona o sistema de créditos?* (Créditos flexíveis com recarga instantânea quando precisar).
 
 10. **Banner de Fechamento (Final Conversion Hook):**
@@ -229,7 +229,7 @@ flowchart TD
 
 ### 7.1 Recomendações de Copywriting
 1. **Evitar Jargões Vazios:** Substitua frases genéricas como *"A melhor IA do mundo"* por benefícios específicos como *"Gere variações cinematográficas em 4K sem precisar de equipe de gravação ou iluminação de estúdio"*.
-2. **Reforçar o Poder de Escolha:** Destaque que o VORIXA integra os melhores modelos mundiais (Flux, Kling, ElevenLabs, etc.) em uma única interface padronizada em português com suporte local.
+2. **Reforçar o Poder de Escolha:** Destaque que o VORTIXIA integra os melhores modelos mundiais (Flux, Kling, ElevenLabs, etc.) em uma única interface padronizada em português com suporte local.
 3. **Falar a Linguagem do Negócio:** Conecte cada recurso a um benefício financeiro: menos tempo de produção = mais testes de criativos = maior escala de vendas.
 
 ### 7.2 Recomendações de Frontend
@@ -246,4 +246,4 @@ flowchart TD
 3. **Teste A/B da Nova Home:** Comparação de métricas de conversão para cadastro (`/register`) e ativação de planos entre a versão inicial e a Home2.
 
 ---
-*Documento homologado pelo @vorixa-benchmark-researcher. Base técnica pronta para suporte ao desenvolvimento da Home2.*
+*Documento homologado pelo @vortixia-benchmark-researcher. Base técnica pronta para suporte ao desenvolvimento da Home2.*

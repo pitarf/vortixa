@@ -88,7 +88,7 @@ export function DashboardCreationCards() {
           </Link>
         </div>
 
-        {/* ================= CARD 2: VORIXA FLOW ================= */}
+        {/* ================= CARD 2: VORTIXIA FLOW ================= */}
         <div className="group relative rounded-3xl bg-[#0D0E12] border border-[#1E202E] hover:border-cyan-500/50 p-5 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:shadow-cyan-600/10 overflow-hidden">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
@@ -102,7 +102,7 @@ export function DashboardCreationCards() {
 
             <div>
               <h3 className="text-base font-bold text-white font-heading group-hover:text-cyan-300 transition-colors">
-                VORIXA FLOW
+                VORTIXIA FLOW
               </h3>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">
                 Workflows visuais ilimitados encadeando múltiplos modelos de IA.

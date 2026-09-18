@@ -89,7 +89,7 @@ export function SalesTopPricingV2() {
             <span className="text-base sm:text-lg line-through text-slate-500 font-mono">~R$ 850 / mês</span>
           </div>
           <div className="text-right">
-            <span className="text-xs text-cyan-400 block font-medium tracking-wide">No VORIXA a partir de:</span>
+            <span className="text-xs text-cyan-400 block font-medium tracking-wide">No VORTIXIA a partir de:</span>
             <span className="text-2xl sm:text-3xl font-normal text-white font-serif">R$ 39 <span className="text-xs font-sans text-slate-400">/ mês</span></span>
           </div>
         </div>

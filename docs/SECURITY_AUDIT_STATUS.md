@@ -1,4 +1,4 @@
-# VORIXA - Matriz Consolidada de Status de Segurança
+# VORTIXIA - Matriz Consolidada de Status de Segurança
 
 Esta matriz categoriza o status real de cada controle avaliado nas Auditorias de Segurança da Fase 5 (14.1 até 14.4.2).
 
@@ -35,7 +35,7 @@ Esta matriz categoriza o status real de cada controle avaliado nas Auditorias de
 | **14.2** | RBAC-01 | Rotas admin via USER | `TESTADO` | Testado no Next.js Route Guard (HTTP 403) | `14.2_rbac_idor` | N/A |
 | **14.2** | RBAC-02 | Acesso a dados de terceiros | `TESTADO` | Vitest: Ownership tests HTTP 403 | `14.2_rbac_idor` | N/A |
 | **14.2** | RBAC-03 | Propriedade de Job | `TESTADO` | Vitest: Validado Job vs Session Owner | `14.2_rbac_idor` | N/A |
-| **14.2** | RBAC-04 | Propriedade de File via link direto | `NÃO APLICÁVEL`| VORIXA não expõe endpoints globais de leitura de DB Files (só por job) | `14.2_rbac_idor` | N/A |
+| **14.2** | RBAC-04 | Propriedade de File via link direto | `NÃO APLICÁVEL`| VORTIXIA não expõe endpoints globais de leitura de DB Files (só por job) | `14.2_rbac_idor` | N/A |
 | **14.2** | RBAC-05 | IDOR UserId injection no POST | `TESTADO` | Vitest: Extração direta de session.user.id | `14.2_rbac_idor` | N/A |
 | **14.2** | RBAC-06 | Injeção de ROLE no payload | `TESTADO` | Vitest: Role não atualizável | `14.2_rbac_idor` | N/A |
 | **14.2** | RBAC-07 | Fraude de Créditos (isUnlimited no payload) | `TESTADO` | Vitest: Limit overrides | `14.2_rbac_idor` | N/A |

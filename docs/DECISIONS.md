@@ -1,6 +1,6 @@
-# ARCHITECTURAL DECISIONS RECORD (ADR) - VORIXA
+# ARCHITECTURAL DECISIONS RECORD (ADR) - VORTIXIA
 
-Este documento registra as decisões arquiteturais tomadas durante a concepção e desenvolvimento do VORIXA.
+Este documento registra as decisões arquiteturais tomadas durante a concepção e desenvolvimento do VORTIXIA.
 
 ---
 

@@ -1,6 +1,6 @@
-# VORIXA - Arquitetura Financeira e Máquina de Estados (Fase 6.1)
+# VORTIXIA - Arquitetura Financeira e Máquina de Estados (Fase 6.1)
 
-Este documento especifica a infraestrutura financeira, entidades conceituais e a máquina de estados rígida para o ciclo de faturamento, pagamentos e concessão de créditos do VORIXA.
+Este documento especifica a infraestrutura financeira, entidades conceituais e a máquina de estados rígida para o ciclo de faturamento, pagamentos e concessão de créditos do VORTIXIA.
 
 ---
 
@@ -69,7 +69,7 @@ As seguintes dependências externas e testes de sandbox serão documentados de f
 ## 5. Relatório de Validação de Banco Limpo e Reprodutibilidade (Fase 6.2)
 
 ### Metodologia de Teste e Execução
-* **Banco Temporário Utilizado**: `vorixa_migration_test_62` (criado do zero).
+* **Banco Temporário Utilizado**: `vortixia_migration_test_62` (criado do zero).
 * **Comando de Deploy Executado**: `npx prisma migrate deploy`
 * **Número de Migrations Aplicadas**: 5 migrations, cobrindo todo o histórico do projeto desde o schema inicial até a modelagem de Ledger/Centavos.
 
@@ -92,8 +92,8 @@ No banco temporário limpo, confirmamos a correta criação das tabelas e chaves
 * Campo de unicidade `Payment.gatewayTxId` para transações de gateway externas.
 
 ### Testes Reais Executados no Banco Temporário
-Os testes automatizados foram apontados para o banco temporário `vorixa_migration_test_62` e passaram com **100% de sucesso (5/5 testes)**. Após a validação, o banco temporário foi destruído de forma segura (`DROP DATABASE`).
+Os testes automatizados foram apontados para o banco temporário `vortixia_migration_test_62` e passaram com **100% de sucesso (5/5 testes)**. Após a validação, o banco temporário foi destruído de forma segura (`DROP DATABASE`).
 
 ### Preservação do Ambiente de Desenvolvimento
-Confirmamos que o banco de dados principal de desenvolvimento (`vorixa_db`) foi totalmente preservado e não sofreu resets ou alterações destrutivas durante este procedimento de validação.
+Confirmamos que o banco de dados principal de desenvolvimento (`vortixia_db`) foi totalmente preservado e não sofreu resets ou alterações destrutivas durante este procedimento de validação.
 

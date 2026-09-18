@@ -1,4 +1,4 @@
-# VORIXA - Relatório Técnico de Auditoria 14.8.1 (Rate Limiting e Proteção contra Abuso)
+# VORTIXIA - Relatório Técnico de Auditoria 14.8.1 (Rate Limiting e Proteção contra Abuso)
 
 Este relatório formaliza as definições, políticas de IP de confiança e os limites propostos para os endpoints da aplicação, detalhando como a blindagem contra abuso será orquestrada entre a aplicação monorepo e os componentes de infraestrutura de borda (Nginx/Cloudflare WAF).
 
@@ -65,7 +65,7 @@ O cliente HTTP pode injetar cabeçalhos falsos como `X-Forwarded-For: 8.8.8.8` d
 
 ## 5. Atualização de PENDING_TESTS.md
 
-Conforme as regras estritas da auditoria, as pendências de rate limiting real e homologação de proxy foram integradas e consolidadas no arquivo [`docs/PENDING_TESTS.md`](file:///c:/Git/React/VORIXA/docs/PENDING_TESTS.md#L37-L41) sob o Item 6.
+Conforme as regras estritas da auditoria, as pendências de rate limiting real e homologação de proxy foram integradas e consolidadas no arquivo [`docs/PENDING_TESTS.md`](file:///c:/Git/React/VORTIXIA/docs/PENDING_TESTS.md#L37-L41) sob o Item 6.
 
 ---
 

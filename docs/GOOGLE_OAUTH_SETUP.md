@@ -1,6 +1,6 @@
-# Guia Passo a Passo: Configuração do Google Login (OAuth 2.0) — VORIXA
+# Guia Passo a Passo: Configuração do Google Login (OAuth 2.0) — VORTIXIA
 
-Este documento contém o passo a passo completo para o proprietário da aplicação gerar as credenciais oficiais do **Google OAuth 2.0** no Google Cloud Console e ativar o botão **"Entrar com o Google"** na plataforma VORIXA.
+Este documento contém o passo a passo completo para o proprietário da aplicação gerar as credenciais oficiais do **Google OAuth 2.0** no Google Cloud Console e ativar o botão **"Entrar com o Google"** na plataforma VORTIXIA.
 
 ---
 
@@ -21,7 +21,7 @@ Tempo estimado: **5 minutos**.
 1. Acesse: **[https://console.cloud.google.com/](https://console.cloud.google.com/)**
 2. Faça login com a conta Google oficial do projeto ou da empresa.
 3. No topo da página (ao lado do logo do Google Cloud), clique no seletor de projetos e selecione **"Novo Projeto"**.
-4. Defina o nome do projeto (ex: `VORIXA`) e clique em **Criar**.
+4. Defina o nome do projeto (ex: `VORTIXIA`) e clique em **Criar**.
 5. Certifique-se de que o projeto recém-criado está selecionado no topo da tela.
 
 ---
@@ -30,7 +30,7 @@ Tempo estimado: **5 minutos**.
 1. No menu de navegação à esquerda, vá em **APIs e Serviços** ➜ **Tela de consentimento OAuth** (ou acesse diretamente pelo link: [Tela de Consentimento](https://console.cloud.google.com/apis/credentials/consent)).
 2. Selecione o tipo de usuário: **Externo** e clique no botão **Criar**.
 3. Preencha as informações obrigatórias da aplicação:
-   * **Nome do app:** `VORIXA`
+   * **Nome do app:** `VORTIXIA`
    * **E-mail para suporte do usuário:** Seu e-mail de contato ou suporte.
    * **Logotipo do app (opcional):** Pode subir a logo oficial `public/logos/logo principal.png`.
    * **Domínio do aplicativo (se já tiver domínio público):**
@@ -50,7 +50,7 @@ Tempo estimado: **5 minutos**.
 1. No menu lateral esquerdo, clique em **Credenciais** (ou acesse: [Credenciais](https://console.cloud.google.com/apis/credentials)).
 2. No menu superior, clique em **+ Criar Credenciais** ➜ **ID do cliente OAuth**.
 3. Em **Tipo de aplicativo**, selecione: **Aplicativo da Web**.
-4. Em **Nome**, defina: `VORIXA Web App`.
+4. Em **Nome**, defina: `VORTIXIA Web App`.
 5. Em **Origens JavaScript autorizadas**, clique em **+ Adicionar URI** e adicione as URLs de onde as requisições partirão:
    * `http://localhost:3000` *(Ambiente de Desenvolvimento / Testes Locais)*
    * `https://seudominio.com.br` *(Substitua pelo seu domínio oficial em Produção)*

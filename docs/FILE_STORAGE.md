@@ -1,10 +1,10 @@
-# FILE STORAGE - VORIXA
+# FILE STORAGE - VORTIXIA
 
 Este documento descreve a infraestrutura e fluxos para armazenamento de arquivos multimídia (imagens, vídeos e áudio).
 
 ## 1. Arquitetura de Storage (Cloudflare R2)
 
-O VORIXA adota **Cloudflare R2** como provedor de storage principal e definitivo desde o início. A escolha se baseia na eliminação total de taxas de transferência de dados de saída (*zero egress fees*), reduzindo drasticamente os custos operacionais à medida que a plataforma cresce e consome alta largura de banda para transferir vídeos.
+O VORTIXIA adota **Cloudflare R2** como provedor de storage principal e definitivo desde o início. A escolha se baseia na eliminação total de taxas de transferência de dados de saída (*zero egress fees*), reduzindo drasticamente os custos operacionais à medida que a plataforma cresce e consome alta largura de banda para transferir vídeos.
 
 * **Arquivos Locais**: Em ambiente de desenvolvimento local, para evitar a dependência do Docker/MinIO, a plataforma utiliza por padrão um adaptador de disco local (`DiskStorageProvider`). Este adaptador grava os arquivos diretamente na pasta `/public/uploads/` (que é listada no `.gitignore` para evitar o versionamento). Caso o desenvolvedor queira testar a API S3 localmente, o suporte ao MinIO permanece disponível através do adaptador S3, bastando configurar as variáveis do `.env`.
 * **Banco de Dados**: O PostgreSQL armazena exclusivamente os metadados na tabela `File`. Arquivos físicos nunca devem ser gravados como blobs no banco de dados.

@@ -1,6 +1,6 @@
-# LANDING PAGE - VORIXA
+# LANDING PAGE - VORTIXIA
 
-Este documento define a estrutura e o fluxo de conversão da Landing Page pública da plataforma VORIXA.
+Este documento define a estrutura e o fluxo de conversão da Landing Page pública da plataforma VORTIXIA.
 
 ## 1. Estrutura de Seções (Página de Vendas)
 
@@ -42,12 +42,12 @@ Exibição de cards de preços comparativos baseados na tabela `CreditPackage` d
 ## 2. Metadados e Otimização para SEO (Regra Obrigatória)
 
 A Landing Page deve possuir os seguintes cabeçalhos para indexação em motores de busca:
-* **Canonical Link**: `<link rel="canonical" href="https://vorixa.com" />` para evitar duplicações de domínio.
+* **Canonical Link**: `<link rel="canonical" href="https://vortixia.com" />` para evitar duplicações de domínio.
 * **Open Graph (OG Tags)**: Caminhos absolutos para o favicon e imagem de compartilhamento nas redes sociais (WhatsApp/Telegram).
   ```html
-  <meta property="og:title" content="VORIXA - Criação de Vídeo e Imagem com IA" />
+  <meta property="og:title" content="VORTIXIA - Criação de Vídeo e Imagem com IA" />
   <meta property="og:description" content="Gere vídeos e mídias profissionais com movimento controlado e sincronização labial avançada." />
-  <meta property="og:image" content="https://vorixa.com/images/og-share-preview.jpg" />
+  <meta property="og:image" content="https://vortixia.com/images/og-share-preview.jpg" />
   <meta property="og:type" content="website" />
   ```
 * **Robots**: Configurado com `index, follow` para permitir varredura do Googlebot nas rotas públicas.

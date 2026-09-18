@@ -1,4 +1,4 @@
-# BACKEND ARCHITECTURE - VORIXA
+# BACKEND ARCHITECTURE - VORTIXIA
 
 Este documento descreve a organização interna das camadas lógicas do Backend (Next.js API Routes).
 

@@ -1,4 +1,4 @@
-# VORIXA - Relatório Técnico de Auditoria 14.7.1 (Validação de Testes de Autenticação)
+# VORTIXIA - Relatório Técnico de Auditoria 14.7.1 (Validação de Testes de Autenticação)
 
 Este relatório detalha a auditoria estruturada aplicada sobre a suíte de testes de autenticação e recuperação de senha (Auditoria 14.7), avaliando se os cenários de teste são robustos contra regressões ou se ocultam falsos positivos por meio de mocks excessivos.
 
@@ -6,7 +6,7 @@ Este relatório detalha a auditoria estruturada aplicada sobre a suíte de teste
 
 ## 1. Contagem Real e Mapeamento de Testes (14.7)
 
-Identificamos a execução real de **6 testes específicos** dentro do arquivo [`__tests__/auth.test.ts`](file:///c:/Git/React/VORIXA/__tests__/auth.test.ts) de um total de **47 testes aprovados** em toda a aplicação (Vitest).
+Identificamos a execução real de **6 testes específicos** dentro do arquivo [`__tests__/auth.test.ts`](file:///c:/Git/React/VORTIXIA/__tests__/auth.test.ts) de um total de **47 testes aprovados** em toda a aplicação (Vitest).
 
 | ID Teste | Nome do Teste | Arquivo | Função / Componente Exercitado | Mocks Utilizados | Assertions |
 |---|---|---|---|---|---|

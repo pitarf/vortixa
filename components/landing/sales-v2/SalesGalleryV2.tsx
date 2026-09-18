@@ -44,7 +44,7 @@ export function SalesGalleryV2() {
       type: "video",
       title: "Clonagem de Dança do TikTok",
       tag: "Motion Real",
-      url: "/uploads/motion_gerado_vorixa.mp4",
+      url: "/uploads/motion_gerado_vortixia.mp4",
       poster: "/uploads/motion_personagem_base.png",
       desc: "Transferência de passos do TikTok para personagem virtual com física realista.",
     },

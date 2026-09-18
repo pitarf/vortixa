@@ -6,7 +6,7 @@ import { Check, Zap, XCircle, Sparkles, ShieldCheck } from "lucide-react";
 
 /**
  * Seção de Preços & Economia — Dark Obsidian Premium.
- * Comparativo visual de choque de custos (Ferramentas Separadas vs. VORIXA) e 3 planos claros.
+ * Comparativo visual de choque de custos (Ferramentas Separadas vs. VORTIXIA) e 3 planos claros.
  * Touch targets >= 44px e escala fluida para telas de 320px sem degraus.
  */
 export function PricingSection() {
@@ -88,7 +88,7 @@ export function PricingSection() {
               
               <div className="flex items-center gap-2 text-violet-300 font-bold font-mono text-xs uppercase">
                 <Zap className="w-4 h-4 text-cyan-400 fill-current shrink-0" />
-                <span>Aqui no VORIXA:</span>
+                <span>Aqui no VORTIXIA:</span>
               </div>
               <p className="text-slate-300 text-xs leading-relaxed">
                 Você tem acesso às melhores ferramentas usando créditos que não vencem de surpresa. Paga apenas pelo que produzir, sem mensalidades duplicadas.

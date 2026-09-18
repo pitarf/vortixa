@@ -19,7 +19,7 @@ export function ResultsMasonryGallery() {
       title: "Clonagem de Dança do TikTok (Motion Control)",
       modelTag: "Kling v3 Motion Control",
       prompt: "Transferência de coreografia gravada no TikTok diretamente para personagem fotorrealista de IA, mantendo 100% dos movimentos e áudio musical.",
-      mediaUrl: "/uploads/motion_gerado_vorixa.mp4",
+      mediaUrl: "/uploads/motion_gerado_vortixia.mp4",
       posterUrl: "/uploads/motion_personagem_base.png",
       aspectRatio: "aspect-[9/16]",
       badge: "Motion Control 💃",

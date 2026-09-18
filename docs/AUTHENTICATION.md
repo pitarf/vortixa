@@ -1,6 +1,6 @@
-# AUTHENTICATION & AUTHORIZATION SPECIFICATION - VORIXA
+# AUTHENTICATION & AUTHORIZATION SPECIFICATION - VORTIXIA
 
-Este documento detalha o sistema de autenticação, controle de acesso baseado em cargos (RBAC) e orquestração de sessões do VORIXA.
+Este documento detalha o sistema de autenticação, controle de acesso baseado em cargos (RBAC) e orquestração de sessões do VORTIXIA.
 
 ## 1. Arquitetura de Autenticação
 
@@ -28,7 +28,7 @@ A plataforma adota o **Auth.js v5 (NextAuth.js@beta)** como biblioteca de autent
 
 ## 3. Proteção de Rotas e Níveis de Acesso (RBAC)
 
-O controle de fronteira é orquestrado pelo arquivo [proxy.ts](file:///c:/Git/React/VORIXA/proxy.ts) do Next.js (equivalente ao middleware de rotas nas versões anteriores):
+O controle de fronteira é orquestrado pelo arquivo [proxy.ts](file:///c:/Git/React/VORTIXIA/proxy.ts) do Next.js (equivalente ao middleware de rotas nas versões anteriores):
 
 * **Rotas Públicas (Acesso Livre)**:
   * `/` (Landing Page)

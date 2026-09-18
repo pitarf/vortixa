@@ -1,4 +1,4 @@
-# AI INTEGRATIONS - VORIXA
+# AI INTEGRATIONS - VORTIXIA
 
 Este documento especifica a camada de integração de Inteligência Artificial utilizando prioritariamente os serviços da **fal.ai**.
 
@@ -24,9 +24,9 @@ export interface IAIProvider {
 
 ## 2. Catálogo de Modelos e Preços (fal.ai)
 
-O catálogo de modelos do VORIXA é configurado no banco de dados e sincronizado conforme as definições de precificação abaixo:
+O catálogo de modelos do VORTIXIA é configurado no banco de dados e sincronizado conforme as definições de precificação abaixo:
 
-| Provider | Modelo | Endpoint | Função | Unidade | Custo Provider | Créditos VORIXA | Status |
+| Provider | Modelo | Endpoint | Função | Unidade | Custo Provider | Créditos VORTIXIA | Status |
 |---|---|---|---|---|---:|---:|---|
 | fal.ai | FLUX.1 dev | `fal-ai/flux/dev` | Texto → Imagem | IMAGE | US$ 0.025 | 1 | Active |
 | fal.ai | Kling 3.0 Standard Motion | `fal-ai/kling-video/v3/standard/motion-control` | Motion Control | SECOND | US$ 0.126 | 15 | Active |
@@ -37,7 +37,7 @@ O catálogo de modelos do VORIXA é configurado no banco de dados e sincronizado
 *Última verificação de preços da API fal.ai: 18 de Agosto de 2026.*
 
 > [!NOTE]
-> Os custos estimados/configurados do provedor calculados pelo VORIXA são armazenados separadamente na coluna `providerCostUsd` de cada job de geração, permitindo calcular a margem de lucro operacional posterior da plataforma comparando com os créditos cobrados.
+> Os custos estimados/configurados do provedor calculados pelo VORTIXIA são armazenados separadamente na coluna `providerCostUsd` de cada job de geração, permitindo calcular a margem de lucro operacional posterior da plataforma comparando com os créditos cobrados.
 
 ---
 

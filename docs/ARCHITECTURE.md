@@ -1,6 +1,6 @@
-# ARCHITECTURE - VORIXA
+# ARCHITECTURE - VORTIXIA
 
-Este documento descreve a arquitetura de software, infraestrutura e fluxos de dados adotados na plataforma **VORIXA**, com foco na preparação para escala comercial com infraestrutura inicial enxuta.
+Este documento descreve a arquitetura de software, infraestrutura e fluxos de dados adotados na plataforma **VORTIXIA**, com foco na preparação para escala comercial com infraestrutura inicial enxuta.
 
 ## 1. Visão Geral da Arquitetura
 
@@ -73,7 +73,7 @@ A geração de IA consome tempo de execução. O fluxo assíncrono é desenhado 
    * Dispara a requisição para a **fal.ai** informando o webhook `/api/webhooks/fal`.
    * Atualiza o `AIJob` com o `providerJobId` da fal.ai e altera o status para `PROCESSING`.
 3. O **Backend** retorna imediatamente o `jobId` interno (HTTP 202).
-4. O **Webhook do VORIXA** recebe a conclusão da fal.ai:
+4. O **Webhook do VORTIXIA** recebe a conclusão da fal.ai:
    * Valida a assinatura de segurança do payload.
    * Se sucesso: Transfere o arquivo da fal.ai para o Cloudflare R2, registra o `File`, associa ao `AIJobOutput` e altera status do job para `COMPLETED`.
    * Se falha: Altera status do job para `FAILED` e inicia o **estorno automático** transacional de créditos.

@@ -1,4 +1,4 @@
-# DOCKER CONFIGURATION - VORIXA
+# DOCKER CONFIGURATION - VORTIXIA
 
 Este documento descreve como o projeto é empacotado e executado em ambientes isolados utilizando **Docker** e **Docker Compose** para implantação.
 
@@ -61,12 +61,12 @@ services:
   # Banco de Dados PostgreSQL com Volume Mapeado
   postgres:
     image: postgres:15-alpine
-    container_name: vorixa-postgres
+    container_name: vortixia-postgres
     restart: always
     environment:
-      POSTGRES_USER: vorixa_user
-      POSTGRES_PASSWORD: vorixa_password
-      POSTGRES_DB: vorixa_db
+      POSTGRES_USER: vortixia_user
+      POSTGRES_PASSWORD: vortixia_password
+      POSTGRES_DB: vortixia_db
     ports:
       - "5432:5432"
     volumes:
@@ -75,7 +75,7 @@ services:
   # Storage S3 Local (MinIO)
   minio:
     image: minio/minio
-    container_name: vorixa-minio
+    container_name: vortixia-minio
     restart: always
     ports:
       - "9000:9000"
@@ -105,8 +105,8 @@ Para inicializar a estrutura do banco localmente pela primeira vez, execute:
 docker-compose up -d
 
 # Executa as migrations do Prisma
-docker exec -it vorixa-app npx prisma migrate dev
+docker exec -it vortixia-app npx prisma migrate dev
 
 # Popula o banco com os provedores, modelos e ferramentas iniciais (seed)
-docker exec -it vorixa-app npx prisma db seed
+docker exec -it vortixia-app npx prisma db seed
 ```

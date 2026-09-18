@@ -1,6 +1,6 @@
-# REQUIREMENTS - VORIXA
+# REQUIREMENTS - VORTIXIA
 
-Este documento detalha os requisitos e regras de negócio para a implementação da plataforma VORIXA.
+Este documento detalha os requisitos e regras de negócio para a implementação da plataforma VORTIXIA.
 
 ## 1. Requisitos Funcionais (RF)
 

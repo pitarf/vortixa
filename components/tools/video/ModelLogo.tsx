@@ -22,7 +22,7 @@ export function ModelLogo({ modelId, className = "", size = "md" }: ModelLogoPro
   }[size];
 
   // VORTIXIA IA (Motor Proprietário)
-  if (modelId === "vorixa-ia" || modelId.includes("vorixa") || modelId.includes("vortixia")) {
+  if (modelId === "vortixia-ia" || modelId.includes("vortixia") || modelId.includes("vortixia")) {
     return (
       <div
         className={`relative ${sizeClasses} bg-gradient-to-br from-[#120826] via-[#2E1065] to-[#06B6D4] border border-cyan-400/50 flex flex-col items-center justify-center p-0.5 shadow-lg shadow-cyan-950/40 overflow-hidden flex-shrink-0 select-none ${className}`}

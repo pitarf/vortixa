@@ -291,7 +291,7 @@ export function NodeInspector() {
               </button>
               <a
                 href={outputUrl}
-                download={`vorixa-${data.nodeId}`}
+                download={`vortixia-${data.nodeId}`}
                 target="_blank"
                 rel="noreferrer"
                 className="py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"

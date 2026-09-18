@@ -1,6 +1,6 @@
-# VORIXA — MASTER COPYWRITING & NARRATIVE ARCHITECTURE (HOME2)
+# VORTIXIA — MASTER COPYWRITING & NARRATIVE ARCHITECTURE (HOME2)
 **Documento Oficial de Copywriting de Alta Conversão, Direct Response & Storytelling**  
-**Versão:** 2.0.0 (Home2 Production Ready) | **Autor:** @vorixa-copywriter-agent | **Data:** 02/09/2026
+**Versão:** 2.0.0 (Home2 Production Ready) | **Autor:** @vortixia-copywriter-agent | **Data:** 02/09/2026
 
 ---
 
@@ -8,7 +8,7 @@
 
 * **Grande Ideia (Big Idea):** *"O Fim da Fragmentação de Assinaturas de IA: Seu Estúdio de Cinema e Criadores Virtuais em um Único Lugar, com Controle Determinístico e Sem Roleta-Russa de Prompts."*
 * **Inimigo Comum:** Pagar 5 a 6 assinaturas em dólar com IOF (Midjourney, Runway, Kling, ElevenLabs, HeyGen, Topaz), perder horas pulando de aba em aba e continuar recebendo vídeos com movimentos bizarros ou sem sincronia.
-* **Mecanismo Único:** **VORIXA Engine Pipeline + VORIXA FLOW™** — O pipeline que conecta a melhor geração de imagem (FLUX.1), animação cinematográfica (Kling 1.5), controle de movimento corporal, sincronia labial realista (LivePortrait LipSync) e upscaling 4K nativo em uma esteira fluida.
+* **Mecanismo Único:** **VORTIXIA Engine Pipeline + VORTIXIA FLOW™** — O pipeline que conecta a melhor geração de imagem (FLUX.1), animação cinematográfica (Kling 1.5), controle de movimento corporal, sincronia labial realista (LivePortrait LipSync) e upscaling 4K nativo em uma esteira fluida.
 * **Tom de Voz:** Autoritário, cinematográfico, transparente, provocador com o desperdício financeiro e obsessivo por ROI e controle criativo.
 
 ---
@@ -20,10 +20,10 @@ graph TD
     A[1. Top Bar & Announcement] --> B[2. Hero Section Cinematográfico]
     B --> C[3. Trust Bar & Métricas de Performance]
     C --> D[4. Showcase All-in-One: Os 5 Motores de Elite]
-    D --> E[5. VORIXA FLOW: Do Conceito ao 4K em 3 Passos]
+    D --> E[5. VORTIXIA FLOW: Do Conceito ao 4K em 3 Passos]
     E --> F[6. Proof Slider: Antes & Depois Interativo]
     F --> G[7. Matriz de Casos de Uso por Indústria]
-    G --> H[8. Comparador de Custo Radical: 5 Assinaturas vs VORIXA]
+    G --> H[8. Comparador de Custo Radical: 5 Assinaturas vs VORTIXIA]
     H --> I[9. Tabela de Planos & Calculadora de Capacidade]
     I --> J[10. Quebra de Objeções & FAQ Estratégico]
     J --> K[11. Final Conversion Hook & CTA de Fechamento]
@@ -33,7 +33,7 @@ graph TD
 
 # 1. BARRA DE TOPO & ANÚNCIO (TOP BANNER)
 
-* **Tag:** `NOVO • VORIXA 2.0`
+* **Tag:** `NOVO • VORTIXIA 2.0`
 * **Texto Principal:** *"🚀 Motor Kling 1.5 + LipSync Instantâneo Liberados. Crie seus primeiros vídeos sem gastar nada."*
 * **Micro-Link:** `[Experimentar Agora ➔]` *(Leva direto para `/register`)*
 
@@ -64,7 +64,7 @@ graph TD
   * **Ícone:** Raio luminoso (`⚡`)
   * **Efeito:** Glow pulsante Violeta/Indigo (`bg-gradient-to-r from-violet-600 to-indigo-600`)
 * **Botão Secundário (Social Proof / Explorar):**
-  * **Texto:** `Assistir Demo de 60s` ou `Ver VORIXA FLOW em Ação`
+  * **Texto:** `Assistir Demo de 60s` ou `Ver VORTIXIA FLOW em Ação`
   * **Ícone:** Play em vidro translúcido (`▶`)
 
 ### 2.5 Micro-Copy de Alívio de Fricção (Abaixo do CTA)
@@ -99,12 +99,12 @@ graph TD
 
 # 4. SEÇÃO 3: SUÍTE ALL-IN-ONE — OS 5 MOTORES DE ELITE
 
-> **Objetivo:** Destruir a necessidade de contratar múltiplas ferramentas. Provar que o VORIXA tem o melhor de cada categoria em uma interface única e harmonizada.
+> **Objetivo:** Destruir a necessidade de contratar múltiplas ferramentas. Provar que o VORTIXIA tem o melhor de cada categoria em uma interface única e harmonizada.
 
 ### 4.1 Cabeçalho da Seção
 * **Kicker:** `TODAS AS FERRAMENTAS QUE VOCÊ PRECISA`
 * **Título:** ## 5 Motores de Inteligência Artificial. Zero Malabarismo de Abas.
-* **Subtítulo:** Não escolha entre boa imagem ou bom movimento. No VORIXA, você tem acesso às IAs mais poderosas do planeta integradas em um pipeline contínuo.
+* **Subtítulo:** Não escolha entre boa imagem ou bom movimento. No VORTIXIA, você tem acesso às IAs mais poderosas do planeta integradas em um pipeline contínuo.
 
 ---
 
@@ -142,14 +142,14 @@ graph TD
 
 ---
 
-# 5. SEÇÃO 4: VORIXA FLOW™ — DO CONCEITO AO VÍDEO FINAL EM 3 PASSOS
+# 5. SEÇÃO 4: VORTIXIA FLOW™ — DO CONCEITO AO VÍDEO FINAL EM 3 PASSOS
 
 > **Objetivo:** Quebrar a objeção de que IA generativa profissional é difícil ou requer código. Demonstrar o fluxo de criação intuitivo e fluido.
 
 ### 5.1 Cabeçalho da Seção
 * **Kicker:** `FLUXO VISUAL INTUITIVO`
 * **Título:** ## Da Ideia ao Filme Final em 3 Passos Simples
-* **Subtítulo:** Você não precisa de conhecimentos técnicos, prompts quilométricos ou placas de vídeo caras. O VORIXA guia sua criação em uma esteira visual lógica.
+* **Subtítulo:** Você não precisa de conhecimentos técnicos, prompts quilométricos ou placas de vídeo caras. O VORTIXIA guia sua criação em uma esteira visual lógica.
 
 ### 5.2 Os 3 Passos Estruturados
 
@@ -173,7 +173,7 @@ graph LR
 
 # 6. SEÇÃO 5: ANTES & DEPOIS INTERATIVO (PROVA INEGÁVEL)
 
-> **Objetivo:** Permitir ao visitante interagir com o slider e ver a mágica do VORIXA acontecer na frente dos olhos: de uma imagem estática simples a um vídeo cinematográfico vibrante.
+> **Objetivo:** Permitir ao visitante interagir com o slider e ver a mágica do VORTIXIA acontecer na frente dos olhos: de uma imagem estática simples a um vídeo cinematográfico vibrante.
 
 ### 6.1 Headline da Seção
 * **Título:** ## Veja a Transformação em Tempo Real
@@ -201,34 +201,34 @@ graph LR
 
 #### 1. E-commerce, Dropshipping & D2C Brands
 * **Dores Resolvidas:** Acabe com o custo de estúdios fotográficos, contratação de modelos, envio de amostras e semanas de espera para lançar uma coleção.
-* **Como o VORIXA resolve:** Crie fotos de produtos em cenários de luxo e transforme imagens em vídeos verticais (9:16) no estilo TikTok/Reels mostrando o produto em ação com modelos virtuais de qualquer etnia.
+* **Como o VORTIXIA resolve:** Crie fotos de produtos em cenários de luxo e transforme imagens em vídeos verticais (9:16) no estilo TikTok/Reels mostrando o produto em ação com modelos virtuais de qualquer etnia.
 * **Resultado Chave:** `+340% de CTR em criativos de Meta Ads e TikTok Ads.`
 
 #### 2. Agências de Tráfego Pago & Performance
 * **Dores Resolvidas:** Fadiga de criativos no Facebook Ads, altos custos de produção de variações e incapacidade de testar 20 criativos novos por semana.
-* **Como o VORIXA resolve:** Produza dezenas de ganchos (hooks) diferentes para o mesmo produto em minutos, trocando o rosto do avatar, a voz e o cenário com poucos cliques.
+* **Como o VORTIXIA resolve:** Produza dezenas de ganchos (hooks) diferentes para o mesmo produto em minutos, trocando o rosto do avatar, a voz e o cenário com poucos cliques.
 * **Resultado Chave:** `Escala de ROAS com custo de produção reduzido a centavos por variação.`
 
 #### 3. Criadores de Conteúdo, Afiliados & Canais Dark
 * **Dores Resolvidas:** Timidez de aparecer na câmera, custo de microfone/iluminação e falta de consistência na produção diária de vídeos para YouTube e TikTok.
-* **Como o VORIXA resolve:** Crie personagens consistentes que narram histórias, ensinam tutoriais e promovem produtos como afiliados sem você precisar gravar um único segundo do seu próprio rosto.
+* **Como o VORTIXIA resolve:** Crie personagens consistentes que narram histórias, ensinam tutoriais e promovem produtos como afiliados sem você precisar gravar um único segundo do seu próprio rosto.
 * **Resultado Chave:** `Canais monetizados e consistência de postagem 10x mais rápida.`
 
 #### 4. Produtoras Audiovisuais, Cineastas & Designers
 * **Dores Resolvidas:** Tempo excessivo gasto em storyboards 3D manuais, renders demorados em After Effects e limitações de orçamento de clientes.
-* **Como o VORIXA resolve:** Pitching de projetos com concept arts foto-realistas, cenas b-roll cinematográficas e pré-visualizações completas em 4K para aprovação imediata do cliente.
+* **Como o VORTIXIA resolve:** Pitching de projetos com concept arts foto-realistas, cenas b-roll cinematográficas e pré-visualizações completas em 4K para aprovação imediata do cliente.
 * **Resultado Chave:** `Aprovação de orçamentos 5x mais rápida com demonstrações visuais impactantes.`
 
 ---
 
 # 8. SEÇÃO 7: COMPARATIVO DE CUSTO RADICAL (A MATEMÁTICA DO ROI)
 
-> **Objetivo:** Tornar a decisão irracionalmente óbvia pelo lado financeiro. Mostrar o desperdício brutal de assinar ferramentas isoladas em dólar versus o VORIXA All-in-One.
+> **Objetivo:** Tornar a decisão irracionalmente óbvia pelo lado financeiro. Mostrar o desperdício brutal de assinar ferramentas isoladas em dólar versus o VORTIXIA All-in-One.
 
 ### 8.1 Cabeçalho
 * **Kicker:** `A CONTA QUE NINGUÉM TE MOSTRA`
 * **Título:** ## Pare de Queimar Dinheiro com 5 Assinaturas em Dólar
-* **Subtítulo:** Veja quanto você gasta todos os meses somando plataformas isoladas (com IOF e conversão de moeda) vs. assinar o ecossistema completo do VORIXA.
+* **Subtítulo:** Veja quanto você gasta todos os meses somando plataformas isoladas (com IOF e conversão de moeda) vs. assinar o ecossistema completo do VORTIXIA.
 
 ---
 
@@ -242,11 +242,11 @@ graph LR
 | **HeyGen / D-ID** | Lip Sync & Animação Facial | ~R$ 290,00 / mês ($49 USD) |
 | **Topaz Video AI / Upscaler** | Upscaling e Nitidez 4K | ~R$ 150,00 / mês ($25 USD) |
 | **TOTAL SEPARADO POR MÊS:** | *5 Plataformas Desconectadas* | **R$ 1.110,00 / mês** |
-| 🚀 **VORIXA ALL-IN-ONE:** | **Todos os 5 Motores Integrados** | **A partir de R$ 49,00 / mês** |
+| 🚀 **VORTIXIA ALL-IN-ONE:** | **Todos os 5 Motores Integrados** | **A partir de R$ 49,00 / mês** |
 
 ### 8.3 Chamada de Destaque Financeiro (Callout Box)
 > ### 💡 Economia Real de +R$ 1.000,00 Todos os Meses
-> Com o VORIXA, você economiza mais de **R$ 12.000 por ano**, elimina a dor de cabeça de faturas internacionais no cartão e ganha velocidade criando tudo em uma única linha do tempo fluida.
+> Com o VORTIXIA, você economiza mais de **R$ 12.000 por ano**, elimina a dor de cabeça de faturas internacionais no cartão e ganha velocidade criando tudo em uma única linha do tempo fluida.
 > 
 > `[Quero Economizar Agora e Ter Todas as Ferramentas ➔]`
 
@@ -316,9 +316,9 @@ graph LR
 > **Objetivo:** Eliminar qualquer dúvida jurídica, técnica ou operacional que impeça o cadastro e o upgrade imediato.
 
 ### 1. Posso usar as imagens e vídeos gerados para fins comerciais e anúncios?
-**Resposta:** **Sim, 100%.** Todo conteúdo renderizado no VORIXA pertence a você. Você tem direitos irrestritos para veicular em campanhas de tráfego pago (Meta Ads, TikTok Ads, Google), vender criativos para clientes, publicar em canais monetizados do YouTube ou aplicar em lojas virtuais sem qualquer royalty adicional.
+**Resposta:** **Sim, 100%.** Todo conteúdo renderizado no VORTIXIA pertence a você. Você tem direitos irrestritos para veicular em campanhas de tráfego pago (Meta Ads, TikTok Ads, Google), vender criativos para clientes, publicar em canais monetizados do YouTube ou aplicar em lojas virtuais sem qualquer royalty adicional.
 
-### 2. Os vídeos vêm com alguma marca d'água da VORIXA?
+### 2. Os vídeos vêm com alguma marca d'água da VORTIXIA?
 **Resposta:** **Não.** Todas as renderizações são entregues com acabamento profissional limpo, em alta definição e sem nenhum tipo de logotipo ou marca d'água da plataforma.
 
 ### 3. Preciso de um computador potente ou placa de vídeo dedicada?

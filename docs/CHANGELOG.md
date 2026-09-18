@@ -1,4 +1,4 @@
-# CHANGELOG - VORIXA
+# CHANGELOG - VORTIXIA
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
@@ -51,7 +51,7 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
 ### Adicionado / Refatorado
 - **Studio CREATE v2.0 Turbo (`/dashboard/create`)**:
-  * Redesenho integral com 100% de fidelidade à referência visual de alta fidelidade da VORIXA CREATIVE SUITE.
+  * Redesenho integral com 100% de fidelidade à referência visual de alta fidelidade da VORTIXIA CREATIVE SUITE.
   * **Header do Studio**: Edição dinâmica de nome de projeto, botão de persistência "Salvar", menu contextual de opções e botão de destaque "Enviar para o Flow".
   * **Stepper Horizontal de 4 Etapas**: `1. Tipo de Mídia` ➔ `2. Prompt & Referências` ➔ `3. Parâmetros` ➔ `4. Gerar & Refinar`.
   * **Painel de Criação Lateral**:
@@ -66,14 +66,14 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
     - Barra de ações rápidas: *Baixar, Variar, Upscale 4K, Enviar para o Flow, Usar como Referência*.
   * **Faixa "Inspirações para você"**: 5 cards cinematográficos com carregamento instantâneo de parâmetros e mídia no player.
   * **Histórico Lateral**: Integração em tempo real com `GET /api/library`, exibindo mídias recentes com preview e badges.
-  * **Barra de Rodapé**: Dica de Pro com atalho para o VORIXA FLOW, medidor de créditos em anel (62%) e tempo médio.
+  * **Barra de Rodapé**: Dica de Pro com atalho para o VORTIXIA FLOW, medidor de créditos em anel (62%) e tempo médio.
   * **Validação**: 100% dos 122 testes Vitest verdes e build Next.js 16 validado sem erros.
 
 ## [2.5.0] - 2026-09-05
 
 ### Adicionado / Refatorado
 - **Central de Novidades & Changelog Dinâmico (Fase 8.3)**:
-  * Widget "Novidades no VORIXA" no Dashboard com visual idêntico à referência do usuário (badge `v1.5`, `Turbo`, `4K AI` e link inferior "Testar novos modelos no Flow →").
+  * Widget "Novidades no VORTIXIA" no Dashboard com visual idêntico à referência do usuário (badge `v1.5`, `Turbo`, `4K AI` e link inferior "Testar novos modelos no Flow →").
   * **Modal Interativo de Novidades (`ChangelogModal.tsx`)**: Acionado diretamente pelo botão `Changelog` no widget ou na central de notificações, com busca instantânea e filtros por categorias.
   * **Mapeamento de 100% dos Recursos Reais Ativos (13 Recursos)**:
     - *Google Imagen 3 (Gemini Pro)* (`fal-ai/nano-banana-pro` - 3 créditos): Fotorrealismo extremo, textura de pele natural e sem corte de corpo inteiro.
@@ -84,7 +84,7 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
     - *PromptEngine com Tradução Contextual* (otimizador com parâmetros de câmera Sony A7R IV e preservação de falas em PT-BR).
     - *LivePortrait LipSync Facial* (sincronia fonética sub-milimétrica - 8 créditos).
     - *Kling Motion Control* (transferência de poses e coreografias - 15 créditos).
-    - *VORIXA FLOW Canvas Infinito* (DAG visual encadeado com histórico Undo/Redo e pré-voo de custos).
+    - *VORTIXIA FLOW Canvas Infinito* (DAG visual encadeado com histórico Undo/Redo e pré-voo de custos).
     - *Studio CREATE* (estúdio all-in-one com presets e ação "Open in Flow ✦").
     - *Library Central de Ativos* (organização de mídia com busca e Cinema Lightbox 4K).
     - *Google OAuth2 & Hostinger SMTP* (login em 1 clique e e-mails transacionais com SSL 465).
@@ -95,12 +95,12 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 ## [2.4.0] - 2026-09-05
 
 ### Adicionado / Refatorado
-- **Dashboard VORIXA CREATIVE OS (Fase 8.2)**:
+- **Dashboard VORTIXIA CREATIVE OS (Fase 8.2)**:
   * Redesenho completo da interface do Dashboard e Casca de Navegação baseado na referência visual editorial Dark Obsidian.
   * **Topbar Global Omnibox**: Campo de busca global com atalho de teclado `[ ⌘ K ]` / `[ Ctrl K ]`, badge dourado de créditos (`#F59E0B`), central de notificações com sino interativo e menu de perfil.
   * **Sidebar Lateral Dark Obsidian**: Menu com categorização por suítes (Creative Suite, Motores de IA, Biblioteca e Sistema) e gaveta deslizante adaptativa para dispositivos móveis.
-  * **Hero Banner Cinematográfico**: Saudação editorial com atalhos de 1 clique ("Criar com IA", "Abrir VORIXA FLOW", "Explorar Modelos") e strip de 4 métricas de desempenho da plataforma.
-  * **Grid dos 4 Cards Principais de Criação**: Studio CREATE, VORIXA FLOW com pré-visualização de conexões de nós em pipeline, Build with AI e Biblioteca 2x2.
+  * **Hero Banner Cinematográfico**: Saudação editorial com atalhos de 1 clique ("Criar com IA", "Abrir VORTIXIA FLOW", "Explorar Modelos") e strip de 4 métricas de desempenho da plataforma.
+  * **Grid dos 4 Cards Principais de Criação**: Studio CREATE, VORTIXIA FLOW com pré-visualização de conexões de nós em pipeline, Build with AI e Biblioteca 2x2.
   * **Seção de Projetos Recentes**: Cards widescreen 16:9 com badges de modelo, tempo decorrido, menu de ações rápidas e modal de visualização em tela cheia (Lightbox).
   * **Widgets de Apoio**: Gráfico SVG de uso em anel de 62%, destaque cinematográfico da comunidade ("O Despertar") e feed de novidades em tempo real.
 - **Validação de Qualidade**: Suíte com 100% de aprovação (16 arquivos, 122 testes Vitest verdes) e build de produção Next.js 16 validado com sucesso.
@@ -112,7 +112,7 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
   - Integradas credenciais reais de produção do Google Cloud Console (`GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET`).
   - Ativado `GoogleProvider` com fluxo de login e cadastro integrado em `/login` e `/register`.
 - **E-mail Transacional com Identidade Visual & Hostinger SMTP**:
-  - Template responsivo Dark Obsidian com logo VORIXA em gradiente cosmic, glow accent bar e tipografia oficial.
+  - Template responsivo Dark Obsidian com logo VORTIXIA em gradiente cosmic, glow accent bar e tipografia oficial.
   - Conexão direta via SSL (Porta 465) com `smtp.hostinger.com` autenticada (`contato@vortixia.com.br`).
   - Disparo de teste validado com sucesso.
 - **Suíte de Testes**: 100% dos 122 testes vitest passando com sucesso.
@@ -144,7 +144,7 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
   * Top Announcement Bar com aviso de novidades e links táticos de conversão.
   * Hero Cinematográfico com Headline Magnética, controle de áudio, 100 créditos grátis e eliminação total de zoom-in artificial.
   * Showcase All-in-One dos 5 Motores de Elite com abas táteis, especificações técnicas e cópia de prompts com 1 clique.
-  * VORIXA FLOW™ simplificado em 3 passos lógicos (Conceito -> Frame Fotorrealista -> Animação & Voz 4K).
+  * VORTIXIA FLOW™ simplificado em 3 passos lógicos (Conceito -> Frame Fotorrealista -> Animação & Voz 4K).
   * Comparador de Custos Radical comprovando economia matemática (+80%) contra 5 assinaturas separadas em dólar.
   * Matriz de Casos de Uso por nicho de mercado (E-commerce UGC, Agências, Canais Dark, Produtoras).
   * Tabela de Planos em Reais com seletor mensal/anual e selo de Garantia Incondicional de 7 Dias.
@@ -154,12 +154,12 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
   * Botão `ThemeToggle` dinâmico com ícones táteis de Sol ☀️ e Lua 🌙.
   * Ajuste de contraste para o modo claro no Header, abas interativas, cards e texto do botão CTA final.
 - **Motor de Otimização e Hiper-Realismo Fotográfico (PromptEngine v2)**:
-  * Serviço [`PromptEngine`](file:///c:/Git/React/VORIXA/services/ai/prompt-engine.service.ts) calibrado com engenharia reversa de estúdio:
+  * Serviço [`PromptEngine`](file:///c:/Git/React/VORTIXIA/services/ai/prompt-engine.service.ts) calibrado com engenharia reversa de estúdio:
     - Injeção automática de hardware óptico real (*Shot on Sony A7R IV com lente 85mm f/1.4, iluminação volumétrica e profundidade de campo*).
     - Eliminação de "pele de cera/plástico de IA" com micro-texturas orgânicas (*micropores, natural skin blemishes, fine lines, subsurface scattering*).
     - Preservação estrita e universal de qualquer fala, diálogo ou script entre aspas no idioma original digitado.
-  * Botão **`✦ Otimizar Prompt por IA`** integrado no [`PromptInput`](file:///c:/Git/React/VORIXA/components/ai/prompt-input.tsx).
-  * API [`/api/tools/optimize-prompt`](file:///c:/Git/React/VORIXA/app/api/tools/optimize-prompt/route.ts) e middleware transparente no [`AIService`](file:///c:/Git/React/VORIXA/services/ai/ai.service.ts).
+  * Botão **`✦ Otimizar Prompt por IA`** integrado no [`PromptInput`](file:///c:/Git/React/VORTIXIA/components/ai/prompt-input.tsx).
+  * API [`/api/tools/optimize-prompt`](file:///c:/Git/React/VORTIXIA/app/api/tools/optimize-prompt/route.ts) e middleware transparente no [`AIService`](file:///c:/Git/React/VORTIXIA/services/ai/ai.service.ts).
 - **121/121 testes Vitest aprovados** com 100% de integridade no PostgreSQL.
 
 
@@ -219,7 +219,7 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
 ## [0.5.0] - 2026-08-19
 ### Adicionado
-- **Fase 5 Concluída**: Studio de Criação e VORIXA FLOW Canvas.
+- **Fase 5 Concluída**: Studio de Criação e VORTIXIA FLOW Canvas.
 - Engine de execução de DAG com ordenação topológica e algoritmo de Kahn para detecção de ciclos (`CYCLE_DETECTED`).
 - Node Inspector, Canvas infinito com `@xyflow/react`, nós customizados para FLUX, Kling, LipSync e Upscale.
 

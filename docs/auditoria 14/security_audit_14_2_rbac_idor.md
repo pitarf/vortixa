@@ -1,4 +1,4 @@
-# VORIXA - Relatório Técnico de Auditoria 14.2 (RBAC, Autorização e IDOR)
+# VORTIXIA - Relatório Técnico de Auditoria 14.2 (RBAC, Autorização e IDOR)
 
 Este documento detalha os resultados da auditoria das políticas de Controle de Acesso Baseado em Perfis (RBAC), autorizações e vulnerabilidades de referências diretas a objetos (IDOR).
 
@@ -15,7 +15,7 @@ Este documento detalha os resultados da auditoria das políticas de Controle de 
 | **RBAC-05** | UserId manipulado (Injeção de ID no body) | `TESTADO` | Envio de `userId: "outro-id"` no corpo da requisição de geração. | ALTA | N/A (Identidade atribuída exclusivamente da sessão) |
 | **RBAC-06** | Role manipulado (Injeção de privilégio) | `TESTADO` | Envio de `role: "ADMIN"` ou campos extras de permissão no cadastro/sessão. | ALTA | N/A (Campos ignorados por Zod schema e lidos apenas da sessão JWT) |
 | **RBAC-07** | isUnlimited manipulado (Fraude de créditos) | `TESTADO` | Tentativa de injetar `isUnlimited: true` ou `creditMode` no payload. | CRÍTICA | N/A (Atributo lido exclusivamente da sessão no banco de dados) |
-| **RBAC-08** | IDOR por ID (Adivinhação de chaves) | `TESTADO` | Uso de IDs sequenciais nas tabelas. O VORIXA utiliza UUID v4 de forma nativa. | MÉDIA | N/A (UUIDs gerados nativamente pelo Prisma) |
+| **RBAC-08** | IDOR por ID (Adivinhação de chaves) | `TESTADO` | Uso de IDs sequenciais nas tabelas. O VORTIXIA utiliza UUID v4 de forma nativa. | MÉDIA | N/A (UUIDs gerados nativamente pelo Prisma) |
 | **RBAC-09** | IDs inexistentes (Exposição de erros) | `TESTADO` | Consulta de Job ID malformado ou inexistente em `/api/tools/job/[id]`. | MÉDIA | N/A (Retorna HTTP 404 seguro: "Job não localizado.") |
 | **RBAC-10** | Escalação horizontal | `TESTADO` | USER_A tentando ler ou alterar saldo/jobs do USER_B. Rejeitado pelo backend. | ALTA | N/A (Isolamento de dados por ID de usuário) |
 | **RBAC-11** | Escalação vertical | `TESTADO` | USER tentando invocar Server Actions administrativas ou endpoints protegidos. | ALTA | N/A (Protegido na borda via middleware e verificação de roles) |

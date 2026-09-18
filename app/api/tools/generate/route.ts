@@ -44,11 +44,11 @@ export async function POST(req: Request) {
       }
     }
 
-    // Se for uma requisição do motor proprietário VORIXA IA (One-Prompt Magic Video)
-    const isVorixaIA =
-      parsed.data.modelId === "vorixa-ia" ||
-      parsed.data.inputs?.engine === "vorixa-ia" ||
-      parsed.data.inputs?.engine === "VORIXA_IA_ONE_PROMPT";
+    // Se for uma requisição do motor proprietário VORTIXIA IA (One-Prompt Magic Video)
+    const isVortixiaIA =
+      parsed.data.modelId === "vortixia-ia" ||
+      parsed.data.inputs?.engine === "vortixia-ia" ||
+      parsed.data.inputs?.engine === "VORTIXIA_IA_ONE_PROMPT";
 
     // Se for uma requisição de vídeo com fala/áudio (One-Shot Talking Video)
     const isTalkingVideo =
@@ -56,9 +56,9 @@ export async function POST(req: Request) {
       Boolean(parsed.data.inputs?.speech_text && parsed.data.inputs.speech_text.trim());
 
     let job;
-    if (isVorixaIA) {
-      const { VorixaIAService } = await import("@/services/ai/vorixa-ia.service");
-      job = await VorixaIAService.submitVorixaIAJob({
+    if (isVortixiaIA) {
+      const { VortixiaIAService } = await import("@/services/ai/vortixia-ia.service");
+      job = await VortixiaIAService.submitVortixiaIAJob({
         userId: session.user.id,
         prompt: parsed.data.inputs.prompt || "",
         imageUrl:
@@ -126,8 +126,8 @@ export async function POST(req: Request) {
     let msg = isBusinessError && !isSyntaxOrInternal ? err.message : "Ocorreu um erro de processamento da geração de IA.";
     // Sanitização estrita: jamais expor nomes de provedores externos (fal.ai, WaveSpeed, etc.) para o usuário
     msg = msg
-      .replace(/fal\.ai/gi, "VORIXA Neural")
-      .replace(/WaveSpeed(\s*AI)?/gi, "VORIXA Neural")
+      .replace(/fal\.ai/gi, "VORTIXIA Neural")
+      .replace(/WaveSpeed(\s*AI)?/gi, "VORTIXIA Neural")
       .replace(/cluster WaveSpeed/gi, "servidores neurais");
 
     return NextResponse.json({ error: msg }, { status: 400 });

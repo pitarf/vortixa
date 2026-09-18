@@ -52,7 +52,7 @@ export function MediaLightbox() {
           <div className="flex items-center gap-2">
             <a
               href={lightboxMedia.url}
-              download={`vorixa-${Date.now()}.${lightboxMedia.type === "video" ? "mp4" : "jpg"}`}
+              download={`vortixia-${Date.now()}.${lightboxMedia.type === "video" ? "mp4" : "jpg"}`}
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-colors"

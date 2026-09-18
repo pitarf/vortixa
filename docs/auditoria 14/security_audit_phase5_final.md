@@ -1,4 +1,4 @@
-# VORIXA - Consolidação Final da Auditoria de Segurança (Fase 5)
+# VORTIXIA - Consolidação Final da Auditoria de Segurança (Fase 5)
 
 Este documento apresenta o fechamento e a consolidação de todos os controles de segurança auditados, inspecionados ou pendentes na Fase 5, cobrindo do módulo 14.1 até o 14.9.1.
 
@@ -6,7 +6,7 @@ Este documento apresenta o fechamento e a consolidação de todos os controles d
 
 ## 1. Resumo Executivo e Métricas Globais
 
-A auditoria de segurança da Fase 5 aplicou uma análise rigorosa e invasiva sobre a base de código do VORIXA. Todas as vulnerabilidades de runtime locais foram remediadas, e os controles que dependem de infraestrutura ativa em produção (VPS/Cloudflare/SMTP) foram isolados e catalogados.
+A auditoria de segurança da Fase 5 aplicou uma análise rigorosa e invasiva sobre a base de código do VORTIXIA. Todas as vulnerabilidades de runtime locais foram remediadas, e os controles que dependem de infraestrutura ativa em produção (VPS/Cloudflare/SMTP) foram isolados e catalogados.
 
 ### Métricas Consolidadas:
 * **Total de Testes do Vitest**: **47 testes aprovados** (comprovando integridade lógica local).

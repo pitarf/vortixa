@@ -1,4 +1,4 @@
-# VORIXA - Relatório Técnico de Auditoria Adversarial (Fase 5)
+# VORTIXIA - Relatório Técnico de Auditoria Adversarial (Fase 5)
 
 Este documento apresenta a matriz de risco, testes de vulnerabilidade e validação de segurança dos novos endpoints e componentes introduzidos na Fase 5.
 

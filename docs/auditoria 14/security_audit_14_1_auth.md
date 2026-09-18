@@ -1,6 +1,6 @@
-# VORIXA - Relatório Técnico de Auditoria 14.1 (Autenticação e Sessões)
+# VORTIXIA - Relatório Técnico de Auditoria 14.1 (Autenticação e Sessões)
 
-Este documento detalha os resultados da auditoria técnica das camadas de Autenticação e Gerenciamento de Sessão da plataforma VORIXA.
+Este documento detalha os resultados da auditoria técnica das camadas de Autenticação e Gerenciamento de Sessão da plataforma VORTIXIA.
 
 ---
 

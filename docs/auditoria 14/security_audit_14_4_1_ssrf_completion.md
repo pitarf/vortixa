@@ -1,6 +1,6 @@
-# VORIXA - Auditoria 14.4.1: Complementação SSRF e Chamadas de Rede
+# VORTIXIA - Auditoria 14.4.1: Complementação SSRF e Chamadas de Rede
 
-Este relatório apresenta o mapeamento de chamadas de rede do backend e validações complementares contra Server-Side Request Forgery (SSRF) no VORIXA (Fase 5).
+Este relatório apresenta o mapeamento de chamadas de rede do backend e validações complementares contra Server-Side Request Forgery (SSRF) no VORTIXIA (Fase 5).
 
 ---
 
@@ -15,15 +15,15 @@ Realizamos uma busca minuciosa por todas as operações de rede no servidor:
    * **Destino**: `https://accounts.google.com` (Google OAuth).
    * **Controle**: Fixo nas configurações do `GoogleProvider` em `auth.config.ts`.
 3. **Brevo API (EmailService)**:
-   * **Destino**: `https://api.brevo.com/v3/smtp/email` no arquivo [email.service.ts](file:///c:/Git/React/VORIXA/services/email.service.ts).
+   * **Destino**: `https://api.brevo.com/v3/smtp/email` no arquivo [email.service.ts](file:///c:/Git/React/VORTIXIA/services/email.service.ts).
    * **Controle**: O destinatário é o e-mail do usuário cadastrado, mas a URL da API da Brevo é fixa.
 4. **fal.ai SDK (Model Queue)**:
-   * **Destino**: `https://queue.fal.run` no arquivo [fal-ai.provider.ts](file:///c:/Git/React/VORIXA/services/ai/providers/fal-ai.provider.ts).
+   * **Destino**: `https://queue.fal.run` no arquivo [fal-ai.provider.ts](file:///c:/Git/React/VORTIXIA/services/ai/providers/fal-ai.provider.ts).
    * **Controle**: O endpoint da fal.ai é fixo e autenticado com `FAL_KEY` interna. Os parâmetros e inputs são repassados ao SDK.
 5. **StorageService (Download de Mídias Geradas)**:
-   * **Destino**: A URL da mídia gerada pela fal.ai no arquivo [storage.service.ts](file:///c:/Git/React/VORIXA/services/storage.service.ts).
+   * **Destino**: A URL da mídia gerada pela fal.ai no arquivo [storage.service.ts](file:///c:/Git/React/VORTIXIA/services/storage.service.ts).
    * **Controle**: A URL é enviada pelo webhook de conclusão da fal.ai (`/api/webhooks/fal`). 
-   * **Risco**: Se um hacker fizesse spoofing do webhook enviando URLs de servidores internos (ex: `http://127.0.0.1:5432`), o servidor VORIXA tentaria baixar o arquivo, criando um vetor de SSRF.
+   * **Risco**: Se um hacker fizesse spoofing do webhook enviando URLs de servidores internos (ex: `http://127.0.0.1:5432`), o servidor VORTIXIA tentaria baixar o arquivo, criando um vetor de SSRF.
    * **Mitigação Aplicada**: Implementamos uma validação estrita de hostname (whitelist) no `StorageService.uploadToLocalDisk`. Apenas URLs com domínios confiáveis da fal.ai (`*.fal.media`, `*.fal.run`, `*.fal.ai`, além de `localhost`/`127.0.0.1`/`picsum.photos` exclusivos em ambiente de teste) são aceitos para download. Tentativas de requisitar redes privadas ou outros servidores são bloqueadas antes de efetuar a chamada HTTP.
 
 ---
@@ -41,7 +41,7 @@ Realizamos uma busca minuciosa por todas as operações de rede no servidor:
 
 ## Conclusão SSRF
 
-Não existe superfície de ataque de SSRF explorável no VORIXA. O único vetor potencial (download de arquivos gerados a partir do webhook da fal.ai) foi complementado com uma proteção ativa baseada em lista de permissões de host confiável (`*.fal.media`, `*.fal.run`, `*.fal.ai`), blindando completamente a infraestrutura de rede interna e serviços do servidor.
+Não existe superfície de ataque de SSRF explorável no VORTIXIA. O único vetor potencial (download de arquivos gerados a partir do webhook da fal.ai) foi complementado com uma proteção ativa baseada em lista de permissões de host confiável (`*.fal.media`, `*.fal.run`, `*.fal.ai`), blindando completamente a infraestrutura de rede interna e serviços do servidor.
 
 ---
 

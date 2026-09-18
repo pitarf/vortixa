@@ -1,4 +1,4 @@
-# FRONTEND ARCHITECTURE - VORIXA
+# FRONTEND ARCHITECTURE - VORTIXIA
 
 Este documento descreve as diretrizes visuais, estruturais e de interface do usuário para a construção do Frontend no Next.js (React).
 

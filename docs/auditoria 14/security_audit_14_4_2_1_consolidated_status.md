@@ -1,4 +1,4 @@
-# VORIXA - Auditoria 14.4.2.1: Status Consolidado de Segurança
+# VORTIXIA - Auditoria 14.4.2.1: Status Consolidado de Segurança
 
 Este relatório executivo detalha o status consolidado de todas as auditorias de segurança executadas na Fase 5 (14.1 a 14.4.2), estabelecendo os resultados efetivos, as integrações pendentes e a rastreabilidade exata dos testes.
 
@@ -21,7 +21,7 @@ A Matriz Completa detalhada encontra-se arquivada em: `docs/SECURITY_AUDIT_STATU
 
 ## 3. Estado Real da Segurança (Resumo Executivo)
 
-O VORIXA apresenta uma arquitetura **segura e bloqueada contra as vulnerabilidades críticas mapeadas (OWASP)** em âmbito de código e simulação de integração, com o isolamento de dados no backend (RBAC) e proteção transacional de créditos funcionando perfeitamente de forma automatizada (Vitest).
+O VORTIXIA apresenta uma arquitetura **segura e bloqueada contra as vulnerabilidades críticas mapeadas (OWASP)** em âmbito de código e simulação de integração, com o isolamento de dados no backend (RBAC) e proteção transacional de créditos funcionando perfeitamente de forma automatizada (Vitest).
 
 **Totais Consolidados:**
 * **Total de Controles Analisados:** 44
@@ -42,7 +42,7 @@ O VORIXA apresenta uma arquitetura **segura e bloqueada contra as vulnerabilidad
 **Integrações Externas Não Homologadas (PENDENTES):**
 * O fluxo completo de Google OAuth (Login Social).
 * Disparo real de e-mails via Brevo.
-* Validação do tráfego do Webhook público (fal.ai → VORIXA em rede live/ngrok).
+* Validação do tráfego do Webhook público (fal.ai → VORTIXIA em rede live/ngrok).
 
 Estes itens foram permanentemente indexados em `docs/PENDING_TESTS.md` e não invalidam a segurança do código, apenas exigem homologação prática posterior.
 

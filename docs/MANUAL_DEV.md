@@ -15,8 +15,8 @@ Certifique-se de ter instalado em sua máquina local:
 
 ### Passo 1: Clonar o Repositório e Instalar Dependências
 ```bash
-git clone https://github.com/usuario/vorixa.git
-cd vorixa
+git clone https://github.com/usuario/vortixia.git
+cd vortixia
 npm install
 ```
 
@@ -27,7 +27,7 @@ cp .env.example .env
 ```
 Preencha a variável `DATABASE_URL` com as suas credenciais locais do PostgreSQL (exemplo):
 ```env
-DATABASE_URL="postgresql://postgres:sua_senha_local@localhost:5432/vorixa_db?schema=public&connection_limit=10"
+DATABASE_URL="postgresql://postgres:sua_senha_local@localhost:5432/vortixia_db?schema=public&connection_limit=10"
 AUTH_SECRET="uma-chave-aleatoria-e-longa-para-jws"
 FAL_KEY="sua-chave-api-da-fal-ai"
 VOREXPAY_API_KEY="sua-chave-api-do-vorexpay"
@@ -125,7 +125,7 @@ Para habilitar a funcionalidade de login com o Google no ambiente local de desen
 
 ---
 
-## 7. Modelagem de Dados do VORIXA FLOW (Fase 8 - Etapa 3)
+## 7. Modelagem de Dados do VORTIXIA FLOW (Fase 8 - Etapa 3)
 
 ### Esquema Prisma
 * **`Flow`**: Agregação raiz do grafo criativo (`userId`, `name`, `description`, `viewport`, `status`).
@@ -136,7 +136,7 @@ Para habilitar a funcionalidade de login com o Google no ambiente local de desen
 
 ---
 
-## 8. Arquitetura do VORIXA FLOW Canvas & Frontend Core (Fase 8 - Etapa 5)
+## 8. Arquitetura do VORTIXIA FLOW Canvas & Frontend Core (Fase 8 - Etapa 5)
 
 ### 1. Stack Tecnológico de Frontend
 * **`@xyflow/react`**: Engine espacial para renderização de grafos infinitos, dot matrix, minimap, drag & drop de nós e conexões inteligentes.
@@ -176,7 +176,7 @@ Para habilitar a funcionalidade de login com o Google no ambiente local de desen
 ### 2. Tabela de Custos e Precificação (Anotação para Precificação de Planos)
 * **fal.ai (`fal-ai/any-llm`)**: ~\$0.001 por chamada (~R\$ 0,005 / prompt) devido ao faturamento por GPU-segundo. Custo de ~R\$ 5,00 a cada 1.000 otimizações.
 * **Migração Futura Recomendada (Google Gemini Flash / Groq)**: ~\$0.000018 por chamada (~R\$ 0,0001 / prompt). Custo de ~R\$ 0,10 a cada 1.000 otimizações (economia de 50x).
-* **Impacto na Margem de Lucro**: Como o custo de LLM é inferior a 1 centavo mesmo na fal.ai, a funcionalidade "✦ Otimizar Prompt por IA" pode ser oferecida como bônus gratuito para o usuário nos pacotes de crédito do VORIXA.
+* **Impacto na Margem de Lucro**: Como o custo de LLM é inferior a 1 centavo mesmo na fal.ai, a funcionalidade "✦ Otimizar Prompt por IA" pode ser oferecida como bônus gratuito para o usuário nos pacotes de crédito do VORTIXIA.
 
 ### 3. Matriz de Custos de Imagem & Estratégia de Precificação Futura (Backlog Financeiro)
 Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplicar o seguinte modelo de dois tiers para geração de imagens:
@@ -206,7 +206,7 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
   - As páginas de Vídeo (`/dashboard/tools/video`), Imagem (`/dashboard/tools/image`) e Studio CREATE (`/dashboard/create`) foram 100% modularizadas em `/components/tools/video/`, `/components/tools/image/` e `/components/studio/`.
   - Remoção de códigos monolíticos (>1.500 linhas) garantindo manutenibilidade e performance de build.
 * **Isolamento de Testes**:
-  - Testes unitários com Vitest limpam exclusivamente os dados do usuário de teste específico (`talking.video@vorixa.com`), preservando dados reais e de desenvolvimento na base PostgreSQL.
+  - Testes unitários com Vitest limpam exclusivamente os dados do usuário de teste específico (`talking.video@vortixia.com`), preservando dados reais e de desenvolvimento na base PostgreSQL.
 
 ---
 
@@ -230,11 +230,11 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
 ### 1. Arquitetura do Cliente Hot (`app/dashboard/tools/hot/HotGenerationClient.tsx`)
 * **Interface `HotModel`, Flag `requiresImage` e Flag `supportsReferenceImage`**:
   - Propriedade booleana `requiresImage`: Modelos de vídeo e edição (`minimax-h3/image-edit`, `qwen-image/edit`, etc.) possuem `requiresImage: true` e exibem o badge `📷 Requer Imagem`.
-  - Propriedade booleana `supportsReferenceImage`: Define se o modelo consome fotos de referência (`true`) ou se opera puramente a partir de descrições textuais (`false` para `VORIXA HyperReal (Foto Realista 8K)` e `VORIXA Chroma`).
+  - Propriedade booleana `supportsReferenceImage`: Define se o modelo consome fotos de referência (`true`) ou se opera puramente a partir de descrições textuais (`false` para `VORTIXIA HyperReal (Foto Realista 8K)` e `VORTIXIA Chroma`).
   - O botão de ação principal reflete dinamicamente o estado: quando `selectedModel.requiresImage && !referenceImageUrl`, exibe o ícone de upload com o texto `Selecione uma Foto para Gerar (+18)`, e ao ser acionado rola a tela para o Card 3 (`#hot-reference-section`).
 * **Card 3 Condicional: Foto de Referência**:
   - Renderizado exclusivamente quando `selectedModel.supportsReferenceImage !== false`.
-  - Para o motor `VORIXA HyperReal (Foto Realista 8K)`, o Card 3 e seu box de upload são totalmente omitidos da árvore DOM, avançando o formulário diretamente do Motor Neural para a descrição do prompt.
+  - Para o motor `VORTIXIA HyperReal (Foto Realista 8K)`, o Card 3 e seu box de upload são totalmente omitidos da árvore DOM, avançando o formulário diretamente do Motor Neural para a descrição do prompt.
   - Numeração dinâmica dos passos: "3. Prompt & Estética Desejada" quando não há etapa de referência, ou "4. Prompt & Estética Desejada" quando há foto de referência.
   - Permite carregamento manual de arquivos de imagem locais (`/api/tools/upload`) ou seleção imediata via `handleSetReference()`.
   - Exibe preview com miniatura de 80x80px, tag `GUIA`, badge de status `Ativa ✅` e botões de `Trocar Foto`, `Ver Foto` e `Remover`.
@@ -260,9 +260,9 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
 
 ### 4. Especialização em Remoção de Roupas & Presets Semânticos (`HOT_REMOVAL_PRESETS`)
 * **Trio de Motores de Remoção (Todos com Alta Performance Comprovada)**:
-  - `wavespeed/qwen-image/edit-plus` (`VORIXA Qwen Edit Plus`): Badge `🏆 Ultra Remoção & Detalhes 🔞`. Maior retenção de feições faciais, simetria e microdetalhes corporais ao despir a pessoa da foto guia.
-  - `wavespeed/hidream-o1-image/edit` (`VORIXA HiDream Edit`): Badge `✨ Remoção Fotorrealista 🌿`. Refinamento fotorrealista de pele e fidelidade à iluminação do ambiente original.
-  - `wavespeed/qwen-image/edit` (`VORIXA Qwen Edit`): Badge `⚡ Remoção Rápida & Ágil 🎯`. Alta velocidade de renderização (~7s) e excelente fidelidade anatômica e de vestimenta.
+  - `wavespeed/qwen-image/edit-plus` (`VORTIXIA Qwen Edit Plus`): Badge `🏆 Ultra Remoção & Detalhes 🔞`. Maior retenção de feições faciais, simetria e microdetalhes corporais ao despir a pessoa da foto guia.
+  - `wavespeed/hidream-o1-image/edit` (`VORTIXIA HiDream Edit`): Badge `✨ Remoção Fotorrealista 🌿`. Refinamento fotorrealista de pele e fidelidade à iluminação do ambiente original.
+  - `wavespeed/qwen-image/edit` (`VORTIXIA Qwen Edit`): Badge `⚡ Remoção Rápida & Ágil 🎯`. Alta velocidade de renderização (~7s) e excelente fidelidade anatômica e de vestimenta.
   - *Validação de Produção*: Confirmado em testes reais que os 3 modelos removem com excelência, diferenciando-se em detalhes de textura, iluminação e velocidade de entrega.
 * **Estrutura de Presets de 1-Clique (`HOT_REMOVAL_PRESETS`)**:
   - `Remoção Total (Nude)`: Injeta instrução em inglês autoritativa: `"Remove all clothes and bra, completely naked and nude, natural uncovered breasts, realistic soft bare skin... strictly preserving exact same face, hair, body pose, identity, natural lighting and background from reference photo, raw photo 8k."`
@@ -288,7 +288,7 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
 
 ### 2. Fluxo Atômico de Comissões (`AffiliateService` & `PaymentLedgerService`)
 * **Vínculo no Cadastro**:
-  - Parâmetro `?ref=...` na URL armazena cookie assinado `vorixa_ref` com validade de 30 dias.
+  - Parâmetro `?ref=...` na URL armazena cookie assinado `vortixia_ref` com validade de 30 dias.
   - No `POST /api/auth/register`, o código de indicação é processado por `AffiliateService.processReferralRegistration`.
   - **Bloqueio de Auto-Indicação**: Afiliados não podem indicar suas próprias contas (`affiliate.userId !== referredUserId`).
   - **Unicidade de Vínculo**: Cada usuário só pode ter um afiliado associado para sempre.
@@ -348,7 +348,7 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
   - `status`: `pending`.
 
 ### 4. Notificações em Tempo Real (Webhooks)
-* **Endpoint Receptor no VORIXA**: `POST /api/webhooks/payment`
+* **Endpoint Receptor no VORTIXIA**: `POST /api/webhooks/payment`
 * **Cabeçalho de Assinatura**: `X-Webhook-Signature`
 * **Algoritmo de Assinatura**: HMAC SHA-256 gerado sobre o **raw body** bruto da requisição utilizando a chave `VOREXPAY_WEBHOOK_SECRET`. A verificação no `VorexPayProvider` utiliza `crypto.timingSafeEqual` para imunidade a ataques de temporização (timing attacks).
 * **Mapeamento de Eventos**:
@@ -531,12 +531,12 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
 
 ### 2. Infraestrutura de Servidor e CDN Permanente
 * **Diretório Permanente na VPS**:
-  - Caminho físico: `/var/www/vorixa-uploads/models/` com permissões `755` e proprietário `ubuntu:ubuntu`.
+  - Caminho físico: `/var/www/vortixia-uploads/models/` com permissões `755` e proprietário `ubuntu:ubuntu`.
 * **Roteamento Nginx**:
-  - Bloco `location /uploads/` mapeado via `alias /var/www/vorixa-uploads/` com cabeçalhos de alta performance:
+  - Bloco `location /uploads/` mapeado via `alias /var/www/vortixia-uploads/` com cabeçalhos de alta performance:
     ```nginx
     location /uploads/ {
-        alias /var/www/vorixa-uploads/;
+        alias /var/www/vortixia-uploads/;
         autoindex off;
         expires 30d;
         add_header Cache-Control "public, max-age=2592000, immutable";

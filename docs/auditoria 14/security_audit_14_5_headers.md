@@ -1,6 +1,6 @@
-# VORIXA - Relatório Técnico de Auditoria 14.5 (CSRF, CORS e Security Headers)
+# VORTIXIA - Relatório Técnico de Auditoria 14.5 (CSRF, CORS e Security Headers)
 
-Este relatório detalha a auditoria das proteções contra Cross-Site Request Forgery (CSRF), Cross-Origin Resource Sharing (CORS), Clickjacking e a configuração de Security Headers no ambiente do VORIXA.
+Este relatório detalha a auditoria das proteções contra Cross-Site Request Forgery (CSRF), Cross-Origin Resource Sharing (CORS), Clickjacking e a configuração de Security Headers no ambiente do VORTIXIA.
 
 ---
 
@@ -20,7 +20,7 @@ Este relatório detalha a auditoria das proteções contra Cross-Site Request Fo
 
 ## 2. Ações Tomadas e Clickjacking
 
-A principal descoberta da auditoria 14.5 foi a **ausência prévia de cabeçalhos de segurança na configuração do frontend Next.js**, o que permitiria que o VORIXA (e a área de login/dashboard) fosse carregado em um `<iframe>` malicioso hospedado em domínio arbitrário, abrindo brecha teórica para **Clickjacking**.
+A principal descoberta da auditoria 14.5 foi a **ausência prévia de cabeçalhos de segurança na configuração do frontend Next.js**, o que permitiria que o VORTIXIA (e a área de login/dashboard) fosse carregado em um `<iframe>` malicioso hospedado em domínio arbitrário, abrindo brecha teórica para **Clickjacking**.
 
 **Mitigação Aplicada:**
 Editamos o arquivo `next.config.ts` e exportamos a função assíncrona `headers()` aplicando as regras globais (`/(.*)`) de bloqueio de frame-ancestors. 

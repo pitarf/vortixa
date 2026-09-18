@@ -1,6 +1,6 @@
-# ROADMAP DE DESENVOLVIMENTO - VORIXA
+# ROADMAP DE DESENVOLVIMENTO - VORTIXIA
 
-Este documento estabelece o cronograma de implementação do projeto VORIXA, dividido em fases incrementais com entregáveis claros.
+Este documento estabelece o cronograma de implementação do projeto VORTIXIA, dividido em fases incrementais com entregáveis claros.
 
 ## Fase 0: Documentação e Arquitetura (Fase Atual)
 * **Objetivo**: Mapeamento completo de requisitos, modelagem do banco de dados, design de arquitetura técnica e registro de decisões técnicas.
@@ -88,7 +88,7 @@ Este documento estabelece o cronograma de implementação do projeto VORIXA, div
 
 ## Evolução de Infraestrutura em Escala
 
-O crescimento operacional e de tráfego do VORIXA seguirá três estágios estruturais bem delimitados:
+O crescimento operacional e de tráfego do VORTIXIA seguirá três estágios estruturais bem delimitados:
 
 ### Estágio Inicial (MVP Controlado)
 * **Arquitetura**: Next.js Monolito rodando em Container Docker único ou Vercel Serverless.

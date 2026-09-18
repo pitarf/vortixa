@@ -1,6 +1,6 @@
-# VORIXA - Relatório Técnico de Auditoria 14.6 (Secrets e Server/Client Boundary)
+# VORTIXIA - Relatório Técnico de Auditoria 14.6 (Secrets e Server/Client Boundary)
 
-Este documento atesta a verificação da proteção de credenciais (secrets) e a blindagem da fronteira entre servidor e cliente (Server/Client Boundary) no ambiente do VORIXA.
+Este documento atesta a verificação da proteção de credenciais (secrets) e a blindagem da fronteira entre servidor e cliente (Server/Client Boundary) no ambiente do VORTIXIA.
 
 ---
 

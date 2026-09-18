@@ -1,5 +1,5 @@
 /**
- * Utilitários de Segurança e Formatação do VORIXA FLOW.
+ * Utilitários de Segurança e Formatação do VORTIXIA FLOW.
  * Garante validação estrita de URLs de mídia e helpers de estado.
  */
 

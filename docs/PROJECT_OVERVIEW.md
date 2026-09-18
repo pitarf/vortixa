@@ -1,8 +1,8 @@
-# PROJECT OVERVIEW - VORIXA
+# PROJECT OVERVIEW - VORTIXIA
 
 ## 1. Visão Geral da Plataforma
 
-O **VORIXA** é uma plataforma SaaS (Software as a Service) comercial focada na democratização e simplificação do uso de modelos avançados de Inteligência Artificial para criação de conteúdo multimídia (imagem, vídeo, áudio, sincronização labial e otimização). 
+O **VORTIXIA** é uma plataforma SaaS (Software as a Service) comercial focada na democratização e simplificação do uso de modelos avançados de Inteligência Artificial para criação de conteúdo multimídia (imagem, vídeo, áudio, sincronização labial e otimização). 
 
 Através de uma interface unificada, intuitiva e altamente responsiva, os usuários finais podem criar mídias complexas sem a necessidade de gerenciar múltiplos cadastros ou APIs complexas nos provedores de IA. O modelo de monetização é baseado em **créditos internos**, que podem ser adquiridos via pacotes avulsos ou assinaturas mensais.
 

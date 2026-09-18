@@ -1,5 +1,5 @@
 /**
- * VORIXA IA - Motor Proprietário de Vídeo com Fala e Movimento em 1-Clique (One-Prompt Magic)
+ * VORTIXIA IA - Motor Proprietário de Vídeo com Fala e Movimento em 1-Clique (One-Prompt Magic)
  *
  * Transforma comandos de alto nível em linguagem natural (ex: "faça essa modelo falar e indicar essa roupa")
  * em vídeos hiper-realistas com roteiro comercial em português, voz ultra-expressiva e movimento labial sincronizado.
@@ -16,7 +16,7 @@ import { TTSService } from "../tts.service";
 import { StorageService } from "../storage.service";
 import { fal } from "@fal-ai/client";
 
-export interface VorixaIARequest {
+export interface VortixiaIARequest {
   userId: string;
   prompt: string;
   imageUrl?: string;
@@ -27,21 +27,21 @@ export interface VorixaIARequest {
   idempotencyKey?: string;
 }
 
-export interface VorixaIACreditCalculation {
+export interface VortixiaIACreditCalculation {
   credits: number;
   apiUnitCostUsd: number;
   durationSeconds: number;
   resolution: string;
 }
 
-export class VorixaIAService {
+export class VortixiaIAService {
   /**
    * Tabela oficial de precificação em créditos e custo estimado da API (USD):
    * 720p: 5s = 15 cr ($0.28) | 10s = 25 cr ($0.56) | 30s = 65 cr ($1.69)
    * 1080p: 5s = 25 cr ($0.58) | 10s = 45 cr ($1.15) | 30s = 120 cr ($3.45)
    * 4K: 5s = 35 cr ($0.65) | 10s = 60 cr ($1.25) | 30s = 150 cr ($3.60)
    */
-  static calculatePrice(duration: string = "5", resolution: string = "720p"): VorixaIACreditCalculation {
+  static calculatePrice(duration: string = "5", resolution: string = "720p"): VortixiaIACreditCalculation {
     const durNum = parseInt(duration, 10);
     const dur = durNum >= 25 ? "30" : durNum >= 8 ? "10" : "5";
     const res = resolution.toLowerCase().includes("4k")
@@ -134,9 +134,9 @@ export class VorixaIAService {
   }
 
   /**
-   * Ponto de entrada para submissão do job VORIXA IA
+   * Ponto de entrada para submissão do job VORTIXIA IA
    */
-  static async submitVorixaIAJob(request: VorixaIARequest) {
+  static async submitVortixiaIAJob(request: VortixiaIARequest) {
     const {
       userId,
       prompt,
@@ -164,7 +164,7 @@ export class VorixaIAService {
 
     // 2. Localiza ou cria o modelo no banco
     let model = await prisma.aIModel.findFirst({
-      where: { technicalName: "vorixa-ia" },
+      where: { technicalName: "vortixia-ia" },
       include: { tools: true },
     });
 
@@ -181,7 +181,7 @@ export class VorixaIAService {
         data: {
           providerId: provider.id,
           name: "VORTIXIA IA (Vídeo & Fala 1-Clique)",
-          technicalName: "vorixa-ia",
+          technicalName: "vortixia-ia",
           creditCost: 25,
           apiUnitCost: 0.45,
           status: true,
@@ -232,12 +232,12 @@ export class VorixaIAService {
         { jobId: job.id, key: "voice", value: voice },
         { jobId: job.id, key: "duration", value: String(pricing.durationSeconds) },
         { jobId: job.id, key: "resolution", value: pricing.resolution },
-        { jobId: job.id, key: "engine", value: "VORIXA_IA_ONE_PROMPT" },
+        { jobId: job.id, key: "engine", value: "VORTIXIA_IA_ONE_PROMPT" },
       ],
     });
 
     // 5. Consumo atômico dos créditos
-    await CreditService.consumeCredits(userId, pricing.credits, "vorixa-ia", job.id);
+    await CreditService.consumeCredits(userId, pricing.credits, "vortixia-ia", job.id);
 
     // Modo Mock ou Testes Automatizados
     if (process.env.VITEST === "true" || process.env.AI_PROVIDER_MODE === "mock") {
@@ -246,7 +246,7 @@ export class VorixaIAService {
         where: { id: job.id },
         data: {
           status: "COMPLETED",
-          providerJobId: `mock-vorixa-ia-${job.id.slice(0, 8)}`,
+          providerJobId: `mock-vortixia-ia-${job.id.slice(0, 8)}`,
         },
         include: { outputs: true },
       });
@@ -280,7 +280,7 @@ export class VorixaIAService {
       resolution: pricing.resolution,
       totalCredits: pricing.credits,
     }).catch(async (err) => {
-      console.error(`[VorixaIAService] Erro no job ${job.id}:`, err);
+      console.error(`[VortixiaIAService] Erro no job ${job.id}:`, err);
       await prisma.aIJob.update({
         where: { id: job.id },
         data: {
@@ -315,10 +315,10 @@ export class VorixaIAService {
     }
     fal.config({ credentials: process.env.FAL_KEY });
 
-    console.log(`\n🚀 [VORIXA IA INICIADO] Job: ${jobId} | Duração: ${params.duration}s | Resolução: ${params.resolution}`);
+    console.log(`\n🚀 [VORTIXIA IA INICIADO] Job: ${jobId} | Duração: ${params.duration}s | Resolução: ${params.resolution}`);
 
     // ETAPA 1: Síntese de Voz Neural Ultra-Realista (ElevenLabs Turbo v2.5)
-    console.log(`[VORIXA IA] 1. Sintetizando voz com roteiro: "${params.script.slice(0, 50)}..."`);
+    console.log(`[VORTIXIA IA] 1. Sintetizando voz com roteiro: "${params.script.slice(0, 50)}..."`);
     const ttsResult = await TTSService.synthesizeSpeech({
       text: params.script,
       voice: params.voice || "Rachel",
@@ -335,7 +335,7 @@ export class VorixaIAService {
 
     // ETAPA 2: Renderização de Vídeo com o Personagem
     // Se houver imagem de entrada, utiliza Kling 2.1 Pro / Wan 2.1 (que NÃO bloqueiam rostos de IA)
-    console.log(`[VORIXA IA] 2. Renderizando vídeo base com movimento...`);
+    console.log(`[VORTIXIA IA] 2. Renderizando vídeo base com movimento...`);
     const videoInput: any = {
       prompt: `${params.visualPrompt}, looking directly at camera, natural facial expressions, fluent speaking posture, masterpiece photorealistic`,
       duration: String(params.duration > 5 ? 10 : 5),
@@ -363,7 +363,7 @@ export class VorixaIAService {
     }
 
     // ETAPA 3: Sincronização Fonética e Labial Perfeita (LatentSync HD)
-    console.log(`[VORIXA IA] 3. Aplicando sincronização fonética labial...`);
+    console.log(`[VORTIXIA IA] 3. Aplicando sincronização fonética labial...`);
     const lipsyncRes = await fal.subscribe("fal-ai/latentsync", {
       input: {
         video_url: baseVideoUrl,
@@ -377,7 +377,7 @@ export class VorixaIAService {
 
     // ETAPA 4: Upscale 4K Cinematográfico Opcional
     if (params.resolution === "4k") {
-      console.log(`[VORIXA IA] 4. Aplicando Creative Video Upscaler 4K...`);
+      console.log(`[VORTIXIA IA] 4. Aplicando Creative Video Upscaler 4K...`);
       try {
         const upscaleRes = await fal.subscribe("fal-ai/creative-upscaler", {
           input: {
@@ -392,12 +392,12 @@ export class VorixaIAService {
           finalVideoUrl = upscaledUrl;
         }
       } catch (upErr) {
-        console.warn("[VORIXA IA] Aviso: Upscale 4K falhou, mantendo 1080p nativo:", upErr);
+        console.warn("[VORTIXIA IA] Aviso: Upscale 4K falhou, mantendo 1080p nativo:", upErr);
       }
     }
 
     // Conclusão e Persistência
-    console.log(`🎉 [VORIXA IA] Geração Concluída: ${finalVideoUrl}`);
+    console.log(`🎉 [VORTIXIA IA] Geração Concluída: ${finalVideoUrl}`);
     await this.completeJob(jobId, params.userId, finalVideoUrl);
   }
 
@@ -407,9 +407,9 @@ export class VorixaIAService {
   private static async completeJob(jobId: string, userId: string, videoUrl: string) {
     let localUrl = videoUrl;
     try {
-      localUrl = await StorageService.uploadFromUrl(videoUrl, "vorixa_ia_video.mp4");
+      localUrl = await StorageService.uploadFromUrl(videoUrl, "vortixia_ia_video.mp4");
     } catch (err) {
-      console.warn("[VorixaIAService] Aviso ao persistir no storage:", err);
+      console.warn("[VortixiaIAService] Aviso ao persistir no storage:", err);
     }
 
     await prisma.$transaction(async (tx) => {
@@ -424,11 +424,11 @@ export class VorixaIAService {
       const file = await tx.file.create({
         data: {
           userId,
-          name: `vorixa-ia-${jobId.slice(0, 8)}.mp4`,
+          name: `vortixia-ia-${jobId.slice(0, 8)}.mp4`,
           mimeType: "video/mp4",
           sizeBytes: 1024 * 1024 * 4,
           url: localUrl,
-          storageKey: `outputs/${userId}/vorixa-ia-${jobId}.mp4`,
+          storageKey: `outputs/${userId}/vortixia-ia-${jobId}.mp4`,
         },
       });
 
@@ -443,10 +443,15 @@ export class VorixaIAService {
       await tx.auditLog.create({
         data: {
           userId,
-          action: "VORIXA_IA_COMPLETED",
-          details: `Vídeo VORIXA IA gerado com sucesso (Job ${jobId})`,
+          action: "VORTIXIA_IA_COMPLETED",
+          details: `Vídeo VORTIXIA IA gerado com sucesso (Job ${jobId})`,
         },
       });
     });
   }
 }
+
+/**
+ * Alias de retrocompatibilidade
+ */
+export const VorixaIAService = VortixiaIAService;

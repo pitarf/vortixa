@@ -561,7 +561,7 @@ export default function StudioCreatePage() {
   const handleSaveProject = () => {
     setIsEditingName(false);
     localStorage.setItem(
-      "vorixa_studio_last_project",
+      "vortixia_studio_last_project",
       JSON.stringify({
         name: projectName,
         tool: activeTool,
@@ -579,7 +579,7 @@ export default function StudioCreatePage() {
     currentToolDef.models.find((m) => m.id === selectedModelId) || currentToolDef.models[0];
 
   const calculatedCost =
-    activeTool === "video" && currentModelDef.id === "vorixa-ia"
+    activeTool === "video" && currentModelDef.id === "vortixia-ia"
       ? duration === "30"
         ? videoQuality === "ultra4k" ? 150 : videoQuality === "high" ? 120 : 65
         : duration === "10"

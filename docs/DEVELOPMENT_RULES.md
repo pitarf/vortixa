@@ -1,6 +1,6 @@
-# DEVELOPMENT RULES - VORIXA
+# DEVELOPMENT RULES - VORTIXIA
 
-Este documento define as regras fundamentais de desenvolvimento técnico para o VORIXA. Todo desenvolvedor deve segui-las sem exceções.
+Este documento define as regras fundamentais de desenvolvimento técnico para o VORTIXIA. Todo desenvolvedor deve segui-las sem exceções.
 
 ## 1. Regras de Código e Boas Práticas
 

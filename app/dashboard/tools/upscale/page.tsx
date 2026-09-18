@@ -9,7 +9,7 @@ import { Zap } from "lucide-react";
 const UPSCALE_MODELS = [
   {
     id: "fal-ai/creative-upscaler",
-    name: "VORIXA Ultra Upscaler 4K",
+    name: "VORTIXIA Ultra Upscaler 4K",
     badge: "Super Resolução Fiel 💎",
     cost: 5,
     description: "Super-resolução e texturização 4K preservando a integridade fisionômica, traços faciais e anatomia.",

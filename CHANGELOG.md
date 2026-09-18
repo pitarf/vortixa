@@ -1,9 +1,19 @@
-# CHANGELOG - VORIXA
+# CHANGELOG - VORTIXIA
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 
+
+## [2.8.8] - 2026-09-18
+### Renomeação Global da Marca: Transição de VORIXA para VORTIXIA
+- **Atualização Abrangente de Nomenclatura**:
+  - Atualização completa de títulos, textos de interface, documentação, metadados SEO e referências visuais de `VORIXA` para `VORTIXIA`.
+  - Renomeação do serviço central de IA para `VortixiaIAService` (`services/ai/vortixia-ia.service.ts`) com aliases retrocompatíveis.
+  - Atualização dos catálogos de vozes, dicas de páginas e modais institucionais.
+- **Validação e Integridade**:
+  - TypeScript validado via `tsc --noEmit` (**0 erros**).
+  - Suíte de testes unitários validada via `vitest` (**6/6 aprovados**).
 
 ## [2.8.7] - 2026-09-18
 ### Adição de Vídeo da Virginia e Retratos Ultra-Realistas da Modelo Brasileira

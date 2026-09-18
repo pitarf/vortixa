@@ -79,7 +79,7 @@ export function ModelDetailModal({
     if (!model) return;
 
     try {
-      const stored = localStorage.getItem("vorixa_unlocked_prompts");
+      const stored = localStorage.getItem("vortixia_unlocked_prompts");
       if (stored) {
         const unlockedMap = JSON.parse(stored);
         if (unlockedMap[model.id]) {
@@ -195,10 +195,10 @@ export function ModelDetailModal({
       setUnlockedPrompt(promptText);
 
       try {
-        const stored = localStorage.getItem("vorixa_unlocked_prompts");
+        const stored = localStorage.getItem("vortixia_unlocked_prompts");
         const map = stored ? JSON.parse(stored) : {};
         map[model.id] = promptText;
-        localStorage.setItem("vorixa_unlocked_prompts", JSON.stringify(map));
+        localStorage.setItem("vortixia_unlocked_prompts", JSON.stringify(map));
       } catch {}
 
       toast.success("Master Prompt desbloqueado com sucesso!");

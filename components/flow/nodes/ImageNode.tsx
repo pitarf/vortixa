@@ -85,7 +85,7 @@ export const ImageNode = memo(function ImageNode({ id, data, selected }: NodePro
               </button>
               <a
                 href={outputImageUrl}
-                download="vorixa-flux-image.jpg"
+                download="vortixia-flux-image.jpg"
                 target="_blank"
                 rel="noreferrer"
                 className="p-1.5 rounded-lg bg-slate-900/90 text-slate-200 hover:text-cyan-400 border border-slate-700 transition-colors shadow-lg"

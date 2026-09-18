@@ -33,7 +33,7 @@ export default function RegisterPage() {
     let ref = searchParams.get("ref") || searchParams.get("referral") || searchParams.get("indicacao");
     
     if (!ref && typeof document !== "undefined") {
-      const match = document.cookie.match(/(?:^|;\s*)vorixa_ref=([^;]+)/);
+      const match = document.cookie.match(/(?:^|;\s*)vortixia_ref=([^;]+)/);
       if (match) {
         ref = decodeURIComponent(match[1]);
       }
@@ -43,7 +43,7 @@ export default function RegisterPage() {
       const cleanRef = ref.trim().toUpperCase();
       setReferralCode(cleanRef);
       if (typeof document !== "undefined") {
-        document.cookie = `vorixa_ref=${encodeURIComponent(cleanRef)}; path=/; max-age=2592000; SameSite=Lax`;
+        document.cookie = `vortixia_ref=${encodeURIComponent(cleanRef)}; path=/; max-age=2592000; SameSite=Lax`;
       }
     }
   }, []);

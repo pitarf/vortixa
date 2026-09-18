@@ -1,4 +1,4 @@
-# VORIXA - Auditoria 14.5.1: Complementação de CSRF, CORS e Security Headers
+# VORTIXIA - Auditoria 14.5.1: Complementação de CSRF, CORS e Security Headers
 
 Este documento formaliza a validação comportamental em ambiente real (HTTP) das defesas aplicadas anteriormente na Auditoria 14.5. Diferente de uma mera inspeção de código, as rotas e cabeçalhos foram instanciados localmente em uma build de produção e submetidos a ataques simulados `cross-origin` e `OPTIONS` via cliente HTTP externo (`curl`).
 

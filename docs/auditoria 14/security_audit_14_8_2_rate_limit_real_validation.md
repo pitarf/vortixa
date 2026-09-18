@@ -1,6 +1,6 @@
-# VORIXA - Relatório Técnico de Auditoria 14.8.2 (Validação Real de Rate Limiting e Detecção de Falso Positivo)
+# VORTIXIA - Relatório Técnico de Auditoria 14.8.2 (Validação Real de Rate Limiting e Detecção de Falso Positivo)
 
-Este relatório apresenta a auditoria técnica de validação real da existência de mecanismos de Rate Limiting na base de código local do VORIXA e em sua suíte de testes automáticos.
+Este relatório apresenta a auditoria técnica de validação real da existência de mecanismos de Rate Limiting na base de código local do VORTIXIA e em sua suíte de testes automáticos.
 
 ---
 
@@ -39,7 +39,7 @@ Esclarecemos a distinção dos limites que estão implementados localmente na ap
 Se qualquer rate limiter hipotético existisse e fosse removido do código agora, a suíte de testes com os 47 testes continuaria a passar normalmente (100% PASS), provando que não há asserções que validem o comportamento contra regressões desse mecanismo.
 
 ### PENDING_TESTS
-Confirmamos a manutenção integral e a não remoção das pendências no arquivo [docs/PENDING_TESTS.md](file:///c:/Git/React/VORIXA/docs/PENDING_TESTS.md), garantindo o rastreamento da homologação em produção na VPS/Cloudflare:
+Confirmamos a manutenção integral e a não remoção das pendências no arquivo [docs/PENDING_TESTS.md](file:///c:/Git/React/VORTIXIA/docs/PENDING_TESTS.md), garantindo o rastreamento da homologação em produção na VPS/Cloudflare:
 * Google OAuth real;
 * Recuperação real (SMTP Brevo);
 * Webhooks da fal.ai em ambiente live;

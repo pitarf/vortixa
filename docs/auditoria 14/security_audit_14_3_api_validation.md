@@ -1,4 +1,4 @@
-# VORIXA - Relatório Técnico de Auditoria 14.3 (APIs, Inputs e Validação)
+# VORTIXIA - Relatório Técnico de Auditoria 14.3 (APIs, Inputs e Validação)
 
 Este documento detalha os resultados da auditoria das APIs, tratamento de inputs e validações de tipos/conteúdos introduzidos na Fase 5.
 

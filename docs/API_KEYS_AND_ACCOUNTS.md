@@ -1,6 +1,6 @@
-# GUIA DE CHAVES DE API, CONTAS E ATIVAÇÃO EM PRODUÇÃO — VORIXA
+# GUIA DE CHAVES DE API, CONTAS E ATIVAÇÃO EM PRODUÇÃO — VORTIXIA
 
-Este documento reúne **tudo o que é necessário configurar externamente** para colocar o VORIXA em operação real com pagamentos, inteligência artificial, autenticação Google, armazenamento na nuvem e envio de e-mails.
+Este documento reúne **tudo o que é necessário configurar externamente** para colocar o VORTIXIA em operação real com pagamentos, inteligência artificial, autenticação Google, armazenamento na nuvem e envio de e-mails.
 
 ---
 
@@ -25,7 +25,7 @@ Este documento reúne **tudo o que é necessário configurar externamente** para
 1. Acesse [fal.ai](https://fal.ai) e clique em **Sign In** (pode logar com GitHub ou E-mail).
 2. Adicione créditos na carteira da fal.ai (mínimo de US$ 10 para testes).
 3. Vá em **Keys** (ou **API Keys**) no menu lateral.
-4. Clique em **Add Key** e dê o nome `VORIXA_PROD`.
+4. Clique em **Add Key** e dê o nome `VORTIXIA_PROD`.
 5. Copie a chave gerada (formato: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`).
 6. Preencha no seu `.env`:
    ```env
@@ -38,7 +38,7 @@ Este documento reúne **tudo o que é necessário configurar externamente** para
 1. Acesse o [Painel do Desenvolvedor do Mercado Pago](https://www.mercadopago.com.br/developers/panel).
 2. Faça login com sua conta do Mercado Pago.
 3. Clique em **Criar aplicação**.
-   - **Nome**: `VORIXA Pagamentos`
+   - **Nome**: `VORTIXIA Pagamentos`
    - **Tipo de solução**: *Pagamentos no checkout*
 4. Acesse a aba **Credenciais de produção** (ou **Credenciais de teste** para homologação):
    - Copie o **Access Token** (`APP_USR-...`).
@@ -79,9 +79,9 @@ Este documento reúne **tudo o que é necessário configurar externamente** para
 
 ### 2.4. Login Social — Google OAuth 2.0 (`AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET`)
 1. Acesse o [Google Cloud Console](https://console.cloud.google.com/).
-2. Crie um novo projeto chamado `VORIXA`.
+2. Crie um novo projeto chamado `VORTIXIA`.
 3. Vá em **APIs & Services > OAuth consent screen**:
-   - Selecione **External** e preencha o nome do app (`VORIXA`) e e-mail de suporte.
+   - Selecione **External** e preencha o nome do app (`VORTIXIA`) e e-mail de suporte.
 4. Vá em **APIs & Services > Credentials**:
    - Clique em **Create Credentials > OAuth client ID**.
    - Application type: **Web application**.
@@ -98,7 +98,7 @@ Este documento reúne **tudo o que é necessário configurar externamente** para
 
 ### 2.5. Armazenamento de Arquivos — Cloudflare R2 *(Recomendado por ter zero taxa de download/egress)*
 1. Acesse o [Painel da Cloudflare](https://dash.cloudflare.com/) e vá na seção **R2**.
-2. Clique em **Create Bucket** com o nome `vorixa-files`.
+2. Clique em **Create Bucket** com o nome `vortixia-files`.
 3. Em **Manage R2 API Tokens**, clique em **Create API Token**:
    - Permissões: *Object Read & Write*.
    - Copie o **Access Key ID**, o **Secret Access Key** e o **Endpoint S3 API**.
@@ -107,7 +107,7 @@ Este documento reúne **tudo o que é necessário configurar externamente** para
    STORAGE_ENDPOINT="https://<seu-account-id>.r2.cloudflarestorage.com"
    STORAGE_ACCESS_KEY="sua-access-key-r2"
    STORAGE_SECRET_KEY="sua-secret-key-r2"
-   STORAGE_BUCKET="vorixa-files"
+   STORAGE_BUCKET="vortixia-files"
    ```
 
 *(Nota: Para desenvolvimento local, o `docker-compose.yml` já sobe automaticamente o MinIO configurado).*
@@ -116,12 +116,12 @@ Este documento reúne **tudo o que é necessário configurar externamente** para
 
 ### 2.6. Envio Transacional de E-mails — Resend
 1. Crie uma conta em [resend.com](https://resend.com).
-2. Adicione e verifique seu domínio (ex: `vorixa.com`).
-3. Vá em **API Keys** e crie uma chave `VORIXA_APP`.
+2. Adicione e verifique seu domínio (ex: `vortixia.com`).
+3. Vá em **API Keys** e crie uma chave `VORTIXIA_APP`.
 4. Preencha no seu `.env`:
    ```env
    RESEND_API_KEY="re_xxxxxxxxxxxxxx"
-   EMAIL_FROM="VORIXA <contato@seudominio.com>"
+   EMAIL_FROM="VORTIXIA <contato@seudominio.com>"
    ```
 
 ---
@@ -140,7 +140,7 @@ Ou no PowerShell:
 
 #### URL do PostgreSQL (`DATABASE_URL`)
 ```env
-DATABASE_URL="postgresql://vorixa_user:vorixa_password@localhost:5432/vorixa_db?schema=public&connection_limit=10"
+DATABASE_URL="postgresql://vortixia_user:vortixia_password@localhost:5432/vortixia_db?schema=public&connection_limit=10"
 ```
 
 ---
@@ -149,7 +149,7 @@ DATABASE_URL="postgresql://vorixa_user:vorixa_password@localhost:5432/vorixa_db?
 
 ```env
 # ==============================================================================
-# CONFIGURAÇÕES DE AMBIENTE VORIXA - PRODUÇÃO
+# CONFIGURAÇÕES DE AMBIENTE VORTIXIA - PRODUÇÃO
 # ==============================================================================
 
 # 1. URL DA APLICAÇÃO & NÓS
@@ -159,7 +159,7 @@ NEXT_PUBLIC_APP_URL="https://seudominio.com"
 NEXTAUTH_URL="https://seudominio.com"
 
 # 2. BANCO DE DADOS POSTGRESQL
-DATABASE_URL="postgresql://usuario:senha@host:5432/vorixa_db?schema=public&sslmode=prefer"
+DATABASE_URL="postgresql://usuario:senha@host:5432/vortixia_db?schema=public&sslmode=prefer"
 
 # 3. CRIPTOGRAFIA DE SESSÃO / AUTH.JS
 AUTH_SECRET="gerado-via-openssl-rand-hex-32"
@@ -190,11 +190,11 @@ STRIPE_WEBHOOK_SECRET="whsec_xxxxxxxx"
 STORAGE_ENDPOINT="https://xxxxxxxx.r2.cloudflarestorage.com"
 STORAGE_ACCESS_KEY="xxxxxxxx"
 STORAGE_SECRET_KEY="xxxxxxxx"
-STORAGE_BUCKET="vorixa-files"
+STORAGE_BUCKET="vortixia-files"
 
 # 8. E-MAIL TRANSACIONAL (RESEND)
 RESEND_API_KEY="re_xxxxxxxx"
-EMAIL_FROM="VORIXA <no-reply@seudominio.com>"
+EMAIL_FROM="VORTIXIA <no-reply@seudominio.com>"
 ```
 
 ---

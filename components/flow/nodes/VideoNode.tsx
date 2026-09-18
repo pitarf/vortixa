@@ -87,7 +87,7 @@ export const VideoNode = memo(function VideoNode({ id, data, selected }: NodePro
               </button>
               <a
                 href={outputVideoUrl}
-                download="vorixa-kling-video.mp4"
+                download="vortixia-kling-video.mp4"
                 target="_blank"
                 rel="noreferrer"
                 className="p-1.5 rounded-lg bg-slate-900/90 text-slate-200 hover:text-emerald-400 border border-slate-700 transition-colors shadow-lg"

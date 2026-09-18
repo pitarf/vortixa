@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
-import { VorixaIAService } from "@/services/ai/vorixa-ia.service";
+import { VortixiaIAService, VorixaIAService } from "@/services/ai/vortixia-ia.service";
 
-describe("VORIXA IA - Dynamic Pricing & Script Engine Tests", () => {
+describe("VORTIXIA IA - Dynamic Pricing & Script Engine Tests", () => {
   describe("Tabela de Preços e Margem de Lucro", () => {
     it("deve calcular corretamente os preços de 720p para 5s, 10s e 30s", () => {
       const p5 = VorixaIAService.calculatePrice("5", "720p");

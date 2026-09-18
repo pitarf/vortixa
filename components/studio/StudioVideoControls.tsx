@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Mic } from "lucide-react";
-import { VORIXA_VOICES } from "@/lib/voice-catalog";
+import { VORTIXIA_VOICES } from "@/lib/voice-catalog";
 
 interface StudioVideoControlsProps {
   selectedModelId?: string;
@@ -42,7 +42,7 @@ export function StudioVideoControls({
   const modelHasNativeAudio =
     selectedModelId.includes("v2.6") ||
     selectedModelId.includes("seedance") ||
-    selectedModelId === "vorixa-ia";
+    selectedModelId === "vortixia-ia";
 
   return (
     <div className="backdrop-blur-xl bg-[#0E1017]/85 border border-white/[0.08] rounded-2xl p-3.5 sm:p-4.5 space-y-3.5 text-xs shadow-xl">
@@ -225,7 +225,7 @@ export function StudioVideoControls({
                 onChange={(e) => onVoiceChange(e.target.value)}
                 className="w-full bg-[#070709] border border-white/[0.08] rounded-xl px-3.5 py-2.5 text-xs text-white outline-none focus:border-violet-500/80 transition-colors cursor-pointer min-h-[44px]"
               >
-                {VORIXA_VOICES.filter((v) => {
+                {VORTIXIA_VOICES.filter((v) => {
                   if (selectedGender !== "all" && v.gender !== selectedGender) return false;
                   return true;
                 }).map((voice) => (

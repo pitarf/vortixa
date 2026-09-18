@@ -306,7 +306,7 @@ export default function ChangelogPage() {
             Pronto para criar sua próxima produção cinematográfica?
           </h2>
           <p className="text-xs text-slate-400">
-            Conecte nós no VORIXA FLOW ou utilize o Studio CREATE para renderizações imediatas.
+            Conecte nós no VORTIXIA FLOW ou utilize o Studio CREATE para renderizações imediatas.
           </p>
         </div>
 
@@ -316,7 +316,7 @@ export default function ChangelogPage() {
             className="px-5 py-2.5 rounded-2xl text-xs font-mono font-bold bg-cyan-500 hover:bg-cyan-400 text-black transition-all shadow-lg shadow-cyan-500/20"
             style={{ minHeight: "44px" }}
           >
-            Abrir VORIXA FLOW →
+            Abrir VORTIXIA FLOW →
           </Link>
           <Link
             href="/dashboard/create"

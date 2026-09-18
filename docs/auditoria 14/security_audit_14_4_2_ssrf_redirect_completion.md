@@ -1,6 +1,6 @@
-# VORIXA - Auditoria 14.4.2: Validação de Redirects e SSRF
+# VORTIXIA - Auditoria 14.4.2: Validação de Redirects e SSRF
 
-Este relatório detalha a auditoria complementar sobre o tratamento de redirecionamentos HTTP e vulnerabilidades de SSRF e bypass de whitelist no VORIXA.
+Este relatório detalha a auditoria complementar sobre o tratamento de redirecionamentos HTTP e vulnerabilidades de SSRF e bypass de whitelist no VORTIXIA.
 
 ---
 
@@ -43,4 +43,4 @@ A suíte completa finalizou com **44/44 testes aprovados** (Vitest).
 
 O comando de build de produção (`npm run build`) foi validado e compilou o projeto com sucesso.
 
-Nenhum redirect bypass será capaz de forçar o backend do VORIXA a realizar scanning de portas ou acessos indevidos à rede.
+Nenhum redirect bypass será capaz de forçar o backend do VORTIXIA a realizar scanning de portas ou acessos indevidos à rede.

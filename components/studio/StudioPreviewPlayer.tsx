@@ -285,7 +285,7 @@ export function StudioPreviewPlayer({
         <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2 pt-1">
           <a
             href={resultMediaUrl || "#"}
-            download="vorixa-studio-render"
+            download="vortixia-studio-render"
             target="_blank"
             rel="noreferrer"
             className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#13141B] hover:bg-[#1E202E] border border-[#1E202E] text-xs font-bold text-slate-200 transition-all cursor-pointer min-h-[44px]"
@@ -453,7 +453,7 @@ export function StudioPreviewPlayer({
           <div className="flex items-center justify-center gap-3 pt-2">
             <a
               href={resultMediaUrl || "#"}
-              download="vorixa-asset"
+              download="vortixia-asset"
               target="_blank"
               rel="noreferrer"
               className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold cursor-pointer min-h-[48px]"

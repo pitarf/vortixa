@@ -1,6 +1,6 @@
-﻿# 🚀 Módulos e Funcionalidades a Desenvolver no Futuro (Roadmap de Expansão) - VORIXA
+﻿# 🚀 Módulos e Funcionalidades a Desenvolver no Futuro (Roadmap de Expansão) - VORTIXIA
 
-Este documento centraliza as ferramentas, integrações neurais e módulos de alto valor percebido mapeados para as próximas fases de evolução do **VORIXA**.
+Este documento centraliza as ferramentas, integrações neurais e módulos de alto valor percebido mapeados para as próximas fases de evolução do **VORTIXIA**.
 
 ---
 
@@ -13,7 +13,7 @@ Este documento centraliza as ferramentas, integrações neurais e módulos de al
   3. **Parâmetros**: Categoria da peça (tops, bottoms, one-pieces) e modo de qualidade (performance ou balanced).
 * **Implementações Planejadas**:
   - **Ferramenta no Menu Lateral**: Criar a rota dedicada /dashboard/tools/tryon com interface de duplo upload e preview interativo antes/depois.
-  - **Integração no VORIXA FLOW**: Criar o nó customizado **TryOnNode** no Canvas do Flow:
+  - **Integração no VORTIXIA FLOW**: Criar o nó customizado **TryOnNode** no Canvas do Flow:
     - *Entrada A (Image Handle)*: Foto do influenciador/modelo vindo de um ImageNode (ex: gerado no Imagen 3 ou FLUX).
     - *Entrada B (Image Handle)*: Foto da peça de roupa vindo de upload ou catálogo.
     - *Saída (Image Handle)*: Imagem do modelo vestindo a peça, pronta para alimentar um VideoNode (Kling ou MiniMax) ou LipSyncNode.
@@ -29,7 +29,7 @@ Este documento centraliza as ferramentas, integrações neurais e módulos de al
   - **Física de Cabelo e Iluminação**: Cabelos soltos reagindo naturalmente ao movimento corporal com coerência temporal estável entre frames.
 * **Implementações Planejadas**:
   - Disponibilizar como opção de motor de vídeo no **Studio CREATE** e no **Gerador de Vídeo** (/dashboard/tools/video).
-  - Adicionar o motor MiniMax no nó VideoNode do **VORIXA FLOW**.
+  - Adicionar o motor MiniMax no nó VideoNode do **VORTIXIA FLOW**.
 
 ---
 
@@ -39,4 +39,4 @@ Este documento centraliza as ferramentas, integrações neurais e módulos de al
 
 ---
 
-*Documento gerado e mantido pela equipe de engenharia do VORIXA.*
+*Documento gerado e mantido pela equipe de engenharia do VORTIXIA.*

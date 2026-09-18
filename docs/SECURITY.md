@@ -1,12 +1,12 @@
-# SECURITY SPECIFICATION - VORIXA
+# SECURITY SPECIFICATION - VORTIXIA
 
-Este documento reúne os padrões de segurança e conformidade aplicados na plataforma VORIXA.
+Este documento reúne os padrões de segurança e conformidade aplicados na plataforma VORTIXIA.
 
 ## 1. Autenticação e Criptografia de Dados
 
 * **Armazenamento de Senhas**: As senhas de usuários são submetidas a hash usando o algoritmo **bcryptjs** (para estabilidade multiplataforma) com fator de custo de 12 no backend antes da persistência no banco PostgreSQL.
 * **Sessão Segura**: O sistema de sessão utiliza **JSON Web Tokens (JWT)** assinados de forma stateless com expiração definida para 7 dias, transmitidos por meio de cookies seguros (`HttpOnly`, `Secure`, `SameSite=Lax`).
-* **Proteção de Rotas (RBAC)**: O acesso às rotas do sistema é controlado pelo arquivo de entrada de borda [proxy.ts](file:///c:/Git/React/VORIXA/proxy.ts) que valida a presença da sessão e as permissões de acesso do usuário. A rota `/admin` e qualquer rota de API `/api/admin/*` retornam HTTP 403 / Forbidden se o usuário não contiver `role === 'ADMIN'`.
+* **Proteção de Rotas (RBAC)**: O acesso às rotas do sistema é controlado pelo arquivo de entrada de borda [proxy.ts](file:///c:/Git/React/VORTIXIA/proxy.ts) que valida a presença da sessão e as permissões de acesso do usuário. A rota `/admin` e qualquer rota de API `/api/admin/*` retornam HTTP 403 / Forbidden se o usuário não contiver `role === 'ADMIN'`.
 * **Proteção Contra Brute Force**: Os endpoints de login e cadastro `/api/auth/*` são protegidos por rate limiting por IP de origem, limitando o envio a no máximo 5 tentativas malsucedidas de login por minuto antes do bloqueio temporário do IP por 15 minutos.
 
 ---

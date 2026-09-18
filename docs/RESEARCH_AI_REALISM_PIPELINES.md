@@ -43,9 +43,9 @@ O nível mais alto de detalhamento (onde você vê até os fios de tecido da rou
 
 ---
 
-## O que o VORIXA pode fazer para superar a concorrência:
+## O que o VORTIXIA pode fazer para superar a concorrência:
 
-1. **Ativar o `VORIXA Magic Realism Engine` no `PromptEngine`:**
+1. **Ativar o `VORTIXIA Magic Realism Engine` no `PromptEngine`:**
    - Ao receber qualquer prompt curto em português (ex: *"um casal de jovens"*), injetar automaticamente parâmetros de óptica fotográfica de cinema (*Sony A7 IV, 85mm f/1.4, visible pores, unretouched, raw candid photo*).
 2. **Injeção Silenciosa de Anti-CGI Negative Prompts:**
    - Bloquear terminantemente texturas de plástico e filtros artificiais no backend.

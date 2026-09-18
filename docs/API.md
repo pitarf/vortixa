@@ -1,4 +1,4 @@
-# API SPECIFICATION - VORIXA
+# API SPECIFICATION - VORTIXIA
 
 Este documento especifica os endpoints HTTP internos desenvolvidos sob a estrutura de **API Routes** do Next.js. Todas as rotas (exceto webhooks públicos) exigem autenticação do usuário.
 
@@ -57,8 +57,8 @@ Este documento especifica os endpoints HTTP internos desenvolvidos sob a estrutu
   {
     "toolSlug": "motion-control",
     "inputs": {
-      "character_image_url": "https://s3.vorixa.com/uploads/user1/char.png",
-      "reference_video_url": "https://s3.vorixa.com/uploads/user1/ref.mp4",
+      "character_image_url": "https://s3.vortixia.com/uploads/user1/char.png",
+      "reference_video_url": "https://s3.vortixia.com/uploads/user1/ref.mp4",
       "prompt": "personagem dançando animadamente"
     }
   }
@@ -90,7 +90,7 @@ Este documento especifica os endpoints HTTP internos desenvolvidos sob a estrutu
     "status": "COMPLETED",
     "outputs": [
       {
-        "fileUrl": "https://s3.vorixa.com/outputs/final.mp4"
+        "fileUrl": "https://s3.vortixia.com/outputs/final.mp4"
       }
     ],
     "createdAt": "2026-08-17T21:56:40Z"

@@ -76,12 +76,12 @@ Usuários com privilégio de administrador possuem acesso à rota `/dashboard/ad
 
 ---
 
-## 5. VORIXA FLOW Studio (AI Creative Workspace)
+## 5. VORTIXIA FLOW Studio (AI Creative Workspace)
 
-O **VORIXA FLOW** é um espaço de trabalho visual infinito para conectar modelos de inteligência artificial generativa em pipelines encadeados.
+O **VORTIXIA FLOW** é um espaço de trabalho visual infinito para conectar modelos de inteligência artificial generativa em pipelines encadeados.
 
 ### A. Acessando o Studio e Criando um Fluxo
-* **Como Acessar**: Clique no item **VORIXA Flow (Canvas)** no menu lateral do Dashboard (`/dashboard/flow`).
+* **Como Acessar**: Clique no item **VORTIXIA Flow (Canvas)** no menu lateral do Dashboard (`/dashboard/flow`).
 * **Criar Novo Flow**: Clique no botão **Criar Novo Flow** no topo da tela. O sistema criará uma nova sessão de pipeline e abrirá imediatamente o Canvas.
 
 ### B. Interface do Canvas & Controles
@@ -136,13 +136,13 @@ O **VORIXA FLOW** é um espaço de trabalho visual infinito para conectar modelo
   * *Presets de Estilo*: Aplique com 1 clique modificadores como Cinematográfico 8K, Fotorrealista, Cyberpunk Néon ou Anime Ghibli.
   * *Proporções de Tela*: 1:1 Quadrado, 16:9 Cinema e 9:16 Stories/Reels.
   * *Uploaders Inteligentes*: Suporte a drag-and-drop de imagens, vídeos e faixas de áudio.
-* **Ação "Open in Flow ✦"**: Após a conclusão de qualquer mídia no Studio, clique no botão **Open in Flow** para transformar a geração automaticamente em um nó dentro de um novo pipeline visual do VORIXA FLOW.
+* **Ação "Open in Flow ✦"**: Após a conclusão de qualquer mídia no Studio, clique no botão **Open in Flow** para transformar a geração automaticamente em um nó dentro de um novo pipeline visual do VORTIXIA FLOW.
 
 ---
 
 ## 6. Library & Centro de Ativos
 
-* **Objetivo**: Centralizar todas as imagens, vídeos, animações e áudios gerados pelo usuário, sejam originados no Studio CREATE ou através do VORIXA FLOW.
+* **Objetivo**: Centralizar todas as imagens, vídeos, animações e áudios gerados pelo usuário, sejam originados no Studio CREATE ou através do VORTIXIA FLOW.
 * **Como Acessar**: Clique em **Library** no menu lateral (`/dashboard/library`).
 * **Filtros e Busca**:
   * *Filtros por Tipo*: Visualize Todos, apenas Vídeos ou apenas Imagens com contagem dinâmica.
@@ -157,12 +157,12 @@ O **VORIXA FLOW** é um espaço de trabalho visual infinito para conectar modelo
 
 ## 7. Landing Page Cinematográfica & AI Product Experience (Fase 8.1)
 
-* **Objetivo**: Apresentação visual e interativa de alto impacto da plataforma VORIXA como AI Creative Operating System, combinando vídeo protagonista, demonstrações de grafos e storytelling visual.
+* **Objetivo**: Apresentação visual e interativa de alto impacto da plataforma VORTIXIA como AI Creative Operating System, combinando vídeo protagonista, demonstrações de grafos e storytelling visual.
 * **Como Acessar**: Rota raiz `/`.
 * **Componentes e Experiência do Visitante**:
   * *Hero Protagonista Widescreen*: Vídeo de alta fidelidade em loop com nós flutuantes do DAG e indicadores de latência e resolução ao vivo.
   * *Slider Antes / Depois (`BeforeAfterSlider`)*: Comparador interativo com divisor deslizante para Prompt $\to$ Imagem, Imagem $\to$ Vídeo e Upscale 4K.
-  * *Simulador Visual do VORIXA FLOW*: Demonstração interativa dos 5 nós encadeados (Prompt $\to$ FLUX $\to$ Kling $\to$ LipSync $\to$ Upscale 4K) com simulação do Node Inspector em tempo real.
+  * *Simulador Visual do VORTIXIA FLOW*: Demonstração interativa dos 5 nós encadeados (Prompt $\to$ FLUX $\to$ Kling $\to$ LipSync $\to$ Upscale 4K) com simulação do Node Inspector em tempo real.
   * *Assistente "✦ Build with AI"*: Gerador de topologia de fluxo a partir de linguagem natural com pré-visualização de DAG acíclico.
   * *Galeria Editorial de Obras*: Portfólio de vídeos reais gerados por IA com filtragem por categoria (Cinema, UGC, Comercial, Motion) e cópia de prompts com 1 clique.
   * *Vitrine Técnica dos 5 Motores*: Especificações de latência, resolução e custos de créditos (FLUX.1 Schnell, Kling AI 1.5, Kling Motion Control, LivePortrait LipSync, Creative Upscale 4K).
@@ -175,9 +175,9 @@ O **VORIXA FLOW** é um espaço de trabalho visual infinito para conectar modelo
 ```markdown
 ---
 
-## 8. Dashboard VORIXA CREATIVE OS (Fase 8.2)
+## 8. Dashboard VORTIXIA CREATIVE OS (Fase 8.2)
 
-O **Dashboard VORIXA CREATIVE OS** é o centro nervoso da plataforma para criadores e produtores audiovisuais com inteligência artificial.
+O **Dashboard VORTIXIA CREATIVE OS** é o centro nervoso da plataforma para criadores e produtores audiovisuais com inteligência artificial.
 
 ### A. Topbar & Ações Globais
 * **Busca Global Omnibox**:
@@ -188,26 +188,26 @@ O **Dashboard VORIXA CREATIVE OS** é o centro nervoso da plataforma para criado
 * **Central de Notificações**:
   * *Objetivo*: Avisar sobre conclusões de renderizações 4K, novos modelos disponíveis e bônus de créditos.
 * **Status dos Motores & Alternador Turbo**:
-  * *Objetivo*: Alterne entre o modo `VORIXA Turbo` (renderização em nuvem real de alta performance) e `Simulação`.
+  * *Objetivo*: Alterne entre o modo `VORTIXIA Turbo` (renderização em nuvem real de alta performance) e `Simulação`.
 * **Menu de Perfil**:
   * *Objetivo*: Identificação da conta, status do plano (Creator Pro) e encerramento seguro de sessão.
 
 ### B. Sidebar Lateral Dark Obsidian
 * **Creative Suite**:
   * *Studio CREATE* (`/dashboard/create`): Geração direta de imagens, vídeos, lipsync e upscales com presets.
-  * *VORIXA FLOW* (`/dashboard/flow`): Canvas infinito para criação e execução de grafos e pipelines de IA.
+  * *VORTIXIA FLOW* (`/dashboard/flow`): Canvas infinito para criação e execução de grafos e pipelines de IA.
   * *Build with AI* (`/dashboard/flow?mode=ai`): Montagem automática de pipelines a partir de descrições em texto.
 * **Motores de IA**: Acesso direto a cada modelo individual (FLUX.1, Kling AI, LivePortrait, Motion Control e Upscale 4K).
 * **Biblioteca & Gestão**: Meus Ativos, Favoritos e Planos & Créditos.
 
 ### C. Hero Banner & Métricas Operacionais
-* **Saudação Editorial & Atalhos de 1 Clique**: Acesso imediato a "Criar com IA", "Abrir VORIXA FLOW" e "Explorar Modelos".
+* **Saudação Editorial & Atalhos de 1 Clique**: Acesso imediato a "Criar com IA", "Abrir VORTIXIA FLOW" e "Explorar Modelos".
 * **Métricas em Tempo Real**: Indicadores de projetos criados, ativos na biblioteca, créditos disponíveis e uptime operacional (99.99%).
 
 ### D. Cards de Criação & Projetos Recentes
 * **Cards Principais**:
   1. *Studio CREATE*: Preview visual e tags rápidas de motores.
-  2. *VORIXA FLOW*: Simulação de encadeamento dos nós `Prompt -> FLUX -> Kling -> LipSync -> 4K`.
+  2. *VORTIXIA FLOW*: Simulação de encadeamento dos nós `Prompt -> FLUX -> Kling -> LipSync -> 4K`.
   3. *Build with AI*: Caixa ilustrativa de prompt com construção autônoma.
   4. *Biblioteca*: Mini grid 2x2 com acesso rápido à galeria de ativos.
 * **Seus Últimos Projetos**:
@@ -216,32 +216,32 @@ O **Dashboard VORIXA CREATIVE OS** é o centro nervoso da plataforma para criado
 ### E. Widgets de Apoio
 * **Estatísticas de Uso**: Gráfico em anel de 62% com balanço de consumo de créditos e seletor temporal de 7 ou 30 dias.
 * **Destaque da Comunidade**: Visualização de obras em alta com likes e remix de workflows no Flow.
-* **Novidades no VORIXA**: Changelog ao vivo das versões mais recentes dos motores de IA.
+* **Novidades no VORTIXIA**: Changelog ao vivo das versões mais recentes dos motores de IA.
 
 
 ```markdown
 ---
 
-## 9. Central de Novidades & Changelog do VORIXA (Fase 8.3)
+## 9. Central de Novidades & Changelog do VORTIXIA (Fase 8.3)
 
-A **Central de Novidades & Changelog** do VORIXA é o canal oficial e dinâmico para comunicação em tempo real de novos lançamentos de inteligência artificial, atualizações de motores neurais, melhorias de infraestrutura e novidades do ecossistema.
+A **Central de Novidades & Changelog** do VORTIXIA é o canal oficial e dinâmico para comunicação em tempo real de novos lançamentos de inteligência artificial, atualizações de motores neurais, melhorias de infraestrutura e novidades do ecossistema.
 
 ### A. Módulo & Telas
 * **Módulo**: Central de Novidades, Lançamentos & Roadmap (Changelog Engine).
 * **Telas Relacionadas**:
-  1. *Widget "Novidades no VORIXA"* no painel principal (`/dashboard`).
+  1. *Widget "Novidades no VORTIXIA"* no painel principal (`/dashboard`).
   2. *Modal Interativo de Novidades & Versões* (acionado pelo botão "Changelog" no widget ou notificações).
   3. *Página Dedicada de Changelog* (`/dashboard/changelog`).
 
 ### B. Objetivo
-Apresentar de forma transparente aos criadores todos os recursos reais e funcionais atualmente disponíveis (como Google Imagen 3, Kling AI 1.5 a 60fps, FLUX.1 Schnell Turbo, Creative Upscale 4K, PromptEngine com tradução e VORIXA FLOW DAG), oferecendo atalhos de teste com 1 clique para acelerar o fluxo criativo e a descoberta de ferramentas.
+Apresentar de forma transparente aos criadores todos os recursos reais e funcionais atualmente disponíveis (como Google Imagen 3, Kling AI 1.5 a 60fps, FLUX.1 Schnell Turbo, Creative Upscale 4K, PromptEngine com tradução e VORTIXIA FLOW DAG), oferecendo atalhos de teste com 1 clique para acelerar o fluxo criativo e a descoberta de ferramentas.
 
 ### C. Campos e Controles
 * **Campo de Busca de Recursos**: Permite digitar termos livres (ex: "Google", "60fps", "LipSync", "Turbo", "4K") para filtrar os lançamentos instantaneamente tanto no modal quanto na página dedicada.
 * **Filtros de Categoria**:
   * *Todos*: Apresenta o conjunto integral dos 13 recursos e lançamentos.
   * *Modelos de IA*: Foco nos motores generativos (Google Imagen 3, Kling AI 1.5, FLUX.1 Schnell, Recraft V3).
-  * *Estúdio & Flow*: Foco nos ambientes de orquestração (VORIXA FLOW Canvas e Studio CREATE).
+  * *Estúdio & Flow*: Foco nos ambientes de orquestração (VORTIXIA FLOW Canvas e Studio CREATE).
   * *Ferramentas*: Foco nos utilitários de refinamento (LipSync Facial, Motion Control, Creative Upscale 4K, PromptEngine).
   * *Plataforma*: Foco na infraestrutura (Google OAuth2, Hostinger SMTP, Carteira de Créditos Idempotente).
 * **Seletor de Versões / Timeline**: Navegação cronológica entre releases (`OS 2.5`, `OS 2.0`, `OS 1.5`, `OS 1.0`).
@@ -257,7 +257,7 @@ Apresentar de forma transparente aos criadores todos os recursos reais e funcion
 ```markdown
 ---
 
-## 6. Studio CREATE v2.0 (VORIXA CREATIVE SUITE)
+## 6. Studio CREATE v2.0 (VORTIXIA CREATIVE SUITE)
 
 O **Studio CREATE v2.0** é o ambiente integrado de alta performance para criação rápida e cinematográfica de imagens, vídeos, animações labiais e controle de movimento com inteligência artificial.
 
@@ -271,7 +271,7 @@ O **Studio CREATE v2.0** é o ambiente integrado de alta performance para criaç
    * *Nome do Projeto*: Clique no ícone de lápis para editar o nome do projeto e pressione Enter para confirmar.
    * *Botão Salvar*: Salva localmente as configurações e o estado do projeto atual.
    * *Menu de Opções (`...`)*: Limpeza de campos, cópia rápida do prompt e atalhos para a Galeria.
-   * *Botão "Enviar para o Flow"*: Converte instantaneamente a criação em um nó executável no VORIXA FLOW Canvas.
+   * *Botão "Enviar para o Flow"*: Converte instantaneamente a criação em um nó executável no VORTIXIA FLOW Canvas.
 2. **Stepper Horizontal do Workflow**:
    * `1: Tipo de Mídia`: Seleção entre Imagem, Vídeo, Avatar e Motion.
    * `2: Prompt & Referências`: Campo textual e upload de imagens guias.
@@ -330,7 +330,7 @@ O **Studio CREATE v2.0** é o ambiente integrado de alta performance para criaç
 4. Selecione o **Estilo Visual** e a **Proporção de Tela**.
 5. Clique no botão **▶ Gerar Imagem** (ou Gerar Vídeo).
 6. Acompanhe a renderização em tempo real na área central com feedback do cluster.
-7. Ao concluir, reproduza, compare, faça o download ou envie para o **VORIXA FLOW**.
+7. Ao concluir, reproduza, compare, faça o download ou envie para o **VORTIXIA FLOW**.
 
 ### G. Gerador de Imagem e Vídeo Reformulados (Fidelidade Visual e Modularidade)
 * **Gerador de Imagens (`/dashboard/tools/image`)**:
@@ -347,7 +347,7 @@ O **Studio CREATE v2.0** é o ambiente integrado de alta performance para criaç
 
 ## 6. Planos, Recarga de Créditos & Checkout Seguro (`/dashboard/credits`)
 
-A área de créditos do VORIXA permite adquirir pacotes sob demanda sem mensalidades forçadas ou expiração de saldo.
+A área de créditos do VORTIXIA permite adquirir pacotes sob demanda sem mensalidades forçadas ou expiração de saldo.
 
 ### A. Pacotes Disponíveis
 * **Iniciante (100 Créditos)**: R$ 19,90 — Ideal para experimentar os motores e criar os primeiros conteúdos.
@@ -365,13 +365,13 @@ A área de créditos do VORIXA permite adquirir pacotes sob demanda sem mensalid
 
 ### C. Confirmação e Recibo
 * Ao confirmar a transação, o modal de sucesso apresenta o resumo com número do pedido, créditos adicionados e o novo saldo atualizado.
-* A partir do modal, é possível ir diretamente para o **Studio CREATE** ou para o **VORIXA FLOW** para iniciar suas produções.
+* A partir do modal, é possível ir diretamente para o **Studio CREATE** ou para o **VORTIXIA FLOW** para iniciar suas produções.
 
 ---
 
 ## 7. Vitrine de Modelos & Casting (`/dashboard/models`)
 
-A Vitrine de Modelos do VORIXA é um marketplace completo para encontrar, explorar e contratar tanto **Modelos Virtuais de IA** quanto **Modelos Reais**.
+A Vitrine de Modelos do VORTIXIA é um marketplace completo para encontrar, explorar e contratar tanto **Modelos Virtuais de IA** quanto **Modelos Reais**.
 
 ### A. Como Usar um Modelo de IA no Studio CREATE
 1. Acesse **Vitrine de Modelos** no menu lateral.
@@ -385,35 +385,35 @@ A Vitrine de Modelos do VORIXA é um marketplace completo para encontrar, explor
 2. Visualize o cachê estimado por diária (R$) ou a indicação de sob consulta, localização e redes sociais.
 3. Clique em **"👤 Contratar / Reservar"**.
 4. Preencha o formulário de proposta com seu orçamento estimado e notas/briefing da sua campanha.
-5. A solicitação é enviada para a assessoria e equipe administrativa do VORIXA e você poderá acompanhar o status da proposta.
+5. A solicitação é enviada para a assessoria e equipe administrativa do VORTIXIA e você poderá acompanhar o status da proposta.
 
 ---
 
 ## 8. Gerador Sensual & Conteúdo Sem Censura (+18) (`/dashboard/tools/hot`)
 
-A ferramenta Hot do VORIXA é dedicada à geração artística de fotos e vídeos adultos sem travas de censura ou filtros de nudez, utilizando clusters neurais especializados.
+A ferramenta Hot do VORTIXIA é dedicada à geração artística de fotos e vídeos adultos sem travas de censura ou filtros de nudez, utilizando clusters neurais especializados.
 
 ### A. Verificação de Maioridade (+18)
 * Ao acessar a ferramenta pela primeira vez, um modal obrigatório de verificação de idade será apresentado.
 * O acesso só é liberado após a confirmação expressa de que você possui 18 anos ou mais.
 
 ### B. Motores Neurais Disponíveis
-* **VORIXA Qwen Edit Plus (Ultra Detalhes)** `[🏆 Ultra Remoção & Detalhes 🔞]` `[📷 Requer Imagem]`: Excelente motor para remoção de roupas e despir mantendo rigorosamente o mesmo rosto, formato do corpo e plano de fundo. Exige prompt claro, detalhado e em inglês (4 créditos).
-* **VORIXA HiDream Edit (Fotorrealista)** `[✨ Remoção Fotorrealista 🌿]` `[📷 Requer Imagem]`: Excelente para remoção de vestimentas com refinamento orgânico de textura de pele e iluminação realista natural. Exige prompt detalhado em inglês (3 créditos).
-* **VORIXA Qwen Edit (Instrução Semântica)** `[⚡ Remoção Rápida & Ágil 🎯]` `[📷 Requer Imagem]`: Excelente para remoção rápida (~7s) e modificação de roupas guiada por texto natural com alta fidelidade ao cenário original (3 créditos).
-* **VORIXA MiniMax Edit (Alta Fidelidade)** `[Preservação Facial 👤]` `[📷 Requer Imagem]`: Edição fotorrealista mantendo máxima consistência da pessoa, rosto, corpo e iluminação original (3 créditos).
-* **VORIXA HyperReal (Foto Realista 8K)** `[✍️ Só Geração]`: Motor WAN 2.2 com foco em pele crua, micro-texturas reais e iluminação natural. Geração exclusivamente por texto (sem foto de referência, 4 créditos).
-* **VORIXA Chroma (Personagem / Game 3D)** `[✍️ Só Geração]`: Estilo desenho 3D, arte digital e personagem de videogame sem censura (não é fotorrealista). Geração exclusivamente por texto (sem foto de referência, 3 créditos).
-* **VORIXA Motion Hot (Vídeo +18 Fluido)** `[📷 Requer Imagem]`: Animação de fotos e movimentos corporais explícitos sem filtros. Rápido e ultra-estável (15 créditos).
-* **VORIXA Live Voice Hot (Vídeo com Áudio)** `[📷 Requer Imagem]`: Clipes animados sem censura com respiração e áudio ambiente/gemidos nativos (18 créditos).
-* **VORIXA Ultra Cinema Hot (Vídeo 4K)** `[📷 Requer Imagem]`: Motor cinematográfico pesado para movimentos complexos e máxima definição anatômica (30 créditos).
+* **VORTIXIA Qwen Edit Plus (Ultra Detalhes)** `[🏆 Ultra Remoção & Detalhes 🔞]` `[📷 Requer Imagem]`: Excelente motor para remoção de roupas e despir mantendo rigorosamente o mesmo rosto, formato do corpo e plano de fundo. Exige prompt claro, detalhado e em inglês (4 créditos).
+* **VORTIXIA HiDream Edit (Fotorrealista)** `[✨ Remoção Fotorrealista 🌿]` `[📷 Requer Imagem]`: Excelente para remoção de vestimentas com refinamento orgânico de textura de pele e iluminação realista natural. Exige prompt detalhado em inglês (3 créditos).
+* **VORTIXIA Qwen Edit (Instrução Semântica)** `[⚡ Remoção Rápida & Ágil 🎯]` `[📷 Requer Imagem]`: Excelente para remoção rápida (~7s) e modificação de roupas guiada por texto natural com alta fidelidade ao cenário original (3 créditos).
+* **VORTIXIA MiniMax Edit (Alta Fidelidade)** `[Preservação Facial 👤]` `[📷 Requer Imagem]`: Edição fotorrealista mantendo máxima consistência da pessoa, rosto, corpo e iluminação original (3 créditos).
+* **VORTIXIA HyperReal (Foto Realista 8K)** `[✍️ Só Geração]`: Motor WAN 2.2 com foco em pele crua, micro-texturas reais e iluminação natural. Geração exclusivamente por texto (sem foto de referência, 4 créditos).
+* **VORTIXIA Chroma (Personagem / Game 3D)** `[✍️ Só Geração]`: Estilo desenho 3D, arte digital e personagem de videogame sem censura (não é fotorrealista). Geração exclusivamente por texto (sem foto de referência, 3 créditos).
+* **VORTIXIA Motion Hot (Vídeo +18 Fluido)** `[📷 Requer Imagem]`: Animação de fotos e movimentos corporais explícitos sem filtros. Rápido e ultra-estável (15 créditos).
+* **VORTIXIA Live Voice Hot (Vídeo com Áudio)** `[📷 Requer Imagem]`: Clipes animados sem censura com respiração e áudio ambiente/gemidos nativos (18 créditos).
+* **VORTIXIA Ultra Cinema Hot (Vídeo 4K)** `[📷 Requer Imagem]`: Motor cinematográfico pesado para movimentos complexos e máxima definição anatômica (30 créditos).
 
 > ℹ️ **Identificação Visual "📷 Requer Imagem"**: Todos os motores de vídeo e de edição fotográfica trazem a tag âmbar destacada `📷 Requer Imagem`. Caso nenhum arquivo esteja carregado, o botão principal de geração alertará automaticamente `Selecione uma Foto para Gerar (+18)`, direcionando a tela diretamente para a área de anexar ou escolher uma imagem guia. Já os motores textuais trazem a badge roxa `✍️ Só Geração`.
 
 ### C. Recurso de Foto de Referência ("Usar como Referência")
 * **Card de Foto de Referência (Card 3)**:
   * Exibido apenas para motores que suportam ou exigem fotos guia (motores de Edição Facial/Corporal e motores de Vídeo).
-  * **Motores Textuais (VORIXA HyperReal & Chroma)**: Por operarem exclusivamente a partir de texto sem carregar fotos guia, o Card 3 de upload é ocultado automaticamente, simplificando o fluxo de criação.
+  * **Motores Textuais (VORTIXIA HyperReal & Chroma)**: Por operarem exclusivamente a partir de texto sem carregar fotos guia, o Card 3 de upload é ocultado automaticamente, simplificando o fluxo de criação.
   * **Obrigatório para Vídeos (+18) e Edição**: Os motores de vídeo e de edição fotográfica necessitam de uma imagem base para aplicar as instruções ou animar os movimentos.
   * **Atalho "Usar Última Foto"**: Se você já gerou imagens anteriormente, um botão de 1 clique permite utilizar a foto mais recente como referência imediata.
 * **Botão "Usar como Referência" na Mídia Ativa**:
@@ -432,7 +432,7 @@ A ferramenta Hot do VORIXA é dedicada à geração artística de fotos e vídeo
   4. O campo é atualizado automaticamente pronto para a geração no motor selecionado.
 
 ### E. Guia Especial de Remoção de Roupas & Despir (Trio de Motores: Qwen Edit, Plus & HiDream)
-Os 3 motores de edição — **VORIXA Qwen Edit**, **VORIXA Qwen Edit Plus** e **VORIXA HiDream Edit** — removem roupas com excelência mantendo a fisionomia, proporções corporais e o cenário original da foto intactos.
+Os 3 motores de edição — **VORTIXIA Qwen Edit**, **VORTIXIA Qwen Edit Plus** e **VORTIXIA HiDream Edit** — removem roupas com excelência mantendo a fisionomia, proporções corporais e o cenário original da foto intactos.
 * **Regra Fundamental**: O prompt para esses modelos precisa ser **claro, detalhado e estritamente em inglês**. Prompts em português ou vagos podem não aplicar a alteração desejada.
 * **Atalhos Rápidos de 1-Clique (`HOT_REMOVAL_PRESETS`)**:
   * **🔞 Remoção Total (Nude)**: Remove todas as roupas e sutiã, gerando nudez com pele realista e mantendo o mesmo rosto, cabelo, pose e fundo da foto de referência.
@@ -446,11 +446,11 @@ Os 3 motores de edição — **VORIXA Qwen Edit**, **VORIXA Qwen Edit Plus** e *
 
 ## 9. Programa de Indicação, Afiliados e Resgates Pix (`/dashboard/affiliates`)
 
-O Programa de Afiliados do VORIXA permite que você monetize a sua rede de contatos, amigos e clientes. Cada compra de créditos efetuada pelos seus indicados gera comissão financeira creditada diretamente no seu saldo de afiliado.
+O Programa de Afiliados do VORTIXIA permite que você monetize a sua rede de contatos, amigos e clientes. Cada compra de créditos efetuada pelos seus indicados gera comissão financeira creditada diretamente no seu saldo de afiliado.
 
 ### A. Como Funciona a Indicação
 1. Acesse o menu lateral e clique em **"Afiliados & Recompensas"** ou navegue até `/dashboard/affiliates`.
-2. Você terá acesso imediato ao seu **Link de Indicação Exclusivo** e ao seu **Código de Afiliado** (ex: `VORIXA-A1B2C3`).
+2. Você terá acesso imediato ao seu **Link de Indicação Exclusivo** e ao seu **Código de Afiliado** (ex: `VORTIXIA-A1B2C3`).
 3. Ao enviar o link para seus contatos, qualquer pessoa que clicar receberá um cookie de identificação seguro (com duração de 30 dias).
 4. Quando o convidado criar a conta e efetuar qualquer compra de pacotes de créditos, você receberá automaticamente a comissão financeira na sua carteira.
 
@@ -481,7 +481,7 @@ O Programa de Afiliados do VORIXA permite que você monetize a sua rede de conta
 
 ## 10. Recargas e Pagamentos com Pix Instantâneo via Vorexpay (`/dashboard/credits`)
 
-O VORIXA utiliza o gateway oficial **Vorexpay** ([app.vorexpay.com](https://app.vorexpay.com/)) para processar compras de pacotes de crédito com segurança financeira e liberação imediata.
+O VORTIXIA utiliza o gateway oficial **Vorexpay** ([app.vorexpay.com](https://app.vorexpay.com/)) para processar compras de pacotes de crédito com segurança financeira e liberação imediata.
 
 ### A. Como Adquirir Créditos
 1. Acesse o menu lateral e clique em **"Planos & Créditos"** ou acesse `/dashboard/credits`.
@@ -492,8 +492,8 @@ O VORIXA utiliza o gateway oficial **Vorexpay** ([app.vorexpay.com](https://app.
 ### B. Pagamento com Pix Copia e Cola & QR Code
 1. Um código **Pix Copia e Cola** e um **QR Code dinâmico** serão gerados instantaneamente.
 2. Abra o aplicativo do seu banco no smartphone, escolha a opção "Pix Copia e Cola" (ou escaneie o QR Code na tela do computador) e confirme o pagamento.
-3. **Confirmação Automática em Tempo Real**: A tela do VORIXA monitora a confirmação do banco automaticamente a cada 3 segundos. Assim que o banco liquida o pagamento, o modal fecha sozinho e celebra a aprovação com som e confirmação visual.
-4. Seus créditos são disponibilizados imediatamente na sua carteira digital para uso no Studio CREATE, VORIXA FLOW e demais ferramentas neurais!
+3. **Confirmação Automática em Tempo Real**: A tela do VORTIXIA monitora a confirmação do banco automaticamente a cada 3 segundos. Assim que o banco liquida o pagamento, o modal fecha sozinho e celebra a aprovação com som e confirmação visual.
+4. Seus créditos são disponibilizados imediatamente na sua carteira digital para uso no Studio CREATE, VORTIXIA FLOW e demais ferramentas neurais!
 
 ---
 

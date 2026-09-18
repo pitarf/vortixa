@@ -1,7 +1,7 @@
-# Especificação Técnica e de Produto — Fase 8: VORIXA Creative Workspace & Flow
+# Especificação Técnica e de Produto — Fase 8: VORTIXIA Creative Workspace & Flow
 
 ## 1. Visão do Produto
-O **VORIXA** evolui de um catálogo de ferramentas isoladas de IA para um **AI Creative Workspace** integrado e cinematográfico. O diferencial central é o **VORIXA FLOW**, um canvas visual de criação baseado em grafos (DAG), permitindo encadear modelos generativos (Texto -> Imagem FLUX -> Vídeo Kling/Luma -> LipSync -> Upscale 4K) com controle total de parâmetros, preview em tempo real e execução granular.
+O **VORTIXIA** evolui de um catálogo de ferramentas isoladas de IA para um **AI Creative Workspace** integrado e cinematográfico. O diferencial central é o **VORTIXIA FLOW**, um canvas visual de criação baseado em grafos (DAG), permitindo encadear modelos generativos (Texto -> Imagem FLUX -> Vídeo Kling/Luma -> LipSync -> Upscale 4K) com controle total de parâmetros, preview em tempo real e execução granular.
 
 ---
 
@@ -19,7 +19,7 @@ O **VORIXA** evolui de um catálogo de ferramentas isoladas de IA para um **AI C
 
 ---
 
-## 3. Arquitetura do VORIXA Flow (Frontend)
+## 3. Arquitetura do VORTIXIA Flow (Frontend)
 
 ```mermaid
 graph LR
@@ -73,7 +73,7 @@ graph LR
 
 1. **Landing Page (`app/page.tsx`)**: Hero cinematográfico com demonstração interativa do Flow, vitrine de mídias geradas por IA, comparativos e tabela de planos/créditos.
 2. **Studio Unificado CREATE (`app/dashboard/create/page.tsx`)**: Interface moderna de geração individual reaproveitando as 5 ferramentas existentes.
-3. **Canvas do VORIXA FLOW (`app/dashboard/flow/[id]/page.tsx` & `/dashboard/flow/page.tsx`)**: Workspace infinito, templates pré-configurados, biblioteca de nós e botão "✦ Build with AI".
+3. **Canvas do VORTIXIA FLOW (`app/dashboard/flow/[id]/page.tsx` & `/dashboard/flow/page.tsx`)**: Workspace infinito, templates pré-configurados, biblioteca de nós e botão "✦ Build with AI".
 4. **Library (`app/dashboard/library/page.tsx`)**: Gestão centralizada de Flows salvos, mídias geradas com lightbox e uploads de assets de entrada.
 
 ---
@@ -135,18 +135,18 @@ graph LR
 ## 9. Homologação da Fase 5.1 (Revisão Visual, UX, Produto e Segurança)
 
 ### 9.1. Parecer Multidisciplinar dos Três Subagentes
-1. **Frontend & UX (`@vorixa-frontend-agent`)**:
+1. **Frontend & UX (`@vortixia-frontend-agent`)**:
    * Aprovada a identidade Dark Obsidian (`#070709`, `#0D0E12`, `#13141B`, bordas `#1E202E`).
    * Hierarquia orientada a produto criativo (*AI Creative Workspace*): `CREATE` -> `BUILD` -> `RUN` -> `RESULT`.
    * Nós com feedback visual de execução em tempo real (`QUEUED`, `RUNNING`, `COMPLETED`, `FAILED`).
    * Suporte a acessibilidade com `prefers-reduced-motion` e animação `@keyframes flowDash` em conexões ativas.
    * Drawer lateral adaptativo no mobile para o Node Inspector e controles touch-friendly.
-2. **Backend & Resiliência (`@vorixa-backend-agent`)**:
+2. **Backend & Resiliência (`@vortixia-backend-agent`)**:
    * Zero Trust rigoroso com autoridade 100% no servidor para custos, saldos e inferência.
    * Lock pessimista (`SELECT FOR UPDATE`) para reservas e estornos atômicos.
    * Algoritmo de Kahn com detecção determinística de ciclos (`CYCLE_DETECTED`).
    * Cumprimento da invariante $\text{creditsReserved} = \text{creditsCharged} + \text{creditsRefunded}$ em execuções normais, falhas parciais e cancelamentos.
-3. **Segurança & QA Adversarial (`@vorixa-security-qa-agent`)**:
+3. **Segurança & QA Adversarial (`@vortixia-security-qa-agent`)**:
    * Blindagem total contra IDOR em Flows, Nodes, Connections e Executions.
    * Imunidade comprovada a injeções de nós cross-tenant e mass assignment.
    * Proteção XSS em prompts e configurações JSON com escape nativo no React/JSX.

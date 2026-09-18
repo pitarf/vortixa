@@ -27,11 +27,11 @@ export class AffiliateService {
   static readonly MIN_WITHDRAWAL_CENTS = 5000;
 
   /**
-   * Gera um código de indicação único e aleatório no formato VORIXA-XXXXX
+   * Gera um código de indicação único e aleatório no formato VORTIXIA-XXXXX
    */
   private static generateUniqueCode(): string {
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    let code = "VORIXA-";
+    let code = "VORTIXIA-";
     for (let i = 0; i < 5; i++) {
       code += chars.charAt(crypto.randomInt(0, chars.length));
     }
