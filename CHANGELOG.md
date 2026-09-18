@@ -6,7 +6,12 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 ## [2.8.8] - 2026-09-18
-### Renomeação Global da Marca para VORTIXIA, Comercial One Million & Vídeo Super Realista WaveSpeed
+### Renomeação Global da Marca para VORTIXIA, Vídeos Seedance 2.5 & Comercial One Million
+- **Mídias Cinemáticas Seedance 2.5 (WaveSpeed)**:
+  - Adicionados 3 novos vídeos de demonstração de ponta da arquitetura ByteDance Seedance 2.5:
+    - *Coreografia & Fluidez:* Dinâmica em 60fps com alta retenção anatômica (`/uploads/seedance_showcase_1.mp4`).
+    - *Passarela Cinemática:* Simulação de tecido e iluminação de palco (`/uploads/seedance_showcase_2.mp4`).
+    - *Produção Comercial Cinematográfica:* Composição horizontal dramática (`/uploads/seedance_showcase_3.mp4`).
 - **Vídeo de IA Super Realista (WaveSpeed)**:
   - Adicionado vídeo de demonstração cinematográfica ultra-realista com física de movimento e microexpressões faciais orgânicas (`/uploads/wavespeed_realism_showcase.mp4`).
 - **Comercial One Million Paco Rabanne (Loop Contínuo)**:
