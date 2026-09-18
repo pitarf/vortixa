@@ -53,10 +53,10 @@ export function SalesGalleryV2() {
       category: "commercial",
       type: "video",
       title: "Comercial One Million (Paco Rabanne)",
-      tag: "Produto & Comercial",
-      url: "/uploads/one_million_commercial.mp4",
+      tag: "Loop Contínuo • 4K",
+      url: "/uploads/one_million_loop.mp4",
       poster: "/uploads/one_million_rabanne.png",
-      desc: "Anúncio cinematográfico de luxo em 4K com reflexos dourados, iluminação de estúdio e câmera fluida.",
+      desc: "Anúncio de produto com iluminação dinâmica, rotação de câmera fluida e reprodução contínua em loop e reverso.",
     },
     {
       id: 4,
