@@ -8,6 +8,22 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Cards de Casos de Uso / Aplicações Reais com Mockups do Dashboard (`SalesUseCasesV2.tsx`)**:
+  - Reformulação visual completa em grid 2x2 com numeração monumental (`01`, `02`, `03`, `04`) e badges luminosas no canto superior direito (`Analytics & Tendências`, `Modelos & Avatares`, `Studio CREATE`, `Render 4K Automático`).
+  - Integração de mockups fotográficos e interativos de telas reais do dashboard do VORTIXIA na base de cada card:
+    - **01 (Criativos Virais em Escala):** Interface analítica com taxa de conversão, formato 9:16, status de varredura e métricas de engajamento de alta performance.
+    - **02 (Modelos Exclusivos & Avatares Ultra-Realistas):** Vitrine e seletor visual de modelos de IA brasileiras com fotos reais e badges de consistência física.
+    - **03 (Produção de Conteúdo em Minutos):** Estúdio de criação com controles de lente (85mm), motor de áudio em PT-BR e motion camera zoom suave.
+    - **04 (Automação de Vendas & Tráfego Pago):** Pipeline de renderização em 4K a 60fps com barra de progresso luminosa e botão de play cinemático.
+  - Verificação estática via `tsc --noEmit` (**0 erros**).
+- [x] **Seção de Planos com Cupom no Topo e no Final & Substituição por Plano Anual**:
+  - Alinhamento da proposta de valor: **Plano Mensal a R$ 99,00/mês** e **Plano Anual a R$ 79,00/mês** (faturado anualmente), criando uma vantagem evidente de 20% de economia (R$ 240,00 de economia real ao ano).
+  - Adicionado o campo de cupom estilo pílula e cálculo dinâmico de desconto na primeira seção de preços (`SalesTopPricingV2.tsx`).
+  - No bloco final de planos (`SalesBottomPricingV2.tsx`), o plano Vitalício foi ajustado e substituído pelo **Plano Anual** com a badge centralizada `MELHOR CUSTO-BENEFÍCIO (ECONOMIZE 20%)`.
+  - Todo código de afiliado/vendedor funciona automaticamente como cupom de desconto promocional.
+  - Painel administrativo (`AdminAffiliatesManager.tsx`) equipado com controle dinâmico da porcentagem de desconto do cupom dos vendedores (padrão 10%, editável pelo admin com persistência em `SystemSetting`).
+  - Endpoint de validação `/api/affiliates/validate-coupon` com cálculo automático de desconto e feedback via Sonner Toast.
+  - Verificação estática com `tsc --noEmit` (**0 erros**).
 - [x] **Adição da Transformação de Foto em Vídeo & Fala (Festa da Virginia) na Home**:
   - Resgatado o vídeo de teste original (`7a8abe32-afbb-42f6-9c7a-e77a9aadec60.mp4`) e a imagem estática de origem (`6ea5aba0-f0a5-4be8-985e-09da93fb0630.jpg`) diretamente do banco de dados e armazenamento da VPS.
   - Desenvolvido o componente dedicado `components/landing/sales-v2/SalesImageToVideoV2.tsx` com comparativo lado a lado ("Antes: Imagem Estática" vs "Depois: Vídeo com Fala e Movimento"), controles de reprodução e áudio com fala nativa em português brasileiro (*"Estou pronta para a Festa da Virginia, Você também vai?"*).

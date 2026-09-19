@@ -10,6 +10,7 @@ import { SalesUseCasesV2 } from "@/components/landing/sales-v2/SalesUseCasesV2";
 import { SalesImageToVideoV2 } from "@/components/landing/sales-v2/SalesImageToVideoV2";
 import { SalesMotionV2 } from "@/components/landing/sales-v2/SalesMotionV2";
 import { SalesGalleryV2 } from "@/components/landing/sales-v2/SalesGalleryV2";
+import { SalesBottomPricingV2 } from "@/components/landing/sales-v2/SalesBottomPricingV2";
 import { TestimonialsTrust } from "@/components/landing/TestimonialsTrust";
 import { FaqSection } from "@/components/landing/FaqSection";
 import { LandingFooter } from "@/components/landing/LandingFooter";
@@ -250,29 +251,10 @@ export default function HomeV2Page() {
           <FaqSection />
         </div>
 
-        {/* 8. BANNER FINAL DE FECHAMENTO DISCRETO */}
-        <section className="py-12 px-3 sm:px-6 max-w-4xl mx-auto text-center space-y-6 reveal-scale">
-          <div className="p-8 sm:p-12 rounded-3xl bg-[#0C0D12] border border-white/[0.08] space-y-5">
-            <h3 className="text-2xl sm:text-3xl font-normal text-white">
-              Pronto para criar conteúdos com{" "}
-              <span className="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400">
-                modelos virtuais?
-              </span>
-            </h3>
-            <p className="text-sm text-slate-400 max-w-md mx-auto font-light leading-relaxed">
-              Junte-se a criadores e agências que já estão economizando tempo e dinheiro em cada campanha.
-            </p>
-            <div className="pt-2">
-              <a
-                href="#planos-topo"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-white hover:bg-slate-200 text-slate-950 font-semibold text-sm transition-all shadow"
-              >
-                <span>Escolher meu plano</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-        </section>
+        {/* 8. SEÇÃO DE PLANOS NO FINAL (REFERÊNCIA COM CUPOM & CARDS MENSAL/VITALÍCIO) */}
+        <div className="reveal-scale">
+          <SalesBottomPricingV2 />
+        </div>
       </main>
 
       {/* Rodapé Oficial */}

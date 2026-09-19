@@ -28,10 +28,13 @@ export function AdminAffiliatesManager() {
   const [payoutFilter, setPayoutFilter] = useState<string>("PENDING");
   const [loadingPayouts, setLoadingPayouts] = useState(false);
 
-  // Afiliados
+  // Afiliados & Desconto de Cupons
   const [affiliates, setAffiliates] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loadingAffiliates, setLoadingAffiliates] = useState(false);
+  const [globalDiscountPercent, setGlobalDiscountPercent] = useState<number>(10);
+  const [inputDiscount, setInputDiscount] = useState<string>("10");
+  const [savingGlobalDiscount, setSavingGlobalDiscount] = useState(false);
 
   // Modal de Aprovação / Rejeição
   const [selectedPayout, setSelectedPayout] = useState<any | null>(null);
@@ -66,10 +69,42 @@ export function AdminAffiliatesManager() {
       if (!res.ok) throw new Error("Erro ao carregar lista de afiliados.");
       const data = await res.json();
       setAffiliates(data.affiliates || []);
+      if (typeof data.defaultDiscountPercent === "number") {
+        setGlobalDiscountPercent(data.defaultDiscountPercent);
+        setInputDiscount(data.defaultDiscountPercent.toString());
+      }
     } catch (err: any) {
       toast.error(err.message || "Erro ao consultar afiliados.");
     } finally {
       setLoadingAffiliates(false);
+    }
+  };
+
+  const handleSaveGlobalDiscount = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const parsed = parseInt(inputDiscount, 10);
+    if (isNaN(parsed) || parsed < 1 || parsed > 50) {
+      toast.error("O percentual de desconto deve ser um número inteiro entre 1% e 50%.");
+      return;
+    }
+
+    try {
+      setSavingGlobalDiscount(true);
+      const res = await fetch("/api/admin/affiliates", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ defaultDiscountPercent: parsed }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Erro ao salvar porcentagem de desconto.");
+
+      setGlobalDiscountPercent(parsed);
+      toast.success(data.message || `Desconto dos cupons de afiliados atualizado para ${parsed}%!`);
+    } catch (err: any) {
+      toast.error(err.message || "Falha ao atualizar desconto global de cupons.");
+    } finally {
+      setSavingGlobalDiscount(false);
     }
   };
 
@@ -322,6 +357,48 @@ export function AdminAffiliatesManager() {
       {/* SUB-ABA 2: LISTA DE AFILIADOS */}
       {subTab === "affiliates" && (
         <div className="space-y-4">
+          {/* Card de Configuração: Desconto do Cupom de Vendedor / Afiliado */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#0D0E12] border border-[#1E202E] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Percent className="w-4 h-4 text-purple-400" />
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+                  Desconto do Cupom de Vendedor / Afiliado
+                </h4>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                  Global Ativo: {globalDiscountPercent}% OFF
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Define a porcentagem de desconto que qualquer código de afiliado/vendedor concede aos clientes na compra dos planos na Home e Checkout.
+              </p>
+            </div>
+
+            <form onSubmit={handleSaveGlobalDiscount} className="flex items-center gap-2 self-start md:self-auto">
+              <div className="relative">
+                <input
+                  type="number"
+                  min="1"
+                  max="50"
+                  value={inputDiscount}
+                  onChange={(e) => setInputDiscount(e.target.value)}
+                  className="w-24 bg-[#13141B] border border-[#1E202E] rounded-xl px-3 py-2 text-xs text-white text-center font-bold outline-none focus:border-purple-500"
+                  placeholder="10"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-500 pointer-events-none">
+                  %
+                </span>
+              </div>
+              <button
+                type="submit"
+                disabled={savingGlobalDiscount}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md shadow-purple-600/20 transition-all cursor-pointer disabled:opacity-50"
+              >
+                {savingGlobalDiscount ? "Salvando..." : "Salvar %"}
+              </button>
+            </form>
+          </div>
+
           {/* Barra de Busca */}
           <div className="flex gap-2">
             <div className="flex-1 relative">

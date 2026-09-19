@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Check, ArrowRight, ShieldCheck, HelpCircle } from "lucide-react";
+import { Check, ArrowRight, ShieldCheck, HelpCircle, Ticket, Sparkles, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 /**
  * Seção de Preços & Oferta de Elite — Estilo Octuz AI (Clean & Luxury).
@@ -12,6 +13,61 @@ import { Check, ArrowRight, ShieldCheck, HelpCircle } from "lucide-react";
 export function SalesTopPricingV2() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
   const [pricingTab, setPricingTab] = useState<"subscription" | "credits">("subscription");
+
+  // Estado e lógica de cupom de desconto
+  const [couponCode, setCouponCode] = useState("");
+  const [isValidating, setIsValidating] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string;
+    discountPercent: number;
+    label: string;
+  } | null>(null);
+
+  const handleApplyCoupon = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!couponCode.trim()) {
+      toast.error("Por favor, digite um código de cupom ou indicação.");
+      return;
+    }
+
+    setIsValidating(true);
+    try {
+      const res = await fetch("/api/affiliates/validate-coupon", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: couponCode.trim() }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.valid) {
+        setAppliedCoupon({
+          code: data.code,
+          discountPercent: data.discountPercent,
+          label: data.label,
+        });
+        toast.success(data.message || "Cupom aplicado com sucesso!");
+      } else {
+        toast.error(data.error || "Cupom inválido ou expirado.");
+      }
+    } catch {
+      toast.error("Erro ao validar cupom. Verifique sua conexão.");
+    } finally {
+      setIsValidating(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode("");
+    toast.info("Cupom removido.");
+  };
+
+  const calculatePrice = (basePrice: number) => {
+    if (!appliedCoupon) return basePrice;
+    const discount = (basePrice * appliedCoupon.discountPercent) / 100;
+    return Math.max(1, Math.round(basePrice - discount));
+  };
 
   return (
     <section id="planos-topo" className="py-10 sm:py-16 px-3 sm:px-6 max-w-7xl mx-auto space-y-10 sm:space-y-14 w-full scroll-mt-28">
@@ -127,7 +183,7 @@ export function SalesTopPricingV2() {
             <button
               type="button"
               onClick={() => setBillingCycle("monthly")}
-              className={`py-1.5 px-2 rounded-lg transition-colors cursor-pointer ${billingCycle === "monthly" ? "text-white font-medium underline underline-offset-4" : "hover:text-slate-200"}`}
+              className={`py-2 px-3 rounded-lg transition-colors cursor-pointer min-h-[40px] flex items-center justify-center ${billingCycle === "monthly" ? "text-white font-medium underline underline-offset-4" : "hover:text-slate-200"}`}
             >
               Cobrança mensal
             </button>
@@ -135,13 +191,65 @@ export function SalesTopPricingV2() {
             <button
               type="button"
               onClick={() => setBillingCycle("yearly")}
-              className={`py-1.5 px-2 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer ${billingCycle === "yearly" ? "text-cyan-400 font-medium underline underline-offset-4" : "hover:text-slate-200"}`}
+              className={`py-2 px-3 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer min-h-[40px] ${billingCycle === "yearly" ? "text-cyan-400 font-medium underline underline-offset-4" : "hover:text-slate-200"}`}
             >
               <span>Cobrança anual</span>
               <span className="px-1.5 py-0.5 rounded text-[10px] bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 font-semibold shadow-[0_0_10px_rgba(6,182,212,0.2)]">20% off</span>
             </button>
           </div>
         )}
+
+        {/* Barra de Cupom de Indicação Funcional */}
+        <div className="w-full max-w-md mx-auto pt-2">
+          <form
+            onSubmit={handleApplyCoupon}
+            className="relative flex items-center bg-[#0C0D12] border border-white/[0.12] rounded-full p-1.5 sm:p-2 shadow-2xl focus-within:border-cyan-500/50 transition-all min-h-[46px]"
+          >
+            <div className="pl-3 pr-2 text-cyan-400 shrink-0">
+              <Ticket className="w-4 h-4" />
+            </div>
+
+            <input
+              type="text"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+              placeholder={appliedCoupon ? `CUPOM ${appliedCoupon.code} ATIVO` : "TEM UM CUPOM DE INDICAÇÃO?"}
+              disabled={Boolean(appliedCoupon)}
+              className="w-full bg-transparent text-xs sm:text-sm text-white placeholder:text-slate-500 placeholder:tracking-wider placeholder:font-mono focus:outline-none uppercase font-mono px-1 py-1.5"
+            />
+
+            {appliedCoupon ? (
+              <button
+                type="button"
+                onClick={removeCoupon}
+                className="shrink-0 px-4 py-2 rounded-full bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-medium transition-all cursor-pointer min-h-[36px]"
+              >
+                Remover
+              </button>
+            ) : (
+              <button
+                type="submit"
+                disabled={isValidating}
+                className="shrink-0 px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all cursor-pointer min-h-[38px] flex items-center justify-center gap-1.5 disabled:opacity-50"
+              >
+                {isValidating ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <span>Aplicar</span>
+                )}
+              </button>
+            )}
+          </form>
+
+          {appliedCoupon && (
+            <div className="mt-2 text-center text-xs text-cyan-400 font-medium flex items-center justify-center gap-1.5 animate-in fade-in duration-200">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>
+                {appliedCoupon.label}: {appliedCoupon.discountPercent}% OFF ativado!
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Grid de Planos */}
@@ -156,8 +264,13 @@ export function SalesTopPricingV2() {
               </div>
 
               <div className="flex items-baseline gap-1.5">
+                {appliedCoupon && (
+                  <span className="text-sm line-through text-slate-500 font-mono">
+                    R$ {billingCycle === "yearly" ? "31" : "39"}
+                  </span>
+                )}
                 <span className="text-3xl sm:text-4xl font-normal text-white font-serif">
-                  {billingCycle === "yearly" ? "R$ 31" : "R$ 39"}
+                  R$ {calculatePrice(billingCycle === "yearly" ? 31 : 39)}
                 </span>
                 <span className="text-xs text-slate-400 font-sans">/ mês</span>
               </div>
@@ -187,7 +300,7 @@ export function SalesTopPricingV2() {
             </div>
 
             <Link
-              href="/register?plan=starter"
+              href={`/register?plan=starter${appliedCoupon ? `&coupon=${appliedCoupon.code}` : ""}`}
               className="w-full py-3.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:scale-98 border border-white/[0.12] text-white text-xs font-medium text-center transition-all min-h-[48px] flex items-center justify-center cursor-pointer shadow-sm"
             >
               Começar com o Inicial
@@ -207,8 +320,13 @@ export function SalesTopPricingV2() {
               </div>
 
               <div className="flex items-baseline gap-1.5">
+                {appliedCoupon && (
+                  <span className="text-sm line-through text-slate-500 font-mono">
+                    R$ {billingCycle === "yearly" ? "79" : "99"}
+                  </span>
+                )}
                 <span className="text-3xl sm:text-4xl font-normal text-white font-serif">
-                  {billingCycle === "yearly" ? "R$ 79" : "R$ 99"}
+                  R$ {calculatePrice(billingCycle === "yearly" ? 79 : 99)}
                 </span>
                 <span className="text-xs text-slate-400 font-sans">/ mês</span>
               </div>
@@ -242,7 +360,7 @@ export function SalesTopPricingV2() {
             </div>
 
             <Link
-              href="/register?plan=creator_pro"
+              href={`/register?plan=creator_pro${appliedCoupon ? `&coupon=${appliedCoupon.code}` : ""}`}
               className="w-full py-3.5 rounded-full bg-white hover:bg-slate-100 active:scale-98 text-slate-950 text-xs font-bold text-center transition-all min-h-[48px] flex items-center justify-center cursor-pointer shadow-lg hover:shadow-xl"
             >
               Assinar Creator Pro
@@ -258,8 +376,13 @@ export function SalesTopPricingV2() {
               </div>
 
               <div className="flex items-baseline gap-1">
+                {appliedCoupon && (
+                  <span className="text-sm line-through text-slate-500 font-mono">
+                    R$ {billingCycle === "yearly" ? "199" : "249"}
+                  </span>
+                )}
                 <span className="text-3xl sm:text-4xl font-normal text-white font-serif">
-                  {billingCycle === "yearly" ? "R$ 199" : "R$ 249"}
+                  R$ {calculatePrice(billingCycle === "yearly" ? 199 : 249)}
                 </span>
                 <span className="text-xs text-slate-400 font-sans">/ mês</span>
               </div>
@@ -289,7 +412,7 @@ export function SalesTopPricingV2() {
             </div>
 
             <Link
-              href="/register?plan=studio"
+              href={`/register?plan=studio${appliedCoupon ? `&coupon=${appliedCoupon.code}` : ""}`}
               className="w-full py-3.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:scale-98 border border-white/[0.12] text-white text-xs font-medium text-center transition-all min-h-[48px] flex items-center justify-center cursor-pointer shadow-sm"
             >
               Assinar Plano Studio

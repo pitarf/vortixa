@@ -5,6 +5,31 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.8.9] - 2026-09-18
+### Seção de Planos com Cupom Funcional, Precificação Corrigida & Novos Cards de Aplicações com Mockups do Dashboard
+- **Cards de Casos de Uso / Aplicações Reais com Mockups do Dashboard (`SalesUseCasesV2.tsx`)**:
+  - Reformulação visual completa em grid 2x2 com numeração monumental (`01`, `02`, `03`, `04`) e badges luminosas no canto superior direito.
+  - Integração de mockups fotográficos e interativos de telas reais do dashboard do VORTIXIA na base de cada card:
+    - **01 (Criativos Virais em Escala):** Interface analítica com taxa de conversão, formato 9:16, status de varredura e métricas de engajamento de alta performance.
+    - **02 (Modelos Exclusivos & Avatares Ultra-Realistas):** Vitrine e seletor visual de modelos de IA brasileiras com fotos reais e badges de consistência física.
+    - **03 (Produção de Conteúdo em Minutos):** Estúdio de criação com controles de lente (85mm), motor de áudio em PT-BR e motion camera zoom suave.
+    - **04 (Automação de Vendas & Tráfego Pago):** Pipeline de renderização em 4K a 60fps com barra de progresso luminosa e botão de play cinemático.
+- **Correção da Proposta de Valor e Precificação (Mensal vs Anual)**:
+  - **Plano Mensal:** Definido em **R$ 99,00/mês** (renovação mensal com flexibilidade total e sem compromisso de longo prazo).
+  - **Plano Anual:** Definido em **R$ 79,00/mês** (faturado anualmente), proporcionando uma **vantagem clara e economia real de 20% (R$ 240,00 de economia ao ano)**.
+  - O valor de R$ 99,00 aparece riscado no plano Anual, tornando evidente a vantagem imediata para o cliente assinar o plano Anual com a badge `MELHOR CUSTO-BENEFÍCIO (ECONOMIZE 20%)`.
+- **Cupom de Indicação / Vendedor Integrado no Topo e no Final**:
+  - Adicionado o campo funcional de cupom estilo pílula também na primeira seção de planos logo após o Hero (`SalesTopPricingV2.tsx`) e na seção de fechamento (`SalesBottomPricingV2.tsx`).
+  - Cálculo instantâneo de desconto aplicado a todos os planos (Plano Inicial, Creator Pro e Studio & Agências) tanto na cobrança mensal quanto anual.
+  - Links de checkout e cadastro agora propagam o cupom aplicado automaticamente (`?coupon=...`).
+- **Remoção Definitiva de Qualquer Menção a Vitalício**:
+  - Totalmente eliminado qualquer resquício de plano vitalício no fechamento da Home, alinhando 100% com o modelo de assinaturas recorrentes da plataforma.
+- **Cupons de Vendedor / Afiliado Ajustáveis pelo Admin**:
+  - Todo código de indicação de afiliado/vendedor (`code` ou `customCode`) agora funciona automaticamente como cupom de desconto em toda a loja e na Home.
+  - Painel de controle no Painel Administrativo (`AdminAffiliatesManager.tsx`) permitindo que o administrador altere dinamicamente a porcentagem de desconto dos cupons (padrão 10%, editável entre 1% e 50%).
+- **Validação e Integridade**:
+  - TypeScript verificado com `tsc --noEmit` (**0 erros**).
+
 ## [2.8.8] - 2026-09-18
 ### Renomeação Global da Marca para VORTIXIA, Motion Control WaveSpeed, Texto para Imagem & Seedance 2.5
 - **Motion Control Avançado (Dançarina & Coreografia Profissional)**:
