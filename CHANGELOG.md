@@ -5,6 +5,31 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.8.11] - 2026-09-20
+### Personalização do Nome de Exibição de IAs no Painel Admin e Propagação no Cliente
+- **Painel Administrativo (`components/admin/services/AdminServicesCatalog.tsx`)**:
+  - Adicionado campo editável de nome de exibição para cada modelo de IA tanto na Tabela Desktop quanto no Card Mobile (com área de toque confortável `>= 44px`).
+  - Rastreamento reativo de rascunhos (`nameDrafts`) com destaque visual quando o nome é modificado.
+  - Salvamento unificado via botão de ação disparando `PATCH /api/admin/services/[id]` com feedback visual instantâneo via Sonner Toast.
+- **Backend e Persistência Segura (`app/api/admin/services/[id]/route.ts`)**:
+  - Validação rigorosa de comprimento (entre 2 e 100 caracteres) e sanitização contra caracteres de controle.
+  - Execução atômica com `prisma.$transaction`: atualiza `AIModel.name`, sincroniza ferramentas filhas vinculadas (`AITool.name`) e gera log de auditoria em `AuditLog` com `oldName` e `newName`.
+- **Propagação Dinâmica para o Cliente (`app/api/tools/config/route.ts`)**:
+  - Endpoint `GET /api/tools/config` estendido para retornar a lista de modelos ativos com seus nomes customizados salvos no banco.
+- **Studio Create e Seletores de Modelo (`StudioModelSelector.tsx` & `VideoModelSection.tsx`)**:
+  - Resolução dinâmica de nome (`getModelDisplayName`) mapeando tanto por ID quanto por nome técnico, com fallback automático para os rótulos estáticos.
+  - Sincronização em tempo real nas abas de Imagem, Vídeo, LipSync, Motion e Upscale sem quebrar contratos de execução de API.
+
+## [2.8.10] - 2026-09-20
+### Atualização do Guia de Infraestrutura e Conexão da VPS
+- **Mapeamento e Documentação Técnica Atualizada (`GUIA_CONEXAO_E_ESTADO_VPS.md`)**:
+  - Dados de acesso SSH via IP (`144.22.173.125`) e hostname (`tv.connectadvec.online`).
+  - Especificações auditadas da instância OCI Ampere A1 ARM (24 GB de RAM, 200 GB SSD NVMe).
+  - Tabela completa de contêineres Docker ativos (`vorixa-app`, `vorixa-postgres`, `vorixa-minio`, `connecttv_frontend`, `test_postgres_db`).
+  - Configuração do proxy reverso Nginx com certificados SSL Certbot para `vortixia.com.br` e cache de mídias em `/var/www/vorixa-uploads/`.
+  - Rotinas de backup diário às 03:00 com dumps compactados em `/home/ubuntu/backups/vorixa_postgres/`.
+  - Regras claras de alocação de portas seguras para novos projetos e containers.
+
 ## [2.8.9] - 2026-09-18
 ### Seção de Planos com Cupom Funcional, Precificação Corrigida & Novos Cards de Aplicações com Mockups do Dashboard
 - **Cards de Casos de Uso / Aplicações Reais com Mockups do Dashboard (`SalesUseCasesV2.tsx`)**:

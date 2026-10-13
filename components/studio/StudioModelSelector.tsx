@@ -15,6 +15,7 @@ interface StudioModelSelectorProps {
   onSelectQualityMode?: (modeId: string, steps: number, modelId: string) => void;
   onOpenModelShowcasePicker?: () => void;
   hasActiveShowcaseModel?: boolean;
+  customModelNames?: Record<string, string>;
 }
 
 export function StudioModelSelector({
@@ -25,12 +26,45 @@ export function StudioModelSelector({
   onSelectQualityMode,
   onOpenModelShowcasePicker,
   hasActiveShowcaseModel,
+  customModelNames,
 }: StudioModelSelectorProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [dynamicNames, setDynamicNames] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Busca dinamicamente os nomes cadastrados no banco via /api/tools/config
+  useEffect(() => {
+    async function loadDynamicNames() {
+      try {
+        const res = await fetch("/api/tools/config");
+        if (res.ok) {
+          const data = await res.json();
+          const map: Record<string, string> = {};
+          if (data.models && Array.isArray(data.models)) {
+            data.models.forEach((m: any) => {
+              if (m.id && m.name) map[m.id] = m.name;
+              if (m.technicalName && m.name) map[m.technicalName] = m.name;
+            });
+          }
+          if (data.tools && Array.isArray(data.tools)) {
+            data.tools.forEach((t: any) => {
+              if (t.model?.id && t.model?.name) map[t.model.id] = t.model.name;
+              if (t.model?.technicalName && t.model?.name) map[t.model.technicalName] = t.model.name;
+            });
+          }
+          if (Object.keys(map).length > 0) {
+            setDynamicNames(map);
+          }
+        }
+      } catch {
+        // Silencioso: fallback gracioso para nomes estáticos
+      }
+    }
+    loadDynamicNames();
   }, []);
 
   // Previne rolagem da página ao abrir modal e fecha com tecla ESC
@@ -55,6 +89,10 @@ export function StudioModelSelector({
   const currentModelDef =
     currentToolDef.models.find((m) => m.id === selectedModelId) ||
     currentToolDef.models[0];
+
+  const getModelDisplayName = (modelId: string, fallbackName: string) => {
+    return customModelNames?.[modelId] || dynamicNames[modelId] || fallbackName;
+  };
 
   return (
     <>
@@ -128,7 +166,7 @@ export function StudioModelSelector({
               <div className="min-w-0 space-y-0.5">
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <span className="text-xs font-extrabold text-white truncate">
-                    {currentModelDef.name}
+                    {getModelDisplayName(currentModelDef.id, currentModelDef.name)}
                   </span>
                   {currentModelDef.badge && (
                     <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 uppercase tracking-wider whitespace-nowrap">
@@ -174,13 +212,14 @@ export function StudioModelSelector({
             <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 touch-pan-x">
               {currentToolDef.models.map((m) => {
                 const isCurrent = selectedModelId === m.id;
+                const displayName = getModelDisplayName(m.id, m.name);
                 return (
                   <button
                     key={m.id}
                     type="button"
                     onClick={() => {
                       onSelectModel(m.id);
-                      toast.success(`Motor "${m.name}" selecionado!`);
+                      toast.success(`Motor "${displayName}" selecionado!`);
                     }}
                     className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-[11px] font-bold whitespace-nowrap transition-all cursor-pointer min-h-[38px] active:scale-95 shrink-0 ${
                       isCurrent
@@ -188,7 +227,7 @@ export function StudioModelSelector({
                         : "bg-[#13141B] border-white/[0.08] text-slate-300 hover:text-white hover:border-slate-700"
                     }`}
                   >
-                    <span>{m.name.split("(")[0].trim()}</span>
+                    <span>{displayName.split("(")[0].trim()}</span>
                     <span
                       className={`text-[9px] font-mono px-1 py-0.5 rounded ${
                         isCurrent ? "bg-black/30 text-violet-200 font-bold" : "bg-black/40 text-slate-400"
@@ -287,13 +326,14 @@ export function StudioModelSelector({
             <div className="space-y-2.5 overflow-y-auto overscroll-contain touch-pan-y pr-1 flex-1">
               {currentToolDef.models.map((model) => {
                 const isSelected = selectedModelId === model.id;
+                const displayName = getModelDisplayName(model.id, model.name);
                 return (
                   <div
                     key={model.id}
                     onClick={() => {
                       onSelectModel(model.id);
                       setIsModalOpen(false);
-                      toast.success(`Motor "${model.name}" selecionado!`);
+                      toast.success(`Motor "${displayName}" selecionado!`);
                     }}
                     className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 cursor-pointer transition-all duration-200 min-h-[56px] select-none touch-manipulation active:scale-[0.99] ${
                       isSelected
@@ -306,7 +346,7 @@ export function StudioModelSelector({
                       <div className="min-w-0 space-y-0.5">
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <span className="text-xs sm:text-sm font-bold text-white truncate">
-                            {model.name}
+                            {displayName}
                           </span>
                           {model.badge && (
                             <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 uppercase tracking-wider">

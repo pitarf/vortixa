@@ -23,10 +23,26 @@ export async function GET() {
       },
     });
 
+    // Modelos de IA ativos com seus nomes customizados e custos para sincronização com o cliente
+    const models = await prisma.aIModel.findMany({
+      where: { status: true },
+      select: {
+        id: true,
+        name: true,
+        technicalName: true,
+        creditCost: true,
+        status: true,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
+
     return NextResponse.json({
       balance,
       creditMode: userRecord?.isUnlimited ? "UNLIMITED" : "LIMITED",
       tools,
+      models,
     });
   } catch (err: any) {
     console.error("Erro no endpoint GET /api/tools/config:", err);

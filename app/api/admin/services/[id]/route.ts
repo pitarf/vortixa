@@ -35,13 +35,38 @@ export async function PATCH(
       return NextResponse.json({ error: "Payload JSON inválido." }, { status: 400 });
     }
 
-    const { status, creditCost, apiUnitCost } = body;
+    const { name, status, creditCost, apiUnitCost } = body;
 
     const updateData: {
+      name?: string;
       status?: boolean;
       creditCost?: number;
       apiUnitCost?: number;
     } = {};
+
+    // Validação e sanitização do nome de exibição do modelo/serviço
+    if (name !== undefined && name !== null) {
+      if (typeof name !== "string") {
+        return NextResponse.json(
+          { error: "O nome do serviço deve ser um texto válido." },
+          { status: 400 }
+        );
+      }
+
+      const sanitizedName = name
+        .replace(/[\u0000-\u001F\u007F-\u009F]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+      if (sanitizedName.length < 2 || sanitizedName.length > 100) {
+        return NextResponse.json(
+          { error: "O nome do serviço deve ter entre 2 e 100 caracteres." },
+          { status: 400 }
+        );
+      }
+
+      updateData.name = sanitizedName;
+    }
 
     if (typeof status === "boolean") {
       updateData.status = status;
@@ -71,7 +96,7 @@ export async function PATCH(
 
     if (Object.keys(updateData).length === 0) {
       return NextResponse.json(
-        { error: "Nenhum campo para atualização foi enviado (status, creditCost ou apiUnitCost)." },
+        { error: "Nenhum campo para atualização foi enviado (name, status, creditCost ou apiUnitCost)." },
         { status: 400 }
       );
     }
@@ -84,34 +109,51 @@ export async function PATCH(
       return NextResponse.json({ error: "Serviço não encontrado no catálogo." }, { status: 404 });
     }
 
-    const updatedModel = await prisma.aIModel.update({
-      where: { id },
-      data: updateData,
-      include: {
-        provider: true,
-        tools: true,
-      },
-    });
-
-    // Se o status do modelo foi alterado, manter ferramentas vinculadas em sincronia se desejado
-    if (typeof status === "boolean") {
-      await prisma.aITool.updateMany({
-        where: { modelId: id },
-        data: { status },
+    // Execução atômica no banco via transação Prisma
+    const updatedModel = await prisma.$transaction(async (tx) => {
+      const model = await tx.aIModel.update({
+        where: { id },
+        data: updateData,
+        include: {
+          provider: true,
+          tools: true,
+        },
       });
-    }
 
-    // Registrar log de auditoria
-    await prisma.auditLog.create({
-      data: {
-        userId: admin.id,
-        action: "UPDATE_SERVICE_CONFIG",
-        details: JSON.stringify({
-          serviceId: id,
-          serviceName: existingModel.name,
-          changes: updateData,
-        }),
-      },
+      // Se o status do modelo foi alterado, manter ferramentas vinculadas em sincronia
+      if (typeof status === "boolean") {
+        await tx.aITool.updateMany({
+          where: { modelId: id },
+          data: { status },
+        });
+      }
+
+      // Se o nome do modelo foi alterado, atualizar também o nome das ferramentas associadas
+      if (updateData.name) {
+        await tx.aITool.updateMany({
+          where: { modelId: id },
+          data: { name: updateData.name },
+        });
+      }
+
+      // Registrar log de auditoria com rastreabilidade de mudanças
+      await tx.auditLog.create({
+        data: {
+          userId: admin.id,
+          action: "UPDATE_SERVICE_CONFIG",
+          details: JSON.stringify({
+            serviceId: id,
+            serviceName: existingModel.name,
+            changes: updateData,
+            ...(updateData.name && {
+              oldName: existingModel.name,
+              newName: updateData.name,
+            }),
+          }),
+        },
+      });
+
+      return model;
     });
 
     const dollarRate = await CurrencyService.getUsdToBrlRate();

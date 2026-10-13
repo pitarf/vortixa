@@ -10,18 +10,56 @@ import { toast } from "sonner";
 interface VideoModelSectionProps {
   selectedModel: VideoModelDef;
   onSelectModel: (model: VideoModelDef) => void;
+  customModelNames?: Record<string, string>;
 }
 
 export function VideoModelSection({
   selectedModel,
   onSelectModel,
+  customModelNames,
 }: VideoModelSectionProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [dynamicNames, setDynamicNames] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Busca dinamicamente os nomes cadastrados no banco via /api/tools/config
+  useEffect(() => {
+    async function loadDynamicNames() {
+      try {
+        const res = await fetch("/api/tools/config");
+        if (res.ok) {
+          const data = await res.json();
+          const map: Record<string, string> = {};
+          if (data.models && Array.isArray(data.models)) {
+            data.models.forEach((m: any) => {
+              if (m.id && m.name) map[m.id] = m.name;
+              if (m.technicalName && m.name) map[m.technicalName] = m.name;
+            });
+          }
+          if (data.tools && Array.isArray(data.tools)) {
+            data.tools.forEach((t: any) => {
+              if (t.model?.id && t.model?.name) map[t.model.id] = t.model.name;
+              if (t.model?.technicalName && t.model?.name) map[t.model.technicalName] = t.model.name;
+            });
+          }
+          if (Object.keys(map).length > 0) {
+            setDynamicNames(map);
+          }
+        }
+      } catch {
+        // Fallback silencioso para nomes padrão
+      }
+    }
+    loadDynamicNames();
+  }, []);
+
+  const getDisplayName = (modelId: string, fallbackName: string) => {
+    return customModelNames?.[modelId] || dynamicNames[modelId] || fallbackName;
+  };
 
   // Bloqueia rolagem do body e adiciona listener de ESC
   useEffect(() => {
@@ -61,7 +99,7 @@ export function VideoModelSection({
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs font-extrabold text-slate-900 dark:text-white truncate">
-                  {selectedModel.name}
+                  {getDisplayName(selectedModel.id, selectedModel.name)}
                 </span>
                 {selectedModel.badge && (
                   <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/30 uppercase tracking-wider whitespace-nowrap">
@@ -126,13 +164,14 @@ export function VideoModelSection({
             <div className="space-y-2.5 overflow-y-auto overscroll-contain touch-pan-y pr-1 flex-1">
               {VIDEO_MODELS.map((model) => {
                 const isSelected = selectedModel.id === model.id;
+                const displayName = getDisplayName(model.id, model.name);
                 return (
                   <div
                     key={model.id}
                     onClick={() => {
                       onSelectModel(model);
                       setIsModalOpen(false);
-                      toast.success(`Motor "${model.name}" selecionado!`);
+                      toast.success(`Motor "${displayName}" selecionado!`);
                     }}
                     className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 cursor-pointer transition-all min-h-[56px] select-none touch-manipulation active:scale-[0.99] ${
                       isSelected
@@ -146,7 +185,7 @@ export function VideoModelSection({
                       <div className="min-w-0 space-y-0.5">
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                            {model.name}
+                            {displayName}
                           </span>
                           <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-violet-100 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-500/20 whitespace-nowrap">
                             {model.cost} cr

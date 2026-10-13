@@ -8,6 +8,15 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Personalização do Nome de Exibição de IAs no Admin e Propagação no Cliente**:
+  - Implementada funcionalidade de edição e salvamento do nome amigável de cada IA no Painel Administrativo (`AdminServicesCatalog.tsx`), tanto na Tabela Desktop quanto nos Cards Mobile (touch targets `>= 44px`).
+  - Rota `PATCH /api/admin/services/[id]` atualizada com validação de 2 a 100 caracteres, transação atômica Prisma sincronizando `AIModel` e ferramentas filhas `AITool`, e registro em `AuditLog`.
+  - Endpoint `GET /api/tools/config` atualizado para expor a lista de modelos ativos (`models`) com seus nomes customizados.
+  - Seletores do Studio Create (`StudioModelSelector.tsx`) e da ferramenta dedicada de vídeo (`VideoModelSection.tsx`) atualizados com resolução reativa de nomes customizados.
+  - Verificação estática com `tsc --noEmit` (**0 erros**).
+- [x] **Atualização do Guia de Infraestrutura e Conexão da VPS (`GUIA_CONEXAO_E_ESTADO_VPS.md`)**:
+  - Auditoria em tempo real da VPS Oracle Cloud (`144.22.173.125`).
+  - Documentação dos 5 contêineres Docker ativos, mapeamento das portas locais/externas, regras de proxy reverso Nginx com SSL para `vortixia.com.br`, diretórios de mídia `/var/www/vorixa-uploads/` e rotinas de backup diário automatizado.
 - [x] **Cards de Casos de Uso / Aplicações Reais com Mockups do Dashboard (`SalesUseCasesV2.tsx`)**:
   - Reformulação visual completa em grid 2x2 com numeração monumental (`01`, `02`, `03`, `04`) e badges luminosas no canto superior direito (`Analytics & Tendências`, `Modelos & Avatares`, `Studio CREATE`, `Render 4K Automático`).
   - Integração de mockups fotográficos e interativos de telas reais do dashboard do VORTIXIA na base de cada card:

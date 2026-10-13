@@ -21,7 +21,8 @@ import {
   CheckCircle2, 
   XCircle,
   HelpCircle,
-  ArrowUpDown
+  ArrowUpDown,
+  Pencil
 } from "lucide-react";
 import { toast } from "sonner";
 import { AdminServiceBatchBar } from "./AdminServiceBatchBar";
@@ -84,7 +85,8 @@ export function AdminServicesCatalog() {
   // Seleção Múltipla para Ações em Lote
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  // Estado temporário dos créditos sendo editados (inline inputs)
+  // Estado temporário dos nomes, créditos e custos sendo editados (inline inputs)
+  const [nameDrafts, setNameDrafts] = useState<Record<string, string>>({});
   const [creditDrafts, setCreditDrafts] = useState<Record<string, number>>({});
   const [apiCostDrafts, setApiCostDrafts] = useState<Record<string, number>>({});
 
@@ -120,13 +122,16 @@ export function AdminServicesCatalog() {
         if (data.dollarRate) {
           setDollarRate(data.dollarRate);
         }
-        // Inicializar rascunhos de créditos e custos
+        // Inicializar rascunhos de nomes, créditos e custos
+        const initialNames: Record<string, string> = {};
         const initialCredits: Record<string, number> = {};
         const initialApiCosts: Record<string, number> = {};
         (data.services || []).forEach((s: ServiceItem) => {
+          initialNames[s.id] = s.name;
           initialCredits[s.id] = s.creditCost;
           initialApiCosts[s.id] = s.apiUnitCostUsd;
         });
+        setNameDrafts(initialNames);
         setCreditDrafts(initialCredits);
         setApiCostDrafts(initialApiCosts);
       } else {
@@ -159,8 +164,10 @@ export function AdminServicesCatalog() {
   // Filtragem dos Serviços
   const filteredServices = useMemo(() => {
     return displayServices.filter((service) => {
+      const draftName = nameDrafts[service.id] || service.name;
       const matchesSearch =
         service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        draftName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         service.technicalName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         service.tools.some((t) => t.name.toLowerCase().includes(searchQuery.toLowerCase()) || t.slug.toLowerCase().includes(searchQuery.toLowerCase()));
 
@@ -172,7 +179,7 @@ export function AdminServicesCatalog() {
 
       return matchesSearch && matchesCategory && matchesStatus;
     });
-  }, [displayServices, searchQuery, selectedCategory, statusFilter]);
+  }, [displayServices, searchQuery, selectedCategory, statusFilter, nameDrafts]);
 
   // Manipular toggle de status individual (Ativar / Desativar)
   const handleToggleStatus = async (service: ServiceItem) => {
@@ -201,8 +208,9 @@ export function AdminServicesCatalog() {
     }
   };
 
-  // Salvar alterações de crédito e custo de API individuais
-  const handleSavePricing = async (serviceId: string) => {
+  // Salvar alterações de nome, crédito e custo de API individuais
+  const handleSaveService = async (serviceId: string) => {
+    const draftName = nameDrafts[serviceId] !== undefined ? nameDrafts[serviceId].trim() : undefined;
     const draftCredit = creditDrafts[serviceId];
     const draftApiCost = apiCostDrafts[serviceId];
 
@@ -212,6 +220,7 @@ export function AdminServicesCatalog() {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          name: draftName,
           creditCost: draftCredit,
           apiUnitCost: draftApiCost,
         }),
@@ -224,6 +233,7 @@ export function AdminServicesCatalog() {
             s.id === serviceId
               ? {
                   ...s,
+                  name: draftName || s.name,
                   creditCost: Number(draftCredit),
                   apiUnitCostUsd: Number(draftApiCost),
                   estimatedCostBrl: Number((draftApiCost * dollarRate).toFixed(4)),
@@ -231,16 +241,19 @@ export function AdminServicesCatalog() {
               : s
           )
         );
-        toast.success("Precificação atualizada com sucesso!");
+        toast.success("Nome da IA e configurações atualizados!");
       } else {
-        toast.error(json.error || "Erro ao salvar precificação.");
+        toast.error(json.error || "Erro ao salvar configurações do serviço.");
       }
     } catch {
-      toast.error("Erro ao salvar precificação.");
+      toast.error("Erro ao salvar configurações do serviço.");
     } finally {
       setSavingId(null);
     }
   };
+
+  // Alias para retrocompatibilidade
+  const handleSavePricing = handleSaveService;
 
   // Selecionar / Desmarcar todos os filtrados
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -401,7 +414,11 @@ export function AdminServicesCatalog() {
             const isSaving = savingId === service.id;
             const draftCredit = creditDrafts[service.id] ?? service.creditCost;
             const draftApiCost = apiCostDrafts[service.id] ?? service.apiUnitCostUsd;
-            const isDirty = draftCredit !== service.creditCost || draftApiCost !== service.apiUnitCostUsd;
+            const draftName = nameDrafts[service.id] !== undefined ? nameDrafts[service.id] : service.name;
+            const isDirty = 
+              draftName.trim() !== service.name || 
+              draftCredit !== service.creditCost || 
+              draftApiCost !== service.apiUnitCostUsd;
 
             return (
               <div
@@ -414,7 +431,7 @@ export function AdminServicesCatalog() {
               >
                 {/* Header do Card Mobile de Serviço */}
                 <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-start gap-3 min-w-0">
+                  <div className="flex items-start gap-3 min-w-0 flex-1">
                     <div className="pt-0.5">
                       <input
                         type="checkbox"
@@ -424,12 +441,16 @@ export function AdminServicesCatalog() {
                         className="rounded border-slate-700 text-violet-600 focus:ring-violet-500 h-5 w-5 bg-slate-900 cursor-pointer"
                       />
                     </div>
-                    <div className="min-w-0">
-                      <div className="font-bold text-white text-sm truncate">
-                        {service.name}
-                      </div>
-                      <div className="font-mono text-[11px] text-slate-400 truncate">
-                        {service.technicalName}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-mono text-[11px] text-slate-400 truncate max-w-[200px]" title={service.technicalName}>
+                          {service.technicalName}
+                        </span>
+                        {draftName !== service.name && (
+                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
+                            Modificado
+                          </span>
+                        )}
                       </div>
                       {service.tools.length > 0 && (
                         <div className="text-[10px] text-violet-400 mt-0.5 truncate">
@@ -463,6 +484,30 @@ export function AdminServicesCatalog() {
                       </span>
                     </button>
                   </div>
+                </div>
+
+                {/* Campo Editável de Nome de Exibição no Mobile (Touch Target >= 44px) */}
+                <div className="space-y-1 pt-1">
+                  <label className="text-[10px] text-slate-400 font-medium flex items-center gap-1">
+                    <Pencil className="w-3 h-3 text-violet-400" />
+                    <span>Nome de Exibição da IA</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={draftName}
+                    onChange={(e) =>
+                      setNameDrafts({
+                        ...nameDrafts,
+                        [service.id]: e.target.value,
+                      })
+                    }
+                    placeholder="Nome amigável da IA"
+                    className={`w-full bg-slate-900 border rounded-xl px-3 py-2 text-xs text-white font-semibold transition-all focus:outline-none min-h-[44px] ${
+                      draftName !== service.name
+                        ? "border-violet-500 bg-violet-950/20 text-violet-100"
+                        : "border-slate-800 focus:border-violet-500"
+                    }`}
+                  />
                 </div>
 
                 {/* Grid de Custos e Precificação Mobile */}
@@ -580,7 +625,11 @@ export function AdminServicesCatalog() {
                   const isSaving = savingId === service.id;
                   const draftCredit = creditDrafts[service.id] ?? service.creditCost;
                   const draftApiCost = apiCostDrafts[service.id] ?? service.apiUnitCostUsd;
-                  const isDirty = draftCredit !== service.creditCost || draftApiCost !== service.apiUnitCostUsd;
+                  const draftName = nameDrafts[service.id] !== undefined ? nameDrafts[service.id] : service.name;
+                  const isDirty = 
+                    draftName.trim() !== service.name || 
+                    draftCredit !== service.creditCost || 
+                    draftApiCost !== service.apiUnitCostUsd;
 
                   return (
                     <tr
@@ -599,17 +648,40 @@ export function AdminServicesCatalog() {
                         />
                       </td>
 
-                      {/* Nome do Motor & Provedor */}
+                      {/* Nome do Motor & Provedor Editável */}
                       <td className="py-3 px-4">
-                        <div className="flex flex-col">
-                          <span className="font-bold text-white text-sm">
-                            {service.name}
-                          </span>
-                          <span className="font-mono text-[11px] text-slate-400 truncate max-w-xs">
-                            {service.technicalName}
-                          </span>
+                        <div className="flex flex-col gap-1.5 max-w-xs">
+                          <div className="relative flex items-center group">
+                            <input
+                              type="text"
+                              value={draftName}
+                              onChange={(e) =>
+                                setNameDrafts({
+                                  ...nameDrafts,
+                                  [service.id]: e.target.value,
+                                })
+                              }
+                              placeholder="Nome de Exibição"
+                              className={`w-full bg-slate-900 border rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-white font-semibold transition-all focus:outline-none ${
+                                draftName !== service.name
+                                  ? "border-violet-500 bg-violet-950/20 text-violet-100"
+                                  : "border-slate-800 hover:border-slate-700 focus:border-violet-500"
+                              }`}
+                            />
+                            <Pencil className="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500 pointer-events-none group-focus-within:text-violet-400" />
+                          </div>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="font-mono text-[10px] text-slate-400 truncate max-w-[200px]" title={service.technicalName}>
+                              {service.technicalName}
+                            </span>
+                            {draftName !== service.name && (
+                              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
+                                Modificado
+                              </span>
+                            )}
+                          </div>
                           {service.tools.length > 0 && (
-                            <span className="text-[10px] text-violet-400 mt-0.5">
+                            <span className="text-[10px] text-violet-400">
                               {service.tools.map((t) => t.name).join(", ")}
                             </span>
                           )}
