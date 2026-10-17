@@ -76,6 +76,7 @@ export interface ExecutiveDashboardStats {
   topServices: TopServiceModel[];
   topUsersByBalance: TopUserItem[];
   topUsersByConsumption: TopUserItem[];
+  topUsersByPaid: TopUserItem[];
 
   totalUsersCount: number;
   packagesCount: number;
@@ -465,6 +466,10 @@ export class AdminDashboardService {
       .sort((a, b) => b.creditsSpent - a.creditsSpent)
       .slice(0, 6);
 
+    const topUsersByPaid = [...userSummaryList]
+      .sort((a, b) => b.totalPaidBrl - a.totalPaidBrl)
+      .slice(0, 6);
+
     const totalUsersCount = await prisma.user.count();
     const packagesCount = await prisma.creditPackage.count();
 
@@ -505,6 +510,7 @@ export class AdminDashboardService {
       topServices,
       topUsersByBalance,
       topUsersByConsumption,
+      topUsersByPaid,
       totalUsersCount,
       packagesCount,
     };

@@ -5,6 +5,29 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.8.13] - 2026-10-17
+### Visibilidade e Ordenação do Total Gasto em R$ por Usuário (LTV) no Painel Administrativo
+- **Visibilidade de Gastos em R$ de Cada Usuário**:
+  - Tabela de Usuários Desktop & Mobile (`AdminUsersTable.tsx`): Renomeada e destacada a coluna e badge para **`Total Gasto (R$)`**, exibindo o valor exato acumulado em compras aprovadas (`status: "PAID"`) em verde esmeralda com o contador de compras associadas.
+  - Adicionadas opções de ordenação direta no seletor de filtros:
+    - **`💰 Maior Gasto em R$ (Top Compradores)` (`spent-desc`)**: ordena imediatamente os usuários pelos maiores compradores históricos da plataforma.
+    - **`Menor Gasto em R$` (`spent-asc`)**.
+- **Novo Ranking de Maiores Pagadores no Leaderboard (`AdminUsersLeaderboard.tsx`)**:
+  - Adicionada a aba prioritária **`[ 💰 Maior Gasto (R$) ]`** ao lado de `[ 💳 Maior Saldo ]` e `[ ⚡ Maior Consumo ]`.
+  - Exibe os top compradores da plataforma com medalhas de rank e valor total investido em R$ destacado.
+- **KPIs Financeiros no Drawer de Detalhes do Usuário (`AdminUserDrawer.tsx`)**:
+  - Inserido no topo da gaveta do usuário o bloco de KPIs: **Total Gasto (R$)**, Saldo Atual e Gerações de IA.
+  - Adicionado no início da aba "Recargas & Pagamentos" o mini-card de consolidação financeira: Total Aprovado (R$), Compras Pagas e Pendentes de Pagamento.
+- **Card de Busca Rápida / Preview de Usuário (`lookup`)**:
+  - Endpoint `GET /api/admin/users/lookup` agora retorna `totalSpentBrl` e `totalPaidCount`.
+  - O card de preview no ajuste administrativo exibe instantaneamente o total gasto em R$ do usuário ao pesquisar por nome, ID ou e-mail.
+- **Backend & APIs (`app/api/admin/users/route.ts` & `services/admin-dashboard.service.ts`)**:
+  - `GET /api/admin/users` agora suporta ordenação por `sortBy=spent`.
+  - `AdminDashboardService.getExecutiveStats` calcula e expõe `topUsersByPaid`.
+- **Qualidade & Testes**:
+  - TypeScript: 100% verificado (`tsc --noEmit` $\rightarrow$ **0 erros**).
+  - Vitest: **25 de 25 testes aprovados (100%)**.
+
 ## [2.8.12] - 2026-10-17
 ### Controle Tátil de Dedução de Créditos, Zerar Saldo e Banimento de Usuários da IA no Mobile
 - **Resolução de Bloqueio em Dispositivos Móveis (Celular / iOS / Android)**:

@@ -58,12 +58,22 @@ export async function GET(req: Request) {
             balance: true,
           },
         },
+        payments: {
+          where: {
+            status: "PAID",
+          },
+          select: {
+            amountCents: true,
+          },
+        },
       },
     });
 
     if (!user) {
       return NextResponse.json({ found: false, user: null, message: "Nenhum usuário encontrado." }, { status: 200 });
     }
+
+    const totalSpentBrl = user.payments.reduce((acc, p) => acc + (p.amountCents / 100), 0);
 
     return NextResponse.json({
       found: true,
@@ -75,6 +85,8 @@ export async function GET(req: Request) {
         isBlocked: user.isBlocked,
         isUnlimited: user.isUnlimited,
         balance: user.creditBalance?.balance || 0,
+        totalSpentBrl: Number(totalSpentBrl.toFixed(2)),
+        totalPaidCount: user.payments.length,
         createdAt: user.createdAt,
       },
     }, { status: 200 });

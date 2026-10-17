@@ -1,26 +1,33 @@
 "use client";
 
 import React, { useState } from "react";
-import { Wallet, Zap, UserCheck, ArrowUpRight, Copy, Check, Search } from "lucide-react";
+import { Wallet, Zap, UserCheck, ArrowUpRight, Copy, Check, Search, DollarSign } from "lucide-react";
 import { toast } from "sonner";
 import { TopUserItem } from "@/services/admin-dashboard.service";
 
 interface AdminUsersLeaderboardProps {
   topByBalance: TopUserItem[];
   topByConsumption: TopUserItem[];
+  topByPaid?: TopUserItem[];
   onSelectUserForAdjustment?: (userId: string) => void;
 }
 
 export function AdminUsersLeaderboard({
   topByBalance,
   topByConsumption,
+  topByPaid = [],
   onSelectUserForAdjustment,
 }: AdminUsersLeaderboardProps) {
-  const [tab, setTab] = useState<"balance" | "consumption">("balance");
+  const [tab, setTab] = useState<"balance" | "consumption" | "spent">("spent");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const rawList = tab === "balance" ? topByBalance : topByConsumption;
+  const rawList =
+    tab === "spent"
+      ? topByPaid
+      : tab === "balance"
+      ? topByBalance
+      : topByConsumption;
   const list = rawList.filter((u) => {
     if (!searchTerm.trim()) return true;
     const term = searchTerm.toLowerCase();
@@ -83,7 +90,19 @@ export function AdminUsersLeaderboard({
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-1 p-1 bg-[#070709] rounded-xl border border-[#1E202E] w-full sm:w-auto">
+          <div className="grid grid-cols-3 gap-1 p-1 bg-[#070709] rounded-xl border border-[#1E202E] w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={() => setTab("spent")}
+              className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all min-h-[44px] touch-manipulation active:scale-[0.97] cursor-pointer ${
+                tab === "spent"
+                  ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <DollarSign className="h-3.5 w-3.5 flex-shrink-0" />
+              <span>Maior Gasto (R$)</span>
+            </button>
             <button
               type="button"
               onClick={() => setTab("balance")}
@@ -101,7 +120,7 @@ export function AdminUsersLeaderboard({
               onClick={() => setTab("consumption")}
               className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all min-h-[44px] touch-manipulation active:scale-[0.97] cursor-pointer ${
                 tab === "consumption"
-                  ? "bg-violet-600 text-white shadow-md shadow-violet-600/30"
+                  ? "bg-fuchsia-600 text-white shadow-md shadow-fuchsia-600/30"
                   : "text-slate-400 hover:text-white"
               }`}
             >
@@ -172,13 +191,22 @@ export function AdminUsersLeaderboard({
                   </div>
 
                   <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#1E202E] flex-shrink-0">
-                    {tab === "balance" ? (
+                    {tab === "spent" ? (
+                      <div className="text-left sm:text-right">
+                        <div className="text-xs font-black text-emerald-400 font-mono">
+                          R$ {u.totalPaidBrl.toFixed(2).replace(".", ",")}
+                        </div>
+                        <div className="text-[10px] text-slate-500 font-mono">
+                          Saldo: {u.balance.toLocaleString("pt-BR")} cr
+                        </div>
+                      </div>
+                    ) : tab === "balance" ? (
                       <div className="text-left sm:text-right">
                         <div className="text-xs font-black text-cyan-400 font-mono">
                           {u.balance.toLocaleString("pt-BR")} cr
                         </div>
                         <div className="text-[10px] text-slate-500 font-mono">
-                          Pago: R$ {u.totalPaidBrl.toFixed(2)}
+                          Pago: R$ {u.totalPaidBrl.toFixed(2).replace(".", ",")}
                         </div>
                       </div>
                     ) : (

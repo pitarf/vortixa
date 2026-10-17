@@ -137,6 +137,10 @@ export async function GET(
       createdAt: job.createdAt,
     }));
 
+    const paidPayments = paymentsFormatted.filter((p) => p.status === "PAID");
+    const totalSpentBrl = paidPayments.reduce((acc, p) => acc + (p.amountCents / 100), 0);
+    const totalPendingBrl = pendingPayments.reduce((acc, p) => acc + (p.amountCents / 100), 0);
+
     return NextResponse.json({
       user: {
         id: user.id,
@@ -147,6 +151,9 @@ export async function GET(
         isBlocked: user.isBlocked,
         isUnlimited: user.isUnlimited,
         balance: user.creditBalance?.balance ?? 0,
+        totalSpentBrl: Number(totalSpentBrl.toFixed(2)),
+        totalPaidCount: paidPayments.length,
+        totalPendingBrl: Number(totalPendingBrl.toFixed(2)),
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       },

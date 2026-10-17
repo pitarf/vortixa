@@ -41,6 +41,9 @@ interface UserDetailData {
     isBlocked: boolean;
     isUnlimited: boolean;
     balance: number;
+    totalSpentBrl?: number;
+    totalPaidCount?: number;
+    totalPendingBrl?: number;
     createdAt: string;
     updatedAt: string;
   };
@@ -381,6 +384,37 @@ export function AdminUserDrawer({ userId, onClose, onUserUpdated }: AdminUserDra
           </button>
         </div>
 
+        {/* KPI Cards de Resumo Financeiro & Uso */}
+        {data && (
+          <div className="grid grid-cols-3 gap-2 px-4 sm:px-6 py-3 bg-slate-900/60 border-b border-slate-900 text-center">
+            <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800/80">
+              <span className="text-[10px] text-slate-400 font-medium block">Total Gasto (R$)</span>
+              <span className="text-sm font-mono font-black text-emerald-400">
+                R$ {(data.user.totalSpentBrl ?? 0).toFixed(2).replace(".", ",")}
+              </span>
+              <span className="text-[9px] text-slate-500 block">
+                {data.user.totalPaidCount ?? 0} compra(s)
+              </span>
+            </div>
+
+            <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800/80">
+              <span className="text-[10px] text-slate-400 font-medium block">Saldo Atual</span>
+              <span className="text-sm font-mono font-black text-amber-300">
+                {data.user.isUnlimited ? "ILIMITADO" : `${data.user.balance.toLocaleString("pt-BR")} cr`}
+              </span>
+              <span className="text-[9px] text-slate-500 block">disponível</span>
+            </div>
+
+            <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800/80">
+              <span className="text-[10px] text-slate-400 font-medium block">Gerações IA</span>
+              <span className="text-sm font-mono font-black text-cyan-400">
+                {data.jobs.length}
+              </span>
+              <span className="text-[9px] text-slate-500 block">mídias criadas</span>
+            </div>
+          </div>
+        )}
+
         {/* Abas Superiores */}
         <div className="flex border-b border-slate-900 px-4 sm:px-6 bg-slate-950/40">
           <button
@@ -693,6 +727,29 @@ export function AdminUserDrawer({ userId, onClose, onUserUpdated }: AdminUserDra
                  ============================================================= */}
               {activeTab === "payments" && (
                 <div className="space-y-4">
+                  {/* Resumo Consolidado de Gastos & Compras */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-3 rounded-2xl bg-slate-900/40 border border-slate-900 text-center">
+                    <div className="p-2 rounded-xl bg-slate-950 border border-slate-800/80">
+                      <span className="text-[10px] text-slate-400 block">Total Aprovado (R$)</span>
+                      <span className="text-xs sm:text-sm font-mono font-black text-emerald-400">
+                        R$ {(data.user.totalSpentBrl ?? 0).toFixed(2).replace(".", ",")}
+                      </span>
+                    </div>
+
+                    <div className="p-2 rounded-xl bg-slate-950 border border-slate-800/80">
+                      <span className="text-[10px] text-slate-400 block">Compras Pagas</span>
+                      <span className="text-xs sm:text-sm font-mono font-bold text-white">
+                        {data.user.totalPaidCount ?? 0} transação(ões)
+                      </span>
+                    </div>
+
+                    <div className="p-2 rounded-xl bg-slate-950 border border-slate-800/80 col-span-2 sm:col-span-1">
+                      <span className="text-[10px] text-slate-400 block">Pendente de Pagamento</span>
+                      <span className="text-xs sm:text-sm font-mono font-bold text-amber-300">
+                        R$ {(data.user.totalPendingBrl ?? 0).toFixed(2).replace(".", ",")}
+                      </span>
+                    </div>
+                  </div>
                   {/* Destaque de Recargas Pendentes */}
                   {data.pendingPayments.length > 0 && (
                     <div className="space-y-3">

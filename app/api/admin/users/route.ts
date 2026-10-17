@@ -70,9 +70,12 @@ export async function GET(req: Request) {
       orderBy = { email: sortOrder };
     }
 
-    const [total, users] = await Promise.all([
-      prisma.user.count({ where }),
-      prisma.user.findMany({
+    let items: any[] = [];
+    let total = 0;
+
+    if (sortBy === "spent" || sortBy === "totalSpent") {
+      // Quando ordenado por total gasto em R$, busca os registros candidatos e ordena em memória
+      const allUsers = await prisma.user.findMany({
         where,
         select: {
           id: true,
@@ -103,29 +106,98 @@ export async function GET(req: Request) {
             },
           },
         },
-        orderBy,
-        skip,
-        take: limit,
-      }),
-    ]);
+      });
 
-    const items = users.map((u) => {
-      const totalSpentCents = u.payments.reduce((acc, p) => acc + p.amountCents, 0);
-      return {
-        id: u.id,
-        name: u.name || "Sem nome",
-        email: u.email,
-        image: u.image,
-        role: u.role,
-        isBlocked: u.isBlocked,
-        isUnlimited: u.isUnlimited,
-        balance: u.creditBalance?.balance ?? 0,
-        totalRechargesBrl: Number((totalSpentCents / 100).toFixed(2)),
-        totalRechargesCount: u._count.payments,
-        totalJobsCount: u._count.jobs,
-        createdAt: u.createdAt,
-      };
-    });
+      total = allUsers.length;
+
+      const mappedUsers = allUsers.map((u) => {
+        const totalSpentCents = u.payments.reduce((acc, p) => acc + p.amountCents, 0);
+        return {
+          id: u.id,
+          name: u.name || "Sem nome",
+          email: u.email,
+          image: u.image,
+          role: u.role,
+          isBlocked: u.isBlocked,
+          isUnlimited: u.isUnlimited,
+          balance: u.creditBalance?.balance ?? 0,
+          totalSpentBrl: Number((totalSpentCents / 100).toFixed(2)),
+          totalRechargesBrl: Number((totalSpentCents / 100).toFixed(2)),
+          totalRechargesCount: u._count.payments,
+          totalJobsCount: u._count.jobs,
+          createdAt: u.createdAt,
+          _totalSpentCents: totalSpentCents,
+        };
+      });
+
+      mappedUsers.sort((a, b) => {
+        return sortOrder === "asc"
+          ? a._totalSpentCents - b._totalSpentCents
+          : b._totalSpentCents - a._totalSpentCents;
+      });
+
+      items = mappedUsers.slice(skip, skip + limit).map(({ _totalSpentCents, ...rest }) => rest);
+    } else {
+      const [countedTotal, users] = await Promise.all([
+        prisma.user.count({ where }),
+        prisma.user.findMany({
+          where,
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+            role: true,
+            isBlocked: true,
+            isUnlimited: true,
+            createdAt: true,
+            creditBalance: {
+              select: {
+                balance: true,
+              },
+            },
+            payments: {
+              where: {
+                status: "PAID",
+              },
+              select: {
+                amountCents: true,
+              },
+            },
+            _count: {
+              select: {
+                jobs: true,
+                payments: true,
+              },
+            },
+          },
+          orderBy,
+          skip,
+          take: limit,
+        }),
+      ]);
+
+      total = countedTotal;
+
+      items = users.map((u) => {
+        const totalSpentCents = u.payments.reduce((acc, p) => acc + p.amountCents, 0);
+        return {
+          id: u.id,
+          name: u.name || "Sem nome",
+          email: u.email,
+          image: u.image,
+          role: u.role,
+          isBlocked: u.isBlocked,
+          isUnlimited: u.isUnlimited,
+          balance: u.creditBalance?.balance ?? 0,
+          totalSpentBrl: Number((totalSpentCents / 100).toFixed(2)),
+          totalRechargesBrl: Number((totalSpentCents / 100).toFixed(2)),
+          totalRechargesCount: u._count.payments,
+          totalJobsCount: u._count.jobs,
+          createdAt: u.createdAt,
+        };
+      });
+    }
 
     return NextResponse.json({
       items,

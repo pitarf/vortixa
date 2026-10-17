@@ -33,6 +33,7 @@ export interface UserRow {
   isBlocked: boolean;
   isUnlimited: boolean;
   balance: number;
+  totalSpentBrl?: number;
   totalRechargesBrl: number;
   totalRechargesCount: number;
   totalJobsCount: number;
@@ -46,7 +47,7 @@ export function AdminUsersTable() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("ALL");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
-  const [sortBy, setSortBy] = useState<"createdAt" | "balance" | "name">("createdAt");
+  const [sortBy, setSortBy] = useState<"createdAt" | "balance" | "name" | "spent">("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   // Paginação
@@ -277,7 +278,7 @@ export function AdminUsersTable() {
           <select
             value={`${sortBy}-${sortOrder}`}
             onChange={(e) => {
-              const [field, order] = e.target.value.split("-") as ["createdAt" | "balance" | "name", "asc" | "desc"];
+              const [field, order] = e.target.value.split("-") as ["createdAt" | "balance" | "name" | "spent", "asc" | "desc"];
               setSortBy(field);
               setSortOrder(order);
               setPage(1);
@@ -286,6 +287,8 @@ export function AdminUsersTable() {
             className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-violet-500 transition-colors"
             style={{ minHeight: "42px" }}
           >
+            <option value="spent-desc">💰 Maior Gasto em R$ (Top Compradores)</option>
+            <option value="spent-asc">Menor Gasto em R$</option>
             <option value="createdAt-desc">Mais Recentes Primeiro</option>
             <option value="createdAt-asc">Mais Antigos Primeiro</option>
             <option value="balance-desc">Maior Saldo de Créditos</option>
@@ -398,9 +401,9 @@ export function AdminUsersTable() {
                   </div>
 
                   <div className="bg-slate-900/60 p-2 rounded-xl border border-slate-800/60">
-                    <span className="text-[10px] text-slate-500 font-medium block">Recargas</span>
+                    <span className="text-[10px] text-slate-500 font-medium block">Total Gasto (R$)</span>
                     <span className="text-xs font-mono font-bold text-emerald-400">
-                      R$ {user.totalRechargesBrl.toFixed(2).replace(".", ",")}
+                      R$ {(user.totalSpentBrl ?? user.totalRechargesBrl).toFixed(2).replace(".", ",")}
                     </span>
                   </div>
 
@@ -480,7 +483,7 @@ export function AdminUsersTable() {
                 <th className="py-3.5 px-4">Papel (Role)</th>
                 <th className="py-3.5 px-4">Status</th>
                 <th className="py-3.5 px-4">Saldo Atual</th>
-                <th className="py-3.5 px-4">Total Recargas</th>
+                <th className="py-3.5 px-4">Total Gasto (R$)</th>
                 <th className="py-3.5 px-4">Gerações IA</th>
                 <th className="py-3.5 px-4">Cadastrado em</th>
                 <th className="py-3.5 px-4 text-right">Ações Rápidas</th>
@@ -583,11 +586,13 @@ export function AdminUsersTable() {
                         </span>
                       </td>
 
-                      {/* Total Recargas */}
-                      <td className="py-3 px-4 font-mono text-slate-300">
-                        R$ {user.totalRechargesBrl.toFixed(2).replace(".", ",")}
+                      {/* Total Gasto em R$ */}
+                      <td className="py-3 px-4 font-mono">
+                        <span className="font-bold text-emerald-400">
+                          R$ {(user.totalSpentBrl ?? user.totalRechargesBrl).toFixed(2).replace(".", ",")}
+                        </span>
                         <span className="text-[10px] text-slate-500 block">
-                          ({user.totalRechargesCount} transação(ões))
+                          ({user.totalRechargesCount} compra(s))
                         </span>
                       </td>
 

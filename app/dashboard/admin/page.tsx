@@ -79,6 +79,8 @@ export default function AdminDashboardPage() {
     isBlocked: boolean;
     isUnlimited: boolean;
     balance: number;
+    totalSpentBrl?: number;
+    totalPaidCount?: number;
     createdAt: string;
   } | null>(null);
   const [searchingUser, setSearchingUser] = useState(false);
@@ -581,6 +583,7 @@ export default function AdminDashboardPage() {
               <AdminUsersLeaderboard
                 topByBalance={stats.topUsersByBalance}
                 topByConsumption={stats.topUsersByConsumption}
+                topByPaid={stats.topUsersByPaid}
                 onSelectUserForAdjustment={(userId) => {
                   setTargetUserId(userId);
                   setActiveConfigTab("adjust");
@@ -827,11 +830,19 @@ export default function AdminDashboardPage() {
                             {searchedUser.email}
                           </p>
                         </div>
-                        <div className="text-right shrink-0">
-                          <span className="text-[10px] text-slate-500 block">Saldo Atual</span>
-                          <span className="text-xs font-black text-cyan-300 font-mono">
-                            {searchedUser.balance} cr
-                          </span>
+                        <div className="flex items-center gap-3 text-right shrink-0">
+                          <div>
+                            <span className="text-[10px] text-slate-500 block">Total Gasto (R$)</span>
+                            <span className="text-xs font-black text-emerald-400 font-mono">
+                              R$ {(searchedUser.totalSpentBrl ?? 0).toFixed(2).replace(".", ",")}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] text-slate-500 block">Saldo Atual</span>
+                            <span className="text-xs font-black text-cyan-300 font-mono">
+                              {searchedUser.balance} cr
+                            </span>
+                          </div>
                         </div>
                       </div>
 

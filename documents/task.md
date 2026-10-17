@@ -8,6 +8,13 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Visibilidade e Ordenação do Total Gasto em R$ por Usuário (LTV) no Painel Administrativo**:
+  - Tabela de Usuários Desktop & Mobile (`AdminUsersTable.tsx`) atualizada com a coluna e métrica destacada **`Total Gasto (R$)`**.
+  - Adicionadas opções de ordenação `spent-desc` (**`💰 Maior Gasto em R$ (Top Compradores)`**) e `spent-asc` no seletor de filtros com suporte no backend `GET /api/admin/users?sortBy=spent`.
+  - Nova aba **`[ 💰 Maior Gasto (R$) ]`** adicionada no `AdminUsersLeaderboard.tsx` com cálculo de `topUsersByPaid` no `AdminDashboardService`.
+  - Inserido bloco de KPIs financeiros no topo da gaveta de usuários (`AdminUserDrawer.tsx`) com Total Gasto em Compras, Saldo e Gerações, além de mini-card consolidado na aba de pagamentos.
+  - Endpoint `GET /api/admin/users/lookup` e card de preview de usuários atualizados para exibir o total gasto em R$ acumulado em compras aprovadas.
+  - Validação estática `tsc --noEmit` (**0 erros**) e suíte Vitest com **25 testes aprovados (100%)**.
 - [x] **Controle Tátil de Dedução de Créditos, Zerar Saldo e Banimento de Usuários da IA no Mobile**:
   - Resolução do problema onde o sinal de menos (`-`) não entrava no input no celular (iOS/Android).
   - Adicionado seletor tátil de 3 operações: `[ 🟢 + Adicionar ]`, `[ 🔴 - Tirar / Reduzir ]` e `[ 🧹 Zerar Saldo ]`.
