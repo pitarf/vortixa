@@ -17,15 +17,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        console.log("[AUTH-DEBUG] Raw credentials keys:", Object.keys(credentials || {}));
         const cleanEmail = (credentials?.email as string)?.trim().toLowerCase();
         const rawPassword = credentials?.password as string;
-        console.log("[AUTH-DEBUG] Clean email:", cleanEmail, "Password len:", rawPassword?.length);
 
-        if (!cleanEmail || !rawPassword) {
-          console.log("[AUTH-DEBUG] Missing cleanEmail or rawPassword");
-          return null;
-        }
+        if (!cleanEmail || !rawPassword) return null;
         
         try {
           const user = await prisma.user.findFirst({
@@ -34,15 +29,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
           });
 
-          console.log("[AUTH-DEBUG] User found in DB:", !!user, "id:", user?.id, "hasHash:", !!user?.passwordHash);
-
-          if (!user || !user.passwordHash) {
-            console.log("[AUTH-DEBUG] User or passwordHash missing");
-            return null;
-          }
+          if (!user || !user.passwordHash) return null;
 
           if (user.isBlocked) {
-            console.warn(`[AUTH-DEBUG] Tentativa de login em conta bloqueada: ${cleanEmail}`);
+            console.warn(`[AUTH] Tentativa de login em conta bloqueada: ${cleanEmail}`);
             return null;
           }
 
@@ -51,17 +41,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             user.passwordHash
           );
 
-          console.log("[AUTH-DEBUG] Passwords match result:", passwordsMatch);
+          if (passwordsMatch) return user;
 
-          if (passwordsMatch) {
-            console.log("[AUTH-DEBUG] Authentication SUCCESS for:", user.email);
-            return user;
-          }
-
-          console.log("[AUTH-DEBUG] Passwords do NOT match!");
           return null;
         } catch (err: any) {
-          console.error("[AUTH-DEBUG] Error during authorize:", err);
+          console.error("[AUTH] Erro ao autenticar credenciais:", err);
           return null;
         }
       },
