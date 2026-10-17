@@ -7,6 +7,9 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ## [2.8.14] - 2026-10-17
 ### Painel de Equivalência Financeira e Conversão do Consumo de Créditos em Reais (R$)
+- **Resiliência e Normalização de Autenticação (`auth.ts`)**:
+  - Implementada busca case-insensitive e limpeza de espaços (`trim().toLowerCase()` e `mode: "insensitive"`) no método `authorize` do NextAuth/Credentials para prevenir falhas de login quando digitado com maiúsculas no celular.
+  - Sincronização e validação das credenciais de conexão do PostgreSQL em produção.
 - **Conversão e Detalhamento de Créditos em Reais (R$) no Painel Administrativo**:
   - **Métricas do Período & Tempo Real ("Hoje")**:
     - Adicionado no card de "Desempenho de Hoje" o valor equivalente em Reais dos créditos consumidos no dia (`≈ R$ X,XX`).

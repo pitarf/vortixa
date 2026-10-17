@@ -17,16 +17,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        const cleanEmail = (credentials?.email as string)?.trim().toLowerCase();
+        const rawPassword = credentials?.password as string;
+
+        if (!cleanEmail || !rawPassword) return null;
         
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email as string },
+        const user = await prisma.user.findFirst({
+          where: {
+            email: { equals: cleanEmail, mode: "insensitive" },
+          },
         });
 
         if (!user || !user.passwordHash) return null;
 
+        if (user.isBlocked) {
+          console.warn(`[AUTH] Tentativa de login em conta bloqueada: ${cleanEmail}`);
+          return null;
+        }
+
         const passwordsMatch = await bcrypt.compare(
-          credentials.password as string,
+          rawPassword,
           user.passwordHash
         );
 
