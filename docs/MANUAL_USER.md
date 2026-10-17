@@ -673,5 +673,29 @@ A página **Minha Conta** centraliza as informações da sua identidade na plata
 * **Segurança e Senha**: Visualize se sua conta está protegida por senha criptografada e clique em `Alterar Senha` para receber o link de redefinição por e-mail.
 * **Saldo e Recargas**: Acompanhe o seu saldo de créditos em tempo real e acesse o atalho `Recarregar Créditos`.
 
+---
+
+## 11. Painel de Governança Administrativa & Equivalência Financeira em Reais (`/dashboard/admin`)
+
+O **Painel Administrativo** oferece aos proprietários e administradores do VORTIXIA controle total das finanças, saúde do negócio, consumo de recursos e gestão de clientes.
+
+### A. Monitoramento Financeiro de Créditos em Reais (R$)
+* **Consumo de Créditos em Tempo Real ("Hoje")**:
+  - No bloco superior de desempenho, visualize a quantidade de créditos gastos no dia e seu valor equivalente em Reais (`≈ R$ X,XX`).
+* **Card de Consumo de Créditos (R$)**:
+  - Destaque principal do período com o valor monetário total que os créditos consumidos representam (`R$ Y,YY`) com base na taxa de referência oficial do sistema (**R$ 0,15 por crédito**).
+* **Painel Executivo: "Equivalência Financeira de Créditos em Reais (R$)"**:
+  - **Consumo no Período Selecionado**: total de créditos consumidos e equivalência em R$ para o filtro ativo.
+  - **Total Geral Histórico (Vitalício / All-Time)**: soma histórica de todos os créditos gastos na plataforma e seu valor consolidado em Reais.
+  - **Custo Vitalício de Provedores IA**: gasto real em dólares ($ USD) e em Reais (R$) com processamento em GPUs parceiras (Fal.ai e WaveSpeed AI).
+  - **Tabela Didática de Pacotes**: referência do custo unitário por crédito em cada pacote do sistema (Plano Teste R$ 0,20/cr, Profissional R$ 0,15/cr, Criador R$ 0,13/cr e Studio Ultra R$ 0,12/cr).
+
+### B. Gestão Individual de Usuários com LTV e Consumo
+* Na aba **Gestão de Usuários** e na gaveta lateral (Drawer), cada cliente exibe:
+  - **Recargas / Total Pago (R$)**: valor real em dinheiro pago pelo cliente em compras aprovadas.
+  - **Consumo IA (cr / R$)**: quantidade de créditos consumidos em gerações concluídas e o valor financeiro correspondente em Reais.
+  - **Saldo Atual**: créditos disponíveis para novas gerações.
+
+
 
 

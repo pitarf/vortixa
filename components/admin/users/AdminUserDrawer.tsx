@@ -44,6 +44,8 @@ interface UserDetailData {
     totalSpentBrl?: number;
     totalPaidCount?: number;
     totalPendingBrl?: number;
+    totalCreditsSpent?: number;
+    totalCreditsSpentBrl?: number;
     createdAt: string;
     updatedAt: string;
   };
@@ -386,10 +388,10 @@ export function AdminUserDrawer({ userId, onClose, onUserUpdated }: AdminUserDra
 
         {/* KPI Cards de Resumo Financeiro & Uso */}
         {data && (
-          <div className="grid grid-cols-3 gap-2 px-4 sm:px-6 py-3 bg-slate-900/60 border-b border-slate-900 text-center">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-4 sm:px-6 py-3 bg-slate-900/60 border-b border-slate-900 text-center">
             <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800/80">
-              <span className="text-[10px] text-slate-400 font-medium block">Total Gasto (R$)</span>
-              <span className="text-sm font-mono font-black text-emerald-400">
+              <span className="text-[10px] text-slate-400 font-medium block">Recargas (R$)</span>
+              <span className="text-sm font-mono font-black text-emerald-400 block truncate">
                 R$ {(data.user.totalSpentBrl ?? 0).toFixed(2).replace(".", ",")}
               </span>
               <span className="text-[9px] text-slate-500 block">
@@ -399,15 +401,25 @@ export function AdminUserDrawer({ userId, onClose, onUserUpdated }: AdminUserDra
 
             <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800/80">
               <span className="text-[10px] text-slate-400 font-medium block">Saldo Atual</span>
-              <span className="text-sm font-mono font-black text-amber-300">
+              <span className="text-sm font-mono font-black text-amber-300 block truncate">
                 {data.user.isUnlimited ? "ILIMITADO" : `${data.user.balance.toLocaleString("pt-BR")} cr`}
               </span>
               <span className="text-[9px] text-slate-500 block">disponível</span>
             </div>
 
             <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800/80">
+              <span className="text-[10px] text-slate-400 font-medium block">Créditos Gastos</span>
+              <span className="text-sm font-mono font-black text-rose-400 block truncate">
+                {(data.user.totalCreditsSpent ?? 0).toLocaleString("pt-BR")} cr
+              </span>
+              <span className="text-[9px] text-slate-400 block font-mono">
+                ≈ R$ {(data.user.totalCreditsSpentBrl ?? 0).toFixed(2).replace(".", ",")}
+              </span>
+            </div>
+
+            <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800/80">
               <span className="text-[10px] text-slate-400 font-medium block">Gerações IA</span>
-              <span className="text-sm font-mono font-black text-cyan-400">
+              <span className="text-sm font-mono font-black text-cyan-400 block">
                 {data.jobs.length}
               </span>
               <span className="text-[9px] text-slate-500 block">mídias criadas</span>

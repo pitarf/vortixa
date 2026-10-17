@@ -99,6 +99,14 @@ export async function GET(req: Request) {
               amountCents: true,
             },
           },
+          jobs: {
+            where: {
+              status: "COMPLETED",
+            },
+            select: {
+              creditCost: true,
+            },
+          },
           _count: {
             select: {
               jobs: true,
@@ -112,6 +120,9 @@ export async function GET(req: Request) {
 
       const mappedUsers = allUsers.map((u) => {
         const totalSpentCents = u.payments.reduce((acc, p) => acc + p.amountCents, 0);
+        const totalCreditsSpent = u.jobs.reduce((acc, j) => acc + j.creditCost, 0);
+        const totalCreditsSpentBrl = Number((totalCreditsSpent * 0.15).toFixed(2));
+
         return {
           id: u.id,
           name: u.name || "Sem nome",
@@ -125,6 +136,8 @@ export async function GET(req: Request) {
           totalRechargesBrl: Number((totalSpentCents / 100).toFixed(2)),
           totalRechargesCount: u._count.payments,
           totalJobsCount: u._count.jobs,
+          totalCreditsSpent,
+          totalCreditsSpentBrl,
           createdAt: u.createdAt,
           _totalSpentCents: totalSpentCents,
         };
@@ -164,6 +177,14 @@ export async function GET(req: Request) {
                 amountCents: true,
               },
             },
+            jobs: {
+              where: {
+                status: "COMPLETED",
+              },
+              select: {
+                creditCost: true,
+              },
+            },
             _count: {
               select: {
                 jobs: true,
@@ -181,6 +202,9 @@ export async function GET(req: Request) {
 
       items = users.map((u) => {
         const totalSpentCents = u.payments.reduce((acc, p) => acc + p.amountCents, 0);
+        const totalCreditsSpent = u.jobs.reduce((acc, j) => acc + j.creditCost, 0);
+        const totalCreditsSpentBrl = Number((totalCreditsSpent * 0.15).toFixed(2));
+
         return {
           id: u.id,
           name: u.name || "Sem nome",
@@ -194,6 +218,8 @@ export async function GET(req: Request) {
           totalRechargesBrl: Number((totalSpentCents / 100).toFixed(2)),
           totalRechargesCount: u._count.payments,
           totalJobsCount: u._count.jobs,
+          totalCreditsSpent,
+          totalCreditsSpentBrl,
           createdAt: u.createdAt,
         };
       });

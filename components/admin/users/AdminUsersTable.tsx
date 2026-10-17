@@ -37,6 +37,8 @@ export interface UserRow {
   totalRechargesBrl: number;
   totalRechargesCount: number;
   totalJobsCount: number;
+  totalCreditsSpent?: number;
+  totalCreditsSpentBrl?: number;
   createdAt: string;
 }
 
@@ -401,16 +403,22 @@ export function AdminUsersTable() {
                   </div>
 
                   <div className="bg-slate-900/60 p-2 rounded-xl border border-slate-800/60">
-                    <span className="text-[10px] text-slate-500 font-medium block">Total Gasto (R$)</span>
-                    <span className="text-xs font-mono font-bold text-emerald-400">
+                    <span className="text-[10px] text-slate-500 font-medium block">Recargas (R$)</span>
+                    <span className="text-xs font-mono font-bold text-emerald-400 block truncate">
                       R$ {(user.totalSpentBrl ?? user.totalRechargesBrl).toFixed(2).replace(".", ",")}
+                    </span>
+                    <span className="text-[9px] text-slate-500 font-mono block">
+                      {user.totalRechargesCount} compra(s)
                     </span>
                   </div>
 
                   <div className="bg-slate-900/60 p-2 rounded-xl border border-slate-800/60">
-                    <span className="text-[10px] text-slate-500 font-medium block">Gerações</span>
-                    <span className="text-xs font-mono font-bold text-cyan-400">
-                      {user.totalJobsCount}
+                    <span className="text-[10px] text-slate-500 font-medium block">Consumo IA</span>
+                    <span className="text-xs font-mono font-bold text-cyan-400 block">
+                      {user.totalJobsCount} jobs
+                    </span>
+                    <span className="text-[9px] text-rose-400 font-mono block truncate">
+                      {(user.totalCreditsSpent || 0).toLocaleString("pt-BR")} cr ≈ R$ {(user.totalCreditsSpentBrl || 0).toFixed(2).replace(".", ",")}
                     </span>
                   </div>
                 </div>
@@ -484,7 +492,7 @@ export function AdminUsersTable() {
                 <th className="py-3.5 px-4">Status</th>
                 <th className="py-3.5 px-4">Saldo Atual</th>
                 <th className="py-3.5 px-4">Total Gasto (R$)</th>
-                <th className="py-3.5 px-4">Gerações IA</th>
+                <th className="py-3.5 px-4">Consumo IA (cr / R$)</th>
                 <th className="py-3.5 px-4">Cadastrado em</th>
                 <th className="py-3.5 px-4 text-right">Ações Rápidas</th>
               </tr>
@@ -596,9 +604,17 @@ export function AdminUsersTable() {
                         </span>
                       </td>
 
-                      {/* Gerações de IA */}
-                      <td className="py-3 px-4 font-mono text-slate-300">
-                        {user.totalJobsCount} gerações
+                      {/* Gerações de IA & Consumo em R$ */}
+                      <td className="py-3 px-4 font-mono">
+                        <span className="font-bold text-white block">
+                          {user.totalJobsCount} jobs
+                        </span>
+                        <span className="text-[11px] text-rose-400 block">
+                          {(user.totalCreditsSpent || 0).toLocaleString("pt-BR")} cr
+                          <span className="text-slate-500 font-normal ml-1">
+                            (≈ R$ {(user.totalCreditsSpentBrl || 0).toFixed(2).replace(".", ",")})
+                          </span>
+                        </span>
                       </td>
 
                       {/* Data de Criação */}

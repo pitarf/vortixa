@@ -32,6 +32,7 @@ export interface TopUserItem {
   balance: number;
   generationsCount: number;
   creditsSpent: number;
+  creditsSpentBrl: number;
   totalPaidBrl: number;
   createdAt: Date;
 }
@@ -54,6 +55,8 @@ export interface ExecutiveDashboardStats {
   otherGenerations: number;
   creditsSold: number;
   creditsConsumed: number;
+  creditsConsumedBrl: number;
+  creditRateBrl: number;
   paymentsCount: {
     PAID: number;
     PENDING: number;
@@ -68,6 +71,17 @@ export interface ExecutiveDashboardStats {
     signups: number;
     generations: number;
     creditsConsumed: number;
+    creditsConsumedBrl: number;
+  };
+
+  allTimeStats: {
+    totalCreditsConsumed: number;
+    totalCreditsConsumedBrl: number;
+    totalGenerations: number;
+    totalRevenueBrl: number;
+    totalCreditsSold: number;
+    totalApiCostUsd: number;
+    totalApiCostBrl: number;
   };
 
   timeSeries: ChartDataPoint[];
@@ -158,6 +172,26 @@ export class AdminDashboardService {
     }
 
     const USD_TO_BRL = 5.5;
+    const DEFAULT_CREDIT_RATE_BRL = 0.15; // Taxa de conversão de referência do VORIXA (R$ 0,15 por crédito)
+
+    // Consulta consolidada Vitalícia / All-Time (para visão geral do proprietário)
+    const [allTimeJobs, allTimePayments] = await Promise.all([
+      prisma.aIJob.aggregate({
+        where: { status: "COMPLETED" },
+        _sum: { creditCost: true, providerCostUsd: true },
+        _count: { id: true },
+      }),
+      prisma.payment.aggregate({
+        where: { status: "PAID" },
+        _sum: { amountCents: true, creditsGranted: true },
+      }),
+    ]);
+
+    const allTimeCreditsConsumed = allTimeJobs._sum.creditCost || 0;
+    const allTimeCreditsConsumedBrl = Math.round(allTimeCreditsConsumed * DEFAULT_CREDIT_RATE_BRL * 100) / 100;
+    const allTimeRevenueBrl = (allTimePayments._sum.amountCents || 0) / 100;
+    const allTimeApiUsd = allTimeJobs._sum.providerCostUsd || 0;
+    const allTimeApiBrl = allTimeApiUsd * USD_TO_BRL;
 
     // 2. Consulta de Pagamentos no período
     const paymentsInPeriod = await prisma.payment.findMany({
@@ -445,6 +479,7 @@ export class AdminDashboardService {
       const totalPaidBrl = u.payments.reduce((acc, p) => acc + p.amountCents, 0) / 100;
       const generationsCount = u.jobs.length;
       const creditsSpent = u.jobs.reduce((acc, j) => acc + j.creditCost, 0);
+      const creditsSpentBrl = Math.round(creditsSpent * DEFAULT_CREDIT_RATE_BRL * 100) / 100;
 
       return {
         id: u.id,
@@ -453,6 +488,7 @@ export class AdminDashboardService {
         balance,
         generationsCount,
         creditsSpent,
+        creditsSpentBrl,
         totalPaidBrl,
         createdAt: u.createdAt,
       };
@@ -473,6 +509,10 @@ export class AdminDashboardService {
     const totalUsersCount = await prisma.user.count();
     const packagesCount = await prisma.creditPackage.count();
 
+    const creditsConsumedBrl = Math.round(creditsConsumed * DEFAULT_CREDIT_RATE_BRL * 100) / 100;
+    const todayCreditsConsumed = todayJobs._sum.creditCost || 0;
+    const todayCreditsConsumedBrl = Math.round(todayCreditsConsumed * DEFAULT_CREDIT_RATE_BRL * 100) / 100;
+
     return {
       period,
       dateRange: {
@@ -491,6 +531,8 @@ export class AdminDashboardService {
       otherGenerations,
       creditsSold,
       creditsConsumed,
+      creditsConsumedBrl,
+      creditRateBrl: DEFAULT_CREDIT_RATE_BRL,
       paymentsCount: {
         PAID: paymentsInPeriod.length,
         PENDING: 0,
@@ -503,7 +545,17 @@ export class AdminDashboardService {
         profitBrl: Math.round(todayProfitBrl * 100) / 100,
         signups: todaySignupsCount,
         generations: todayJobs._count.id || 0,
-        creditsConsumed: todayJobs._sum.creditCost || 0,
+        creditsConsumed: todayCreditsConsumed,
+        creditsConsumedBrl: todayCreditsConsumedBrl,
+      },
+      allTimeStats: {
+        totalCreditsConsumed: allTimeCreditsConsumed,
+        totalCreditsConsumedBrl: allTimeCreditsConsumedBrl,
+        totalGenerations: allTimeJobs._count.id || 0,
+        totalRevenueBrl: Math.round(allTimeRevenueBrl * 100) / 100,
+        totalCreditsSold: allTimePayments._sum.creditsGranted || 0,
+        totalApiCostUsd: Math.round(allTimeApiUsd * 100) / 100,
+        totalApiCostBrl: Math.round(allTimeApiBrl * 100) / 100,
       },
       timeSeries,
       xAxisType,

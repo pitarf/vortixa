@@ -5,6 +5,28 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.8.14] - 2026-10-17
+### Painel de Equivalência Financeira e Conversão do Consumo de Créditos em Reais (R$)
+- **Conversão e Detalhamento de Créditos em Reais (R$) no Painel Administrativo**:
+  - **Métricas do Período & Tempo Real ("Hoje")**:
+    - Adicionado no card de "Desempenho de Hoje" o valor equivalente em Reais dos créditos consumidos no dia (`≈ R$ X,XX`).
+    - Expandida a grade principal de KPIs executivos para 5 colunas, incluindo o card dedicado **`Consumo de Créditos`**, exibindo em destaque o total consumido em Reais (`R$ Y,YY`) e a quantidade de créditos correspondente baseada na taxa oficial de referência do sistema (`R$ 0,15 / crédito`).
+  - **Novo Painel Executivo: "Equivalência Financeira de Créditos em Reais (R$)"**:
+    - Exibe comparativo completo entre:
+      1. **Consumo no Período Selecionado**: total de créditos consumidos e equivalência em R$ no período filtrado.
+      2. **Total Geral Histórico (Vitalício / All-Time)**: soma histórica de todos os créditos consumidos no banco de dados e seu valor equivalente em Reais.
+      3. **Custo Vitalício de Provedores IA**: gasto real em dólares ($ USD) e em Reais (R$) com GPUs dos provedores de IA (Fal.ai e WaveSpeed AI).
+      4. **Tabela de Referência de Pacotes**: detalhamento didático do custo por crédito em cada faixa de plano do VORIXA (Plano Teste R$ 0,20/cr, Profissional R$ 0,15/cr, Criador R$ 0,13/cr, Studio Ultra R$ 0,12/cr).
+- **Consumo Individual de Créditos por Usuário na Tabela e no Drawer**:
+  - **Tabela de Usuários Desktop & Mobile (`AdminUsersTable.tsx`)**:
+    - Nova métrica na coluna de Gerações/Consumo exibindo a quantidade de créditos que o cliente consumiu e seu valor equivalente em Reais (`X cr ≈ R$ Y,YY`).
+  - **Drawer de Detalhes do Usuário (`AdminUserDrawer.tsx`)**:
+    - Adicionado card de destaque no topo com o total de créditos gastos pelo cliente e o valor correspondente em Reais.
+  - **Card de Busca Rápida / Preview de Usuário (`lookup`)**:
+    - Exibe instantaneamente no card de ajuste administrativo o total gasto em recargas (R$), os créditos consumidos (com equivalência em R$) e o saldo atual.
+- **Backend & APIs (`services/admin-dashboard.service.ts` e rotas administrativas)**:
+  - `AdminDashboardService.getExecutiveStats` agora calcula e retorna `creditsConsumedBrl`, `creditRateBrl`, `todayStats.creditsConsumedBrl` e o agregado `allTimeStats` consolidado.
+  - Endpoints `/api/admin/users`, `/api/admin/users/[id]` e `/api/admin/users/lookup` atualizados com `totalCreditsSpent` e `totalCreditsSpentBrl`.
 ## [2.8.13] - 2026-10-17
 ### Visibilidade e Ordenação do Total Gasto em R$ por Usuário (LTV) no Painel Administrativo
 - **Visibilidade de Gastos em R$ de Cada Usuário**:

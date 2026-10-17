@@ -8,6 +8,11 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Painel de Equivalência Financeira e Conversão do Consumo de Créditos em Reais (R$)**:
+  - Implementado cálculo e conversão monetária do consumo de créditos tanto para o dia de hoje (`todayStats.creditsConsumedBrl`), período selecionado (`creditsConsumedBrl`) quanto consolidado vitalício (`allTimeStats.totalCreditsConsumedBrl`).
+  - Adicionado no Painel Administrativo (`/dashboard/admin`) o novo card de KPI em destaque **Consumo de Créditos (R$)** e o **Painel Executivo: "Equivalência Financeira de Créditos em Reais (R$)"** detalhando créditos gastos, valor em reais pela taxa oficial (R$ 0,15/cr), custo de infraestrutura em USD/R$ e tabela de referência de todos os pacotes.
+  - Tabela de usuários (`AdminUsersTable.tsx`), Drawer do usuário (`AdminUserDrawer.tsx`) e Card de Busca Rápida (`lookup`) atualizados com exibição de consumo em créditos e seu valor correspondente em Reais (`X cr ≈ R$ Y,YY`).
+  - Validação estática `tsc --noEmit` (**0 erros**) e suíte Vitest com **31 arquivos e 222 testes aprovados (100%)**.
 - [x] **Visibilidade e Ordenação do Total Gasto em R$ por Usuário (LTV) no Painel Administrativo**:
   - Tabela de Usuários Desktop & Mobile (`AdminUsersTable.tsx`) atualizada com a coluna e métrica destacada **`Total Gasto (R$)`**.
   - Adicionadas opções de ordenação `spent-desc` (**`💰 Maior Gasto em R$ (Top Compradores)`**) e `spent-asc` no seletor de filtros com suporte no backend `GET /api/admin/users?sortBy=spent`.

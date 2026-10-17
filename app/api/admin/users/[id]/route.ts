@@ -141,6 +141,10 @@ export async function GET(
     const totalSpentBrl = paidPayments.reduce((acc, p) => acc + (p.amountCents / 100), 0);
     const totalPendingBrl = pendingPayments.reduce((acc, p) => acc + (p.amountCents / 100), 0);
 
+    const completedJobs = jobsFormatted.filter((j) => j.status === "COMPLETED");
+    const totalCreditsSpent = completedJobs.reduce((acc, j) => acc + j.creditCost, 0);
+    const totalCreditsSpentBrl = Number((totalCreditsSpent * 0.15).toFixed(2));
+
     return NextResponse.json({
       user: {
         id: user.id,
@@ -154,6 +158,8 @@ export async function GET(
         totalSpentBrl: Number(totalSpentBrl.toFixed(2)),
         totalPaidCount: paidPayments.length,
         totalPendingBrl: Number(totalPendingBrl.toFixed(2)),
+        totalCreditsSpent,
+        totalCreditsSpentBrl,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       },

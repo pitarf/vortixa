@@ -573,3 +573,18 @@ Quando chegarmos na etapa de refinamento de planos e pacotes de crédito, aplica
 * **Validação Automatizada**:
   - Suíte de testes `__tests__/kling-3-standard-generation.test.ts` com 4 testes validando a submissão via API, auto-registro no PostgreSQL, e roteamento correto com e sem imagem de referência.
 
+---
+
+## 25. Painel Executivo e Métricas de Conversão de Consumo de Créditos em Reais (R$)
+
+### 1. Arquitetura de Conversão Monetária (`services/admin-dashboard.service.ts`)
+* **Taxa de Conversão de Referência**:
+  - O sistema adota a constante `DEFAULT_CREDIT_RATE_BRL = 0.15` (R$ 0,15 por crédito), derivada da média ponderada do plano mais popular da plataforma (`pkg-500` / Plano Profissional: 550 créditos por R$ 79,90 ≈ R$ 0,145/cr).
+* **Consolidação Temporal**:
+  - **Hoje em Tempo Real (`todayStats`)**: `creditsConsumed` e `creditsConsumedBrl`.
+  - **Período Selecionado**: `creditsConsumed` e `creditsConsumedBrl`.
+  - **Histórico Geral Vitalício (`allTimeStats`)**: agregação atômica via `prisma.aIJob.aggregate` com `status = 'COMPLETED'`, expondo `totalCreditsConsumed`, `totalCreditsConsumedBrl`, `totalApiCostUsd`, `totalApiCostBrl` e `totalGenerations`.
+* **Métricas Individuais por Cliente**:
+  - `AdminUsersTable.tsx` e `AdminUserDrawer.tsx` calculam o consumo do usuário em créditos e o multiplicam por R$ 0,15, permitindo comparar `Total Pago em Recargas (R$)` versus `Consumo Real em IA (R$)`.
+
+

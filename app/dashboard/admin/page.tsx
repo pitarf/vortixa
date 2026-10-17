@@ -81,6 +81,8 @@ export default function AdminDashboardPage() {
     balance: number;
     totalSpentBrl?: number;
     totalPaidCount?: number;
+    totalCreditsSpent?: number;
+    totalCreditsSpentBrl?: number;
     createdAt: string;
   } | null>(null);
   const [searchingUser, setSearchingUser] = useState(false);
@@ -488,13 +490,16 @@ export default function AdminDashboardPage() {
                   <div className="text-xs sm:text-sm font-black text-rose-400 mt-0.5 truncate font-mono">
                     {stats.todayStats.creditsConsumed.toLocaleString("pt-BR")} cr
                   </div>
+                  <span className="text-[10px] text-slate-400 font-mono block mt-0.5">
+                    ≈ R$ {(stats.todayStats.creditsConsumedBrl || 0).toFixed(2).replace(".", ",")}
+                  </span>
                 </div>
               </div>
             </div>
           )}
 
           {/* Cards de Métricas e Indicadores Consolidados do Período */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
             {/* Receita Faturada */}
             <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 relative overflow-hidden">
               <div className="flex items-center justify-between">
@@ -513,10 +518,28 @@ export default function AdminDashboardPage() {
               </p>
             </div>
 
+            {/* Consumo de Créditos em Reais */}
+            <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 relative overflow-hidden">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-400">Consumo de Créditos</span>
+                <div className="h-8 w-8 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center">
+                  <Coins className="h-4 w-4" />
+                </div>
+              </div>
+              <div className="mt-3">
+                <span className="text-xl sm:text-2xl font-black text-rose-400 font-mono">
+                  {stats ? `R$ ${stats.creditsConsumedBrl.toFixed(2).replace(".", ",")}` : "R$ 0,00"}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 mt-1 font-mono truncate">
+                {stats?.creditsConsumed.toLocaleString("pt-BR") || 0} cr gastos (R$ 0,15/cr)
+              </p>
+            </div>
+
             {/* Lucro Líquido Estimado */}
             <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 relative overflow-hidden">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-400">Lucro Líquido Estimado</span>
+                <span className="text-xs font-medium text-slate-400">Lucro Estimado</span>
                 <div className="h-8 w-8 rounded-lg bg-violet-500/10 text-violet-400 flex items-center justify-center">
                   <TrendingUp className="h-4 w-4" />
                 </div>
@@ -527,14 +550,14 @@ export default function AdminDashboardPage() {
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 mt-1 font-mono">
-                Margem estimada de {stats?.marginPercent || 0}%
+                Margem de {stats?.marginPercent || 0}%
               </p>
             </div>
 
             {/* Custo Agregado de API */}
             <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 relative overflow-hidden">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-400">Custo de Infraestrutura</span>
+                <span className="text-xs font-medium text-slate-400">Custo Infraestrutura</span>
                 <div className="h-8 w-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
                   <Layers className="h-4 w-4" />
                 </div>
@@ -545,14 +568,14 @@ export default function AdminDashboardPage() {
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 mt-1 font-mono">
-                Consumo: {stats?.creditsConsumed.toLocaleString("pt-BR") || 0} créditos
+                ≈ R$ {stats ? (stats.apiCostUsd * 5.5).toFixed(2).replace(".", ",") : "0,00"}
               </p>
             </div>
 
             {/* Novos Cadastros */}
             <div className="bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-5 relative overflow-hidden">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-400">Cadastros no Período</span>
+                <span className="text-xs font-medium text-slate-400">Cadastros</span>
                 <div className="h-8 w-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
                   <Users className="h-4 w-4" />
                 </div>
@@ -563,10 +586,107 @@ export default function AdminDashboardPage() {
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 mt-1 font-mono">
-                Base total: {stats?.totalUsersCount || 0} usuários
+                Base: {stats?.totalUsersCount || 0} usuários
               </p>
             </div>
           </div>
+
+          {/* Painel Executivo: Detalhamento Financeiro do Consumo de Créditos em Reais */}
+          {stats && stats.allTimeStats && (
+            <div className="bg-[#0D0E12] border border-violet-900/30 rounded-2xl p-4 sm:p-5 relative overflow-hidden bg-gradient-to-br from-[#0D0E12] via-[#0E1018] to-violet-950/20 shadow-xl shadow-black/30">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#1E202E] pb-3 mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="h-8 w-8 rounded-lg bg-violet-600/20 text-violet-400 flex items-center justify-center shrink-0">
+                    <Coins className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                      Equivalência Financeira de Créditos em Reais (R$)
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30">
+                        Taxa Ref: R$ 0,15 / crédito
+                      </span>
+                    </h3>
+                    <p className="text-xs text-slate-400">
+                      Conversão e margem direta entre créditos consumidos pelos usuários e custo de provedores em Reais.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {/* 1. Consumo no Período Selecionado */}
+                <div className="bg-[#070709] p-3.5 rounded-xl border border-[#1E202E]">
+                  <span className="text-[11px] text-slate-400 font-medium block">
+                    Consumo no Período Selecionado
+                  </span>
+                  <div className="text-lg font-black text-rose-400 font-mono mt-1">
+                    {stats.creditsConsumed.toLocaleString("pt-BR")} créditos
+                  </div>
+                  <div className="text-sm font-bold text-emerald-400 font-mono mt-0.5">
+                    ≈ R$ {stats.creditsConsumedBrl.toFixed(2).replace(".", ",")}
+                  </div>
+                  <p className="text-[10px] text-slate-500 mt-1">
+                    Em {stats.totalGenerations} gerações concluídas
+                  </p>
+                </div>
+
+                {/* 2. Consumo Geral Vitalício (All-Time) */}
+                <div className="bg-[#070709] p-3.5 rounded-xl border border-[#1E202E]">
+                  <span className="text-[11px] text-slate-400 font-medium block">
+                    Total Geral Histórico (Vitalício)
+                  </span>
+                  <div className="text-lg font-black text-fuchsia-400 font-mono mt-1">
+                    {stats.allTimeStats.totalCreditsConsumed.toLocaleString("pt-BR")} créditos
+                  </div>
+                  <div className="text-sm font-bold text-emerald-400 font-mono mt-0.5">
+                    ≈ R$ {stats.allTimeStats.totalCreditsConsumedBrl.toFixed(2).replace(".", ",")}
+                  </div>
+                  <p className="text-[10px] text-slate-500 mt-1">
+                    Em {stats.allTimeStats.totalGenerations} gerações na história da plataforma
+                  </p>
+                </div>
+
+                {/* 3. Custo Real de Provedores IA */}
+                <div className="bg-[#070709] p-3.5 rounded-xl border border-[#1E202E]">
+                  <span className="text-[11px] text-slate-400 font-medium block">
+                    Custo Vitalício de Provedores IA
+                  </span>
+                  <div className="text-lg font-black text-amber-400 font-mono mt-1">
+                    ${stats.allTimeStats.totalApiCostUsd.toFixed(2)} USD
+                  </div>
+                  <div className="text-sm font-bold text-amber-300 font-mono mt-0.5">
+                    ≈ R$ {stats.allTimeStats.totalApiCostBrl.toFixed(2).replace(".", ",")}
+                  </div>
+                  <p className="text-[10px] text-slate-500 mt-1">
+                    Fal.ai & WaveSpeed AI agregados
+                  </p>
+                </div>
+
+                {/* 4. Tabela de Conversão por Pacote */}
+                <div className="bg-[#070709] p-3 rounded-xl border border-[#1E202E] text-[11px] font-mono space-y-1">
+                  <span className="text-[10px] text-slate-400 font-sans font-medium block mb-1">
+                    Referência de Preço por Pacote
+                  </span>
+                  <div className="flex justify-between text-slate-300">
+                    <span>Plano Teste (50 cr):</span>
+                    <span className="text-violet-300 font-bold">R$ 0,20 / cr</span>
+                  </div>
+                  <div className="flex justify-between text-slate-300">
+                    <span>Profissional (550 cr):</span>
+                    <span className="text-emerald-300 font-bold">R$ 0,15 / cr</span>
+                  </div>
+                  <div className="flex justify-between text-slate-300">
+                    <span>Criador (1.150 cr):</span>
+                    <span className="text-cyan-300 font-bold">R$ 0,13 / cr</span>
+                  </div>
+                  <div className="flex justify-between text-slate-300">
+                    <span>Studio Ultra (3.000 cr):</span>
+                    <span className="text-amber-300 font-bold">R$ 0,12 / cr</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Gráficos Interativos Dinâmicos com SVG Responsivo sem corte */}
           {stats && (
@@ -832,14 +952,23 @@ export default function AdminDashboardPage() {
                         </div>
                         <div className="flex items-center gap-3 text-right shrink-0">
                           <div>
-                            <span className="text-[10px] text-slate-500 block">Total Gasto (R$)</span>
-                            <span className="text-xs font-black text-emerald-400 font-mono">
+                            <span className="text-[10px] text-slate-500 block">Recargas (R$)</span>
+                            <span className="text-xs font-black text-emerald-400 font-mono block">
                               R$ {(searchedUser.totalSpentBrl ?? 0).toFixed(2).replace(".", ",")}
                             </span>
                           </div>
                           <div>
+                            <span className="text-[10px] text-slate-500 block">Consumo IA</span>
+                            <span className="text-xs font-black text-rose-400 font-mono block">
+                              {(searchedUser.totalCreditsSpent ?? 0).toLocaleString("pt-BR")} cr
+                            </span>
+                            <span className="text-[9px] text-slate-400 font-mono block">
+                              ≈ R$ {(searchedUser.totalCreditsSpentBrl ?? 0).toFixed(2).replace(".", ",")}
+                            </span>
+                          </div>
+                          <div>
                             <span className="text-[10px] text-slate-500 block">Saldo Atual</span>
-                            <span className="text-xs font-black text-cyan-300 font-mono">
+                            <span className="text-xs font-black text-cyan-300 font-mono block">
                               {searchedUser.balance} cr
                             </span>
                           </div>

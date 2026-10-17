@@ -66,6 +66,14 @@ export async function GET(req: Request) {
             amountCents: true,
           },
         },
+        jobs: {
+          where: {
+            status: "COMPLETED",
+          },
+          select: {
+            creditCost: true,
+          },
+        },
       },
     });
 
@@ -74,6 +82,8 @@ export async function GET(req: Request) {
     }
 
     const totalSpentBrl = user.payments.reduce((acc, p) => acc + (p.amountCents / 100), 0);
+    const totalCreditsSpent = user.jobs.reduce((acc, j) => acc + j.creditCost, 0);
+    const totalCreditsSpentBrl = Number((totalCreditsSpent * 0.15).toFixed(2));
 
     return NextResponse.json({
       found: true,
@@ -87,6 +97,8 @@ export async function GET(req: Request) {
         balance: user.creditBalance?.balance || 0,
         totalSpentBrl: Number(totalSpentBrl.toFixed(2)),
         totalPaidCount: user.payments.length,
+        totalCreditsSpent,
+        totalCreditsSpentBrl,
         createdAt: user.createdAt,
       },
     }, { status: 200 });
