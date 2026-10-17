@@ -37,6 +37,8 @@ export interface UserRow {
   totalRechargesBrl: number;
   totalRechargesCount: number;
   totalJobsCount: number;
+  completedJobsCount?: number;
+  failedJobsCount?: number;
   totalCreditsSpent?: number;
   totalCreditsSpentBrl?: number;
   createdAt: string;
@@ -415,9 +417,14 @@ export function AdminUsersTable() {
                   <div className="bg-slate-900/60 p-2 rounded-xl border border-slate-800/60">
                     <span className="text-[10px] text-slate-500 font-medium block">Consumo IA</span>
                     <span className="text-xs font-mono font-bold text-cyan-400 block">
-                      {user.totalJobsCount} jobs
+                      {user.completedJobsCount ?? user.totalJobsCount} concluídos
                     </span>
-                    <span className="text-[9px] text-rose-400 font-mono block truncate">
+                    {(user.failedJobsCount ?? 0) > 0 && (
+                      <span className="text-[9px] text-slate-500 font-mono block">
+                        ({user.failedJobsCount} falhas não cobradas)
+                      </span>
+                    )}
+                    <span className="text-[9px] text-rose-400 font-mono block truncate mt-0.5">
                       {(user.totalCreditsSpent || 0).toLocaleString("pt-BR")} cr ≈ R$ {(user.totalCreditsSpentBrl || 0).toFixed(2).replace(".", ",")}
                     </span>
                   </div>
@@ -607,9 +614,14 @@ export function AdminUsersTable() {
                       {/* Gerações de IA & Consumo em R$ */}
                       <td className="py-3 px-4 font-mono">
                         <span className="font-bold text-white block">
-                          {user.totalJobsCount} jobs
+                          {user.completedJobsCount ?? user.totalJobsCount} jobs concluídos
                         </span>
-                        <span className="text-[11px] text-rose-400 block">
+                        {(user.failedJobsCount ?? 0) > 0 && (
+                          <span className="text-[10px] text-slate-500 block">
+                            ({user.failedJobsCount} falhas não cobradas)
+                          </span>
+                        )}
+                        <span className="text-[11px] text-rose-400 block mt-0.5">
                           {(user.totalCreditsSpent || 0).toLocaleString("pt-BR")} cr
                           <span className="text-slate-500 font-normal ml-1">
                             (≈ R$ {(user.totalCreditsSpentBrl || 0).toFixed(2).replace(".", ",")})
