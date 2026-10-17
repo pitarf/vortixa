@@ -17,7 +17,14 @@ import {
   ScrollText,
   Layers2,
   LayoutDashboard,
-  UserCog
+  UserCog,
+  MinusCircle,
+  PlusCircle,
+  Ban,
+  Search,
+  Trash2,
+  UserCheck,
+  Coins
 } from "lucide-react";
 import { toast } from "sonner";
 import { TimePeriod, ExecutiveDashboardStats } from "@/services/admin-dashboard.service";
@@ -59,10 +66,23 @@ export default function AdminDashboardPage() {
   const [savingBranding, setSavingBranding] = useState(false);
   const [adjustingCredits, setAdjustingCredits] = useState(false);
 
-  // Form de ajuste manual de crédito
+  // Form de ajuste manual de crédito e controle de acesso
   const [targetUserId, setTargetUserId] = useState("");
+  const [adjustmentMode, setAdjustmentMode] = useState<"add" | "deduct" | "zero">("add");
   const [creditsAmount, setCreditsAmount] = useState<number>(100);
   const [reason, setReason] = useState("");
+  const [searchedUser, setSearchedUser] = useState<{
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    isBlocked: boolean;
+    isUnlimited: boolean;
+    balance: number;
+    createdAt: string;
+  } | null>(null);
+  const [searchingUser, setSearchingUser] = useState(false);
+  const [togglingBlock, setTogglingBlock] = useState(false);
 
   // Aba principal do Painel Admin
   const [mainTab, setMainTab] = useState<"overview" | "services" | "users" | "logs" | "models" | "affiliates">("overview");
@@ -160,10 +180,69 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleLookupUser = async (query = targetUserId) => {
+    const q = query.trim();
+    if (!q || q.length < 2) {
+      setSearchedUser(null);
+      return;
+    }
+    try {
+      setSearchingUser(true);
+      const res = await fetch(`/api/admin/users/lookup?q=${encodeURIComponent(q)}`);
+      const json = await res.json();
+      if (res.ok && json.found && json.user) {
+        setSearchedUser(json.user);
+      } else {
+        setSearchedUser(null);
+      }
+    } catch {
+      // silencioso
+    } finally {
+      setSearchingUser(false);
+    }
+  };
+
+  const handleToggleBlockUser = async () => {
+    if (!searchedUser) return;
+    const nextBlocked = !searchedUser.isBlocked;
+    const actionWord = nextBlocked ? "BANIR / BLOQUEAR da IA" : "DESBLOQUEAR e liberar acesso à IA";
+    
+    if (!window.confirm(`Confirma ${actionWord} para o usuário ${searchedUser.email}?`)) {
+      return;
+    }
+
+    try {
+      setTogglingBlock(true);
+      const res = await fetch(`/api/admin/users/${searchedUser.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isBlocked: nextBlocked }),
+      });
+      const json = await res.json();
+      if (res.ok) {
+        setSearchedUser({ ...searchedUser, isBlocked: nextBlocked });
+        toast.success(nextBlocked ? "Usuário banido/bloqueado da IA com sucesso!" : "Acesso à IA liberado!");
+        fetchStats(currentPeriod);
+      } else {
+        toast.error(json.error || "Erro ao alterar status de acesso.");
+      }
+    } catch {
+      toast.error("Erro de conexão ao alterar status do usuário.");
+    } finally {
+      setTogglingBlock(false);
+    }
+  };
+
   const handleAdjustCredits = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!targetUserId.trim() || !reason.trim()) {
-      toast.error("Preencha todos os campos obrigatórios para o ajuste de créditos.");
+    const cleanTarget = targetUserId.trim();
+    if (!cleanTarget) {
+      toast.error("Informe o ID ou e-mail do usuário de destino.");
+      return;
+    }
+
+    if (adjustmentMode !== "zero" && (!creditsAmount || creditsAmount <= 0)) {
+      toast.error("Informe uma quantidade de créditos válida maior que zero.");
       return;
     }
 
@@ -171,21 +250,34 @@ export default function AdminDashboardPage() {
       setAdjustingCredits(true);
       const idempotencyKey = `adm_adj_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
+      const payload: any = {
+        targetUserId: cleanTarget,
+        idempotencyKey,
+        reason: reason.trim() || undefined,
+      };
+
+      if (adjustmentMode === "zero") {
+        payload.action = "ZERO";
+      } else if (adjustmentMode === "deduct") {
+        payload.creditsAmount = -Math.abs(Number(creditsAmount));
+      } else {
+        payload.creditsAmount = Math.abs(Number(creditsAmount));
+      }
+
       const res = await fetch("/api/admin/adjust-credits", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          targetUserId: targetUserId.trim(),
-          creditsAmount: Number(creditsAmount),
-          reason: reason.trim(),
-          idempotencyKey,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const json = await res.json();
       if (res.ok) {
         toast.success(json.message || "Créditos ajustados com sucesso!");
-        setTargetUserId("");
+        if (json.newBalance !== undefined && searchedUser) {
+          setSearchedUser({ ...searchedUser, balance: json.newBalance });
+        } else {
+          handleLookupUser(cleanTarget);
+        }
         setReason("");
         fetchStats(currentPeriod);
       } else {
@@ -622,7 +714,7 @@ export default function AdminDashboardPage() {
               </form>
             </div>
 
-            {/* Ajuste Manual de Saldo com Idempotência */}
+            {/* Ajuste Manual de Saldo com Idempotência e Banimento da IA */}
             <div 
               ref={creditFormRef}
               className={`bg-[#0D0E12] border border-[#1E202E] rounded-2xl p-4 sm:p-6 flex flex-col justify-between ${
@@ -630,73 +722,277 @@ export default function AdminDashboardPage() {
               }`}
             >
               <div>
-                <div className="flex items-center gap-2 text-white font-bold text-base mb-1 font-heading">
-                  <Sliders className="h-5 w-5 text-cyan-400" />
-                  Ajuste Administrativo de Créditos
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center gap-2 text-white font-bold text-base font-heading">
+                    <Sliders className="h-5 w-5 text-cyan-400" />
+                    Ajuste de Créditos & Acesso à IA
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-800/40">
+                    Ledger Seguro
+                  </span>
                 </div>
-                <p className="text-xs text-slate-400 mb-6">
-                  Ajuste saldo com auditoria compulsória no Ledger e proteção de chave contra retries.
+                <p className="text-xs text-slate-400 mb-4">
+                  Adicione, retire créditos ou suspenda o acesso do usuário à IA sem complicação no celular.
                 </p>
+
+                {/* Seletor Tátil de Operação (+ / - / Zerar) */}
+                <div className="grid grid-cols-3 gap-1.5 p-1 bg-[#070709] border border-[#1E202E] rounded-xl mb-4">
+                  <button
+                    type="button"
+                    onClick={() => setAdjustmentMode("add")}
+                    className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-xs font-bold transition-all min-h-[44px] cursor-pointer ${
+                      adjustmentMode === "add"
+                        ? "bg-emerald-600 text-white shadow-md shadow-emerald-900/30"
+                        : "text-slate-400 hover:text-white hover:bg-slate-900"
+                    }`}
+                  >
+                    <PlusCircle className="h-3.5 w-3.5" />
+                    <span>Adicionar (+)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setAdjustmentMode("deduct")}
+                    className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-xs font-bold transition-all min-h-[44px] cursor-pointer ${
+                      adjustmentMode === "deduct"
+                        ? "bg-rose-600 text-white shadow-md shadow-rose-900/30"
+                        : "text-slate-400 hover:text-white hover:bg-slate-900"
+                    }`}
+                  >
+                    <MinusCircle className="h-3.5 w-3.5" />
+                    <span>Tirar / Reduzir (-)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setAdjustmentMode("zero")}
+                    className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-xs font-bold transition-all min-h-[44px] cursor-pointer ${
+                      adjustmentMode === "zero"
+                        ? "bg-amber-600 text-white shadow-md shadow-amber-900/30"
+                        : "text-slate-400 hover:text-white hover:bg-slate-900"
+                    }`}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    <span>Zerar Saldo</span>
+                  </button>
+                </div>
 
                 <form onSubmit={handleAdjustCredits} className="space-y-4">
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      ID do Usuário Destino (targetUserId)
+                      Usuário Destino (ID ou E-mail)
                     </label>
-                    <input
-                      type="text"
-                      value={targetUserId}
-                      onChange={(e) => setTargetUserId(e.target.value)}
-                      placeholder="Ex: cld9482..."
-                      className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors font-mono min-h-[48px]"
-                      required
-                    />
+                    <div className="relative flex items-center">
+                      <input
+                        type="text"
+                        value={targetUserId}
+                        onChange={(e) => {
+                          setTargetUserId(e.target.value);
+                          if (e.target.value.trim().length >= 3) {
+                            handleLookupUser(e.target.value);
+                          } else {
+                            setSearchedUser(null);
+                          }
+                        }}
+                        onBlur={() => handleLookupUser()}
+                        placeholder="Cole o ID ou digite o e-mail do usuário..."
+                        className="w-full bg-[#070709] border border-[#1E202E] rounded-xl pl-4 pr-11 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors font-mono min-h-[48px]"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleLookupUser()}
+                        disabled={searchingUser || !targetUserId.trim()}
+                        className="absolute right-2 p-2 text-slate-400 hover:text-white disabled:opacity-40 cursor-pointer min-h-[40px] min-w-[40px] flex items-center justify-center"
+                        title="Buscar usuário"
+                      >
+                        {searchingUser ? (
+                          <RefreshCw className="h-4 w-4 animate-spin text-cyan-400" />
+                        ) : (
+                          <Search className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      Quantidade de Créditos (Positivo para crédito, Negativo para débito)
-                    </label>
-                    <input
-                      type="number"
-                      value={creditsAmount}
-                      onChange={(e) => setCreditsAmount(Number(e.target.value))}
-                      className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors font-bold min-h-[48px]"
-                      required
-                    />
-                  </div>
+                  {/* Card de Preview do Usuário Localizado */}
+                  {searchedUser && (
+                    <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2.5 animate-in fade-in duration-200">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-white truncate">
+                            {searchedUser.name || "Sem nome cadastrado"}
+                          </p>
+                          <p className="text-[11px] text-slate-400 font-mono truncate">
+                            {searchedUser.email}
+                          </p>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <span className="text-[10px] text-slate-500 block">Saldo Atual</span>
+                          <span className="text-xs font-black text-cyan-300 font-mono">
+                            {searchedUser.balance} cr
+                          </span>
+                        </div>
+                      </div>
 
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 gap-2">
+                        <div className="flex items-center gap-1.5">
+                          {searchedUser.isBlocked ? (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                              <Ban className="h-3 w-3" /> Banido da IA
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                              <UserCheck className="h-3 w-3" /> IA Liberada
+                            </span>
+                          )}
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={handleToggleBlockUser}
+                          disabled={togglingBlock}
+                          className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1.5 min-h-[36px] cursor-pointer active:scale-95 ${
+                            searchedUser.isBlocked
+                              ? "bg-emerald-600/80 hover:bg-emerald-600 text-white"
+                              : "bg-rose-600/80 hover:bg-rose-600 text-white"
+                          }`}
+                        >
+                          {togglingBlock ? (
+                            <RefreshCw className="h-3 w-3 animate-spin" />
+                          ) : searchedUser.isBlocked ? (
+                            <UserCheck className="h-3 w-3" />
+                          ) : (
+                            <Ban className="h-3 w-3" />
+                          )}
+                          <span>
+                            {searchedUser.isBlocked ? "Desbanir Usuário" : "Banir Usuário da IA"}
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Quantidade de Créditos (visível quando não for Zerar) */}
+                  {adjustmentMode !== "zero" ? (
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="block text-xs font-semibold text-slate-300">
+                          {adjustmentMode === "deduct"
+                            ? "Quantidade a Deduzir / Tirar"
+                            : "Quantidade a Conceder / Adicionar"}
+                        </label>
+                        <span className="text-[11px] text-slate-400">
+                          {adjustmentMode === "deduct" ? "Será debitado do saldo" : "Será creditado no saldo"}
+                        </span>
+                      </div>
+
+                      <div className="relative">
+                        <span className={`absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-sm ${
+                          adjustmentMode === "deduct" ? "text-rose-400" : "text-emerald-400"
+                        }`}>
+                          {adjustmentMode === "deduct" ? "−" : "+"}
+                        </span>
+                        <input
+                          type="number"
+                          min="1"
+                          value={creditsAmount}
+                          onChange={(e) => setCreditsAmount(Math.abs(Number(e.target.value)))}
+                          className="w-full bg-[#070709] border border-[#1E202E] rounded-xl pl-8 pr-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors font-bold min-h-[48px]"
+                          required
+                        />
+                      </div>
+
+                      {/* Atalhos Rápidos de Quantidade */}
+                      <div className="flex items-center gap-1.5 mt-2 overflow-x-auto no-scrollbar">
+                        {[50, 100, 250, 500, 1000].map((val) => (
+                          <button
+                            key={val}
+                            type="button"
+                            onClick={() => setCreditsAmount(val)}
+                            className="px-2.5 py-1 text-[11px] font-mono font-semibold rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 cursor-pointer min-h-[32px]"
+                          >
+                            {adjustmentMode === "deduct" ? `-${val}` : `+${val}`}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-3 bg-amber-950/30 border border-amber-900/50 rounded-xl">
+                      <p className="text-xs text-amber-300 leading-relaxed">
+                        🧹 <strong>Modo Zerar Saldo</strong>: Ao confirmar, todo o saldo remanescente do usuário será deduzido, deixando a conta com exatamente 0 créditos.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Motivo Administrativo com Sugestões Rápidas */}
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      Motivo Administrativo (AuditLog)
+                      Motivo / Justificativa (Opcional - preenchimento automático)
                     </label>
                     <input
                       type="text"
                       value={reason}
                       onChange={(e) => setReason(e.target.value)}
-                      placeholder="Ex: Bonificação de suporte, compensação de instabilidade"
+                      placeholder={
+                        adjustmentMode === "deduct"
+                          ? "Ex: Cancelamento, estorno ou correção"
+                          : adjustmentMode === "zero"
+                          ? "Ex: Zerar saldo por solicitação ou termo"
+                          : "Ex: Bonificação de suporte, recarga manual PIX"
+                      }
                       className="w-full bg-[#070709] border border-[#1E202E] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors min-h-[48px]"
-                      required
                     />
-                  </div>
 
-                  <div className="p-3 bg-cyan-950/30 border border-cyan-900/50 rounded-xl">
-                    <p className="text-[11px] text-cyan-300 leading-relaxed">
-                      🛡️ <strong>Garantia de Idempotência</strong>: Esta operação registra transação única no banco de dados e gera registro de autoria do administrador logado na sessão.
-                    </p>
+                    {/* Sugestões Táteis de Motivos */}
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {(adjustmentMode === "deduct"
+                        ? ["Dedução por cancelamento", "Estorno de teste", "Correção de saldo"]
+                        : adjustmentMode === "zero"
+                        ? ["Zerar saldo administrativamente", "Encerramento de conta", "Correção total"]
+                        : ["Bonificação de suporte", "Recarga manual PIX", "Compensação de instabilidade"]
+                      ).map((sug) => (
+                        <button
+                          key={sug}
+                          type="button"
+                          onClick={() => setReason(sug)}
+                          className="px-2 py-0.5 text-[10px] rounded-md bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800 cursor-pointer"
+                        >
+                          {sug}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   <button
                     type="submit"
                     disabled={adjustingCredits}
-                    className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition-all shadow-lg shadow-cyan-600/20 disabled:opacity-50 min-h-[48px] touch-manipulation active:scale-95 cursor-pointer"
+                    className={`w-full mt-2 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-white text-xs font-bold transition-all shadow-lg disabled:opacity-50 min-h-[48px] touch-manipulation active:scale-95 cursor-pointer ${
+                      adjustmentMode === "deduct"
+                        ? "bg-rose-600 hover:bg-rose-500 shadow-rose-600/20"
+                        : adjustmentMode === "zero"
+                        ? "bg-amber-600 hover:bg-amber-500 shadow-amber-600/20"
+                        : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20"
+                    }`}
                   >
                     {adjustingCredits ? (
                       <RefreshCw className="h-4 w-4 animate-spin" />
+                    ) : adjustmentMode === "deduct" ? (
+                      <MinusCircle className="h-4 w-4" />
+                    ) : adjustmentMode === "zero" ? (
+                      <Trash2 className="h-4 w-4" />
                     ) : (
-                      <CheckCircle2 className="h-4 w-4" />
+                      <PlusCircle className="h-4 w-4" />
                     )}
-                    {adjustingCredits ? "Processando Ajuste..." : "Executar Ajuste de Créditos"}
+                    <span>
+                      {adjustingCredits
+                        ? "Processando Operação..."
+                        : adjustmentMode === "deduct"
+                        ? `Confirmar Débito de ${creditsAmount} Créditos`
+                        : adjustmentMode === "zero"
+                        ? "Zerar Saldo deste Usuário Agora"
+                        : `Confirmar Adição de ${creditsAmount} Créditos`}
+                    </span>
                   </button>
                 </form>
               </div>

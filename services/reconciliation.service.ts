@@ -167,9 +167,18 @@ export class ReconciliationService {
       throw err;
     }
 
-    // 3. Validação explícita de existência do targetUserId antes de qualquer modificação de saldo
-    const targetUser = await prisma.user.findUnique({
-      where: { id: targetUserId },
+    // 3. Validação explícita de existência do targetUserId (aceita UUID ou email com sanitização de hifens unicode)
+    const normalizedTarget = targetUserId
+      .replace(/[\u2010\u2011\u2012\u2013\u2014\u2015]/g, "-")
+      .trim();
+
+    const targetUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { id: normalizedTarget },
+          { email: { equals: normalizedTarget.toLowerCase(), mode: "insensitive" } },
+        ],
+      },
     });
     if (!targetUser) {
       const err: any = new Error("Usuário alvo não encontrado.");
@@ -177,6 +186,7 @@ export class ReconciliationService {
       err.code = "USER_NOT_FOUND";
       throw err;
     }
+    const resolvedUserId = targetUser.id;
 
     // Helper interno para validar consistência dos parâmetros com transação idempotente existente
     const validateIdempotentMatch = (existingTx: {
@@ -185,7 +195,7 @@ export class ReconciliationService {
       type: string;
     }) => {
       if (
-        existingTx.userId !== targetUserId ||
+        existingTx.userId !== resolvedUserId ||
         existingTx.amount !== creditsAmount ||
         existingTx.type !== "ADMIN_ADJUSTMENT"
       ) {
@@ -215,7 +225,7 @@ export class ReconciliationService {
         // 5. Lock pessimista do saldo de créditos para evitar race conditions
         await tx.$executeRaw`
           SELECT 1 FROM "CreditBalance" 
-          WHERE "userId" = ${targetUserId} 
+          WHERE "userId" = ${resolvedUserId} 
           FOR UPDATE
         `;
 
@@ -231,23 +241,24 @@ export class ReconciliationService {
         }
 
         const balanceRecord = await tx.creditBalance.findUnique({
-          where: { userId: targetUserId },
+          where: { userId: resolvedUserId },
         });
 
         const currentBalance = balanceRecord?.balance || 0;
-        const newBalance = currentBalance + creditsAmount;
+        // Previne saldo negativo em caso de débito excessivo
+        const newBalance = Math.max(0, currentBalance + creditsAmount);
 
         // 6. Atualiza saldo de forma atômica
         await tx.creditBalance.upsert({
-          where: { userId: targetUserId },
-          create: { userId: targetUserId, balance: newBalance },
+          where: { userId: resolvedUserId },
+          create: { userId: resolvedUserId, balance: newBalance },
           update: { balance: newBalance },
         });
 
         // 7. Grava transação do Ledger vinculando a chave de idempotência com constraint única
         const createdTx = await tx.creditTransaction.create({
           data: {
-            userId: targetUserId,
+            userId: resolvedUserId,
             amount: creditsAmount,
             type: "ADMIN_ADJUSTMENT",
             description: `Ajuste manual administrativo: ${reason}`,
@@ -260,7 +271,7 @@ export class ReconciliationService {
           data: {
             userId: adminUserId,
             action: "MANUAL_CREDIT_ADJUSTMENT",
-            details: `Ajuste manual de ${creditsAmount} créditos para o usuário ${targetUserId}. Motivo: ${reason}. Saldo anterior: ${currentBalance}, Novo saldo: ${newBalance}`,
+            details: `Ajuste manual de ${creditsAmount} créditos para o usuário ${targetUser.email} (${resolvedUserId}). Motivo: ${reason}. Saldo anterior: ${currentBalance}, Novo saldo: ${newBalance}`,
           },
         });
 

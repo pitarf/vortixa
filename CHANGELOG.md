@@ -5,6 +5,30 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.8.12] - 2026-10-17
+### Controle Tátil de Dedução de Créditos, Zerar Saldo e Banimento de Usuários da IA no Mobile
+- **Resolução de Bloqueio em Dispositivos Móveis (Celular / iOS / Android)**:
+  - Eliminada a dependência de digitar o sinal de menos (`-`) no teclado virtual mobile (que causava reset do input ou travamento no teclado numérico).
+  - Implementado seletor tátil nativo de 3 modos: `[ 🟢 + Adicionar ]`, `[ 🔴 - Tirar / Reduzir ]` e `[ 🧹 Zerar Saldo ]`.
+  - O valor de créditos agora é digitado como número absoluto positivo (com touch target confortável `>= 44px`), e o sistema aplica a orientação do sinal automaticamente na submissão.
+  - Adicionadas pílulas táteis de seleção rápida de valores (`50`, `100`, `250`, `500`, `1000 créditos`).
+- **Ação Direta de Banir / Bloquear Usuário da IA**:
+  - Usuários marcados com `isBlocked: true` têm todas as gerações de IA bloqueadas imediatamente pelo backend (`403 Forbidden: Conta suspensa ou inexistente`).
+  - Adicionado botão tátil direto de 1 toque no painel (`[ 🚫 Banir Usuário da IA ]` / `[ 🔓 Desbanir Usuário ]`) com confirmação e feedback instantâneo via Sonner Toast.
+  - Criado endpoint de busca rápida `GET /api/admin/users/lookup?q=...` para exibição instantânea de prévia do usuário (nome, e-mail, saldo em créditos e status de acesso à IA).
+- **Backend & Ledger Financeiro (`app/api/admin/adjust-credits/route.ts` & `services/reconciliation.service.ts`)**:
+  - Aceitação flexível de `targetUserId` por UUID ou por E-mail cadastrado (case-insensitive) com sanitização de hifens unicode (evita falhas de cópia do WhatsApp/iOS).
+  - Suporte à ação `action: "ZERO"` que calcula e debita o saldo exato em transação atômica do Ledger, prevenindo saldo negativo.
+  - Fallback automático inteligente para o campo de motivo/justificativa quando omitido no celular.
+  - Suporte a atualização conjunta de `isBlocked` com registro compulsório no `AuditLog`.
+- **Componentes Refatorados**:
+  - Painel Administrativo Principal: `app/dashboard/admin/page.tsx`
+  - Gaveta de Usuários: `components/admin/users/AdminUserDrawer.tsx`
+  - Formulário Modular: `components/admin/credit-adjustment-form.tsx`
+- **Garantia de Qualidade & Testes**:
+  - `tsc --noEmit`: 100% aprovado (**0 erros de tipo**).
+  - Suíte de Testes Vitest (`__tests__/admin-panel.test.ts` e `__tests__/malicious-credits-bypass.test.ts`): **25 de 25 testes aprovados (100%)**.
+
 ## [2.8.11] - 2026-09-20
 ### Personalização do Nome de Exibição de IAs no Painel Admin e Propagação no Cliente
 - **Painel Administrativo (`components/admin/services/AdminServicesCatalog.tsx`)**:

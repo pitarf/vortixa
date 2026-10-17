@@ -8,6 +8,14 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Controle Tátil de Dedução de Créditos, Zerar Saldo e Banimento de Usuários da IA no Mobile**:
+  - Resolução do problema onde o sinal de menos (`-`) não entrava no input no celular (iOS/Android).
+  - Adicionado seletor tátil de 3 operações: `[ 🟢 + Adicionar ]`, `[ 🔴 - Tirar / Reduzir ]` e `[ 🧹 Zerar Saldo ]`.
+  - Busca de usuários por UUID ou E-mail com prévia de saldo e status de acesso à IA em tempo real (`GET /api/admin/users/lookup`).
+  - Botão de ação rápida para Banir ou Liberar o usuário das IAs (`isBlocked: true/false`) com feedback Sonner Toast.
+  - Suporte a fallback de motivos e ação de zerar saldo atômico no Ledger financeiro (`ReconciliationService`).
+  - Atualização completa em `app/dashboard/admin/page.tsx`, `components/admin/users/AdminUserDrawer.tsx` e `components/admin/credit-adjustment-form.tsx`.
+  - Validação estática `tsc --noEmit` (**0 erros**) e suíte Vitest com **25 testes aprovados (100%)**.
 - [x] **Personalização do Nome de Exibição de IAs no Admin e Propagação no Cliente**:
   - Implementada funcionalidade de edição e salvamento do nome amigável de cada IA no Painel Administrativo (`AdminServicesCatalog.tsx`), tanto na Tabela Desktop quanto nos Cards Mobile (touch targets `>= 44px`).
   - Rota `PATCH /api/admin/services/[id]` atualizada com validação de 2 a 100 caracteres, transação atômica Prisma sincronizando `AIModel` e ferramentas filhas `AITool`, e registro em `AuditLog`.

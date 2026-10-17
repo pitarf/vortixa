@@ -19,6 +19,9 @@ import {
   RotateCcw,
   Check,
   Zap,
+  PlusCircle,
+  MinusCircle,
+  Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -97,7 +100,8 @@ export function AdminUserDrawer({ userId, onClose, onUserUpdated }: AdminUserDra
   const [newPassword, setNewPassword] = useState("");
   const [savingPassword, setSavingPassword] = useState(false);
 
-  // Form states - Ajuste de créditos individual
+  // Form states - Ajuste de créditos individual com suporte tátil
+  const [drawerAdjustMode, setDrawerAdjustMode] = useState<"add" | "deduct" | "zero">("add");
   const [creditsDelta, setCreditsDelta] = useState<number>(50);
   const [creditsReason, setCreditsReason] = useState("");
   const [adjustingCredits, setAdjustingCredits] = useState(false);
@@ -247,23 +251,35 @@ export function AdminUserDrawer({ userId, onClose, onUserUpdated }: AdminUserDra
   // Ajustar Crédito Manual com Idempotência e Ledger
   const handleAdjustCredits = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!data || !creditsReason.trim() || creditsDelta === 0) {
-      toast.error("Preencha a quantidade de créditos e o motivo obrigatório.");
+    if (!data) return;
+
+    if (drawerAdjustMode !== "zero" && (!creditsDelta || creditsDelta <= 0)) {
+      toast.error("Informe uma quantidade de créditos válida maior que zero.");
       return;
     }
 
     try {
       setAdjustingCredits(true);
       const idempotencyKey = `user_drawer_adj_${data.user.id}_${Date.now()}`;
+      
+      const payload: any = {
+        targetUserId: data.user.id,
+        reason: creditsReason.trim() || undefined,
+        idempotencyKey,
+      };
+
+      if (drawerAdjustMode === "zero") {
+        payload.action = "ZERO";
+      } else if (drawerAdjustMode === "deduct") {
+        payload.creditsAmount = -Math.abs(Number(creditsDelta));
+      } else {
+        payload.creditsAmount = Math.abs(Number(creditsDelta));
+      }
+
       const res = await fetch("/api/admin/adjust-credits", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          targetUserId: data.user.id,
-          creditsAmount: Number(creditsDelta),
-          reason: creditsReason.trim(),
-          idempotencyKey,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const resJson = await res.json();
@@ -482,53 +498,154 @@ export function AdminUserDrawer({ userId, onClose, onUserUpdated }: AdminUserDra
                     </button>
                   </div>
 
-                  {/* Form de Ajuste Manual de Crédito */}
+                  {/* Form de Ajuste Manual de Crédito Tátil */}
                   <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/50 border border-slate-900 space-y-3">
-                    <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
-                      <Coins className="h-4 w-4 text-cyan-400" />
-                      Ajuste Administrativo de Créditos (Ledger)
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
+                        <Coins className="h-4 w-4 text-cyan-400" />
+                        Ajuste de Créditos (Ledger)
+                      </div>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-cyan-300">
+                        Saldo: {data.user.balance || 0} cr
+                      </span>
                     </div>
-                    <p className="text-xs text-slate-400">
-                      Adicione créditos positivos ou debite créditos negativos com registro imediato de auditoria.
-                    </p>
+
+                    {/* Seletor Tátil (+ / - / Zerar) */}
+                    <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 border border-slate-800 rounded-xl">
+                      <button
+                        type="button"
+                        onClick={() => setDrawerAdjustMode("add")}
+                        className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-xs font-bold transition-all min-h-[40px] cursor-pointer ${
+                          drawerAdjustMode === "add"
+                            ? "bg-emerald-600 text-white shadow-md shadow-emerald-900/30"
+                            : "text-slate-400 hover:text-white"
+                        }`}
+                      >
+                        <PlusCircle className="h-3.5 w-3.5" />
+                        <span>Adicionar (+)</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setDrawerAdjustMode("deduct")}
+                        className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-xs font-bold transition-all min-h-[40px] cursor-pointer ${
+                          drawerAdjustMode === "deduct"
+                            ? "bg-rose-600 text-white shadow-md shadow-rose-900/30"
+                            : "text-slate-400 hover:text-white"
+                        }`}
+                      >
+                        <MinusCircle className="h-3.5 w-3.5" />
+                        <span>Tirar (-)</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setDrawerAdjustMode("zero")}
+                        className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-xs font-bold transition-all min-h-[40px] cursor-pointer ${
+                          drawerAdjustMode === "zero"
+                            ? "bg-amber-600 text-white shadow-md shadow-amber-900/30"
+                            : "text-slate-400 hover:text-white"
+                        }`}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        <span>Zerar Saldo</span>
+                      </button>
+                    </div>
 
                     <form onSubmit={handleAdjustCredits} className="space-y-3 pt-1">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-[11px] font-bold text-slate-400 mb-1">
-                            Quantidade (+ para conceder / - para debitar)
-                          </label>
-                          <input
-                            type="number"
-                            value={creditsDelta}
-                            onChange={(e) => setCreditsDelta(Number(e.target.value))}
-                            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono font-bold focus:border-cyan-500 focus:outline-none"
-                            required
-                          />
-                        </div>
+                      {drawerAdjustMode !== "zero" ? (
+                        <div className="space-y-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-[11px] font-bold text-slate-400 mb-1">
+                                {drawerAdjustMode === "deduct" ? "Quantidade a Deduzir" : "Quantidade a Conceder"}
+                              </label>
+                              <div className="relative">
+                                <span className={`absolute left-3 top-1/2 -translate-y-1/2 font-bold text-xs ${
+                                  drawerAdjustMode === "deduct" ? "text-rose-400" : "text-emerald-400"
+                                }`}>
+                                  {drawerAdjustMode === "deduct" ? "−" : "+"}
+                                </span>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  value={creditsDelta}
+                                  onChange={(e) => setCreditsDelta(Math.abs(Number(e.target.value)))}
+                                  className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-7 pr-3 py-2 text-xs text-white font-mono font-bold focus:border-cyan-500 focus:outline-none min-h-[42px]"
+                                  required
+                                />
+                              </div>
+                            </div>
 
-                        <div>
-                          <label className="block text-[11px] font-bold text-slate-400 mb-1">
-                            Motivo / Justificativa (AuditLog)
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Ex: Bonificação suporte, recarga manual PIX"
-                            value={creditsReason}
-                            onChange={(e) => setCreditsReason(e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none"
-                            required
-                          />
+                            <div>
+                              <label className="block text-[11px] font-bold text-slate-400 mb-1">
+                                Motivo / Justificativa
+                              </label>
+                              <input
+                                type="text"
+                                placeholder={
+                                  drawerAdjustMode === "deduct"
+                                    ? "Ex: Cancelamento, estorno ou correção"
+                                    : "Ex: Bonificação suporte, recarga manual PIX"
+                                }
+                                value={creditsReason}
+                                onChange={(e) => setCreditsReason(e.target.value)}
+                                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none min-h-[42px]"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Atalhos de Valores Rápidos */}
+                          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                            {[50, 100, 250, 500].map((val) => (
+                              <button
+                                key={val}
+                                type="button"
+                                onClick={() => setCreditsDelta(val)}
+                                className="px-2.5 py-1 text-[10px] font-mono font-semibold rounded-lg bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 cursor-pointer min-h-[30px]"
+                              >
+                                {drawerAdjustMode === "deduct" ? `-${val}` : `+${val}`}
+                              </button>
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="p-3 bg-amber-950/30 border border-amber-900/50 rounded-xl">
+                          <p className="text-xs text-amber-300 leading-relaxed">
+                            🧹 Ao confirmar, o saldo atual de <strong>{data.user.balance || 0} créditos</strong> será zerado.
+                          </p>
+                        </div>
+                      )}
 
                       <button
                         type="submit"
                         disabled={adjustingCredits}
-                        className="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md shadow-cyan-600/20 disabled:opacity-50 cursor-pointer"
+                        className={`w-full py-2.5 rounded-xl text-white text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50 min-h-[44px] cursor-pointer ${
+                          drawerAdjustMode === "deduct"
+                            ? "bg-rose-600 hover:bg-rose-500 shadow-rose-600/20"
+                            : drawerAdjustMode === "zero"
+                            ? "bg-amber-600 hover:bg-amber-500 shadow-amber-600/20"
+                            : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20"
+                        }`}
                       >
-                        {adjustingCredits ? <Loader2 className="h-4 w-4 animate-spin" /> : <Coins className="h-4 w-4" />}
-                        <span>Aplicar Ajuste de Créditos</span>
+                        {adjustingCredits ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : drawerAdjustMode === "deduct" ? (
+                          <MinusCircle className="h-4 w-4" />
+                        ) : drawerAdjustMode === "zero" ? (
+                          <Trash2 className="h-4 w-4" />
+                        ) : (
+                          <PlusCircle className="h-4 w-4" />
+                        )}
+                        <span>
+                          {adjustingCredits
+                            ? "Processando..."
+                            : drawerAdjustMode === "deduct"
+                            ? `Confirmar Débito de ${creditsDelta} Créditos`
+                            : drawerAdjustMode === "zero"
+                            ? "Zerar Saldo deste Usuário"
+                            : `Conceder ${creditsDelta} Créditos`}
+                        </span>
                       </button>
                     </form>
                   </div>
