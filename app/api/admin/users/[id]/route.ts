@@ -120,30 +120,49 @@ export async function GET(
 
     const pendingPayments = paymentsFormatted.filter((p) => p.status === "PENDING");
 
-    const jobsFormatted = user.jobs.map((job) => ({
-      id: job.id,
-      modelName: job.model?.name || "Modelo Desconhecido",
-      modelTechnicalName: job.model?.technicalName,
-      toolName: job.tool?.name || "Ferramenta",
-      toolSlug: job.tool?.slug,
-      status: job.status,
-      creditCost: job.creditCost,
-      apiUnitCostUsd: job.apiUnitCost,
-      providerCostUsd: job.providerCostUsd,
-      creditsCharged: job.creditsCharged,
-      creditsRefunded: job.creditsRefunded,
-      error: job.error,
-      fileUrl: job.outputs[0]?.fileUrl || null,
-      createdAt: job.createdAt,
-    }));
+    const jobsFormatted = user.jobs.map((job) => {
+      const isFailedOrCancelled = job.status === "FAILED" || job.status === "CANCELLED";
+      // Se falhou ou foi cancelado, o custo real cobrado do usuário e da API é ZERO
+      const effectiveCreditCost = isFailedOrCancelled ? 0 : job.creditCost;
+      const effectiveApiCostUsd = isFailedOrCancelled ? 0 : (job.providerCostUsd ?? job.apiUnitCost ?? 0);
+      const creditCostBrl = Number((effectiveCreditCost * 0.15).toFixed(2));
+      const apiCostBrl = Number((effectiveApiCostUsd * 5.60).toFixed(4));
+
+      // Limpeza de encoding (ex: 'V??deo' -> 'Vídeo')
+      const cleanToolName = (job.tool?.name || "Ferramenta").replace(/V\?\?deo/gi, "Vídeo");
+      const cleanModelName = (job.model?.name || "Modelo Desconhecido").replace(/V\?\?deo/gi, "Vídeo");
+
+      return {
+        id: job.id,
+        modelName: cleanModelName,
+        modelTechnicalName: job.model?.technicalName,
+        toolName: cleanToolName,
+        toolSlug: job.tool?.slug,
+        status: job.status,
+        creditCost: effectiveCreditCost,
+        originalCreditCost: job.creditCost,
+        creditCostBrl,
+        apiUnitCostUsd: effectiveApiCostUsd,
+        apiCostBrl,
+        providerCostUsd: effectiveApiCostUsd,
+        creditsCharged: isFailedOrCancelled ? 0 : job.creditsCharged,
+        creditsRefunded: isFailedOrCancelled ? (job.creditsRefunded || job.creditCost) : job.creditsRefunded,
+        error: job.error,
+        fileUrl: job.outputs[0]?.fileUrl || null,
+        createdAt: job.createdAt,
+      };
+    });
 
     const paidPayments = paymentsFormatted.filter((p) => p.status === "PAID");
     const totalSpentBrl = paidPayments.reduce((acc, p) => acc + (p.amountCents / 100), 0);
     const totalPendingBrl = pendingPayments.reduce((acc, p) => acc + (p.amountCents / 100), 0);
 
     const completedJobs = jobsFormatted.filter((j) => j.status === "COMPLETED");
+    const failedJobs = jobsFormatted.filter((j) => j.status === "FAILED" || j.status === "CANCELLED");
     const totalCreditsSpent = completedJobs.reduce((acc, j) => acc + j.creditCost, 0);
     const totalCreditsSpentBrl = Number((totalCreditsSpent * 0.15).toFixed(2));
+    const totalApiCostUsd = Number(completedJobs.reduce((acc, j) => acc + j.apiUnitCostUsd, 0).toFixed(4));
+    const totalApiCostBrl = Number((totalApiCostUsd * 5.60).toFixed(2));
 
     return NextResponse.json({
       user: {
@@ -160,6 +179,10 @@ export async function GET(
         totalPendingBrl: Number(totalPendingBrl.toFixed(2)),
         totalCreditsSpent,
         totalCreditsSpentBrl,
+        totalApiCostUsd,
+        totalApiCostBrl,
+        completedJobsCount: completedJobs.length,
+        failedJobsCount: failedJobs.length,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       },

@@ -548,7 +548,13 @@ export class FalAIProvider implements IAIProvider {
             
             await prisma.aIJob.update({
               where: { id: jobId },
-              data: { status: "FAILED", error: userFriendlyMsg },
+              data: {
+                status: "FAILED",
+                error: userFriendlyMsg,
+                creditsCharged: 0,
+                creditsRefunded: job?.creditCost || 0,
+                providerCostUsd: 0,
+              },
             });
 
             // Estorno de créditos e Log de Auditoria
@@ -660,7 +666,13 @@ export class FalAIProvider implements IAIProvider {
           const job = await prisma.aIJob.findUnique({ where: { id: jobId } });
           await prisma.aIJob.update({
             where: { id: jobId },
-            data: { status: "FAILED", error: "Ocorreu uma instabilidade temporária durante a renderização da IA. Seus créditos foram estornados." },
+            data: {
+              status: "FAILED",
+              error: "Ocorreu uma instabilidade temporária durante a renderização da IA. Seus créditos foram estornados.",
+              creditsCharged: 0,
+              creditsRefunded: job?.creditCost || 0,
+              providerCostUsd: 0,
+            },
           });
 
           if (job && job.creditCost > 0) {

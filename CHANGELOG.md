@@ -5,6 +5,25 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.8.15] - 2026-10-17
+### Não Cobrança de Falhas de IA, Exibição de Custos em Reais (R$) e Correção de Encoding
+- **Regra de Não Cobrança em Jobs Falhos (`FAILED` / `CANCELLED`)**:
+  - **Apenas jobs concluídos com sucesso geram débito efetivo**: Se um job de IA falha ou é rejeitado pela API externa, nenhum crédito é cobrado e o custo de API externa é considerado zero.
+  - **Reconciliação e Auditoria Financeira no Banco de Dados**:
+    - Em `services/ai/ai.service.ts`, `services/ai/providers/fal-ai.provider.ts`, `app/api/webhooks/fal/route.ts`, `services/ai/vortixia-ia.service.ts` e `services/talking-video.service.ts`: ao registrar falha de geração, o registro do job agora grava estritamente `creditsCharged: 0`, `creditsRefunded: creditCost` e `providerCostUsd: 0`.
+    - Garantido o estorno automático de créditos para o saldo do usuário via `CreditService.refundCredits`.
+  - **Exibição Transparente no Histórico IA & Custos (`AdminUserDrawer.tsx`)**:
+    - Para jobs com status `FAILED`: o card não exibe mais cobrança. Exibe o custo original riscado com badge verde em destaque: `0 cr (Estornado / Não cobrado)` e custo de API como `$0.0000 USD (R$ 0,00)`.
+    - Novo painel consolidado no cabeçalho da aba "Histórico IA & Custos" detalhando: Total Cobrado do Usuário (em créditos e R$), Custo Efetivo de APIs (em USD e R$) e contador segregado de gerações com sucesso vs falhas (não cobradas).
+- **Exibição do Custo em Reais (R$) em Todos os Jobs e Painéis**:
+  - Para cada job concluído (`COMPLETED`), são exibidos lado a lado:
+    - Custo em créditos e sua paridade em Reais: `X cr (≈ R$ Y,YY)`.
+    - Custo de API em dólares e em Reais: `$Z.ZZZZ USD (≈ R$ W,WW)`.
+  - `AdminLogsViewer.tsx`: tabela desktop e cards mobile atualizados para exibir valores equivalentes em Reais e zerar o custo em falhas.
+  - `AdminUsersLeaderboard.tsx`: adicionado o valor equivalente em Reais para os créditos gastos no ranking de consumo.
+- **Correção de Encoding**:
+  - Higienização automática de caracteres mal codificados (ex: `V??deo` $\rightarrow$ `Vídeo`) em títulos de ferramentas e modelos na API e nas telas de auditoria.
+
 ## [2.8.14] - 2026-10-17
 ### Painel de Equivalência Financeira e Conversão do Consumo de Créditos em Reais (R$)
 - **Resiliência e Normalização de Autenticação (`auth.ts`)**:

@@ -492,11 +492,27 @@ export function AdminLogsViewer() {
                           </div>
 
                           <div className="text-right">
-                            <span className="font-mono text-xs font-bold text-violet-400">
-                              {job.creditCost} cr
-                            </span>
+                            {isFailed ? (
+                              <div>
+                                <span className="font-mono text-xs text-slate-500 line-through mr-1">
+                                  {job.creditCost} cr
+                                </span>
+                                <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/30 block mt-0.5">
+                                  0 cr (Não cobrado)
+                                </span>
+                              </div>
+                            ) : (
+                              <div>
+                                <span className="font-mono text-xs font-bold text-violet-400">
+                                  {job.creditCost} cr
+                                </span>
+                                <span className="text-[10px] text-emerald-400 font-mono block">
+                                  ≈ R$ {(job.creditCost * 0.15).toFixed(2).replace(".", ",")}
+                                </span>
+                              </div>
+                            )}
                             {job.durationSeconds !== null && (
-                              <span className="text-[10px] text-slate-500 font-mono block">
+                              <span className="text-[10px] text-slate-500 font-mono block mt-0.5">
                                 {job.durationSeconds}s
                               </span>
                             )}
@@ -613,12 +629,36 @@ export function AdminLogsViewer() {
                               </div>
                             </td>
                             <td className="py-3.5 px-4 whitespace-nowrap">
-                              <div className="font-mono text-xs font-bold text-violet-400">
-                                {job.creditCost} créditos
-                              </div>
-                              <div className="text-[10px] text-slate-500 font-mono">
-                                ${job.apiUnitCostUsd?.toFixed(4) || "0.0000"} USD
-                              </div>
+                              {isFailed ? (
+                                <div>
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-mono text-xs text-slate-500 line-through">
+                                      {job.creditCost} cr
+                                    </span>
+                                    <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/30">
+                                      0 cr (Não cobrado)
+                                    </span>
+                                  </div>
+                                  <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+                                    $0.0000 USD (R$ 0,00)
+                                  </div>
+                                </div>
+                              ) : (
+                                <div>
+                                  <div className="font-mono text-xs font-bold text-violet-400">
+                                    {job.creditCost} créditos
+                                    <span className="text-[10px] text-emerald-400 font-semibold ml-1">
+                                      (≈ R$ {(job.creditCost * 0.15).toFixed(2).replace(".", ",")})
+                                    </span>
+                                  </div>
+                                  <div className="text-[10px] text-amber-300 font-mono">
+                                    ${(job.providerCostUsd ?? job.apiUnitCostUsd ?? 0).toFixed(4)} USD
+                                    <span className="text-slate-400 ml-1">
+                                      (≈ R$ {(((job.providerCostUsd ?? job.apiUnitCostUsd ?? 0) * 5.60)).toFixed(2).replace(".", ",")})
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
                             </td>
                             <td className="py-3.5 px-4 whitespace-nowrap">
                               {job.durationSeconds !== null ? (

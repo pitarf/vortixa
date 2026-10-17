@@ -214,7 +214,10 @@ export function AdminUsersLeaderboard({
                         <div className="text-xs font-black text-fuchsia-400 font-mono">
                           {u.creditsSpent.toLocaleString("pt-BR")} cr
                         </div>
-                        <div className="text-[10px] text-slate-500 font-mono">
+                        <div className="text-[10px] text-emerald-400 font-mono font-bold">
+                          ≈ R$ {(u.creditsSpent * 0.15).toFixed(2).replace(".", ",")}
+                        </div>
+                        <div className="text-[9px] text-slate-500 font-mono">
                           {u.generationsCount} mídias geradas
                         </div>
                       </div>

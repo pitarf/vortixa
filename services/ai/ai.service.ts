@@ -309,12 +309,15 @@ export class AIService {
 
       return updatedJob;
     } catch (error: any) {
-      // Se a submissão falhar, marca o Job como FAILED e estorna créditos caso já tenham sido consumidos
+      // Se a submissão falhar, marca o Job como FAILED, zera cobrança de API e estorna créditos
       await prisma.aIJob.update({
         where: { id: job.id },
         data: {
           status: "FAILED",
           error: error.message,
+          creditsCharged: 0,
+          creditsRefunded: cost,
+          providerCostUsd: 0,
         },
       });
 

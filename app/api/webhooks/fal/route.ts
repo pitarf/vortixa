@@ -153,6 +153,9 @@ export async function POST(req: Request) {
         data: {
           status: "FAILED",
           error: error || "Falha relatada pelo provedor de IA.",
+          creditsCharged: 0,
+          creditsRefunded: job.creditCost,
+          providerCostUsd: 0,
         },
       });
 

@@ -190,6 +190,9 @@ export class TalkingVideoService {
         data: {
           status: "FAILED",
           error: err.message || "Erro na geração do vídeo falante.",
+          creditsCharged: 0,
+          creditsRefunded: totalCost,
+          providerCostUsd: 0,
         },
       });
       await CreditService.refundCredits(userId, totalCost, job.id);

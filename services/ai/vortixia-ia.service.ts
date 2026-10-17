@@ -286,6 +286,9 @@ export class VortixiaIAService {
         data: {
           status: "FAILED",
           error: err.message || "Erro no motor VORTIXIA IA.",
+          creditsCharged: 0,
+          creditsRefunded: pricing.credits,
+          providerCostUsd: 0,
         },
       });
       await CreditService.refundCredits(userId, pricing.credits, job.id).catch(() => {});

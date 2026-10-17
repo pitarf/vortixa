@@ -46,6 +46,10 @@ interface UserDetailData {
     totalPendingBrl?: number;
     totalCreditsSpent?: number;
     totalCreditsSpentBrl?: number;
+    totalApiCostUsd?: number;
+    totalApiCostBrl?: number;
+    completedJobsCount?: number;
+    failedJobsCount?: number;
     createdAt: string;
     updatedAt: string;
   };
@@ -79,7 +83,10 @@ interface UserDetailData {
     toolSlug?: string;
     status: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED" | "CANCELLED";
     creditCost: number;
+    originalCreditCost?: number;
+    creditCostBrl?: number;
     apiUnitCostUsd: number;
+    apiCostBrl?: number;
     providerCostUsd?: number | null;
     creditsCharged: number;
     creditsRefunded: number;
@@ -880,73 +887,149 @@ export function AdminUserDrawer({ userId, onClose, onUserUpdated }: AdminUserDra
                     </span>
                   </div>
 
+                  {/* Resumo Financeiro & Efetivo de Execuções */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 rounded-2xl bg-slate-900/40 border border-slate-900 text-center">
+                    <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800/80">
+                      <span className="text-[10px] text-slate-400 block font-medium">Total Cobrado do Usuário</span>
+                      <span className="text-sm font-mono font-black text-violet-300 block">
+                        {(data.user.totalCreditsSpent ?? 0).toLocaleString("pt-BR")} cr
+                      </span>
+                      <span className="text-[11px] font-mono font-bold text-emerald-400 block">
+                        ≈ R$ {(data.user.totalCreditsSpentBrl ?? 0).toFixed(2).replace(".", ",")}
+                      </span>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800/80">
+                      <span className="text-[10px] text-slate-400 block font-medium">Custo Efetivo de APIs (Gasto Real)</span>
+                      <span className="text-sm font-mono font-black text-amber-300 block">
+                        ${(data.user.totalApiCostUsd ?? 0).toFixed(4)} USD
+                      </span>
+                      <span className="text-[11px] font-mono font-bold text-slate-300 block">
+                        ≈ R$ {(data.user.totalApiCostBrl ?? 0).toFixed(2).replace(".", ",")}
+                      </span>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800/80">
+                      <span className="text-[10px] text-slate-400 block font-medium">Status das Gerações</span>
+                      <div className="text-xs font-mono font-bold mt-1 space-y-0.5">
+                        <span className="text-emerald-400 block">
+                          ✓ {data.user.completedJobsCount ?? data.jobs.filter((j) => j.status === "COMPLETED").length} com sucesso
+                        </span>
+                        <span className="text-rose-400 block">
+                          ✗ {data.user.failedJobsCount ?? data.jobs.filter((j) => j.status === "FAILED" || j.status === "CANCELLED").length} falhas (não cobradas)
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
                   {data.jobs.length === 0 ? (
                     <div className="py-8 text-center text-xs text-slate-500 bg-slate-900/30 rounded-xl border border-slate-900">
                       Nenhuma geração executada por este usuário até o momento.
                     </div>
                   ) : (
                     <div className="space-y-2.5 max-h-[500px] overflow-y-auto pr-1">
-                      {data.jobs.map((job) => (
-                        <div
-                          key={job.id}
-                          className="p-3.5 rounded-xl bg-slate-900/40 border border-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
-                        >
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-white font-heading">
-                                {job.toolName}
-                              </span>
-                              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">
-                                {job.modelName}
-                              </span>
-                              <span
-                                className={`px-2 py-0.2 rounded text-[10px] font-mono font-bold uppercase ${
-                                  job.status === "COMPLETED"
-                                    ? "bg-emerald-500/20 text-emerald-300"
-                                    : job.status === "FAILED"
-                                    ? "bg-rose-500/20 text-rose-300"
-                                    : "bg-amber-500/20 text-amber-300"
-                                }`}
+                      {data.jobs.map((job) => {
+                        const isFailed = job.status === "FAILED" || job.status === "CANCELLED";
+                        const isCompleted = job.status === "COMPLETED";
+                        const cleanToolName = (job.toolName || "Ferramenta").replace(/V\?\?deo/gi, "Vídeo");
+                        const cleanModelName = (job.modelName || "").replace(/V\?\?deo/gi, "Vídeo");
+
+                        return (
+                          <div
+                            key={job.id}
+                            className={`p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs ${
+                              isFailed
+                                ? "bg-rose-950/10 border-rose-900/30"
+                                : "bg-slate-900/40 border-slate-900"
+                            }`}
+                          >
+                            <div className="space-y-1.5 min-w-0 flex-1">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="font-bold text-white font-heading">
+                                  {cleanToolName}
+                                </span>
+                                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">
+                                  {cleanModelName}
+                                </span>
+                                <span
+                                  className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+                                    isCompleted
+                                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                                      : isFailed
+                                      ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                                      : "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                                  }`}
+                                >
+                                  {job.status === "FAILED" ? "FALHOU (NÃO COBRADO)" : job.status}
+                                </span>
+                              </div>
+
+                              <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono text-slate-400">
+                                {/* Custo em Créditos e Reais */}
+                                {isFailed ? (
+                                  <span className="inline-flex items-center gap-1.5">
+                                    <span>Custo:</span>
+                                    <span className="line-through text-slate-500">
+                                      {job.originalCreditCost || job.creditCost} cr
+                                    </span>
+                                    <strong className="text-emerald-400 font-bold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/30">
+                                      0 cr (Estornado / Não cobrado)
+                                    </strong>
+                                  </span>
+                                ) : (
+                                  <span>
+                                    Custo:{" "}
+                                    <strong className="text-violet-300">{job.creditCost} cr</strong>
+                                    <span className="text-emerald-400 font-bold ml-1">
+                                      (≈ R$ {(job.creditCostBrl ?? (job.creditCost * 0.15)).toFixed(2).replace(".", ",")})
+                                    </span>
+                                  </span>
+                                )}
+
+                                <span>•</span>
+
+                                {/* Custo da API em USD e Reais */}
+                                {isFailed ? (
+                                  <span>
+                                    Custo API: <strong className="text-slate-400">$0.0000 USD (R$ 0,00)</strong>
+                                  </span>
+                                ) : (
+                                  <span>
+                                    Custo API:{" "}
+                                    <strong className="text-amber-300">
+                                      ${(job.providerCostUsd ?? job.apiUnitCostUsd).toFixed(4)} USD
+                                    </strong>
+                                    <span className="text-slate-300 ml-1">
+                                      (≈ R$ {(job.apiCostBrl ?? ((job.providerCostUsd ?? job.apiUnitCostUsd) * 5.60)).toFixed(2).replace(".", ",")})
+                                    </span>
+                                  </span>
+                                )}
+
+                                <span>•</span>
+                                <span>{new Date(job.createdAt).toLocaleString("pt-BR")}</span>
+                              </div>
+
+                              {job.error && (
+                                <p className="text-[11px] text-rose-300 font-mono bg-rose-950/40 p-2 rounded-lg border border-rose-900/50 mt-1">
+                                  {job.error}
+                                </p>
+                              )}
+                            </div>
+
+                            {job.fileUrl && (
+                              <a
+                                href={job.fileUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="self-start sm:self-center px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-bold flex items-center gap-1.5 transition-all border border-slate-700 flex-shrink-0 cursor-pointer"
                               >
-                                {job.status}
-                              </span>
-                            </div>
-
-                            <div className="flex items-center gap-3 text-[11px] font-mono text-slate-400">
-                              <span>
-                                Custo: <strong className="text-violet-300">{job.creditCost} cr</strong>
-                              </span>
-                              <span>•</span>
-                              <span>
-                                Custo API:{" "}
-                                <strong className="text-amber-300">
-                                  ${(job.providerCostUsd ?? job.apiUnitCostUsd).toFixed(4)} USD
-                                </strong>
-                              </span>
-                              <span>•</span>
-                              <span>{new Date(job.createdAt).toLocaleString("pt-BR")}</span>
-                            </div>
-
-                            {job.error && (
-                              <p className="text-[11px] text-rose-400/90 font-mono bg-rose-950/30 p-1.5 rounded-lg border border-rose-900/50 mt-1">
-                                {job.error}
-                              </p>
+                                <span>Visualizar</span>
+                                <ExternalLink className="h-3 w-3" />
+                              </a>
                             )}
                           </div>
-
-                          {job.fileUrl && (
-                            <a
-                              href={job.fileUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="self-start sm:self-center px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-bold flex items-center gap-1.5 transition-all border border-slate-700"
-                            >
-                              <span>Visualizar</span>
-                              <ExternalLink className="h-3 w-3" />
-                            </a>
-                          )}
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
