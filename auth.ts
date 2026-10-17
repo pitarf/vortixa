@@ -20,7 +20,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const cleanEmail = (credentials?.email as string)?.trim().toLowerCase();
         const rawPassword = credentials?.password as string;
 
-        if (!cleanEmail || !rawPassword) return null;
+        if (!cleanEmail || !rawPassword) {
+          console.warn("[AUTH] Tentativa de login sem e-mail ou sem senha.");
+          return null;
+        }
         
         try {
           const user = await prisma.user.findFirst({
@@ -29,7 +32,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
           });
 
-          if (!user || !user.passwordHash) return null;
+          if (!user || !user.passwordHash) {
+            console.warn(`[AUTH] Usuário não encontrado ou sem hash de senha: ${cleanEmail}`);
+            return null;
+          }
 
           if (user.isBlocked) {
             console.warn(`[AUTH] Tentativa de login em conta bloqueada: ${cleanEmail}`);
@@ -40,6 +46,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             rawPassword,
             user.passwordHash
           );
+
+          console.log(`[AUTH] Verificação de credenciais para ${cleanEmail}: ${passwordsMatch ? "SUCESSO" : "SENHA_INCORRETA"}`);
 
           if (passwordsMatch) return user;
 
