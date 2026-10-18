@@ -41,6 +41,8 @@ export interface UserRow {
   failedJobsCount?: number;
   totalCreditsSpent?: number;
   totalCreditsSpentBrl?: number;
+  totalApiCostUsd?: number;
+  totalApiCostBrl?: number;
   createdAt: string;
 }
 
@@ -427,6 +429,11 @@ export function AdminUsersTable() {
                     <span className="text-[9px] text-rose-400 font-mono block truncate mt-0.5">
                       {(user.totalCreditsSpent || 0).toLocaleString("pt-BR")} cr ≈ R$ {(user.totalCreditsSpentBrl || 0).toFixed(2).replace(".", ",")}
                     </span>
+                    {typeof user.totalApiCostUsd === "number" && user.totalApiCostUsd > 0 && (
+                      <span className="text-[9px] text-amber-400 font-mono font-bold block truncate mt-0.5">
+                        API: ${user.totalApiCostUsd.toFixed(2)} (≈ R$ {(user.totalApiCostBrl || (user.totalApiCostUsd * 5.60)).toFixed(2).replace(".", ",")})
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -624,9 +631,14 @@ export function AdminUsersTable() {
                         <span className="text-[11px] text-rose-400 block mt-0.5">
                           {(user.totalCreditsSpent || 0).toLocaleString("pt-BR")} cr
                           <span className="text-slate-500 font-normal ml-1">
-                            (≈ R$ {(user.totalCreditsSpentBrl || 0).toFixed(2).replace(".", ",")})
+                            (≈ R$ {(user.totalCreditsSpentBrl || 0).toFixed(2).replace(".", ",")} em créditos)
                           </span>
                         </span>
+                        {typeof user.totalApiCostUsd === "number" && user.totalApiCostUsd > 0 && (
+                          <span className="text-[10px] text-amber-400 font-bold block mt-0.5">
+                            Custo API: ${user.totalApiCostUsd.toFixed(2)} USD (≈ R$ {(user.totalApiCostBrl || (user.totalApiCostUsd * 5.60)).toFixed(2).replace(".", ",")})
+                          </span>
+                        )}
                       </td>
 
                       {/* Data de Criação */}

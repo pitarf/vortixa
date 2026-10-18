@@ -105,6 +105,7 @@ export async function GET(req: Request) {
             },
             select: {
               creditCost: true,
+              providerCostUsd: true,
             },
           },
           _count: {
@@ -122,6 +123,8 @@ export async function GET(req: Request) {
         const totalSpentCents = u.payments.reduce((acc, p) => acc + p.amountCents, 0);
         const totalCreditsSpent = u.jobs.reduce((acc, j) => acc + j.creditCost, 0);
         const totalCreditsSpentBrl = Number((totalCreditsSpent * 0.15).toFixed(2));
+        const totalApiCostUsd = Number(u.jobs.reduce((acc, j) => acc + (j.providerCostUsd || 0), 0).toFixed(4));
+        const totalApiCostBrl = Number((totalApiCostUsd * 5.60).toFixed(2));
 
         return {
           id: u.id,
@@ -140,6 +143,8 @@ export async function GET(req: Request) {
           failedJobsCount: Math.max(0, u._count.jobs - u.jobs.length),
           totalCreditsSpent,
           totalCreditsSpentBrl,
+          totalApiCostUsd,
+          totalApiCostBrl,
           createdAt: u.createdAt,
           _totalSpentCents: totalSpentCents,
         };
@@ -185,6 +190,7 @@ export async function GET(req: Request) {
               },
               select: {
                 creditCost: true,
+                providerCostUsd: true,
               },
             },
             _count: {
@@ -206,6 +212,8 @@ export async function GET(req: Request) {
         const totalSpentCents = u.payments.reduce((acc, p) => acc + p.amountCents, 0);
         const totalCreditsSpent = u.jobs.reduce((acc, j) => acc + j.creditCost, 0);
         const totalCreditsSpentBrl = Number((totalCreditsSpent * 0.15).toFixed(2));
+        const totalApiCostUsd = Number(u.jobs.reduce((acc, j) => acc + (j.providerCostUsd || 0), 0).toFixed(4));
+        const totalApiCostBrl = Number((totalApiCostUsd * 5.60).toFixed(2));
 
         return {
           id: u.id,
@@ -224,6 +232,8 @@ export async function GET(req: Request) {
           failedJobsCount: Math.max(0, u._count.jobs - u.jobs.length),
           totalCreditsSpent,
           totalCreditsSpentBrl,
+          totalApiCostUsd,
+          totalApiCostBrl,
           createdAt: u.createdAt,
         };
       });

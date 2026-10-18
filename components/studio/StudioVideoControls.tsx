@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Mic } from "lucide-react";
+import { Mic, AlertTriangle } from "lucide-react";
 import { VORTIXIA_VOICES } from "@/lib/voice-catalog";
 
 interface StudioVideoControlsProps {
@@ -46,6 +46,21 @@ export function StudioVideoControls({
 
   return (
     <div className="backdrop-blur-xl bg-[#0E1017]/85 border border-white/[0.08] rounded-2xl p-3.5 sm:p-4.5 space-y-3.5 text-xs shadow-xl">
+      {/* Alerta de Restrição de Pessoas Reais nos Motores Rígidos */}
+      {(selectedModelId.includes("kling-2.6") ||
+        selectedModelId.includes("seedance") ||
+        selectedModelId.includes("kling-v3")) && (
+        <div className="flex items-start gap-2.5 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-200/90 leading-relaxed">
+          <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+          <div className="space-y-0.5">
+            <span className="font-bold text-amber-300 block">Atenção com Fotos Reais</span>
+            <p className="text-slate-300 text-[10.5px]">
+              O cluster internacional deste motor bloqueia automaticamente <strong>rostos humanos reais</strong> durante o render. Para animar pessoas reais, use a aba <strong>LipSync</strong> ou modelos tolerantes como <strong>Wan 2.1</strong>.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Duração e Resolução em Pílulas Táteis Ergonômicas (min-h-[44px]) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {/* Controle de Duração */}

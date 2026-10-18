@@ -5,6 +5,52 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 
 
+## [2.8.18] - 2026-10-17
+### Reajuste dos Verdadeiros Gastos da Fal.ai e Calibração de Precificação
+- **Alinhamento do Histórico de Jobs com o Extrato Oficial da Fal.ai**:
+  - Aplicada migração corretiva no PostgreSQL da VPS atualizando a coluna `providerCostUsd` e `billingQuantity` dos 17 jobs concluídos no dia 16/10 com os valores exatos faturados pela Fal.ai:
+    - Seedance 2.5 (`01a14682...`): ajustado para **$5,7304 USD** (267.78 k-tokens).
+    - Seedance 2.0 (`01a14688...`): ajustado para **$3,4304 USD** (245.03 k-tokens).
+    - Kling 3.0 Standard: ajustado para **$0,7875 USD** cada (4 jobs = $3,15 USD).
+    - Kling 3.0 Pro: ajustado para **$0,84 USD** cada (3 jobs = $2,52 USD).
+    - Kling 2.1 Pro: ajustado para **$0,35 USD** cada (3 jobs = $1,05 USD).
+    - Kling 2.6 Pro: ajustado para **$0,70 USD** cada (5 jobs = $3,50 USD).
+    - **Total Consolidado no Banco:** **$19,3808 USD** (R$ 108,53), com paridade decimal exata com o painel da Fal.ai.
+- **Exibição do Custo de API Real na Tabela Principal de Usuários (`AdminUsersTable.tsx`)**:
+  - Distinção explícita entre **Consumo em Créditos do Cliente** (`436 cr ≈ R$ 65,40`) e **Custo Real de API / Provedor** (`Custo API: $19.38 USD ≈ R$ 108,53`), eliminando ambiguidades tanto no Desktop quanto nos Cards Mobile.
+- **Calibração de Custos e Créditos dos Motores de Vídeo (`AIModel` e Studio Types)**:
+  - ByteDance Seedance 2.5: Custo base atualizado para **$2.50 USD** e preço reajustado para **120 créditos** (5s) / **240 créditos** (10s), eliminando o déficit operacional anterior.
+  - ByteDance Seedance 2.0: Custo base para **$1.50 USD** e preço para **80 créditos** (5s) / **160 créditos** (10s).
+  - Kling 3.0 Standard: Custo base para **$0.39 USD** e preço para **20 créditos** (5s) / **40 créditos** (10s).
+  - Kling 3.0 Pro Ultra: Custo base para **$0.42 USD** e preço para **25 créditos** (5s) / **50 créditos** (10s).
+  - Kling 2.6 Pro: Custo base para **$0.35 USD** e preço para **22 créditos** (5s) / **44 créditos** (10s).
+- **Correção da Persistência de Proporcionalidade de Duração no Backend**:
+  - `services/ai/ai.service.ts`: O `providerCostUsd` agora é persistido com o `apiUnitCost` proporcional à duração (10s = 2x, 30s = 4x).
+  - `app/api/webhooks/fal/route.ts`: Webhook atualizado para preservar o `job.apiUnitCost` multiplicado ao finalizar o job.
+- **Verificação Estática**:
+  - `tsc --noEmit` aprovado com **0 erros**.
+
+## [2.8.17] - 2026-10-17
+### Blindagem Preventiva de Moderação e Auditoria de Consumo da Fal.ai
+- **Auditoria de Consumo da Fal.ai**:
+  - Cruzamento de dados entre o painel da Fal.ai ($19,38 USD consumidos em 16/10) e o banco de dados de produção do VORIXA.
+  - Identificado que o consumo foi decorrente de 49 gerações pesadas de vídeo disparadas por usuário que recebeu bonificação manual de créditos, e que a Fal.ai fatura o tempo de GPU de inferência mesmo quando o Safety Filter descarta o vídeo no último estágio por detectar rostos humanos reais ou celebridades.
+- **Proteção e Alertas no Studio Create**:
+  - `StudioModelSelector.tsx` & `StudioVideoControls.tsx`: Inseridos alertas visuais destacados (`AlertTriangle`) em âmbar informando a política estrita de moderação internacional de fotos de pessoas reais nos motores Kling 2.6 Pro, Seedance e Kling 3.0, orientando os usuários a utilizar o LipSync ou modelos sem censura como Wan 2.1 para evitar descarte de mídia e consumo desnecessário de GPU.
+  - Adicionadas tags `⚠️ Moderação Rígida` nos cards do modal de seleção de modelos.
+- **Verificação Estática**:
+  - Compilação estática com `tsc --noEmit` (**0 erros**).
+
+## [2.8.16] - 2026-10-17
+### Correção Definitiva de Autenticação do PostgreSQL na VPS e BcryptJS no Dockerfile
+- **Causa Raiz Identificada e Corrigida**:
+  - **Divergência de Credenciais do PostgreSQL**: O container `vorixa-postgres` inicializou originalmente com uma senha diferente (`vorixa_prod_pass_2026_secure`) da esperada na `DATABASE_URL` do `docker-compose.yml` (`vorixa_password`). Isso causava rejeição pelo driver adapter `@prisma/adapter-pg` com erro `P1000 DriverAdapterError: AuthenticationFailed`, levando o NextAuth a lançar `CredentialsSignin` ("Senha incorreta ou e-mail não cadastrado").
+  - **Correção da Role no Banco**: Executado `ALTER USER vorixa_user WITH PASSWORD 'vorixa_password';` diretamente no PostgreSQL, harmonizando com o container da aplicação e atualizando o arquivo `.env` da VPS.
+  - **Inclusão da pasta UMD do BcryptJS no Dockerfile**: O pacote `bcryptjs` 3.0.3 aponta seu entrypoint CJS para `umd/index.js`, que não vinha por padrão no output standalone do Next.js. Adicionada instrução explícita no build de produção para garantir a presença dos módulos compilados.
+- **Validação de Login e Conexão**:
+  - Teste de consulta Prisma e verificação com `bcryptjs.compare('Rafael@67', user.password)` validada com retorno `true`.
+  - Rotas autenticadas e de catálogo público funcionando perfeitamente sem falhas de driver ou conexão.
+
 ## [2.8.15] - 2026-10-17
 ### Não Cobrança de Falhas de IA, Exibição de Custos em Reais (R$) e Correção de Encoding
 - **Regra de Não Cobrança em Jobs Falhos (`FAILED` / `CANCELLED`)**:

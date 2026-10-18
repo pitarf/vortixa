@@ -95,7 +95,7 @@ export async function POST(req: Request) {
           data: {
             status: "COMPLETED",
             billingQuantity: 1.0,
-            providerCostUsd: job.model.apiUnitCost,
+            providerCostUsd: job.apiUnitCost || job.model.apiUnitCost,
           },
         });
 

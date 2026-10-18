@@ -185,7 +185,8 @@ export class AIService {
     const isImageOrEdit = targetModel.technicalName.includes("image") || targetModel.technicalName.includes("edit");
     const isVideo = !isImageOrEdit && (request.toolSlug.includes("video") || targetModel.technicalName.includes("video") || targetModel.technicalName.includes("wan-2.2-spicy") || targetModel.technicalName.includes("luma") || targetModel.technicalName.includes("seedance") || targetModel.technicalName.includes("minimax-h3-spicy") || targetModel.technicalName.includes("minimax-video"));
     const is10s = String(request.inputs?.duration) === "10";
-    const durationMultiplier = (isVideo && is10s) ? 2 : 1;
+    const is30s = String(request.inputs?.duration) === "30";
+    const durationMultiplier = (isVideo && is30s) ? 4 : (isVideo && is10s) ? 2 : 1;
 
     // Kling em modo Alta / Pro (1080p = 1.5x) e 4K Ultra (2.0x)
     const isKling = targetModel.technicalName.includes("kling");
@@ -301,7 +302,7 @@ export class AIService {
           providerJobId: result.providerJobId,
           billingUnit: targetModel.billingUnit || "GENERATION",
           billingQuantity: 1.0,
-          providerCostUsd: targetModel.apiUnitCost,
+          providerCostUsd: apiUnitCost,
           creditsReserved: cost,
           creditsCharged: cost,
         },

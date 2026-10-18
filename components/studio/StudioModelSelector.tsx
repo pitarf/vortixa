@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { ChevronRight, Sparkles, X, Check, Zap } from "lucide-react";
+import { ChevronRight, Sparkles, X, Check, Zap, AlertTriangle } from "lucide-react";
 import { StudioTool, TOOLS, QUALITY_MODES } from "./types";
 import { ModelLogo } from "@/components/tools/video/ModelLogo";
 import { toast } from "sonner";
@@ -195,6 +195,24 @@ export function StudioModelSelector({
             </button>
           </div>
 
+          {/* Alerta Preventivo de Moderação Internacional (Proteção contra perda de créditos em fotos reais) */}
+          {(currentModelDef.id.includes("kling-2.6") ||
+            currentModelDef.id.includes("seedance") ||
+            currentModelDef.id.includes("kling-v3")) && (
+            <div className="flex items-start gap-2.5 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-[11px] text-amber-200/90 leading-relaxed animate-in fade-in duration-200">
+              <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="font-bold text-amber-300">Moderação de Rostos & Pessoas Reais</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono font-semibold">Política Internacional</span>
+                </div>
+                <p className="text-slate-300 text-[10.5px]">
+                  Os clusters Kling e Seedance bloqueiam fotos de <strong>pessoas reais, celebridades e deepfakes</strong> durante o render. Para animar pessoas reais com segurança, recomendamos usar o <strong>LipSync</strong>, <strong>Wan 2.1</strong> ou modelos sem censura.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Barra de Seleção Rápida de Motor no Celular (1 toque na tela) */}
           <div className="pt-2 border-t border-white/[0.06]">
             <div className="flex items-center justify-between gap-1 mb-1.5">
@@ -356,6 +374,11 @@ export function StudioModelSelector({
                           {model.requiresReferenceImage && (
                             <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/30 uppercase tracking-wider">
                               📷 Exige Foto
+                            </span>
+                          )}
+                          {(model.id.includes("kling-2.6") || model.id.includes("seedance") || model.id.includes("kling-v3")) && (
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 tracking-wider">
+                              ⚠️ Moderação Rígida
                             </span>
                           )}
                         </div>

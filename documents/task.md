@@ -8,6 +8,21 @@
 - [ ] Fase 13.1: Expansão do Catálogo de Motores Google Nano Banana 2 e Gemini 3 Pro Preview.
 
 ## Concluído
+- [x] **Reajuste dos Verdadeiros Gastos da Fal.ai e Calibração de Precificação**:
+  - Histórico do banco de dados na VPS (`AIJob`) migrado e alinhado exatamente com o extrato da Fal.ai: Seedance 2.5 ($5,73), Seedance 2.0 ($3,43), Kling 3.0 Standard ($3,15), Kling 3.0 Pro ($2,52), Kling 2.1 Pro ($1,05) e Kling 2.6 Pro ($3,50), totalizando exatamente os **$19,38 USD** faturados.
+  - Tabela `AIModel` e `types.ts` calibrados com custos unitários reais e novos preços em créditos, garantindo margem de lucro saudável em vídeos de 5s, 10s e 30s.
+  - Correção no `AIService` e webhook fal.ai para gravar o `providerCostUsd` proporcional à duração e qualidade de cada job.
+  - Validação estática com `tsc --noEmit` (**0 erros**).
+- [x] **Blindagem Preventiva de Moderação e Auditoria de Consumo da Fal.ai**:
+  - Cruzamento de dados de faturamento da Fal.ai com o banco de dados de produção comprovando que o consumo de $19,38 USD em 16/10 partiu de 49 gerações pesadas de vídeo disparadas por um usuário que recebeu bonificação manual.
+  - Implementação de alertas preventivos de moderação internacional em `StudioModelSelector.tsx` e `StudioVideoControls.tsx` instruindo os usuários sobre o bloqueio de pessoas reais em Kling 2.6 Pro e Seedance, orientando o uso de LipSync ou Wan 2.1.
+  - Adição de tags de alerta de moderação rígida nos cards de seleção de modelo.
+  - Validação estática com `tsc --noEmit` (**0 erros**).
+- [x] **Correção Definitiva de Autenticação do PostgreSQL na VPS e BcryptJS no Dockerfile**:
+  - Diagnosticada e eliminada a falha de conexão do driver `@prisma/adapter-pg` com erro `P1000 DriverAdapterError: AuthenticationFailed`.
+  - Harmonizada a senha do usuário `vorixa_user` via comando `ALTER USER vorixa_user WITH PASSWORD 'vorixa_password';` diretamente no banco PostgreSQL e sincronizado o `.env` da VPS.
+  - Ajustado o `Dockerfile` standalone garantindo a inclusão da pasta `umd` do pacote `bcryptjs` 3.0.3.
+  - Validada a consulta Prisma e match de senha para `rfpita.ti@gmail.com` com retorno `true`.
 - [x] **Não Cobrança de Falhas de IA, Exibição de Custos em Reais (R$) e Correção de Encoding**:
   - Implementada regra estrita onde jobs com status `FAILED` ou `CANCELLED` não cobram créditos do usuário (`effectiveCreditCost = 0`) e possuem custo de provedor zerado (`providerCostUsd = 0`).
   - Atualizados os serviços e webhooks de IA (`AIService.submitJob`, `FalAIProvider`, `VortixiaIAService`, `TalkingVideoService` e webhook fal.ai) para gravar no banco `creditsCharged: 0`, `creditsRefunded: creditCost` e `providerCostUsd: 0` ao detectar falhas.
